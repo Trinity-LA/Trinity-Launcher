@@ -13,6 +13,7 @@
 TrinitoWindow::TrinitoWindow(QWidget *parent) : QWidget(parent) {
     setWindowTitle("Trinito — Gestor de Contenido para Bedrock");
     resize(500, 220);
+    setFixedSize(size());
 
     auto *layout = new QVBoxLayout(this);
     QTabWidget *tabs = new QTabWidget();
