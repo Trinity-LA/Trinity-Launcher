@@ -210,4 +210,4 @@ flatpak run --command=trinito com.trench.trinity.launcher
 
 # 📄 Licencia
 
-Este proyecto está bajo licencia MIT. Consulte el archivo [`LICENSE`](./LICENSE) para los términos completos de uso, modificación y redistribución.
+Este proyecto está bajo licencia BSD. Consulte el archivo LICENSE para los términos completos de uso, modificación y redistribución.
