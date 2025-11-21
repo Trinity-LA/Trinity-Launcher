@@ -17,6 +17,7 @@
 LauncherWindow::LauncherWindow(QWidget *parent) : QWidget(parent) {
     setWindowTitle("Trinity Launcher - Multiversions");
     resize(480, 220);
+    setFixedSize(size());
 
     mainLayout = new QVBoxLayout(this);
     mainLayout->setContentsMargins(20, 20, 20, 20);
