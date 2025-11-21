@@ -176,7 +176,7 @@ QStringList loadInstalledVersions();
 
 ```bash
 # Clonar el repo
-git clone https://github.com/0rt4/Trinity_Launcher.git
+git clone https://github.com/Trinity-LA/Trinity-Launcher.git
 cd Trinity_Launcher
 
 # Crear una rama
