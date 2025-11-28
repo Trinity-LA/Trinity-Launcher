@@ -2,8 +2,8 @@
 
 > **Entorno gráfico para Minecraft Bedrock en Linux con soporte Flatpak**
 
-[![License](https://img.shields.io/badge/license-MIT-blue.svg)](./LICENSE)
-[![Language](https://img.shields.io/badge/language-C%2B%2B-blue.svg)](src/)
+
+[![Language](https://img.shields.io/badge/license-BSD-blue.svg)](src/)
 [![Qt5](https://img.shields.io/badge/Qt-5-green.svg)](https://www.qt.io/)
 
 Trinity Launcher es un entorno gráfico para ejecutar y gestionar **Minecraft: Bedrock Edition** en Linux, diseñado para funcionar dentro de Flatpak. Incluye dos aplicaciones complementarias escritas en **C++ con Qt5**:
