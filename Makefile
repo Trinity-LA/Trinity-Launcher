@@ -37,7 +37,7 @@ MOVE          = mv -f
 TAR           = tar -cf
 COMPRESS      = gzip -9f
 DISTNAME      = trinchete1.0.0
-DISTDIR = /home/franckey/Trinity_Launcher/Trinity/build/obj/trinchete1.0.0
+DISTDIR = /home/void/2.0/build/obj/trinchete1.0.0
 LINK          = g++
 LFLAGS        = -Wl,-O1 -Wl,-rpath,/usr/lib
 LIBS          = $(SUBLIBS) /usr/lib/libQt5Widgets.so /usr/lib/libQt5Gui.so /usr/lib/libQt5Core.so -lGL -lpthread   
@@ -55,26 +55,26 @@ OBJECTS_DIR   = build/obj/
 SOURCES       = src/main.cpp \
 		src/core/version_manager.cpp \
 		src/core/game_launcher.cpp \
+		src/core/version_config.cpp \
 		src/ui/windows/launcher_window.cpp \
-		src/ui/dialogs/extract_dialog.cpp \
-		src/ui/widgets/version_selector.cpp build/rcc/qrc_resources.cpp \
+		src/ui/dialogs/extract_dialog.cpp build/rcc/qrc_resources.cpp \
 		build/moc/moc_version_manager.cpp \
 		build/moc/moc_game_launcher.cpp \
+		build/moc/moc_version_config.cpp \
 		build/moc/moc_launcher_window.cpp \
-		build/moc/moc_extract_dialog.cpp \
-		build/moc/moc_version_selector.cpp
+		build/moc/moc_extract_dialog.cpp
 OBJECTS       = build/obj/main.o \
 		build/obj/version_manager.o \
 		build/obj/game_launcher.o \
+		build/obj/version_config.o \
 		build/obj/launcher_window.o \
 		build/obj/extract_dialog.o \
-		build/obj/version_selector.o \
 		build/obj/qrc_resources.o \
 		build/obj/moc_version_manager.o \
 		build/obj/moc_game_launcher.o \
+		build/obj/moc_version_config.o \
 		build/obj/moc_launcher_window.o \
-		build/obj/moc_extract_dialog.o \
-		build/obj/moc_version_selector.o
+		build/obj/moc_extract_dialog.o
 DIST          = /usr/lib/qt5/mkspecs/features/spec_pre.prf \
 		/usr/lib/qt5/mkspecs/common/unix.conf \
 		/usr/lib/qt5/mkspecs/common/linux.conf \
@@ -154,14 +154,14 @@ DIST          = /usr/lib/qt5/mkspecs/features/spec_pre.prf \
 		/usr/lib/qt5/mkspecs/features/lex.prf \
 		trinchete.pro src/core/version_manager.h \
 		src/core/game_launcher.h \
+		src/core/version_config.h \
 		src/ui/windows/launcher_window.h \
-		src/ui/dialogs/extract_dialog.h \
-		src/ui/widgets/version_selector.h src/main.cpp \
+		src/ui/dialogs/extract_dialog.h src/main.cpp \
 		src/core/version_manager.cpp \
 		src/core/game_launcher.cpp \
+		src/core/version_config.cpp \
 		src/ui/windows/launcher_window.cpp \
-		src/ui/dialogs/extract_dialog.cpp \
-		src/ui/widgets/version_selector.cpp
+		src/ui/dialogs/extract_dialog.cpp
 QMAKE_TARGET  = trinchete
 DESTDIR       = bin/
 TARGET        = bin/trinchete
@@ -349,8 +349,8 @@ distdir: FORCE
 	$(COPY_FILE) --parents $(DIST) $(DISTDIR)/
 	$(COPY_FILE) --parents resources/resources.qrc $(DISTDIR)/
 	$(COPY_FILE) --parents /usr/lib/qt5/mkspecs/features/data/dummy.cpp $(DISTDIR)/
-	$(COPY_FILE) --parents src/core/version_manager.h src/core/game_launcher.h src/ui/windows/launcher_window.h src/ui/dialogs/extract_dialog.h src/ui/widgets/version_selector.h $(DISTDIR)/
-	$(COPY_FILE) --parents src/main.cpp src/core/version_manager.cpp src/core/game_launcher.cpp src/ui/windows/launcher_window.cpp src/ui/dialogs/extract_dialog.cpp src/ui/widgets/version_selector.cpp $(DISTDIR)/
+	$(COPY_FILE) --parents src/core/version_manager.h src/core/game_launcher.h src/core/version_config.h src/ui/windows/launcher_window.h src/ui/dialogs/extract_dialog.h $(DISTDIR)/
+	$(COPY_FILE) --parents src/main.cpp src/core/version_manager.cpp src/core/game_launcher.cpp src/core/version_config.cpp src/ui/windows/launcher_window.cpp src/ui/dialogs/extract_dialog.cpp $(DISTDIR)/
 
 
 clean: compiler_clean 
@@ -379,6 +379,9 @@ compiler_rcc_clean:
 	-$(DEL_FILE) build/rcc/qrc_resources.cpp
 build/rcc/qrc_resources.cpp: resources/resources.qrc \
 		/usr/lib/qt5/bin/rcc \
+		resources/icons8-minecraft-dirt-block-96.png \
+		resources/icons8-minecraft-creeper-96.png \
+		resources/trinihq_vector.png \
 		resources/appicon.png
 	/usr/lib/qt5/bin/rcc -name resources resources/resources.qrc -o build/rcc/qrc_resources.cpp
 
@@ -388,34 +391,34 @@ compiler_moc_predefs_clean:
 build/moc/moc_predefs.h: /usr/lib/qt5/mkspecs/features/data/dummy.cpp
 	g++ -pipe -O2 -Wall -Wextra -dM -E -o build/moc/moc_predefs.h /usr/lib/qt5/mkspecs/features/data/dummy.cpp
 
-compiler_moc_header_make_all: build/moc/moc_version_manager.cpp build/moc/moc_game_launcher.cpp build/moc/moc_launcher_window.cpp build/moc/moc_extract_dialog.cpp build/moc/moc_version_selector.cpp
+compiler_moc_header_make_all: build/moc/moc_version_manager.cpp build/moc/moc_game_launcher.cpp build/moc/moc_version_config.cpp build/moc/moc_launcher_window.cpp build/moc/moc_extract_dialog.cpp
 compiler_moc_header_clean:
-	-$(DEL_FILE) build/moc/moc_version_manager.cpp build/moc/moc_game_launcher.cpp build/moc/moc_launcher_window.cpp build/moc/moc_extract_dialog.cpp build/moc/moc_version_selector.cpp
+	-$(DEL_FILE) build/moc/moc_version_manager.cpp build/moc/moc_game_launcher.cpp build/moc/moc_version_config.cpp build/moc/moc_launcher_window.cpp build/moc/moc_extract_dialog.cpp
 build/moc/moc_version_manager.cpp: src/core/version_manager.h \
 		build/moc/moc_predefs.h \
 		/usr/lib/qt5/bin/moc
-	/usr/lib/qt5/bin/moc $(DEFINES) --include /home/franckey/Trinity_Launcher/Trinity/build/moc/moc_predefs.h -I/usr/lib/qt5/mkspecs/linux-g++ -I/home/franckey/Trinity_Launcher/Trinity -I/home/franckey/Trinity_Launcher/Trinity/src -I/usr/include/qt5 -I/usr/include/qt5/QtWidgets -I/usr/include/qt5/QtGui -I/usr/include/qt5/QtCore -I/usr/include/c++/14.2.1 -I/usr/include/c++/14.2.1/x86_64-unknown-linux-gnu -I/usr/include/c++/14.2.1/backward -I/usr/lib64/gcc/x86_64-unknown-linux-gnu/14.2.1/include -I/usr/local/include -I/usr/lib64/gcc/x86_64-unknown-linux-gnu/14.2.1/include-fixed -I/usr/include src/core/version_manager.h -o build/moc/moc_version_manager.cpp
+	/usr/lib/qt5/bin/moc $(DEFINES) --include /home/void/2.0/build/moc/moc_predefs.h -I/usr/lib/qt5/mkspecs/linux-g++ -I/home/void/2.0 -I/home/void/2.0/src -I/usr/include/qt5 -I/usr/include/qt5/QtWidgets -I/usr/include/qt5/QtGui -I/usr/include/qt5/QtCore -I/usr/include/c++/14.2.1 -I/usr/include/c++/14.2.1/x86_64-unknown-linux-gnu -I/usr/include/c++/14.2.1/backward -I/usr/lib64/gcc/x86_64-unknown-linux-gnu/14.2.1/include -I/usr/local/include -I/usr/lib64/gcc/x86_64-unknown-linux-gnu/14.2.1/include-fixed -I/usr/include src/core/version_manager.h -o build/moc/moc_version_manager.cpp
 
 build/moc/moc_game_launcher.cpp: src/core/game_launcher.h \
 		build/moc/moc_predefs.h \
 		/usr/lib/qt5/bin/moc
-	/usr/lib/qt5/bin/moc $(DEFINES) --include /home/franckey/Trinity_Launcher/Trinity/build/moc/moc_predefs.h -I/usr/lib/qt5/mkspecs/linux-g++ -I/home/franckey/Trinity_Launcher/Trinity -I/home/franckey/Trinity_Launcher/Trinity/src -I/usr/include/qt5 -I/usr/include/qt5/QtWidgets -I/usr/include/qt5/QtGui -I/usr/include/qt5/QtCore -I/usr/include/c++/14.2.1 -I/usr/include/c++/14.2.1/x86_64-unknown-linux-gnu -I/usr/include/c++/14.2.1/backward -I/usr/lib64/gcc/x86_64-unknown-linux-gnu/14.2.1/include -I/usr/local/include -I/usr/lib64/gcc/x86_64-unknown-linux-gnu/14.2.1/include-fixed -I/usr/include src/core/game_launcher.h -o build/moc/moc_game_launcher.cpp
+	/usr/lib/qt5/bin/moc $(DEFINES) --include /home/void/2.0/build/moc/moc_predefs.h -I/usr/lib/qt5/mkspecs/linux-g++ -I/home/void/2.0 -I/home/void/2.0/src -I/usr/include/qt5 -I/usr/include/qt5/QtWidgets -I/usr/include/qt5/QtGui -I/usr/include/qt5/QtCore -I/usr/include/c++/14.2.1 -I/usr/include/c++/14.2.1/x86_64-unknown-linux-gnu -I/usr/include/c++/14.2.1/backward -I/usr/lib64/gcc/x86_64-unknown-linux-gnu/14.2.1/include -I/usr/local/include -I/usr/lib64/gcc/x86_64-unknown-linux-gnu/14.2.1/include-fixed -I/usr/include src/core/game_launcher.h -o build/moc/moc_game_launcher.cpp
 
-build/moc/moc_launcher_window.cpp: src/ui/windows/launcher_window.h \
-		src/ui/widgets/version_selector.h \
+build/moc/moc_version_config.cpp: src/core/version_config.h \
 		build/moc/moc_predefs.h \
 		/usr/lib/qt5/bin/moc
-	/usr/lib/qt5/bin/moc $(DEFINES) --include /home/franckey/Trinity_Launcher/Trinity/build/moc/moc_predefs.h -I/usr/lib/qt5/mkspecs/linux-g++ -I/home/franckey/Trinity_Launcher/Trinity -I/home/franckey/Trinity_Launcher/Trinity/src -I/usr/include/qt5 -I/usr/include/qt5/QtWidgets -I/usr/include/qt5/QtGui -I/usr/include/qt5/QtCore -I/usr/include/c++/14.2.1 -I/usr/include/c++/14.2.1/x86_64-unknown-linux-gnu -I/usr/include/c++/14.2.1/backward -I/usr/lib64/gcc/x86_64-unknown-linux-gnu/14.2.1/include -I/usr/local/include -I/usr/lib64/gcc/x86_64-unknown-linux-gnu/14.2.1/include-fixed -I/usr/include src/ui/windows/launcher_window.h -o build/moc/moc_launcher_window.cpp
+	/usr/lib/qt5/bin/moc $(DEFINES) --include /home/void/2.0/build/moc/moc_predefs.h -I/usr/lib/qt5/mkspecs/linux-g++ -I/home/void/2.0 -I/home/void/2.0/src -I/usr/include/qt5 -I/usr/include/qt5/QtWidgets -I/usr/include/qt5/QtGui -I/usr/include/qt5/QtCore -I/usr/include/c++/14.2.1 -I/usr/include/c++/14.2.1/x86_64-unknown-linux-gnu -I/usr/include/c++/14.2.1/backward -I/usr/lib64/gcc/x86_64-unknown-linux-gnu/14.2.1/include -I/usr/local/include -I/usr/lib64/gcc/x86_64-unknown-linux-gnu/14.2.1/include-fixed -I/usr/include src/core/version_config.h -o build/moc/moc_version_config.cpp
+
+build/moc/moc_launcher_window.cpp: src/ui/windows/launcher_window.h \
+		src/core/version_config.h \
+		build/moc/moc_predefs.h \
+		/usr/lib/qt5/bin/moc
+	/usr/lib/qt5/bin/moc $(DEFINES) --include /home/void/2.0/build/moc/moc_predefs.h -I/usr/lib/qt5/mkspecs/linux-g++ -I/home/void/2.0 -I/home/void/2.0/src -I/usr/include/qt5 -I/usr/include/qt5/QtWidgets -I/usr/include/qt5/QtGui -I/usr/include/qt5/QtCore -I/usr/include/c++/14.2.1 -I/usr/include/c++/14.2.1/x86_64-unknown-linux-gnu -I/usr/include/c++/14.2.1/backward -I/usr/lib64/gcc/x86_64-unknown-linux-gnu/14.2.1/include -I/usr/local/include -I/usr/lib64/gcc/x86_64-unknown-linux-gnu/14.2.1/include-fixed -I/usr/include src/ui/windows/launcher_window.h -o build/moc/moc_launcher_window.cpp
 
 build/moc/moc_extract_dialog.cpp: src/ui/dialogs/extract_dialog.h \
 		build/moc/moc_predefs.h \
 		/usr/lib/qt5/bin/moc
-	/usr/lib/qt5/bin/moc $(DEFINES) --include /home/franckey/Trinity_Launcher/Trinity/build/moc/moc_predefs.h -I/usr/lib/qt5/mkspecs/linux-g++ -I/home/franckey/Trinity_Launcher/Trinity -I/home/franckey/Trinity_Launcher/Trinity/src -I/usr/include/qt5 -I/usr/include/qt5/QtWidgets -I/usr/include/qt5/QtGui -I/usr/include/qt5/QtCore -I/usr/include/c++/14.2.1 -I/usr/include/c++/14.2.1/x86_64-unknown-linux-gnu -I/usr/include/c++/14.2.1/backward -I/usr/lib64/gcc/x86_64-unknown-linux-gnu/14.2.1/include -I/usr/local/include -I/usr/lib64/gcc/x86_64-unknown-linux-gnu/14.2.1/include-fixed -I/usr/include src/ui/dialogs/extract_dialog.h -o build/moc/moc_extract_dialog.cpp
-
-build/moc/moc_version_selector.cpp: src/ui/widgets/version_selector.h \
-		build/moc/moc_predefs.h \
-		/usr/lib/qt5/bin/moc
-	/usr/lib/qt5/bin/moc $(DEFINES) --include /home/franckey/Trinity_Launcher/Trinity/build/moc/moc_predefs.h -I/usr/lib/qt5/mkspecs/linux-g++ -I/home/franckey/Trinity_Launcher/Trinity -I/home/franckey/Trinity_Launcher/Trinity/src -I/usr/include/qt5 -I/usr/include/qt5/QtWidgets -I/usr/include/qt5/QtGui -I/usr/include/qt5/QtCore -I/usr/include/c++/14.2.1 -I/usr/include/c++/14.2.1/x86_64-unknown-linux-gnu -I/usr/include/c++/14.2.1/backward -I/usr/lib64/gcc/x86_64-unknown-linux-gnu/14.2.1/include -I/usr/local/include -I/usr/lib64/gcc/x86_64-unknown-linux-gnu/14.2.1/include-fixed -I/usr/include src/ui/widgets/version_selector.h -o build/moc/moc_version_selector.cpp
+	/usr/lib/qt5/bin/moc $(DEFINES) --include /home/void/2.0/build/moc/moc_predefs.h -I/usr/lib/qt5/mkspecs/linux-g++ -I/home/void/2.0 -I/home/void/2.0/src -I/usr/include/qt5 -I/usr/include/qt5/QtWidgets -I/usr/include/qt5/QtGui -I/usr/include/qt5/QtCore -I/usr/include/c++/14.2.1 -I/usr/include/c++/14.2.1/x86_64-unknown-linux-gnu -I/usr/include/c++/14.2.1/backward -I/usr/lib64/gcc/x86_64-unknown-linux-gnu/14.2.1/include -I/usr/local/include -I/usr/lib64/gcc/x86_64-unknown-linux-gnu/14.2.1/include-fixed -I/usr/include src/ui/dialogs/extract_dialog.h -o build/moc/moc_extract_dialog.cpp
 
 compiler_moc_objc_header_make_all:
 compiler_moc_objc_header_clean:
@@ -434,29 +437,29 @@ compiler_clean: compiler_rcc_clean compiler_moc_predefs_clean compiler_moc_heade
 ####### Compile
 
 build/obj/main.o: src/main.cpp src/ui/windows/launcher_window.h \
-		src/ui/widgets/version_selector.h
+		src/core/version_config.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o build/obj/main.o src/main.cpp
 
 build/obj/version_manager.o: src/core/version_manager.cpp src/core/version_manager.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o build/obj/version_manager.o src/core/version_manager.cpp
 
 build/obj/game_launcher.o: src/core/game_launcher.cpp src/core/game_launcher.h \
-		src/core/version_manager.h
+		src/core/version_manager.h \
+		src/core/version_config.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o build/obj/game_launcher.o src/core/game_launcher.cpp
 
+build/obj/version_config.o: src/core/version_config.cpp src/core/version_config.h
+	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o build/obj/version_config.o src/core/version_config.cpp
+
 build/obj/launcher_window.o: src/ui/windows/launcher_window.cpp src/ui/windows/launcher_window.h \
-		src/ui/widgets/version_selector.h \
-		src/core/version_manager.h \
+		src/core/version_config.h \
 		src/core/game_launcher.h \
+		src/core/version_manager.h \
 		src/ui/dialogs/extract_dialog.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o build/obj/launcher_window.o src/ui/windows/launcher_window.cpp
 
 build/obj/extract_dialog.o: src/ui/dialogs/extract_dialog.cpp src/ui/dialogs/extract_dialog.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o build/obj/extract_dialog.o src/ui/dialogs/extract_dialog.cpp
-
-build/obj/version_selector.o: src/ui/widgets/version_selector.cpp src/ui/widgets/version_selector.h \
-		src/core/version_manager.h
-	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o build/obj/version_selector.o src/ui/widgets/version_selector.cpp
 
 build/obj/qrc_resources.o: build/rcc/qrc_resources.cpp 
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o build/obj/qrc_resources.o build/rcc/qrc_resources.cpp
@@ -467,14 +470,14 @@ build/obj/moc_version_manager.o: build/moc/moc_version_manager.cpp
 build/obj/moc_game_launcher.o: build/moc/moc_game_launcher.cpp 
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o build/obj/moc_game_launcher.o build/moc/moc_game_launcher.cpp
 
+build/obj/moc_version_config.o: build/moc/moc_version_config.cpp 
+	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o build/obj/moc_version_config.o build/moc/moc_version_config.cpp
+
 build/obj/moc_launcher_window.o: build/moc/moc_launcher_window.cpp 
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o build/obj/moc_launcher_window.o build/moc/moc_launcher_window.cpp
 
 build/obj/moc_extract_dialog.o: build/moc/moc_extract_dialog.cpp 
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o build/obj/moc_extract_dialog.o build/moc/moc_extract_dialog.cpp
-
-build/obj/moc_version_selector.o: build/moc/moc_version_selector.cpp 
-	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o build/obj/moc_version_selector.o build/moc/moc_version_selector.cpp
 
 ####### Install
 

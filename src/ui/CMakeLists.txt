@@ -5,8 +5,6 @@ add_library(TrinityUI
     windows/trinito_window.h
     dialogs/extract_dialog.cpp
     dialogs/extract_dialog.h
-    widgets/version_selector.cpp
-    widgets/version_selector.h
 )
 target_link_libraries(TrinityUI PRIVATE Qt5::Widgets TrinityCore)
 target_include_directories(TrinityUI PUBLIC ${CMAKE_CURRENT_SOURCE_DIR})

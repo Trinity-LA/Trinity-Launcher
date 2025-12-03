@@ -4,6 +4,7 @@
 #include <QStandardPaths>
 #include <QCoreApplication>
 #include <QFileInfo>
+#include "version_config.h"
 
 GameLauncher::GameLauncher(QObject *parent) : QObject(parent) {}
 
@@ -16,13 +17,32 @@ bool GameLauncher::launchGame(const QString &versionName, QString &errorMsg) {
 
     QString dataDir = vm.getVersionPath(versionName);
     QString clientPath = QStandardPaths::findExecutable("mcpelauncher-client");
-    
+
     if (clientPath.isEmpty()) {
         errorMsg = "mcpelauncher-client no encontrado.";
         return false;
     }
 
-    return QProcess::startDetached(clientPath, QStringList() << "-dg" << dataDir);
+    // Leer argumentos adicionales
+    VersionConfig config(versionName);
+    QString extraEnv = config.getLaunchArgs();
+
+    QStringList args;
+    args << "-dg" << dataDir;
+
+    // Si hay variables de entorno, usar QProcessEnvironment o lanzar con `env`
+    if (!extraEnv.isEmpty()) {
+        // Ejecutar con QProcess, usando shell para que `env` funcione
+        QProcess process;
+        QStringList fullCommand = {"env"};
+        fullCommand += extraEnv.split(' ', Qt::SkipEmptyParts);
+        fullCommand += clientPath;
+        fullCommand += args;
+
+        return process.startDetached("sh", {"-c", fullCommand.join(' ')});
+    }
+
+    return QProcess::startDetached(clientPath, args);
 }
 
 bool GameLauncher::launchTrinito(QString &errorMsg) {
