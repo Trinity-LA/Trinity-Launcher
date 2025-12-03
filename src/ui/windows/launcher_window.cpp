@@ -86,7 +86,7 @@ void LauncherWindow::setupUi() {
   extractButton->setObjectName("ActionButton"); // Accent color
   topBarLayout->addWidget(extractButton);
 
-  importButton = new QPushButton("Importar");  // ✅ Nuevo botón
+  importButton = new QPushButton("Importar");  // Import button
   importButton->setObjectName("ActionButton");
   topBarLayout->addWidget(importButton);
 
