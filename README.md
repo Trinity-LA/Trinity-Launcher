@@ -9,7 +9,7 @@
 Trinity Launcher es un entorno gráfico para ejecutar y gestionar **Minecraft: Bedrock Edition** en Linux, diseñado para funcionar dentro de Flatpak. Incluye dos aplicaciones complementarias escritas en **C++ con Qt5**:
 
 
-- **Trinchete** 🚀 — Launcher principal que gestiona versiones del juego, permite extraer desde APK y lanza la partida.
+- **Trinchete** 🚀 — UI principal que gestiona versiones del juego, permite extraer desde APK y lanza la partida.
 - **Trinito** 📦 — Gestor de contenido que instala mods, texturas, packs de desarrollo y mundos.
 # 📋 Índice
 
