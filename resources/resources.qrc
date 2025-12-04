@@ -2,5 +2,8 @@
 <RCC version="1.0">
     <qresource prefix="/icons">
         <file alias="appicon">appicon.png</file>
+        <file alias="cube">icons8-minecraft-dirt-block-96.png</file>
+        <file alias="creeper">icons8-minecraft-creeper-96.png</file>
+        <file alias="logo">trinihq_vector.png</file>
     </qresource>
 </RCC>
