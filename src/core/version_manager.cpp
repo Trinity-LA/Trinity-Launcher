@@ -1,15 +1,18 @@
 #include "version_manager.h"
+#include "version_config.h"
 #include <QStandardPaths>
 #include <QDir>
 #include <QProcess>
 #include <QFileInfo>
 #include <QDebug>
+#include <QCoreApplication>
+#include <QThread> // Para QThread::msleep (si es necesario)
 
 VersionManager::VersionManager(QObject *parent) : QObject(parent) {}
 
 QStringList VersionManager::getInstalledVersions() const {
     QString versionsDir = QStandardPaths::writableLocation(QStandardPaths::GenericDataLocation)
-                          + "/mcpelauncher/versions";
+    + "/mcpelauncher/versions";
     QDir dir(versionsDir);
     if (dir.exists()) {
         return dir.entryList(QDir::Dirs | QDir::NoDotAndDotDot);
@@ -19,7 +22,7 @@ QStringList VersionManager::getInstalledVersions() const {
 
 QString VersionManager::getVersionPath(const QString &versionName) const {
     return QStandardPaths::writableLocation(QStandardPaths::GenericDataLocation)
-           + "/mcpelauncher/versions/" + versionName;
+    + "/mcpelauncher/versions/" + versionName;
 }
 
 bool VersionManager::isVersionValid(const QString &versionName) const {
@@ -40,15 +43,58 @@ bool VersionManager::extractApk(const QString &apkPath, const QString &versionNa
         return false;
     }
 
+    // Crear proceso de extracción
     QProcess process;
+
+    // Iniciar proceso
     process.start(extractorPath, {apkPath, destDir});
+
+    // Esperar a que termine (sin bloquear la UI)
+    process.waitForStarted(-1);
+
+    // Reportar estado inicial
+    emit extractionProgress("Iniciando extracción...");
+
+    // Esperar a que termine (sin bloquear la UI)
+    while (process.state() == QProcess::Running) {
+        QCoreApplication::processEvents(QEventLoop::ExcludeUserInputEvents);
+        QThread::msleep(100); // Pausa breve para no saturar la CPU
+    }
+
     process.waitForFinished(-1);
 
     if (process.exitCode() == 0) {
+        emit extractionProgress("Extracción completada.");
         return true;
     } else {
-        errorMsg = process.readAllStandardError();
-        if (errorMsg.isEmpty()) errorMsg = "Error desconocido durante la extracción.";
+        QString err = process.readAllStandardError();
+        if (err.isEmpty()) err = "Error desconocido durante la extracción.";
+        errorMsg = err;
+        emit extractionProgress("Error durante la extracción.");
         return false;
     }
+}
+
+bool VersionManager::deleteVersion(const QString &versionName, QString &errorMsg) {
+    QString versionPath = getVersionPath(versionName);
+
+    if (!QDir(versionPath).removeRecursively()) {
+        errorMsg = "No se pudo eliminar la versión.";
+        return false;
+    }
+
+    return true;
+}
+
+bool VersionManager::editVersion(const QString &versionName, const QString &newArgs, QString &errorMsg) {
+    // Suponiendo que usas VersionConfig para guardar la configuración
+    VersionConfig config(versionName);
+    config.setLaunchArgs(newArgs);
+
+    if (!config.save()) {
+        errorMsg = "No se pudo guardar la configuración.";
+        return false;
+    }
+
+    return true;
 }

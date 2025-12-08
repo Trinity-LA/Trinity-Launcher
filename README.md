@@ -30,7 +30,7 @@ Trinity Launcher es un entorno gráfico para ejecutar y gestionar **Minecraft: B
 | Componente | Descripción | Versión |
 |:-----------|:-----------|:--------|
 | **Lenguaje** | C++ estándar | C++11+ |
-| **Framework UI** | Qt Framework para interfaz gráfica | Qt 5.15.11+ |
+| **Framework UI** | Qt Framework para interfaz gráfica | Qt 6.9+ |
 | **Build System** | Herramienta de compilación | qmake |
 | **Compilador** | GCC (g++) para Linux | GCC 14.2+ |
 | **Empaquetado** | Contenedor de aplicaciones | Flatpak |
@@ -115,6 +115,10 @@ Trinity/
 │   │   ├── CMakeLists.txt
 │   │   ├── version_manager.h
 │   │   ├── version_manager.cpp
+│   │   ├── version_config.h
+│   │   ├── version_config.cpp
+│   │   ├── exporter.cpp
+│   │   ├── exporter.cpp
 │   │   ├── pack_installer.h
 │   │   ├── pack_installer.cpp
 │   │   ├── game_launcher.h
@@ -152,8 +156,8 @@ Trinity/
 ## Requisitos previos
 
 ```bash
-flatpak install flathub io.qt.qtwebengine.BaseApp//5.15-23.08
-flatpak install flathub org.kde.Platform//5.15-23.08 org.kde.Sdk//5.15-23.08
+flatpak install flathub io.qt.qtwebengine.BaseApp//6.9
+flatpak install flathub org.kde.Platform//6.9 org.kde.Sdk//6.9
 ```
 
 ## Construcción

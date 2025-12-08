@@ -9,7 +9,7 @@ RCC_DIR = build/rcc
 UI_DIR = build/ui
 
 INCLUDEPATH += src
-
+RESOURCES += resources/resources.qrc
 SOURCES += src/trinito_main.cpp \
            src/core/pack_installer.cpp \
            src/ui/windows/trinito_window.cpp

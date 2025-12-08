@@ -5,6 +5,10 @@ add_library(TrinityCore
     game_launcher.h
     pack_installer.cpp
     pack_installer.h
+    version_config.h
+    version_config.cpp
+    exporter.cpp
+    exporter.h
 )
 target_link_libraries(TrinityCore PRIVATE Qt5::Core)
 target_include_directories(TrinityCore PUBLIC ${CMAKE_CURRENT_SOURCE_DIR})

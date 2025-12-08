@@ -7,7 +7,7 @@ set(CMAKE_AUTOMOC ON)
 set(CMAKE_AUTORCC ON)
 set(CMAKE_AUTOUIC ON)
 
-find_package(Qt5 COMPONENTS Widgets REQUIRED)
+find_package(Qt5 COMPONENTS Core Widgets REQUIRED)
 
 add_subdirectory(src/core)
 add_subdirectory(src/ui)
@@ -16,7 +16,7 @@ add_subdirectory(src/ui)
 add_executable(trinchete 
 	src/main.cpp
     resources/resources.qrc)
-target_link_libraries(trinchete PRIVATE Qt5::Widgets TrinityCore TrinityUI)
+target_link_libraries(trinchete PRIVATE Qt5::Core Qt5::Widgets TrinityCore TrinityUI)
 
 add_executable(trinito src/trinito_main.cpp)
 target_link_libraries(trinito PRIVATE Qt5::Widgets TrinityCore TrinityUI)

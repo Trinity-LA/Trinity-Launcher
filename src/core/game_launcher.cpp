@@ -10,10 +10,10 @@ GameLauncher::GameLauncher(QObject *parent) : QObject(parent) {}
 
 bool GameLauncher::launchGame(const QString &versionName, QString &errorMsg) {
     VersionManager vm;
-    if (!vm.isVersionValid(versionName)) {
-        errorMsg = QString("Los datos de '%1' están incompletos o no existen.").arg(versionName);
-        return false;
-    }
+   // if (!vm.isVersionValid(versionName)) {
+ //       errorMsg = QString("Los datos de '%1' están incompletos o no existen.").arg(versionName);
+    //    return false;
+ //   }
 
     QString dataDir = vm.getVersionPath(versionName);
     QString clientPath = QStandardPaths::findExecutable("mcpelauncher-client");

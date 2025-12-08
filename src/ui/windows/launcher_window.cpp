@@ -1,5 +1,6 @@
 #include "launcher_window.h"
 #include "../../core/game_launcher.h"
+#include "../../core/exporter.h"
 #include "../../core/version_manager.h"
 #include "../dialogs/extract_dialog.h"
 
@@ -20,46 +21,71 @@
 #include <QProcess>
 #include <QStandardPaths>
 #include <QDirIterator>
+#include <QProgressBar>
 
 LauncherWindow::LauncherWindow(QWidget *parent) : QWidget(parent) {
   setupUi();
   setupConnections();
   loadInstalledVersions();
+  exporter = new Exporter(this);  // Añadir esta línea
+
+  // Conectar señales de exporter
+
+  connect(exporter, &Exporter::exportFinished,
+          this, [this](bool success, const QString &msg) {
+              if (success) {
+                  QMessageBox::information(this, "Éxito", msg);
+                  statusLabel->setText(msg);
+              } else {
+                  QMessageBox::critical(this, "Error", msg);
+              }
+          });
+
+  connect(exporter, &Exporter::importFinished,
+          this, [this](bool success, const QString &msg) {
+              if (success) {
+                  QMessageBox::information(this, "Éxito", msg);
+                  loadInstalledVersions(); // Recargar lista
+                  statusLabel->setText(msg);
+              } else {
+                  QMessageBox::critical(this, "Error", msg);
+              }
+          });
 }
 
 void LauncherWindow::setupUi() {
   setWindowTitle("Trinity Launcher - Multiversions");
-  resize(800, 500);
-  setFixedSize(800, 500);
+  resize(960, 560);
+  setMinimumSize(960, 560); // Tamaño mínimo
 
   // Global Dark Theme
   setStyleSheet("QWidget { background-color: #020617; color: #ffffff; "
-                "font-family: 'Inter', 'Roboto', sans-serif; }"
-                "QListWidget { background-color: #090f20; border: 1px solid "
-                "#1e293b; border-radius: 8px; padding: 5px; outline: 0; }"
-                "QListWidget::item { padding: 10px; border-radius: 5px; "
-                "margin-bottom: 5px; border: none; }"
-                "QListWidget::item:selected { background-color: #8b5cf6; "
-                "color: #ffffff; }"
-                "QListWidget::item:hover { background-color: #1e293b; }"
-                "QPushButton { background-color: #1e293b; border: none; "
-                "border-radius: 6px; padding: 8px 16px; color: #ffffff; "
-                "font-weight: bold; }"
-                "QPushButton:hover { background-color: #334155; }"
-                "QPushButton:pressed { background-color: #0f172a; }"
-                "QPushButton#ActionButton { background-color: #8b5cf6; color: "
-                "#ffffff; }" // Violet accent
-                "QPushButton#ActionButton:hover { background-color: #a78bfa; }"
-                "QLabel#Title { font-size: 18px; font-weight: bold; color: "
-                "#8b5cf6; background: transparent; }"
-                "QLabel#VersionName { font-size: 24px; font-weight: bold; "
-                "background: transparent; }"
-                "QLabel#VersionType { font-size: 14px; color: #94a3b8; "
-                "background: transparent; }"
-                "QLabel#Status { font-size: 12px; color: #64748b; padding: "
-                "5px; background: transparent; }"
-                "QWidget#ContextPanel { background-color: #090f20; "
-                "border-radius: 12px; }");
+  "font-family: 'Inter', 'Roboto', sans-serif; }"
+  "QListWidget { background-color: #090f20; border: 1px solid "
+  "#1e293b; border-radius: 8px; padding: 5px; outline: 0; }"
+  "QListWidget::item { padding: 10px; border-radius: 5px; "
+  "margin-bottom: 5px; border: none; }"
+  "QListWidget::item:selected { background-color: #8b5cf6; "
+  "color: #ffffff; }"
+  "QListWidget::item:hover { background-color: #1e293b; }"
+  "QPushButton { background-color: #1e293b; border: none; "
+  "border-radius: 6px; padding: 8px 16px; color: #ffffff; "
+  "font-weight: bold; }"
+  "QPushButton:hover { background-color: #334155; }"
+  "QPushButton:pressed { background-color: #0f172a; }"
+  "QPushButton#ActionButton { background-color: #8b5cf6; color: "
+  "#ffffff; }" // Violet accent
+  "QPushButton#ActionButton:hover { background-color: #a78bfa; }"
+  "QLabel#Title { font-size: 18px; font-weight: bold; color: "
+  "#8b5cf6; background: transparent; }"
+  "QLabel#VersionName { font-size: 24px; font-weight: bold; "
+  "background: transparent; }"
+  "QLabel#VersionType { font-size: 14px; color: #94a3b8; "
+  "background: transparent; }"
+  "QLabel#Status { font-size: 12px; color: #64748b; padding: "
+  "5px; background: transparent; }"
+  "QWidget#ContextPanel { background-color: #090f20; "
+  "border-radius: 12px; }");
 
   // Main Vertical Layout (Top Bar, Content, Status Bar)
   QVBoxLayout *rootLayout = new QVBoxLayout(this);
@@ -73,7 +99,7 @@ void LauncherWindow::setupUi() {
   logoLabel->setFixedSize(40, 40);
   // Use border-image to ensure the image respects the border-radius
   logoLabel->setStyleSheet(
-      "border-image: url(:/icons/logo); border-radius: 60px;");
+    "border-image: url(:/icons/logo); border-radius: 60px;");
   topBarLayout->addWidget(logoLabel);
 
   QLabel *titleLabel = new QLabel("Trinity Launcher");
@@ -90,7 +116,7 @@ void LauncherWindow::setupUi() {
   importButton->setObjectName("ActionButton");
   topBarLayout->addWidget(importButton);
 
-  toolsButton = new QPushButton("Tools");
+  toolsButton = new QPushButton("Herramientas");
   toolsButton->setObjectName("ActionButton"); // Apply accent style
   topBarLayout->addWidget(toolsButton);
 
@@ -103,7 +129,7 @@ void LauncherWindow::setupUi() {
   // Left: Version List
   versionList = new QListWidget();
   versionList->setIconSize(QSize(48, 48));
-  versionList->setFixedWidth(300);
+  versionList->setFixedWidth(400);
   contentLayout->addWidget(versionList);
 
   // Right: Context Panel
@@ -138,9 +164,15 @@ void LauncherWindow::setupUi() {
   // Actions
   playButton = new QPushButton("JUGAR");
   playButton->setObjectName("ActionButton");
-  playButton->setMinimumHeight(45);
+  playButton->setMinimumHeight(35);
   playButton->setEnabled(false);
   panelLayout->addWidget(playButton);
+
+  // Botón "Crear Acceso Directo" (debajo de JUGAR)
+  shortcutButton = new QPushButton("Crear Acceso Directo");
+  shortcutButton->setObjectName("ActionButton");
+  shortcutButton->setMinimumHeight(35);
+  panelLayout->addWidget(shortcutButton);
 
   editButton = new QPushButton("Editar Configuración");
   editButton->setObjectName("ActionButton");
@@ -168,14 +200,15 @@ void LauncherWindow::setupUi() {
 
 void LauncherWindow::setupConnections() {
   connect(extractButton, &QPushButton::clicked, this,
-        &LauncherWindow::showExtractDialog);
+          &LauncherWindow::showExtractDialog);
   connect(toolsButton, &QPushButton::clicked, this,
-        &LauncherWindow::launchTools);
+          &LauncherWindow::launchTools);
   connect(playButton, &QPushButton::clicked, this, &LauncherWindow::launchGame);
   connect(versionList, &QListWidget::itemClicked, this,
-        &LauncherWindow::onVersionSelected);
+          &LauncherWindow::onVersionSelected);
   connect(importButton, &QPushButton::clicked, this, &LauncherWindow::onImportClicked);
-// Conecta los nuevos botones
+  connect(shortcutButton, &QPushButton::clicked, this, &LauncherWindow::createDesktopShortcut);
+  // Conecta los nuevos botones
   connect(editButton, &QPushButton::clicked, this, &LauncherWindow::onEditConfigClicked);
   connect(exportButton, &QPushButton::clicked, this, &LauncherWindow::onExportClicked);
   connect(deleteButton, &QPushButton::clicked, this, &LauncherWindow::onDeleteClicked);
@@ -231,21 +264,60 @@ void LauncherWindow::updateContextPanel(const QString &versionName) {
 
 void LauncherWindow::showExtractDialog() {
   ExtractDialog dialog(this);
-  if (dialog.exec() != QDialog::Accepted)
-    return;
+  if (dialog.exec() != QDialog::Accepted) return;
 
   QString apkPath = dialog.getApkPath();
   QString versionName = dialog.getVersionName();
 
+  // Verificar si ya existe la versión
   VersionManager vm;
-  QString errorMsg;
-  if (vm.extractApk(apkPath, versionName, errorMsg)) {
-    QMessageBox::information(this, "Éxito", "¡Versión extraída correctamente!");
-    loadInstalledVersions();
-  } else {
-    QMessageBox::critical(this, "Error", "Falló la extracción:\n" + errorMsg);
+  if (vm.getInstalledVersions().contains(versionName)) {
+    int r = QMessageBox::warning(
+      this, "Advertencia",
+      QString("Ya existe una versión llamada '%1'.\n¿Reemplazarla?").arg(versionName),
+                                 QMessageBox::Yes | QMessageBox::No, QMessageBox::No
+    );
+    if (r == QMessageBox::No) return;
   }
+
+  // Crear diálogo de progreso
+  QDialog progressDlg(this);
+  progressDlg.setWindowTitle("Extrayendo APK...");
+  progressDlg.setFixedSize(300, 100);
+
+  auto *layout = new QVBoxLayout(&progressDlg);
+  QLabel *label = new QLabel("Extrayendo versión...");
+  QProgressBar *progressBar = new QProgressBar();
+  progressBar->setRange(0, 0); // Indefinido
+  layout->addWidget(label);
+  layout->addWidget(progressBar);
+
+  progressDlg.show();
+  QApplication::processEvents(); // Actualizar UI
+
+  // Conectar signal de progreso (opcional)
+  QObject::connect(&vm, &VersionManager::extractionProgress,
+                   &progressDlg, [&label](const QString &msg) {
+                     label->setText(msg);
+                     QApplication::processEvents(); // Actualizar UI
+                   });
+
+  // Extraer versión
+  QString errorMsg;
+  bool success = vm.extractApk(apkPath, versionName, errorMsg);
+
+  // Cerrar diálogo de progreso
+  progressDlg.accept();
+
+  if (!success) {
+    QMessageBox::critical(this, "Error", "Falló la extracción:\n" + errorMsg);
+    return;
+  }
+
+  QMessageBox::information(this, "Éxito", "¡Versión extraída correctamente!");
+  loadInstalledVersions(); // Recargar lista
 }
+
 
 void LauncherWindow::launchGame() {
   if (versionList->selectedItems().isEmpty())
@@ -268,47 +340,53 @@ void LauncherWindow::launchTools() {
     QMessageBox::critical(this, "Error", errorMsg);
   }
 }
+
 void LauncherWindow::onEditConfigClicked() {
-    if (versionList->selectedItems().isEmpty()) {
-        QMessageBox::warning(this, "Advertencia", "No hay ninguna versión seleccionada.");
-        return;
+  if (versionList->selectedItems().isEmpty()) {
+    QMessageBox::warning(this, "Advertencia", "No hay ninguna versión seleccionada.");
+    return;
+  }
+  QString selectedVersion = versionList->selectedItems().first()->text();
+
+  // Diálogo simple de edición
+  QDialog dialog(this);
+  dialog.setWindowTitle("Editar configuración de " + selectedVersion);
+  dialog.resize(500, 300);
+
+  auto *layout = new QVBoxLayout(&dialog);
+  QLabel *label = new QLabel("Parámetros de ejecución (antes de mcpelauncher-client):");
+  layout->addWidget(label);
+
+  // Obtener argumentos actuales
+  VersionConfig config(selectedVersion);
+  QString currentArgs = config.getLaunchArgs();
+
+  QLineEdit *argsEdit = new QLineEdit(currentArgs);
+  argsEdit->setPlaceholderText("Ej: DRI_PRIME=1 vblank_mode=0");
+  layout->addWidget(argsEdit);
+
+  auto *buttonBox = new QDialogButtonBox(QDialogButtonBox::Ok | QDialogButtonBox::Cancel);
+  layout->addWidget(buttonBox);
+
+  connect(buttonBox, &QDialogButtonBox::accepted, &dialog, [&]() {
+    QString newArgs = argsEdit->text().trimmed();
+    config.setLaunchArgs(newArgs);
+
+    // Editar versión
+    VersionManager vm;
+    QString errorMsg;
+    if (!vm.editVersion(selectedVersion, newArgs, errorMsg)) {
+      QMessageBox::critical(&dialog, "Error", "No se pudo guardar la configuración:\n" + errorMsg);
+    } else {
+      QMessageBox::information(&dialog, "Éxito", "Configuración guardada.");
+      dialog.accept();
     }
-    QString selectedVersion = versionList->selectedItems().first()->text();
+  });
+  connect(buttonBox, &QDialogButtonBox::rejected, &dialog, &QDialog::reject);
 
-    VersionConfig config(selectedVersion);
-    QString currentArgs = config.getLaunchArgs();
-
-    // Diálogo simple de edición
-    QDialog dialog(this);
-    dialog.setWindowTitle("Editar configuración de " + selectedVersion);
-    dialog.resize(500, 300);
-
-    auto *layout = new QVBoxLayout(&dialog);
-    QLabel *label = new QLabel("Parámetros de ejecución (antes de mcpelauncher-client):");
-    layout->addWidget(label);
-
-    QLineEdit *argsEdit = new QLineEdit(currentArgs);
-    argsEdit->setPlaceholderText("Ej: DRI_PRIME=1 vblank_mode=0");
-    layout->addWidget(argsEdit);
-
-    auto *buttonBox = new QDialogButtonBox(QDialogButtonBox::Ok | QDialogButtonBox::Cancel);
-    layout->addWidget(buttonBox);
-
-    connect(buttonBox, &QDialogButtonBox::accepted, &dialog, [&]() {
-        QString newArgs = argsEdit->text().trimmed();
-        config.setLaunchArgs(newArgs);
-        if (config.save()) {
-            QMessageBox::information(&dialog, "Éxito", "Configuración guardada.");
-            dialog.accept();
-        } else {
-            QMessageBox::critical(&dialog, "Error", "No se pudo guardar la configuración.");
-        }
-    });
-    connect(buttonBox, &QDialogButtonBox::rejected, &dialog, &QDialog::reject);
-
-    if (dialog.exec() == QDialog::Accepted) {
-        statusLabel->setText(QString("Configuración de %1 actualizada.").arg(selectedVersion));
-    }
+  if (dialog.exec() == QDialog::Accepted) {
+    statusLabel->setText(QString("Configuración de %1 actualizada.").arg(selectedVersion));
+  }
 }
 
 void LauncherWindow::onExportClicked() {
@@ -318,92 +396,35 @@ void LauncherWindow::onExportClicked() {
     }
     QString selectedVersion = versionList->selectedItems().first()->text();
 
-    VersionManager vm;
-    QString versionPath = vm.getVersionPath(selectedVersion);
-
-    if (!QDir(versionPath).exists()) {
-        QMessageBox::critical(this, "Error", "La versión no existe.");
-        return;
-    }
-
-    QString baseDataDir = QStandardPaths::writableLocation(QStandardPaths::GenericDataLocation)
-                          + "/mcpelauncher";
-
-    // Carpeta games/com.mojang
-    QString gamesPath = baseDataDir + "/games/com.mojang";
-
-    QString zipPath = QFileDialog::getSaveFileName(
-        this, "Guardar como ZIP", selectedVersion + ".zip",
-        "Archivos ZIP (*.zip);;Todos los archivos (*)"
-    );
-    if (zipPath.isEmpty()) return;
-
-    // Crear un directorio temporal para organizar lo que se va a comprimir
-    QString tempDir = QDir::tempPath() + "/trinity_export_" + selectedVersion;
-    if (QDir(tempDir).exists()) {
-        QDir(tempDir).removeRecursively();
-    }
-    QDir().mkpath(tempDir);
-
-    // Copiar contenido de la versión a una subcarpeta temporal
-    QString tempVersionDir = tempDir + "/version_content";
-    if (!copyDirectory(versionPath, tempVersionDir)) {
-        QMessageBox::critical(this, "Error", "No se pudo copiar la versión.");
-        QDir(tempDir).removeRecursively();
-        return;
-    }
-
-    // Copiar games/com.mojang a otra subcarpeta temporal
-    QString tempGamesDir = tempDir + "/games";
-    if (!copyDirectory(gamesPath, tempGamesDir)) {
-        QMessageBox::critical(this, "Error", "No se pudo copiar los recursos.");
-        QDir(tempDir).removeRecursively();
-        return;
-    }
-
-    // Comprimir ambos directorios en el ZIP
-    QProcess process;
-    process.start("zip", {"-r", zipPath, tempVersionDir, tempGamesDir});
-    process.waitForFinished(-1);
-
-    // Limpiar el directorio temporal
-    QDir(tempDir).removeRecursively();
-
-    if (process.exitCode() == 0) {
-        QMessageBox::information(this, "Éxito", "Versión y recursos exportados correctamente.");
-        statusLabel->setText(QString("Versión %1 exportada como %2").arg(selectedVersion, zipPath));
-    } else {
-        QString err = process.readAllStandardError();
-        QMessageBox::critical(this, "Error", "Falló la exportación:\n" + err);
-    }
+    exporter->exportVersion(selectedVersion);
 }
 
 void LauncherWindow::onDeleteClicked() {
-    if (versionList->selectedItems().isEmpty()) {
-        QMessageBox::warning(this, "Advertencia", "No hay ninguna versión seleccionada.");
-        return;
-    }
-    QString selectedVersion = versionList->selectedItems().first()->text();
+  if (versionList->selectedItems().isEmpty()) {
+    QMessageBox::warning(this, "Advertencia", "No hay ninguna versión seleccionada.");
+    return;
+  }
+  QString selectedVersion = versionList->selectedItems().first()->text();
 
-    int r = QMessageBox::warning(
-        this, "Advertencia",
-        QString("¿Estás seguro de eliminar la versión '%1'?\nEsta acción no se puede deshacer.")
-            .arg(selectedVersion),
-        QMessageBox::Yes | QMessageBox::No, QMessageBox::No
-    );
-    if (r == QMessageBox::No) return;
+  int r = QMessageBox::warning(
+    this, "Advertencia",
+    QString("¿Estás seguro de eliminar la versión '%1'?\nEsta acción no se puede deshacer.")
+    .arg(selectedVersion),
+                               QMessageBox::Yes | QMessageBox::No, QMessageBox::No
+  );
+  if (r == QMessageBox::No) return;
 
-    VersionManager vm;
-    QString versionPath = vm.getVersionPath(selectedVersion);
+  // Eliminar versión
+  VersionManager vm;
+  QString errorMsg;
+  if (!vm.deleteVersion(selectedVersion, errorMsg)) {
+    QMessageBox::critical(this, "Error", "No se pudo eliminar la versión:\n" + errorMsg);
+    return;
+  }
 
-    if (!QDir(versionPath).removeRecursively()) {
-        QMessageBox::critical(this, "Error", "No se pudo eliminar la versión.");
-        return;
-    }
-
-    QMessageBox::information(this, "Éxito", "Versión eliminada correctamente.");
-    loadInstalledVersions(); // Recargar lista
-    statusLabel->setText(QString("Versión %1 eliminada.").arg(selectedVersion));
+  QMessageBox::information(this, "Éxito", "Versión eliminada correctamente.");
+  loadInstalledVersions(); // Recargar lista
+  statusLabel->setText(QString("Versión %1 eliminada.").arg(selectedVersion));
 }
 
 bool LauncherWindow::copyDirectory(const QString &srcPath, const QString &dstPath) {
@@ -425,106 +446,69 @@ bool LauncherWindow::copyDirectory(const QString &srcPath, const QString &dstPat
 }
 
 void LauncherWindow::onImportClicked() {
-    QString zipPath = QFileDialog::getOpenFileName(
-        this, "Seleccionar archivo ZIP", "",
-        "Archivos ZIP (*.zip);;Todos los archivos (*)"
+    exporter->importVersion();
+}
+
+void LauncherWindow::createDesktopShortcut() {
+  if (versionList->selectedItems().isEmpty()) {
+    QMessageBox::warning(this, "Advertencia", "No hay ninguna versión seleccionada.");
+    return;
+  }
+
+  QString selectedVersion = versionList->selectedItems().first()->text();
+
+  // Obtener la ruta de la versión
+  VersionManager vm;
+  QString versionPath = vm.getVersionPath(selectedVersion);
+
+  if (!vm.isVersionValid(selectedVersion)) {
+    QMessageBox::critical(this, "Error", QString("La versión '%1' no es válida o no está completa.").arg(selectedVersion));
+    return;
+  }
+
+  // Ruta de la carpeta Downloads (segura para Flatpak)
+  QString downloadsDir = QStandardPaths::writableLocation(QStandardPaths::DownloadLocation);
+  QString shortcutPath = downloadsDir + "/Minecraft " + selectedVersion + ".desktop";
+
+  // Verificar si ya existe
+  if (QFile::exists(shortcutPath)) {
+    int r = QMessageBox::question(
+      this, "Confirmar",
+      QString("Ya existe un acceso directo para '%1'.\n¿Reemplazarlo?").arg(selectedVersion),
+                                  QMessageBox::Yes | QMessageBox::No, QMessageBox::No
     );
-    if (zipPath.isEmpty()) return;
+    if (r == QMessageBox::No) return;
+  }
 
-    // Extraer nombre de la versión del nombre del archivo (sin extensión)
-    QString fileName = QFileInfo(zipPath).baseName(); // Ej: "1.21.121" de "1.21.121.zip"
+  // Construir el comando para el .desktop
+  QString execCmd = "flatpak run --command=mcpelauncher-client com.trench.trinity.launcher -dg \"" + versionPath + "\"";
 
-    // Directorio temporal para extracción
-    QString tempDir = QDir::tempPath() + "/trinity_import_" + fileName;
-    if (QDir(tempDir).exists()) {
-        QDir(tempDir).removeRecursively();
-    }
-    QDir().mkpath(tempDir);
+  // Usar un icono genérico de juego
+  QString iconIdentifier = "applications-games"; // O puedes probar con "minecraft"
 
-    // Descomprimir el ZIP
-    QProcess process;
-    process.start("unzip", {"-q", zipPath, "-d", tempDir});
-    process.waitForFinished(-1);
+  // Crear contenido del archivo .desktop
+  QString desktopContent = QString(
+    "[Desktop Entry]\n"
+    "Type=Application\n"
+    "Name=Minecraft %1\n" // %1 es el nombre de la versión
+    "Exec=%2\n"           // %2 es el comando exec
+    "Icon=%3\n"           // %3 es el identificador del icono genérico
+    "Terminal=false\n"
+    "Categories=Game;\n"
+    "Comment=Jugar a Minecraft %1 desde Trinity Launcher\n"
+    "StartupNotify=true\n"
+  ).arg(selectedVersion, execCmd, iconIdentifier);
 
-    if (process.exitCode() != 0) {
-        QString err = process.readAllStandardError();
-        QMessageBox::critical(this, "Error", "Falló la extracción:\n" + err);
-        QDir(tempDir).removeRecursively();
-        return;
-    }
+  QFile desktopFile(shortcutPath);
+  if (!desktopFile.open(QIODevice::WriteOnly | QIODevice::Text)) {
+    QMessageBox::critical(this, "Error", "No se pudo crear el archivo de acceso directo en:\n" + shortcutPath);
+    return;
+  }
 
-    // Buscar recursivamente los directorios "version_content" y "games"
-    QString versionContentPath;
-    QString gamesPath;
+  QTextStream out(&desktopFile);
+  out << desktopContent;
+  desktopFile.close();
 
-    QDirIterator it(tempDir, QDir::Dirs | QDir::NoDotAndDotDot, QDirIterator::Subdirectories);
-    while (it.hasNext()) {
-        QString dir = it.next();
-        if (QFileInfo(dir).fileName() == "version_content") {
-            versionContentPath = dir;
-        } else if (QFileInfo(dir).fileName() == "games") {
-            gamesPath = dir;
-        }
-    }
-
-    // Ruta base de datos de la app
-    QString baseDataDir = QStandardPaths::writableLocation(QStandardPaths::GenericDataLocation)
-                          + "/mcpelauncher";
-
-    // Rutas de destino
-    QString destVersionDir = baseDataDir + "/versions/" + fileName;
-    QString destGamesDir = baseDataDir + "/games/com.mojang";
-
-    // Verificar si ya existen versiones o recursos
-    bool versionExists = QDir(destVersionDir).exists();
-    bool gamesExists = QDir(destGamesDir).exists();
-
-    if (versionExists || gamesExists) {
-        int r = QMessageBox::warning(
-            this, "Advertencia",
-            QString("Ya existen datos para '%1'.\n"
-                    "¿Reemplazarlos?\n\n"
-                    "Esto eliminará los archivos actuales.").arg(fileName),
-            QMessageBox::Yes | QMessageBox::No, QMessageBox::No
-        );
-        if (r == QMessageBox::No) {
-            QDir(tempDir).removeRecursively();
-            return;
-        }
-    }
-
-    // Copiar version_content → versions/<nombre>
-    if (!versionContentPath.isEmpty()) {
-        if (versionExists) {
-            QDir(destVersionDir).removeRecursively(); // Eliminar versión anterior
-        }
-        if (!copyDirectory(versionContentPath, destVersionDir)) {
-            QMessageBox::critical(this, "Error", "No se pudo copiar la versión.");
-            QDir(tempDir).removeRecursively();
-            return;
-        }
-    } else {
-        QMessageBox::warning(this, "Advertencia", "El archivo ZIP no contiene 'version_content'.");
-    }
-
-    // Copiar games → games/com.mojang
-    if (!gamesPath.isEmpty()) {
-        if (gamesExists) {
-            QDir(destGamesDir).removeRecursively(); // Eliminar recursos anteriores
-        }
-        if (!copyDirectory(gamesPath, destGamesDir)) {
-            QMessageBox::critical(this, "Error", "No se pudo copiar los recursos.");
-            QDir(tempDir).removeRecursively();
-            return;
-        }
-    } else {
-        QMessageBox::warning(this, "Advertencia", "El archivo ZIP no contiene 'games'.");
-    }
-
-    // Limpiar temporal
-    QDir(tempDir).removeRecursively();
-
-    QMessageBox::information(this, "Éxito", "Versión e información importadas correctamente.");
-    loadInstalledVersions(); // Recargar lista
-    statusLabel->setText(QString("Versión %1 importada.").arg(fileName));
+  // Mensaje de éxito
+  QMessageBox::information(this, "Éxito", QString("Acceso directo creado en la carpeta Descargas:\n%1\n(Usando icono genérico de juegos)").arg(shortcutPath));
 }

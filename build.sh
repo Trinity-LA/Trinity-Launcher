@@ -1,8 +1,12 @@
 #! /bin/bash
-qmake trinito.pro 
-make
 rm Makefile
-qmake trinchete.pro 
+rm -rf build
+qmake6 trinito.pro
+make
+mv ./bin/trinito .
+rm Makefile
+qmake6 trinchete.pro
 make 
-echo "LISTO YA SE COMPILO CON EXITO"
+mv ./bin/trinchete .
+echo "LISTO YA SE COMPILO CON EXITO o eso creemos"
 

@@ -8,7 +8,7 @@
 #include <QVBoxLayout>
 #include <QWidget>
 #include "../../core/version_config.h"
-
+#include "../../core/exporter.h"
 class LauncherWindow : public QWidget {
     Q_OBJECT
 
@@ -31,11 +31,12 @@ private slots:
     void onExportClicked();
     void onDeleteClicked();
     void onImportClicked();
+    void createDesktopShortcut();
 private:
     // Layouts
     QHBoxLayout *mainLayout;
     QVBoxLayout *rightPanelLayout;
-
+    void deletePack(const QString &packType, const QString &packName);
     // Left Side - Version List
     QListWidget *versionList;
 
@@ -52,10 +53,10 @@ private:
     // Top Bar
     QPushButton *extractButton;
     QPushButton *toolsButton;
-
+    Exporter *exporter;
     // Status Bar
     QLabel *statusLabel;
-
+    QPushButton *shortcutButton;
     void setupUi();
     void setupConnections();
     void updateContextPanel(const QString &versionName);

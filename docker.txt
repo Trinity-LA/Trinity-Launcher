@@ -1,0 +1,2 @@
+sudo docker run -it   -v "$(pwd)":/project   trinity ./build.sh
+sudo docker build -t trinity .
