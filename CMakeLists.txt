@@ -1,22 +1,21 @@
-cmake_minimum_required(VERSION 3.14)
+cmake_minimum_required(VERSION 3.17)
 project(Trinity LANGUAGES CXX)
 
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
+set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 set(CMAKE_AUTOMOC ON)
 set(CMAKE_AUTORCC ON)
 set(CMAKE_AUTOUIC ON)
 
-find_package(Qt5 COMPONENTS Core Widgets REQUIRED)
+include_directories(include)
 
-add_subdirectory(src/core)
-add_subdirectory(src/ui)
+find_package(
+  Qt6
+  COMPONENTS Core Widgets
+  REQUIRED)
 
-# Executables
-add_executable(trinchete 
-	src/main.cpp
-    resources/resources.qrc)
-target_link_libraries(trinchete PRIVATE Qt5::Core Qt5::Widgets TrinityCore TrinityUI)
+add_subdirectory(src/TrinityLib/core)
+add_subdirectory(src/TrinityLib/ui)
 
-add_executable(trinito src/trinito_main.cpp)
-target_link_libraries(trinito PRIVATE Qt5::Widgets TrinityCore TrinityUI)
+add_subdirectory(app)

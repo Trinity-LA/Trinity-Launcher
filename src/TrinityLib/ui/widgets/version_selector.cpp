@@ -1,5 +1,5 @@
-#include "version_selector.h"
-#include "../../core/version_manager.h"
+#include "TrinityLib/ui/widgets/version_selector.hpp"
+#include "TrinityLib/core/version_manager.hpp"
 
 VersionSelector::VersionSelector(QWidget *parent) : QComboBox(parent) {
     refreshVersions();

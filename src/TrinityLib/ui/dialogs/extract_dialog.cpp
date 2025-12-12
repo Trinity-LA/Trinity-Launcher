@@ -1,4 +1,4 @@
-#include "extract_dialog.h"
+#include "TrinityLib/ui/dialogs/extract_dialog.hpp"
 #include <QVBoxLayout>
 #include <QFormLayout>
 #include <QPushButton>

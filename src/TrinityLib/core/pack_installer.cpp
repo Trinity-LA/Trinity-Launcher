@@ -1,4 +1,4 @@
-#include "pack_installer.h"
+#include "TrinityLib/core/pack_installer.hpp"
 #include <QStandardPaths>
 #include <QDir>
 #include <QFile>
