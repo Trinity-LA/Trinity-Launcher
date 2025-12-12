@@ -87,8 +87,6 @@ Trinity Launcher es un entorno gráfico para ejecutar y gestionar **Minecraft: B
 
 Ambas aplicaciones se compilan con el flujo estándar de **Qt + qmake**.
 
-### Compilar 
-
 ```bash
 sh build.sh
 ```
@@ -196,13 +194,7 @@ flatpak run --command=trinito com.trench.trinity.launcher
 ```
 ~/.local/share/mcpelauncher/
 ```
-# INSTALACION
-``` 
-flatpak install flathub io.qt.qtwebengine.BaseApp//5.15-23.08
-flatpak install flathub org.kde.Platform//5.15-23.08 org.kde.Sdk//5.15-23.08
-wget https://github.com/Trinity-LA/Trinity-Launcher/releases/download/1.0/trinity.flatpak
-flatpak install ./trinity.flatpak
-``` 
+
 > Ambas apps usan `QStandardPaths`, por lo que **no hay diferencias en el código** entre ambos entornos.
 
 
