@@ -1,5 +1,8 @@
 # 🎮 Trinity Launcher
 
+Para instalar visita nuestra pagina web hay tenemos los pasos de instalación bien explicados
+https://trinitylauncher.vercel.app/
+
 > **Entorno gráfico para Minecraft Bedrock en Linux**
 
 
