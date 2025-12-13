@@ -102,7 +102,7 @@ void LauncherWindow::setupUi() {
     logoLabel->setFixedSize(40, 40);
     // Use border-image to ensure the image respects the border-radius
     logoLabel->setStyleSheet(
-        "border-image: url(:/icons/logo); border-radius: 60px;");
+        "border-image: url(:/branding/logo); border-radius: 60px;");
     topBarLayout->addWidget(logoLabel);
 
     QLabel *titleLabel = new QLabel("Trinity Launcher");
