@@ -52,7 +52,7 @@ Trinity Launcher es un entorno gráfico para ejecutar y gestionar **Minecraft: B
 - **libevdev** / **libzip** — Dependencias para Flatpak
 
 
-Nota: usamos un fork de mcpelauncher hecho por Javier C que esta en el repositorio de codeberg 
+  Nota: usamos un fork de mcpelauncher hecho por Javier C que esta en su repositorio de codeberg 
 ---
 
 ## Trinchete — Launcher Multiversión
