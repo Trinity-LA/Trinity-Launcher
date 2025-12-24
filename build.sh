@@ -93,15 +93,18 @@ echo -e "${BLUE}📦 Organizando ejecutables...${NC}"
 
 # Verificar si los binarios existen antes de moverlos
 if [ -f "$BUILD_DIR/app/trinchete" ]; then
-    cp "$BUILD_DIR/app/trinchete" .
+    sudo cp -rf "$BUILD_DIR/app/trinchete" /usr/local/bin
     echo -e "   -> trinchete listo"
 fi
 
 if [ -f "$BUILD_DIR/app/trinito" ]; then
-    cp "$BUILD_DIR/app/trinito" .
+    sudo cp "$BUILD_DIR/app/trinito" /usr/local/bin
     echo -e "   -> trinito listo"
 fi
 
+# Copiamos los iconos del launcher
+sudo cp -rf resources/branding/com.trench.trinity.launcher.svg /usr/share/icons/
+sudo cp -rf resources/shortcuts/com.trench.trinity.launcher.desktop /usr/share/applications/
+
 echo ""
 echo -e "${GREEN}🎉 ¡Todo listo!${NC}"
-echo -e "Ejecuta: ${YELLOW}./trinchete${NC} o ${YELLOW}./trinito${NC}"
