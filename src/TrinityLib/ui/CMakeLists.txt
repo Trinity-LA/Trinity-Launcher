@@ -1,13 +1,20 @@
+set(INC_DIR "../../../include")
+
 set(UI_HEADERS
-    "${CMAKE_SOURCE_DIR}/include/TrinityLib/ui/windows/launcher_window.hpp"
-    "${CMAKE_SOURCE_DIR}/include/TrinityLib/ui/windows/trinito_window.hpp"
-    "${CMAKE_SOURCE_DIR}/include/TrinityLib/ui/dialogs/extract_dialog.hpp"
-    "${CMAKE_SOURCE_DIR}/include/TrinityLib/ui/widgets/version_selector.hpp")
+    "${INC_DIR}/TrinityLib/ui/windows/launcher_window.hpp"
+    "${INC_DIR}/TrinityLib/ui/windows/trinito_window.hpp"
+    "${INC_DIR}/TrinityLib/ui/dialogs/extract_dialog.hpp"
+    "${INC_DIR}/TrinityLib/ui/widgets/version_selector.hpp")
 
-add_library(
-  TrinityUI STATIC
-  windows/launcher_window.cpp windows/trinito_window.cpp
-  dialogs/extract_dialog.cpp widgets/version_selector.cpp ${UI_HEADERS})
+set(UI_SOURCES windows/launcher_window.cpp windows/trinito_window.cpp
+               dialogs/extract_dialog.cpp widgets/version_selector.cpp)
 
-target_link_libraries(TrinityUI PRIVATE Qt6::Core Qt6::Widgets TrinityCore)
-target_include_directories(TrinityUI PUBLIC "${CMAKE_SOURCE_DIR}/include")
+add_library(TrinityUI STATIC ${UI_SOURCES} ${UI_HEADERS})
+
+target_include_directories(
+  TrinityUI PUBLIC "$<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/${INC_DIR}>")
+
+target_link_libraries(
+  TrinityUI
+  PUBLIC Qt6::Core Qt6::Widgets
+  PRIVATE TrinityCore)
