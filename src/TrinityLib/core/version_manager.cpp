@@ -1,5 +1,5 @@
-#include "version_manager.h"
-#include "version_config.h"
+#include "TrinityLib/core/version_manager.hpp"
+#include "TrinityLib/core/version_config.hpp"
 #include <QStandardPaths>
 #include <QDir>
 #include <QProcess>

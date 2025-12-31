@@ -1,4 +1,4 @@
-#include "version_config.h"
+#include "TrinityLib/core/version_config.hpp"
 #include <QFile>
 #include <QTextStream>
 #include <QDir>

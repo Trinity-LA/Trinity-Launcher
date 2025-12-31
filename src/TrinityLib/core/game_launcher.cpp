@@ -1,19 +1,21 @@
-#include "game_launcher.h"
-#include "version_manager.h"
-#include <QProcess>
-#include <QStandardPaths>
+#include "TrinityLib/core/game_launcher.hpp"
+#include "TrinityLib/core/version_config.hpp"
+#include "TrinityLib/core/version_manager.hpp"
 #include <QCoreApplication>
 #include <QFileInfo>
-#include "version_config.h"
+#include <QProcess>
+#include <QStandardPaths>
 
-GameLauncher::GameLauncher(QObject *parent) : QObject(parent) {}
+GameLauncher::GameLauncher(QObject *parent)
+    : QObject(parent) {}
 
 bool GameLauncher::launchGame(const QString &versionName, QString &errorMsg) {
     VersionManager vm;
-   // if (!vm.isVersionValid(versionName)) {
- //       errorMsg = QString("Los datos de '%1' están incompletos o no existen.").arg(versionName);
+    // if (!vm.isVersionValid(versionName)) {
+    //       errorMsg = QString("Los datos de '%1' están incompletos o no
+    //       existen.").arg(versionName);
     //    return false;
- //   }
+    //   }
 
     QString dataDir = vm.getVersionPath(versionName);
     QString clientPath = QStandardPaths::findExecutable("mcpelauncher-client");
@@ -48,14 +50,15 @@ bool GameLauncher::launchGame(const QString &versionName, QString &errorMsg) {
 bool GameLauncher::launchTrinito(QString &errorMsg) {
     QString appDir = QCoreApplication::applicationDirPath();
     QString toolsPath = appDir + "/trinito";
-    
-    // Check if we are in flatpak, maybe the path is different or we should use flatpak-spawn?
-    // The README says: flatpak run --command=trinito com.trench.trinity.launcher
-    // But from inside the app, we might just call the binary if it's in the same dir.
-    // If running locally: ./trinito
-    
+
+    // Check if we are in flatpak, maybe the path is different or we should use
+    // flatpak-spawn? The README says: flatpak run --command=trinito
+    // com.trench.trinity.launcher But from inside the app, we might just call
+    // the binary if it's in the same dir. If running locally: ./trinito
+
     if (!QFileInfo::exists(toolsPath)) {
-        // Fallback to searching in PATH if not in app dir (e.g. installed in /usr/bin)
+        // Fallback to searching in PATH if not in app dir (e.g. installed in
+        // /usr/bin)
         toolsPath = QStandardPaths::findExecutable("trinito");
     }
 

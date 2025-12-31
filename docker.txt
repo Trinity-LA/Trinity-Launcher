@@ -1,2 +1,13 @@
-sudo docker run -it   -v "$(pwd)":/project   trinity ./build.sh
-sudo docker build -t trinity .
+# Construir imagen
+
+docker build \
+  --build-arg USER_ID=$(id -u) \
+  --build-arg GROUP_ID=$(id -g) \
+  -t trinity .
+
+# Ejecutar imagen
+
+docker run --rm -it \
+  -v "$(pwd)":/project \
+  trinity \
+  ./build.sh --clean --release
