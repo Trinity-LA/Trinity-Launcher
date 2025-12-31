@@ -379,7 +379,7 @@ void LauncherWindow::onEditConfigClicked() {
     layout->addWidget(argsEdit);
 
     auto *buttonBox =
-        new QDialogButtonBox(QDialogButtonBox::Ok | QDialogButtonBox::Cancel);
+        new QDialogButtonBox(QDialogButtonBox::Ok | QDialogButtonBox::Cancelar);
     layout->addWidget(buttonBox);
 
     connect(buttonBox, &QDialogButtonBox::accepted, &dialog, [&]() {
