@@ -1,25 +1,32 @@
+
 # 🎮 Trinity Launcher
 
-Para instalar visita nuestra pagina web hay tenemos los pasos de instalación bien explicados
-https://trinitylauncher.vercel.app/
+Para instalar y conocer los pasos detallados, visita nuestra página web oficial:  
+[https://trinitylauncher.vercel.app/](https://trinitylauncher.vercel.app/)
 
-> **Entorno gráfico para Minecraft Bedrock en Linux**
+> **Entorno gráfico modular para Minecraft Bedrock en Linux**
 
+[![License](https://img.shields.io/badge/license-BSD%203--Clause-blue.svg)](https://opensource.org/licenses/BSD-3-Clause)
+[![Qt](https://img.shields.io/badge/Qt-6-41CD52?logo=qt)](https://www.qt.io/)
+[![GitHub](https://img.shields.io/badge/GitHub-Source-181717?logo=github)](https)
+[![Flatpak](https://img.shields.io/badge/Flatpak-ready-6666FF?logo=flatpak)](https://flatpak.org/)
 
-[![Language](https://img.shields.io/badge/license-BSD-blue.svg)](src/)
-[![Qt5](https://img.shields.io/badge/Qt-6-green.svg)](https://www.qt.io/)
+**Trinity Launcher** es un entorno gráfico moderno, modular y funcional para ejecutar y gestionar **Minecraft: Bedrock Edition** en Linux. Diseñado para funcionar tanto en sistema como dentro de **Flatpak**, utiliza **Qt6** y sigue una arquitectura limpia basada en librerías separadas (`core` y `ui`).
 
-Trinity Launcher es un entorno gráfico para ejecutar y gestionar **Minecraft: Bedrock Edition** en Linux, diseñado para funcionar dentro de Flatpak. Incluye dos aplicaciones complementarias escritas en **C++ con Qt6**:
+Incluye dos aplicaciones complementarias:
 
+- **`trinchete`** 🚀 → **Launcher principal**: gestión avanzada de versiones, exportación/importación, accesos directos.
+- **`trinito`** 📦 → **Gestor de contenido**: instalación, activación/desactivación y eliminación de mods, texturas, packs de desarrollo y mundos.
 
-- **Trinchete** 🚀 — UI principal que gestiona versiones del juego, permite extraer desde APK y lanza la partida.
-- **Trinito** 📦 — Gestor de contenido que instala mods, texturas, packs de desarrollo y mundos.
-# 📋 Índice
+---
+
+## 📋 Índice
 
 - [Tecnologías](#-tecnologías)
 - [Trinchete — Launcher Multiversión](#trinchete--launcher-multiversión)
 - [Trinito — Gestor de Contenido](#trinito--gestor-de-contenido)
-- [Compilación](#compilación)
+- [Compilación e Instalación](#compilación-e-instalación)
+- [MCPelauncher Requerido](#mcpelauncher-requerido)
 - [Empaquetado en Flatpak](#empaquetado-en-flatpak)
 - [Pruebas](#pruebas)
 - [Licencia](#licencia)
@@ -30,177 +37,163 @@ Trinity Launcher es un entorno gráfico para ejecutar y gestionar **Minecraft: B
 
 ### Stack de desarrollo
 
-| Componente | Descripción | Versión |
-|:-----------|:-----------|:--------|
-| **Lenguaje** | C++ estándar | C++11+ |
-| **Framework UI** | Qt Framework para interfaz gráfica | Qt 6.9+ |
-| **Build System** | Herramienta de compilación | qmake |
-| **Compilador** | GCC (g++) para Linux | GCC 14.2+ |
-| **Empaquetado** | Contenedor de aplicaciones | Flatpak |
-| **Plataforma** | Sistema operativo destino | Linux x86_64 |
+| Componente        | Descripción                              | Versión        |
+|-------------------|------------------------------------------|----------------|
+| **Lenguaje**      | C++ estándar                             | C++17          |
+| **Framework UI**  | Qt Framework                             | Qt 6.6+        |
+| **Build System**  | CMake                                    | 3.17+          |
+| **Compilador**    | Clang                                    | 16+            |
+| **Empaquetado**   | Flatpak                                  |                |
+| **Plataforma**    | Linux (x86_64, ARM64)                    | glibc          |
 
-### Librerías Qt5 utilizadas
+### Arquitectura modular
 
-- **QtWidgets** — Componentes de UI (ventanas, botones, cuadros combinados, diálogos)
-- **QtGui** — Renderizado gráfico y manejo de eventos
-- **QtCore** — Funcionalidades fundamentales (strings, archivos, procesos)
-
-### Herramientas externas
-
-- **mcpelauncher-client** — Cliente para ejecutar Minecraft Bedrock
-- **mcpelauncher-extract** — Utilidad para extraer versiones desde APK
-- **libevdev** / **libzip** — Dependencias para Flatpak
+- **`TrinityCore`**: lógica de negocio (gestión de versiones, packs, lanzamiento, exportación).
+- **`TrinityUI`**: interfaces gráficas (ventanas, diálogos, widgets).
+- **Separación clara**: facilita mantenimiento, pruebas y reutilización.
 
 ---
 
-## Trinchete — Launcher Multiversión
+## 🎮 Trinchete — Interfaz del launcher
 
-### Funcionalidades principales
+### Barra superior
+- **+ Extraer APK**: selecciona un `.apk`, le da un nombre y lo extrae con `mcpelauncher-extract`.
+- **Importar**: restaura una versión guardada en `.tar.gz` (incluye juego y datos de `com.mojang`).
+- **Herramientas**: abre la aplicación `trinito`.
 
-- **Listado de versiones**: escanea `.../mcpelauncher/versions/` y muestra carpetas en un `QComboBox`.
-- **Extracción de APK**: abre un diálogo para seleccionar un `.apk` y darle un nombre (ej. `1.21.0`). Luego ejecuta:
-  ```
-  mcpelauncher-extract <archivo.apk> <destino>
-  ```
-- **Validación de integridad**: comprueba que exista `lib/x86_64/libminecraftpe.so` antes de lanzar.
-- **Lanzamiento del juego**: ejecuta `mcpelauncher-client -dg <ruta>` y cierra la interfaz.
-- **Acceso a herramientas**: botón "Tools" que ejecuta el binario `trinito` desde el mismo directorio (`applicationDirPath()`).
+### Panel derecho (versión seleccionada)
+- **JUGAR**: ejecuta `mcpelauncher-client -dg <ruta>` y cierra el launcher.
+- **Crear Acceso Directo**: genera un archivo `.desktop` en `~/Descargas/` para lanzar esta versión vía Flatpak.
+- **Editar Configuración**: permite añadir variables de entorno o argumentos (ej: `DRI_PRIME=1`) guardados en `trinity-config.txt`.
+- **Exportar**: guarda la versión + sus datos en un archivo comprimido (`.tar.gz`).
+- **Eliminar**: borra permanentemente la versión.
 
-## Trinito — Gestor de Contenido
+> ✅ **Interfaz moderna con tema oscuro y soporte para íconos**.
 
-### Estructura por pestañas (QTabWidget)
+---
 
+## 🧰 Trinito — Gestor de Contenido
 
+### Pestañas
 
 | Pestaña      | Tipo de selección | Destino                                      |
-|:-------------|:-----------------|:---------------------------------------------|
-| Mods         | Archivo           | `behavior_packs/`                            |
-| Texturas     | Archivo           | `resource_packs/`                            |
-| Desarrollo   | Archivo           | `development_behavior_packs/` y `development_resource_packs/` |
-| Mundos       | Carpeta           | `minecraftWorlds/`                           |
+|--------------|-------------------|---------------------------------------------|
+| **Mods**     | Archivo           | `behavior_packs/`                           |
+| **Texturas** | Archivo           | `resource_packs/`                           |
+| **Mundos**   | **Carpeta**       | `minecraftWorlds/`                          |
+| **Desarrollo**| Archivo           | `development_behavior_packs/` y `development_resource_packs/` |
 
 ### Funcionalidades clave
+- **Instalación**: botón para seleccionar archivo o carpeta.
+- **Activación/Deshabilitación**:  
+  - ✅ **Habilitado**: nombre normal.  
+  - ⬜ **Deshabilitado**: renombrado a `.disabled` y comprimido con `tar`.
+- **Gestión**: checkboxes interactivos, recarga y eliminación.
+- **Validación segura**: pregunta antes de reemplazar o eliminar.
 
-- **Copia segura**: si ya existe un elemento con el mismo nombre, pregunta antes de reemplazar.
-- **Copia recursiva**: para carpetas de mundos, usa una función `copyDirectory()` recursiva.
-- **Validación mínima**: asume que el usuario proporciona contenido válido.
-- **Rutas portables**: todo basado en `QStandardPaths::GenericDataLocation + "/mcpelauncher/games/com.mojang"`.
+---
 
-## Compilación
+## ⚙️ Compilación e Instalación
 
-Ambas aplicaciones se compilan con el flujo estándar de **Qt + qmake**.
+### Requisitos
+- CMake 3.17+
+- Clang
+- Qt6 (Core, Widgets)
 
-```bash
-sh build.sh
+### Proceso
+```sh
+# Dar permisos de ejecución
+chmod +x build.sh
+
+# Compilar e instalar en el sistema
+sudo ./build.sh
 ```
 
-## Estructura esperada del proyecto
+> 📦 Instala `trinchete` y `trinito` en `/usr/local/bin`, y registra el `.desktop` y el icono en el sistema.
 
-```
-Trinity/
-├── CMakeLists.txt                 # Build system moderno
-├── src/
-│   ├── core/                      # Lógica de negocio (sin Qt)
-│   │   ├── CMakeLists.txt
-│   │   ├── version_manager.h
-│   │   ├── version_manager.cpp
-│   │   ├── version_config.h
-│   │   ├── version_config.cpp
-│   │   ├── exporter.cpp
-│   │   ├── exporter.cpp
-│   │   ├── pack_installer.h
-│   │   ├── pack_installer.cpp
-│   │   ├── game_launcher.h
-│   │   └── game_launcher.cpp
-│   │
-│   ├── ui/                        # Interfaz gráfica (con Qt)
-│   │   ├── CMakeLists.txt
-│   │   ├── windows/
-│   │   │   ├── launcher_window.h
-│   │   │   ├── launcher_window.cpp
-│   │   │   ├── trinito_window.h
-│   │   │   └── trinito_window.cpp
-│   │   ├── dialogs/
-│   │   │   ├── extract_dialog.h
-│   │   │   └── extract_dialog.cpp
-│   │   └── widgets/
-│   │       ├── version_selector.h
-│   │       └── version_selector.cpp
-│   │
-│   └── main.cpp
-│
-├── tests/
-│   ├── CMakeLists.txt
-│   ├── test_version_manager.cpp
-│   └── test_pack_installer.cpp
-│
-├── resources/
-│   └── resources.qrc
-│
-└── build/
+Una vez instalado, ejecuta desde cualquier terminal:
+```sh
+trinchete
+trinito
 ```
 
-# 📦 Empaquetado en Flatpak
+---
 
-## Requisitos previos
+## 🔧 MCPelauncher Requerido
 
-```bash
-flatpak install flathub io.qt.qtwebengine.BaseApp//6.9
-flatpak install flathub org.kde.Platform//6.9 org.kde.Sdk//6.9
+Trinity Launcher **requiere** los binarios de `mcpelauncher-client`, `mcpelauncher-extract` y `mcpelauncher-webview`.
+
+### Recomendación
+Usa el fork mantenido en:  
+👉 [https://github.com/franckey02/mcpelauncher-patch](https://github.com/franckey02/mcpelauncher-patch)  
+(Compatible con versiones recientes de Minecraft, incluyendo **1.21.131+** y betas).
+
+### Instrucciones oficiales
+```sh
+git clone https://github.com/franckey02/mcpelauncher-patch.git
+cd mcpelauncher-patch
+git checkout qt6
+git submodule update --init --recursive
+mkdir -p build
+cd build
+
+CC=clang CXX=clang++ cmake .. \
+  -DCMAKE_BUILD_TYPE=Release \
+  -DCMAKE_POLICY_DEFAULT_CMP0074=NEW \
+  -DCMAKE_C_COMPILER=clang \
+  -DCMAKE_CXX_COMPILER=clang++ \
+  -DCMAKE_C_FLAGS="-march=x86-64 -mtune=generic -msse4.1 -msse4.2 -mpopcnt" \
+  -DCMAKE_CXX_FLAGS="-march=x86-64 -mtune=generic -msse4.1 -msse4.2 -mpopcnt" \
+  -Wno-dev
+
+make -j$(getconf _NPROCESSORS_ONLN)
+sudo make install
 ```
 
-## Construcción
+---
 
-```bash
-# Generar build y repo
+## 📦 Empaquetado en Flatpak
+
+### Requisitos
+```sh
+flatpak install flathub io.qt.qtwebengine.BaseApp//6.6
+flatpak install flathub org.kde.Platform//6.6 org.kde.Sdk//6.6
+```
+
+### Construcción
+```sh
 flatpak-builder --user --force-clean build-dir com.trench.trinity.launcher.json
 flatpak-builder --repo=repo --force-clean build-dir com.trench.trinity.launcher.json
-
-# Crear paquete
 flatpak build-bundle repo trinity.flatpak com.trench.trinity.launcher
-
-# Instalar
 flatpak install ./trinity.flatpak
 ```
 
-> **Nota:** El manifest `com.trench.trinity.launcher.json` debe incluir los módulos de `libevdev`, `libzip` y copiar el directorio `files/` a `/app`.
+> ✅ El manifest debe incluir `libevdev`, `libzip` y copiar `files/` a `/app`.
 
-# 🧪 Pruebas
+---
 
-## Desarrollo local (sin Flatpak)
+## 🧪 Pruebas
 
-```bash
-make && ./trinchete
-make && ./trinito
+### En sistema
+```sh
+trinchete
+trinito
 ```
 
-## Dentro de Flatpak
-
-**Launcher principal:**
-```bash
+### En Flatpak
+```sh
 flatpak run com.trench.trinity.launcher
-```
-
-**Gestor de contenido (desde el botón "Tools" o directamente):**
-```bash
 flatpak run --command=trinito com.trench.trinity.launcher
 ```
 
-## Rutas de datos
+### Rutas de datos (automáticas)
+- **Flatpak**: `~/.var/app/com.trench.trinity.launcher/data/mcpelauncher/`
+- **Local**: `~/.local/share/mcpelauncher/`
 
-**En Flatpak:**
-```
-~/.var/app/com.trench.trinity.launcher/data/mcpelauncher/
-```
+> Ambas usan `QStandardPaths::GenericDataLocation` → **total compatibilidad**.
 
-**En local:**
-```
-~/.local/share/mcpelauncher/
-```
+---
 
-> Ambas apps usan `QStandardPaths`, por lo que **no hay diferencias en el código** entre ambos entornos.
+## 📄 Licencia
 
-
-# 📄 Licencia
-
-Este proyecto está bajo licencia BSD. Consulte el archivo LICENSE para los términos completos de uso, modificación y redistribución.
+Trinity Launcher se distribuye bajo la **Licencia BSD de 3 cláusulas**.
