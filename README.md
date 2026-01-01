@@ -128,7 +128,7 @@ Usa el fork mantenido en:
 [https://github.com/franckey02/mcpelauncher-patch](https://github.com/franckey02/mcpelauncher-patch)  
 (Compatible con versiones recientes de Minecraft, incluyendo **1.21.131+** y betas).
 
-### Instrucciones oficiales
+### Instrucciones 
 **Dependencias:**
 - Compilador C/C++ (gcc, g++)
 - Make
@@ -172,7 +172,9 @@ Usa el fork mantenido en:
 - libzip
 - libdecor
 - libunwind
+
 Nota: si usas el dockerfile te ahorras el instalar tantas dependencias
+
 **Comandos para compilar**
 ```sh
 git clone https://github.com/franckey02/mcpelauncher-patch.git
