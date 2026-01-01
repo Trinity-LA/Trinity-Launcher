@@ -94,7 +94,8 @@ Incluye dos aplicaciones complementarias:
 ---
 
 ## ⚙️ Compilación e Instalación
-
+Puedes seguir nuestro manual en:
+https://trinity-la.github.io/
 ### Requisitos
 - CMake 3.17+
 - Clang
