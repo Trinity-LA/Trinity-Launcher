@@ -119,16 +119,61 @@ trinito
 
 ---
 
-## 🔧 MCPelauncher Requerido
+## 🔧 Mcpelauncher Requerido
 
 Trinity Launcher **requiere** los binarios de `mcpelauncher-client`, `mcpelauncher-extract` y `mcpelauncher-webview`.
 
 ### Recomendación
 Usa el fork mantenido en:  
-👉 [https://github.com/franckey02/mcpelauncher-patch](https://github.com/franckey02/mcpelauncher-patch)  
+[https://github.com/franckey02/mcpelauncher-patch](https://github.com/franckey02/mcpelauncher-patch)  
 (Compatible con versiones recientes de Minecraft, incluyendo **1.21.131+** y betas).
 
 ### Instrucciones oficiales
+**Dependencias:**
+- Compilador C/C++ (gcc, g++)
+- Make
+- Autotools (autoconf, automake, libtool)
+- Git
+- cURL
+- CMake
+- Clang/LLVM
+- Ninja
+- Qt Core
+- Qt GUI
+- Qt Widgets
+- Qt QML/Quick
+- Qt WebEngine
+- Qt SVG
+- Qt Tools
+- OpenSSL
+- TLS/SSL
+- ALSA
+- PulseAudio
+- JACK Audio
+- PipeWire
+- Sndio
+- X11 (Xlib, Xext, Xi, Xfixes, Xcursor, Xrandr, XSS, XTest)
+- OpenGL
+- EGL
+- GLES
+- Vulkan
+- DRM
+- GBM
+- Wayland
+- udev
+- evdev
+- USB (libusb)
+- D-Bus
+- Bluetooth
+- CUPS
+- IBus
+- xkbcommon
+- libpng
+- libzip
+- libdecor
+- libunwind
+Nota: si usas el dockerfile te ahorras el instalar tantas dependencias
+**Comandos para compilar**
 ```sh
 git clone https://github.com/franckey02/mcpelauncher-patch.git
 cd mcpelauncher-patch
