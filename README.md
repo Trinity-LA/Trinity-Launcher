@@ -202,8 +202,8 @@ sudo make install
 
 ### Requisitos
 ```sh
-flatpak install flathub io.qt.qtwebengine.BaseApp//6.6
-flatpak install flathub org.kde.Platform//6.6 org.kde.Sdk//6.6
+flatpak install flathub io.qt.qtwebengine.BaseApp//6.9
+flatpak install flathub org.kde.Platform//6.9 org.kde.Sdk//6.9
 ```
 
 ### Construcción
