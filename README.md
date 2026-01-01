@@ -187,8 +187,6 @@ cd build
 CC=clang CXX=clang++ cmake .. \
   -DCMAKE_BUILD_TYPE=Release \
   -DCMAKE_POLICY_DEFAULT_CMP0074=NEW \
-  -DCMAKE_C_COMPILER=clang \
-  -DCMAKE_CXX_COMPILER=clang++ \
   -DCMAKE_C_FLAGS="-march=x86-64 -mtune=generic -msse4.1 -msse4.2 -mpopcnt" \
   -DCMAKE_CXX_FLAGS="-march=x86-64 -mtune=generic -msse4.1 -msse4.2 -mpopcnt" \
   -Wno-dev
