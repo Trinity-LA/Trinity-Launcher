@@ -3,8 +3,7 @@
 
 [Español](README.md) 
 
-To install and learn the detailed steps, visit our official website:  
-[https://trinitylauncher.vercel.app/](https://trinitylauncher.vercel.app/)
+To install and learn the detailed steps, visit our [official website](https://trinitylauncher.vercel.app)  
 
 > **Modular graphic environment For Minecraft Bedrock Linux**
 
@@ -13,12 +12,12 @@ To install and learn the detailed steps, visit our official website:
 [![GitHub](https://img.shields.io/badge/GitHub-Source-181717?logo=github)](https)
 [![Flatpak](https://img.shields.io/badge/Flatpak-ready-6666FF?logo=flatpak)](https://flatpak.org/)
 
-**Trinity Launcher** is a modern graphic environment, modular and functional for running and managing **Minecraft: Bedrock Edition** on linux. Designed to work both on the system and within **Flatpak**, it uses **Qt6** and follows a clean architecture based on separate libraries (`core` and `ui`).
+**Trinity Launcher** is a modern graphic environment, modular and functional for running and managing **Minecraft: Bedrock Edition** on Linux. Designed to work both on the system and within **Flatpak**, it uses **Qt6** and follows a clean architecture based on separate libraries (`core` and `ui`).
 
 Includes two complementary applications:
 
-- **`trinchete`** 🚀 → **Principal Launcher**: Advanced version management, export/import, shortcuts.
-- **`trinito`** 📦 → **Content manager**: Instalation, activation/deactivation and removal of mods, textures, development packs, and worlds.
+- **`Trinchete`** 🚀 → **Principal Launcher**: Advanced version management, export/import, shortcuts.
+- **`Trinito`** 📦 → **Content manager**: Instalation, activation/deactivation and removal of mods, textures, development packs, and worlds.
 
 ---
 
@@ -69,7 +68,7 @@ Includes two complementary applications:
 - **Create Shortcut**: Generate a `.desktop` file in `~/Downloads/` to launch this version via Flatpak.
 - **Edit Configuration**: Allows you to add environment variables or arguments (e.g., `DRI_PRIME=1`) stored in `trinity-config.txt`.
 - **Export**: Save the version + your data in a compressed file (`.tar.gz`).
-- **Eliminar**: borra permanentemente la versión.
+- **Remove**: Remove the version permanently.
 
 > ✅ **Modern interface with dark theme and support for icons**.
 
@@ -177,7 +176,7 @@ Usa the maintained:
 - libdecor
 - libunwind
 
-Nota: If you use the dockerfile, you save yourself from having to install so many dependencies.
+Note: If you use the dockerfile, you save yourself from having to install so many dependencies.
 
 **Commands for compiling**
 ```sh
