@@ -112,8 +112,8 @@ void LauncherWindow::setupUi() {
     topBarLayout->addStretch();
 
     extractButton = new QPushButton(tr("+ Extraer APK"));
-    extractButton->setObjectName(tr("ActionButton")); // Accent color
-    topBarLayout->addWidget(tr(extractButton));
+    extractButton->setObjectName("ActionButton"); // Accent color
+    topBarLayout->addWidget(extractButton);
 
     importButton = new QPushButton(tr("Importar")); // Import button
     importButton->setObjectName("ActionButton");
@@ -379,7 +379,7 @@ void LauncherWindow::onEditConfigClicked() {
     layout->addWidget(argsEdit);
 
     auto *buttonBox =
-        new QDialogButtonBox(QDialogButtonBox::Ok | QDialogButtonBox::Cancelar);
+        new QDialogButtonBox(QDialogButtonBox::Ok | QDialogButtonBox::Cancel);
     layout->addWidget(buttonBox);
 
     connect(buttonBox, &QDialogButtonBox::accepted, &dialog, [&]() {
@@ -428,9 +428,9 @@ void LauncherWindow::onDeleteClicked() {
 
     int r = QMessageBox::warning(
         this, tr("Advertencia"),
-        QString(tr("¿Estás seguro de eliminar la versión '%1'?\nEsta acción no se puede deshacer.")
-            .arg(selectedVersion),
-        QMessageBox::Yes | QMessageBox::No, QMessageBox::No);
+        QString(tr("¿Estás seguro de eliminar la versión '%1'?\nEsta acción no se puede deshacer.").arg(selectedVersion)),
+        QMessageBox::Yes | QMessageBox::No, 
+        QMessageBox::No);
     if (r == QMessageBox::No)
         return;
 
@@ -550,6 +550,5 @@ void LauncherWindow::createDesktopShortcut() {
     // Mensaje de éxito
     QMessageBox::information(
         this, tr("Éxito"),
-        QString(tr("Acceso directo creado en la carpeta Descargas))
-            .arg(shortcutPath));
+        QString(tr("Acceso directo creado en la carpeta Descargas").arg(shortcutPath)));
 }
