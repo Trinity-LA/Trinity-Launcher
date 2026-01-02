@@ -1,8 +1,9 @@
 
 # 🎮 Trinity Launcher
 
-Para instalar y conocer los pasos detallados, visita nuestra página web oficial:  
-[https://trinitylauncher.vercel.app/](https://trinitylauncher.vercel.app/)
+[English](README_eng.md)
+
+Para instalar y conocer los pasos detallados, visita nuestra [página web oficial](https://trinitylauncher.vercel.app)
 
 > **Entorno gráfico modular para Minecraft Bedrock en Linux**
 
@@ -15,8 +16,8 @@ Para instalar y conocer los pasos detallados, visita nuestra página web oficial
 
 Incluye dos aplicaciones complementarias:
 
-- **`trinchete`** 🚀 → **Launcher principal**: gestión avanzada de versiones, exportación/importación, accesos directos.
-- **`trinito`** 📦 → **Gestor de contenido**: instalación, activación/desactivación y eliminación de mods, texturas, packs de desarrollo y mundos.
+- **`Trinchete`** 🚀 → **Launcher principal**: gestión avanzada de versiones, exportación/importación, accesos directos.
+- **`Trinito`** 📦 → **Gestor de contenido**: instalación, activación/desactivación y eliminación de mods, texturas, packs de desarrollo y mundos.
 
 ---
 
