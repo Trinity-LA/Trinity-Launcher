@@ -1,6 +1,8 @@
 
 # 🎮 Trinity Launcher
 
+[English](README_eng.md)
+
 Para instalar y conocer los pasos detallados, visita nuestra página web oficial:  
 [https://trinitylauncher.vercel.app/](https://trinitylauncher.vercel.app/)
 
