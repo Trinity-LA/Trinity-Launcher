@@ -19,7 +19,7 @@
 
 TrinitoWindow::TrinitoWindow(QWidget *parent)
     : QWidget(parent) {
-    setWindowTitle(" Gestor de Contenido para Bedrock");
+    setWindowTitle(tr(" Gestor de Contenido para Bedrock"));
     resize(820, 500);
 
     // Global Dark Theme (Violet Accent)
@@ -54,10 +54,10 @@ TrinitoWindow::TrinitoWindow(QWidget *parent)
     // Pestañas de instalación (como antes)
     tabs->addTab(createPackTab("behavior_packs", "Behavior Pack (mods)"),
                  "Mods");
-    tabs->addTab(createPackTab("resource_packs", "Resource Pack (texturas)"),
-                 "Texturas");
-    tabs->addTab(createDevTab(), "Desarrollo");
-    tabs->addTab(createWorldTab(), "Mundos");
+    tabs->addTab(createPackTab("resource_packs", "Resource Pack"),
+                 tr("Texturas"));
+    tabs->addTab(createDevTab(), tr("Desarrollo"));
+    tabs->addTab(createWorldTab(), tr("Mundos"));
 }
 
 QWidget *TrinitoWindow::createManageTab(const QString &packType,
@@ -65,7 +65,7 @@ QWidget *TrinitoWindow::createManageTab(const QString &packType,
     auto *widget = new QWidget();
     auto *layout = new QVBoxLayout(widget);
 
-    QLabel *label = new QLabel("Lista de " + displayName + " instalados:");
+    QLabel *label = new QLabel(tr("Lista de ") + displayName + tr(" instalados:"));
     layout->addWidget(label);
 
     QListWidget *listWidget = new QListWidget();
@@ -85,7 +85,7 @@ QWidget *TrinitoWindow::createManageTab(const QString &packType,
     loadPacks(packType, listWidget);
 
     // Botón para recargar la lista
-    QPushButton *refreshButton = new QPushButton("Recargar Lista");
+    QPushButton *refreshButton = new QPushButton(tr("Recargar Lista"));
     connect(refreshButton, &QPushButton::clicked, this,
             [=]() { loadPacks(packType, listWidget); });
     layout->addWidget(refreshButton);
@@ -271,16 +271,16 @@ QWidget *TrinitoWindow::createPackTab(const QString &targetSubdir,
     layout->addWidget(titleLabel);
 
     // Sección de instalación
-    QLabel *installLabel = new QLabel("Instalar nuevo " + labelText + ":");
+    QLabel *installLabel = new QLabel(tr("Instalar nuevo ") + labelText + ":");
     layout->addWidget(installLabel);
 
-    auto *installButton = new QPushButton("Seleccionar archivo...");
+    auto *installButton = new QPushButton(tr("Seleccionar archivo..."));
     layout->addWidget(installButton);
 
     connect(installButton, &QPushButton::clicked, this, [=]() {
         QString path = QFileDialog::getOpenFileName(
-            this, "Seleccionar pack", QDir::homePath(),
-            "Archivos compatibles (*.zip *.mcpack);;Todos los archivos (*)");
+            this, tr("Seleccionar pack"), QDir::homePath(),
+            tr("Archivos compatibles (*.zip *.mcpack);;Todos los archivos (*)"));
         if (!path.isEmpty()) {
             installItem(path, targetSubdir);
         }
@@ -289,7 +289,7 @@ QWidget *TrinitoWindow::createPackTab(const QString &targetSubdir,
     layout->addSpacing(15);
 
     // Sección de gestión
-    QLabel *manageLabel = new QLabel("Gestionar " + labelText + " instalados:");
+    QLabel *manageLabel = new QLabel(tr("Gestionar ") + labelText + tr(" instalados:"));
     layout->addWidget(manageLabel);
 
     QListWidget *listWidget = new QListWidget();
@@ -309,25 +309,24 @@ QWidget *TrinitoWindow::createPackTab(const QString &targetSubdir,
     loadPacks(targetSubdir, listWidget);
 
     // Botón para recargar la lista
-    QPushButton *refreshButton = new QPushButton("Recargar Lista");
+    QPushButton *refreshButton = new QPushButton(tr("Recargar Lista"));
     connect(refreshButton, &QPushButton::clicked, this,
             [=]() { loadPacks(targetSubdir, listWidget); });
     layout->addWidget(refreshButton);
 
     // Botón para eliminar seleccionado
-    QPushButton *deleteButton = new QPushButton("Eliminar Seleccionado");
+    QPushButton *deleteButton = new QPushButton(tr("Eliminar Seleccionado"));
     connect(deleteButton, &QPushButton::clicked, this, [=]() {
         if (listWidget->selectedItems().isEmpty()) {
-            QMessageBox::warning(this, "Advertencia",
-                                 "No hay ningún elemento seleccionado.");
+            QMessageBox::warning(this, tr("Advertencia"),
+                                 tr("No hay ningún elemento seleccionado."));
             return;
         }
 
         QString selectedEntry = listWidget->selectedItems().first()->text();
         int r = QMessageBox::warning(
-            this, "Advertencia",
-            QString("¿Estás seguro de eliminar '%1'?\nEsta acción no se puede "
-                    "deshacer.")
+            this, tr("Advertencia"),
+            QString(tr("¿Estás seguro de eliminar '%1'?\nEsta acción no se puede deshacer."))
                 .arg(selectedEntry),
             QMessageBox::Yes | QMessageBox::No, QMessageBox::No);
         if (r == QMessageBox::No)
@@ -350,8 +349,8 @@ QWidget *TrinitoWindow::createPackTab(const QString &targetSubdir,
 
         if (success) {
             QMessageBox::information(
-                this, "Éxito",
-                QString("'%1' eliminado correctamente.").arg(selectedEntry));
+                this, tr("Éxito"),
+                QString(tr("'%1' eliminado correctamente.")).arg(selectedEntry));
             // Recargar la lista
             loadPacks(targetSubdir, listWidget);
         } else {
@@ -379,11 +378,11 @@ QWidget *TrinitoWindow::createDevTab() {
 
     // Botón para Development Behavior Pack
     auto *behButton =
-        new QPushButton("Añadir Development Behavior Pack (archivo)...");
+        new QPushButton(tr("Añadir Development Behavior Pack (archivo)..."));
     connect(behButton, &QPushButton::clicked, this, [=]() {
         QString path = QFileDialog::getOpenFileName(
-            this, "Añadir Development Behavior Pack", QDir::homePath(),
-            "Archivos compatibles (*.zip *.mcpack);;Todos los archivos (*)");
+            this, tr("Añadir Development Behavior Pack"), QDir::homePath(),
+            tr("Archivos compatibles (*.zip *.mcpack);;Todos los archivos (*)"));
         if (!path.isEmpty()) {
             installItem(path, "development_behavior_packs");
         }
@@ -392,11 +391,11 @@ QWidget *TrinitoWindow::createDevTab() {
 
     // Botón para Development Resource Pack
     auto *resButton =
-        new QPushButton("Añadir Development Resource Pack (archivo)...");
+        new QPushButton(tr("Añadir Development Resource Pack (archivo)..."));
     connect(resButton, &QPushButton::clicked, this, [=]() {
         QString path = QFileDialog::getOpenFileName(
-            this, "Añadir Development Resource Pack", QDir::homePath(),
-            "Archivos compatibles (*.zip *.mcpack);;Todos los archivos (*)");
+            this, tr("Añadir Development Resource Pack"), QDir::homePath(),
+            tr("Archivos compatibles (*.zip *.mcpack);;Todos los archivos (*)"));
         if (!path.isEmpty()) {
             installItem(path, "development_resource_packs");
         }
@@ -408,7 +407,7 @@ QWidget *TrinitoWindow::createDevTab() {
     layout->addSpacing(15);
 
     // Sección de gestión
-    QLabel *manageLabel = new QLabel("Gestionar Development Packs:");
+    QLabel *manageLabel = new QLabel(tr("Gestionar Development Packs:"));
     manageLabel->setStyleSheet("font-weight: bold; font-size: 14px;");
     layout->addWidget(manageLabel);
 
@@ -456,9 +455,8 @@ QWidget *TrinitoWindow::createDevTab() {
 
         QString selectedEntry = behListWidget->selectedItems().first()->text();
         int r = QMessageBox::warning(
-            this, "Advertencia",
-            QString("¿Estás seguro de eliminar el Behavior Pack '%1'?\nEsta "
-                    "acción no se puede deshacer.")
+            this, tr("Advertencia"),
+            QString(tr("¿Estás seguro de eliminar el Behavior Pack '%1'?\nEsta acción no se puede deshacer."))
                 .arg(selectedEntry),
             QMessageBox::Yes | QMessageBox::No, QMessageBox::No);
         if (r == QMessageBox::No)
@@ -481,15 +479,15 @@ QWidget *TrinitoWindow::createDevTab() {
 
         if (success) {
             QMessageBox::information(
-                this, "Éxito",
-                QString("Behavior Pack '%1' eliminado correctamente.")
+                this, tr("Éxito"),
+                QString(tr("eliminado correctamente."))
                     .arg(selectedEntry));
             // Recargar la lista
             loadPacks("development_behavior_packs", behListWidget);
         } else {
             QMessageBox::critical(
                 this, "Error",
-                QString("No se pudo eliminar el Behavior Pack '%1'.")
+                QString(tr("No se pudo eliminar"))
                     .arg(selectedEntry));
         }
     });
@@ -497,7 +495,7 @@ QWidget *TrinitoWindow::createDevTab() {
 
     // Botón para eliminar un pack seleccionado en la lista de Resource Packs
     QPushButton *deleteResButton =
-        new QPushButton("Eliminar Resource Pack Seleccionado");
+        new QPushButton(tr("Eliminar Resource Pack Seleccionado"));
     connect(deleteResButton, &QPushButton::clicked, this, [=]() {
         if (resListWidget->selectedItems().isEmpty()) {
             QMessageBox::warning(this, "Advertencia",
@@ -507,9 +505,8 @@ QWidget *TrinitoWindow::createDevTab() {
 
         QString selectedEntry = resListWidget->selectedItems().first()->text();
         int r = QMessageBox::warning(
-            this, "Advertencia",
-            QString("¿Estás seguro de eliminar el Resource Pack '%1'?\nEsta "
-                    "acción no se puede deshacer.")
+            this, tr("Advertencia"),
+            QString(tr("¿Estás seguro de eliminar el Resource Pack '%1'?\nEsta acción no se puede deshacer."))
                 .arg(selectedEntry),
             QMessageBox::Yes | QMessageBox::No, QMessageBox::No);
         if (r == QMessageBox::No)
@@ -532,8 +529,8 @@ QWidget *TrinitoWindow::createDevTab() {
 
         if (success) {
             QMessageBox::information(
-                this, "Éxito",
-                QString("Resource Pack '%1' eliminado correctamente.")
+                this, tr("Éxito"),
+                QString(tr("eliminado correctamente."))
                     .arg(selectedEntry));
             // Recargar la lista
             loadPacks("development_resource_packs", resListWidget);
@@ -556,17 +553,17 @@ QWidget *TrinitoWindow::createWorldTab() {
     auto *layout = new QVBoxLayout(widget);
 
     // Título
-    QLabel *titleLabel = new QLabel("Mundos Guardados");
+    QLabel *titleLabel = new QLabel(tr("Mundos Guardados"));
     titleLabel->setStyleSheet("font-weight: bold; font-size: 16px;");
     layout->addWidget(titleLabel);
 
     // Botón para seleccionar carpeta del mundo
-    auto *button = new QPushButton("Añadir carpeta del mundo...");
+    auto *button = new QPushButton(tr("Añadir carpeta del mundo..."));
     layout->addWidget(button);
 
     connect(button, &QPushButton::clicked, this, [=]() {
         QString path = QFileDialog::getExistingDirectory(
-            this, "Seleccionar carpeta del mundo", QDir::homePath());
+            this, tr("Seleccionar carpeta del mundo"), QDir::homePath());
         if (!path.isEmpty()) {
             installItem(path, "minecraftWorlds");
         }
@@ -575,7 +572,7 @@ QWidget *TrinitoWindow::createWorldTab() {
     layout->addSpacing(15);
 
     // Sección de gestión
-    QLabel *manageLabel = new QLabel("Gestionar Mundos:");
+    QLabel *manageLabel = new QLabel(tr("Gestionar Mundos:"));
     manageLabel->setStyleSheet("font-weight: bold; font-size: 14px;");
     layout->addWidget(manageLabel);
 
@@ -589,13 +586,13 @@ QWidget *TrinitoWindow::createWorldTab() {
     loadPacks("minecraftWorlds", listWidget);
 
     // Botón para recargar la lista
-    QPushButton *refreshButton = new QPushButton("Recargar Lista");
+    QPushButton *refreshButton = new QPushButton(tr("Recargar Lista"));
     connect(refreshButton, &QPushButton::clicked, this,
             [=]() { loadPacks("minecraftWorlds", listWidget); });
     layout->addWidget(refreshButton);
 
     // Botón para borrar un mundo seleccionado
-    QPushButton *deleteButton = new QPushButton("Borrar Mundo Seleccionado");
+    QPushButton *deleteButton = new QPushButton(tr("Borrar Mundo Seleccionado"));
     connect(deleteButton, &QPushButton::clicked, this, [=]() {
         if (listWidget->selectedItems().isEmpty()) {
             QMessageBox::warning(this, "Advertencia",
@@ -605,9 +602,8 @@ QWidget *TrinitoWindow::createWorldTab() {
 
         QString selectedWorld = listWidget->selectedItems().first()->text();
         int r = QMessageBox::warning(
-            this, "Advertencia",
-            QString("¿Estás seguro de eliminar el mundo '%1'?\nEsta acción no "
-                    "se puede deshacer.")
+            this, tr("Advertencia"),
+            QString(tr("¿Estás seguro de eliminar el mundo '%1'?\nEsta acción no 0se puede deshacer."))
                 .arg(selectedWorld),
             QMessageBox::Yes | QMessageBox::No, QMessageBox::No);
         if (r == QMessageBox::No)
@@ -620,8 +616,8 @@ QWidget *TrinitoWindow::createWorldTab() {
         QString worldPath = baseDataDir + "/minecraftWorlds/" + selectedWorld;
 
         if (QDir(worldPath).removeRecursively()) {
-            QMessageBox::information(this, "Éxito",
-                                     "Mundo eliminado correctamente.");
+            QMessageBox::information(this, tr("Éxito"),
+                                     tr("Mundo eliminado correctamente."));
             // Actualizar la lista
             loadPacks("minecraftWorlds", listWidget);
         } else {
@@ -640,8 +636,8 @@ void TrinitoWindow::installItem(const QString &sourcePath,
 
     if (installer.itemExists(sourcePath, targetSubdir)) {
         int r = QMessageBox::warning(
-            this, "Advertencia",
-            QString("Ya existe un elemento llamado:\n%1\n\n¿Reemplazarlo?")
+            this, tr("Advertencia"),
+            QString(tr("Ya existe un elemento llamado:\n%1\n\n¿Reemplazarlo?"))
                 .arg(installer.getTargetName(sourcePath)),
             QMessageBox::Yes | QMessageBox::No, QMessageBox::No);
         if (r == QMessageBox::No)
@@ -656,8 +652,8 @@ void TrinitoWindow::installItem(const QString &sourcePath,
     // here after user confirmation.
 
     if (installer.installItem(sourcePath, targetSubdir, true, errorMsg)) {
-        QMessageBox::information(this, "Éxito",
-                                 QString("¡%1 instalado correctamente en:\n%2")
+        QMessageBox::information(this, tr("Éxito"),
+                                 QString(tr("¡%1 instalado correctamente en:\n%2"))
                                      .arg(installer.getTargetName(sourcePath))
                                      .arg(targetSubdir));
     } else {

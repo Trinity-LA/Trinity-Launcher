@@ -56,7 +56,7 @@ LauncherWindow::LauncherWindow(QWidget *parent)
 }
 
 void LauncherWindow::setupUi() {
-    setWindowTitle("Trinity Launcher - Minecraft Bedrock");
+    setWindowTitle(tr("Trinity Launcher - Minecraft Bedrock"));
     resize(960, 560);
     setMinimumSize(960, 560); // Tamaño mínimo
 
@@ -105,21 +105,21 @@ void LauncherWindow::setupUi() {
         "border-image: url(:/branding/logo); border-radius: 60px;");
     topBarLayout->addWidget(logoLabel);
 
-    QLabel *titleLabel = new QLabel("Trinity Launcher");
+    QLabel *titleLabel = new QLabel(tr("Trinity Launcher"));
     titleLabel->setObjectName("Title");
     topBarLayout->addWidget(titleLabel);
 
     topBarLayout->addStretch();
 
-    extractButton = new QPushButton("+ Extraer APK");
-    extractButton->setObjectName("ActionButton"); // Accent color
-    topBarLayout->addWidget(extractButton);
+    extractButton = new QPushButton(tr("+ Extraer APK"));
+    extractButton->setObjectName(tr("ActionButton")); // Accent color
+    topBarLayout->addWidget(tr(extractButton));
 
-    importButton = new QPushButton("Importar"); // Import button
+    importButton = new QPushButton(tr("Importar")); // Import button
     importButton->setObjectName("ActionButton");
     topBarLayout->addWidget(importButton);
 
-    toolsButton = new QPushButton("Herramientas");
+    toolsButton = new QPushButton(tr("Herramientas"));
     toolsButton->setObjectName("ActionButton"); // Apply accent style
     topBarLayout->addWidget(toolsButton);
 
@@ -152,7 +152,7 @@ void LauncherWindow::setupUi() {
     panelLayout->addWidget(versionIconLabel, 0, Qt::AlignCenter);
 
     // Version Info
-    versionNameLabel = new QLabel("Selecciona una versión");
+    versionNameLabel = new QLabel(tr("Selecciona una versión"));
     versionNameLabel->setObjectName("VersionName");
     versionNameLabel->setAlignment(Qt::AlignCenter);
     panelLayout->addWidget(versionNameLabel);
@@ -165,26 +165,26 @@ void LauncherWindow::setupUi() {
     panelLayout->addSpacing(20);
 
     // Actions
-    playButton = new QPushButton("JUGAR");
+    playButton = new QPushButton(tr("JUGAR"));
     playButton->setObjectName("ActionButton");
     playButton->setMinimumHeight(35);
     playButton->setEnabled(false);
     panelLayout->addWidget(playButton);
 
     // Botón "Crear Acceso Directo" (debajo de JUGAR)
-    shortcutButton = new QPushButton("Crear Acceso Directo");
+    shortcutButton = new QPushButton(tr("Crear Acceso Directo"));
     shortcutButton->setObjectName("ActionButton");
     shortcutButton->setMinimumHeight(35);
     panelLayout->addWidget(shortcutButton);
 
-    editButton = new QPushButton("Editar Configuración");
+    editButton = new QPushButton(tr("Editar Configuración"));
     editButton->setObjectName("ActionButton");
     panelLayout->addWidget(editButton);
 
     QHBoxLayout *secondaryActions = new QHBoxLayout();
-    exportButton = new QPushButton("Exportar");
+    exportButton = new QPushButton(tr("Exportar"));
     exportButton->setObjectName("ActionButton");
-    deleteButton = new QPushButton("Eliminar");
+    deleteButton = new QPushButton(tr("Eliminar"));
     deleteButton->setObjectName("ActionButton");
     secondaryActions->addWidget(exportButton);
     secondaryActions->addWidget(deleteButton);
@@ -196,7 +196,7 @@ void LauncherWindow::setupUi() {
     rootLayout->addLayout(contentLayout);
 
     // --- Status Bar ---
-    statusLabel = new QLabel("Listo");
+    statusLabel = new QLabel(tr("Listo"));
     statusLabel->setObjectName("Status");
     rootLayout->addWidget(statusLabel);
 }
@@ -252,10 +252,10 @@ void LauncherWindow::onVersionSelected(QListWidgetItem *item) {
 
 void LauncherWindow::updateContextPanel(const QString &versionName) {
     if (versionName.isEmpty()) {
-        versionNameLabel->setText("Sin versiones");
+        versionNameLabel->setText(tr("Sin versiones"));
         versionTypeLabel->setText("");
         playButton->setEnabled(false);
-        statusLabel->setText("No hay versiones instaladas.");
+        statusLabel->setText(tr("No hay versiones instaladas."));
         return;
     }
 
@@ -266,7 +266,7 @@ void LauncherWindow::updateContextPanel(const QString &versionName) {
     // Update status bar with size info (mockup)
     VersionManager vm;
     QString path = vm.getVersionPath(versionName);
-    statusLabel->setText(QString("Versión seleccionada: %1 | Ruta: %2")
+    statusLabel->setText(QString(tr("Versión seleccionada: %1 | Ruta: %2"))
                              .arg(versionName)
                              .arg(path));
 }
@@ -283,8 +283,8 @@ void LauncherWindow::showExtractDialog() {
     VersionManager vm;
     if (vm.getInstalledVersions().contains(versionName)) {
         int r = QMessageBox::warning(
-            this, "Advertencia",
-            QString("Ya existe una versión llamada '%1'.\n¿Reemplazarla?")
+            this, tr("Advertencia"),
+            QString(tr("Ya existe una versión llamada '%1'.\n¿Reemplazarla?"))
                 .arg(versionName),
             QMessageBox::Yes | QMessageBox::No, QMessageBox::No);
         if (r == QMessageBox::No)
@@ -293,11 +293,11 @@ void LauncherWindow::showExtractDialog() {
 
     // Crear diálogo de progreso
     QDialog progressDlg(this);
-    progressDlg.setWindowTitle("Extrayendo APK...");
+    progressDlg.setWindowTitle(tr("Extrayendo APK..."));
     progressDlg.setFixedSize(300, 100);
 
     auto *layout = new QVBoxLayout(&progressDlg);
-    QLabel *label = new QLabel("Extrayendo versión...");
+    QLabel *label = new QLabel(tr("Extrayendo versión..."));
     QProgressBar *progressBar = new QProgressBar();
     progressBar->setRange(0, 0); // Indefinido
     layout->addWidget(label);
@@ -321,13 +321,13 @@ void LauncherWindow::showExtractDialog() {
     progressDlg.accept();
 
     if (!success) {
-        QMessageBox::critical(this, "Error",
-                              "Falló la extracción:\n" + errorMsg);
+        QMessageBox::critical(this, tr("Error"),
+                              tr("Falló la extracción:\n") + errorMsg);
         return;
     }
 
-    QMessageBox::information(this, "Éxito", "¡Versión extraída correctamente!");
-    loadInstalledVersions(); // Recargar lista
+    QMessageBox::information(this, tr("Éxito"), tr("¡Versión extraída correctamente!"));
+    loadInstalledVersions(); // Recargar lista.
 }
 
 void LauncherWindow::launchGame() {
@@ -354,20 +354,20 @@ void LauncherWindow::launchTools() {
 
 void LauncherWindow::onEditConfigClicked() {
     if (versionList->selectedItems().isEmpty()) {
-        QMessageBox::warning(this, "Advertencia",
-                             "No hay ninguna versión seleccionada.");
+        QMessageBox::warning(this,tr( "Advertencia"),
+                             tr("No hay ninguna versión seleccionada."));
         return;
     }
     QString selectedVersion = versionList->selectedItems().first()->text();
 
     // Diálogo simple de edición
     QDialog dialog(this);
-    dialog.setWindowTitle("Editar configuración de " + selectedVersion);
+    dialog.setWindowTitle(tr("Editar configuración de ") + selectedVersion);
     dialog.resize(500, 300);
 
     auto *layout = new QVBoxLayout(&dialog);
     QLabel *label =
-        new QLabel("Parámetros de ejecución (antes de mcpelauncher-client):");
+        new QLabel(tr("Parámetros de ejecución (antes de mcpelauncher-client):"));
     layout->addWidget(label);
 
     // Obtener argumentos actuales
@@ -375,7 +375,7 @@ void LauncherWindow::onEditConfigClicked() {
     QString currentArgs = config.getLaunchArgs();
 
     QLineEdit *argsEdit = new QLineEdit(currentArgs);
-    argsEdit->setPlaceholderText("Ej: DRI_PRIME=1 vblank_mode=0");
+    argsEdit->setPlaceholderText("Ej: DRI_PRIME=1 vblank_mode=0 MESA_LOADER_DRIVER_OVERRIDE=zink");
     layout->addWidget(argsEdit);
 
     auto *buttonBox =
@@ -391,11 +391,11 @@ void LauncherWindow::onEditConfigClicked() {
         QString errorMsg;
         if (!vm.editVersion(selectedVersion, newArgs, errorMsg)) {
             QMessageBox::critical(&dialog, "Error",
-                                  "No se pudo guardar la configuración:\n" +
+                                  tr("No se pudo guardar la configuración:\n") +
                                       errorMsg);
         } else {
-            QMessageBox::information(&dialog, "Éxito",
-                                     "Configuración guardada.");
+            QMessageBox::information(&dialog, tr("Éxito"),
+                                     tr("Configuración guardada."));
             dialog.accept();
         }
     });
@@ -403,14 +403,14 @@ void LauncherWindow::onEditConfigClicked() {
 
     if (dialog.exec() == QDialog::Accepted) {
         statusLabel->setText(
-            QString("Configuración de %1 actualizada.").arg(selectedVersion));
+            QString(tr("Configuración de %1 actualizada.")).arg(selectedVersion));
     }
 }
 
 void LauncherWindow::onExportClicked() {
     if (versionList->selectedItems().isEmpty()) {
-        QMessageBox::warning(this, "Advertencia",
-                             "No hay ninguna versión seleccionada.");
+        QMessageBox::warning(this, tr("Advertencia"),
+                             tr("No hay ninguna versión seleccionada."));
         return;
     }
     QString selectedVersion = versionList->selectedItems().first()->text();
@@ -420,16 +420,15 @@ void LauncherWindow::onExportClicked() {
 
 void LauncherWindow::onDeleteClicked() {
     if (versionList->selectedItems().isEmpty()) {
-        QMessageBox::warning(this, "Advertencia",
-                             "No hay ninguna versión seleccionada.");
+        QMessageBox::warning(this, tr("Advertencia"),
+                             tr("No hay ninguna versión seleccionada."));
         return;
     }
     QString selectedVersion = versionList->selectedItems().first()->text();
 
     int r = QMessageBox::warning(
-        this, "Advertencia",
-        QString("¿Estás seguro de eliminar la versión '%1'?\nEsta acción no se "
-                "puede deshacer.")
+        this, tr("Advertencia"),
+        QString(tr("¿Estás seguro de eliminar la versión '%1'?\nEsta acción no se puede deshacer.")
             .arg(selectedVersion),
         QMessageBox::Yes | QMessageBox::No, QMessageBox::No);
     if (r == QMessageBox::No)
@@ -439,14 +438,14 @@ void LauncherWindow::onDeleteClicked() {
     VersionManager vm;
     QString errorMsg;
     if (!vm.deleteVersion(selectedVersion, errorMsg)) {
-        QMessageBox::critical(this, "Error",
-                              "No se pudo eliminar la versión:\n" + errorMsg);
+        QMessageBox::critical(this, tr("Error"),
+                              tr("No se pudo eliminar la versión:\n") + errorMsg);
         return;
     }
 
-    QMessageBox::information(this, "Éxito", "Versión eliminada correctamente.");
+    QMessageBox::information(this, tr("Éxito"),tr("Versión eliminada correctamente."));
     loadInstalledVersions(); // Recargar lista
-    statusLabel->setText(QString("Versión %1 eliminada.").arg(selectedVersion));
+    statusLabel->setText(QString(tr("Versión %1 eliminada.")).arg(selectedVersion));
 }
 
 bool LauncherWindow::copyDirectory(const QString &srcPath,
@@ -477,8 +476,8 @@ void LauncherWindow::onImportClicked() { exporter->importVersion(); }
 
 void LauncherWindow::createDesktopShortcut() {
     if (versionList->selectedItems().isEmpty()) {
-        QMessageBox::warning(this, "Advertencia",
-                             "No hay ninguna versión seleccionada.");
+        QMessageBox::warning(this, tr("Advertencia"),
+                             tr("No hay ninguna versión seleccionada."));
         return;
     }
 
@@ -491,7 +490,7 @@ void LauncherWindow::createDesktopShortcut() {
     if (!vm.isVersionValid(selectedVersion)) {
         QMessageBox::critical(
             this, "Error",
-            QString("La versión '%1' no es válida o no está completa.")
+            QString(tr("La versión '%1' no es válida o no está completa."))
                 .arg(selectedVersion));
         return;
     }
@@ -505,8 +504,8 @@ void LauncherWindow::createDesktopShortcut() {
     // Verificar si ya existe
     if (QFile::exists(shortcutPath)) {
         int r = QMessageBox::question(
-            this, "Confirmar",
-            QString("Ya existe un acceso directo para '%1'.\n¿Reemplazarlo?")
+            this, tr("Confirmar"),
+            QString(tr("Ya existe un acceso directo para '%1'.\n¿Reemplazarlo?"))
                 .arg(selectedVersion),
             QMessageBox::Yes | QMessageBox::No, QMessageBox::No);
         if (r == QMessageBox::No)
@@ -539,7 +538,7 @@ void LauncherWindow::createDesktopShortcut() {
     if (!desktopFile.open(QIODevice::WriteOnly | QIODevice::Text)) {
         QMessageBox::critical(
             this, "Error",
-            "No se pudo crear el archivo de acceso directo en:\n" +
+            tr("No se pudo crear el archivo de acceso directo en:\n") +
                 shortcutPath);
         return;
     }
@@ -550,8 +549,7 @@ void LauncherWindow::createDesktopShortcut() {
 
     // Mensaje de éxito
     QMessageBox::information(
-        this, "Éxito",
-        QString("Acceso directo creado en la carpeta Descargas:\n%1\n(Usando "
-                "icono genérico de juegos)")
+        this, tr("Éxito"),
+        QString(tr("Acceso directo creado en la carpeta Descargas))
             .arg(shortcutPath));
 }
