@@ -16,8 +16,8 @@ Para instalar y conocer los pasos detallados, visita nuestra [página web oficia
 
 Incluye dos aplicaciones complementarias:
 
-- **`trinchete`** 🚀 → **Launcher principal**: gestión avanzada de versiones, exportación/importación, accesos directos.
-- **`trinito`** 📦 → **Gestor de contenido**: instalación, activación/desactivación y eliminación de mods, texturas, packs de desarrollo y mundos.
+- **`Trinchete`** 🚀 → **Launcher principal**: gestión avanzada de versiones, exportación/importación, accesos directos.
+- **`Trinito`** 📦 → **Gestor de contenido**: instalación, activación/desactivación y eliminación de mods, texturas, packs de desarrollo y mundos.
 
 ---
 
