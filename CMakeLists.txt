@@ -16,13 +16,8 @@ find_package(Qt6 COMPONENTS Core Widgets LinguistTools REQUIRED)
 
 
 set(TS_FILES
-    "i18n/trinity_es.ts"
-    "i18n/trinity_en.ts"
-)
-
-qt_add_translations(Trinity
-    TS_FILES ${TS_FILES}
-    RESOURCE_PREFIX "/i18n"
+    "${CMAKE_CURRENT_SOURCE_DIR}/i18n/trinity_es.ts"
+    "${CMAKE_CURRENT_SOURCE_DIR}/i18n/trinity_en.ts"
 )
 
 
