@@ -22,14 +22,15 @@ Includes two complementary applications:
 
 ## 📋 Table of Contents
 
-- [Technologies](#Technologies)
-- [Trinchete — Multiversion Launcher](#Trinchete--Multiversion-Launcher)
-- [Trinito — Content manager](#Trinito--Content-Manager)
-- [Compilation and Installation](#Compilation-and-Instalation)
-- [MCPElauncher required](#MCPElauncher-required)
-- [Packaging in Flatpak](#Packaging-in-Flatpak)
-- [Testing](#Testing)
-- [License](#License)
+- [Technologies](#-technologies)
+- [Trinchete — Launcher UI](#-trinchete--launcher-ui)
+- [Trinchete — Multiversion Launcher](#-trinito--multiversion-launcher)
+- [Trinito — Content manager](#-trinito--content-manager)
+- [Compilation and Installation](#-compilation-and-installation)
+- [MCPElauncher required](#-mcpelauncher-required)
+- [Packaging in Flatpak](#-packaging-in-flatpak)
+- [Testing](#-testing)
+- [License](#-license)
 
 ---
 
