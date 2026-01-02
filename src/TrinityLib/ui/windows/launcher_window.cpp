@@ -56,7 +56,7 @@ LauncherWindow::LauncherWindow(QWidget *parent)
 }
 
 void LauncherWindow::setupUi() {
-    setWindowTitle(tr("Trinity Launcher - Minecraft Bedrock"));
+    setWindowTitle("Trinity Launcher - Minecraft Bedrock");
     resize(960, 560);
     setMinimumSize(960, 560); // Tamaño mínimo
 
