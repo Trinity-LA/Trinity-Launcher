@@ -20,6 +20,12 @@ find_package(
 # We define which language use
 qt_standard_project_setup(I18N_TRANSLATED_LANGUAGES en)
 
+set(TRINITY_SRC_DIR "${CMAKE_CURRENT_SOURCE_DIR}/src")
+set(TRINITY_INC_DIR "${CMAKE_CURRENT_SOURCE_DIR}/include")
+
+file(GLOB_RECURSE PROJECT_TRANSLATABLE_FILES "${TRINITY_SRC_DIR}/*.cpp"
+     "${TRINITY_INC_DIR}/*.hpp")
+
 add_subdirectory(src/TrinityLib/core)
 add_subdirectory(src/TrinityLib/ui)
 

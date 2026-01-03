@@ -2,17 +2,17 @@
 #include "TrinityLib/core/pack_installer.hpp"
 
 #include <QApplication>
-#include <QCheckBox> // Añadir
+#include <QCheckBox>
 #include <QDir>
 #include <QFile>
 #include <QFileDialog>
 #include <QFileInfo>
 #include <QLabel>
-#include <QListWidget> // Añadir
+#include <QListWidget>
 #include <QMessageBox>
 #include <QProcess>
 #include <QPushButton>
-#include <QStandardItemModel> // Añadir
+#include <QStandardItemModel>
 #include <QStandardPaths>
 #include <QTabWidget>
 #include <QVBoxLayout>
@@ -87,7 +87,7 @@ QWidget *TrinitoWindow::createManageTab(const QString &packType,
     // Botón para recargar la lista
     QPushButton *refreshButton = new QPushButton(tr("Recargar Lista"));
     connect(refreshButton, &QPushButton::clicked, this,
-            [=]() { loadPacks(packType, listWidget); });
+            [=, this]() { loadPacks(packType, listWidget); });
     layout->addWidget(refreshButton);
 
     return widget;
@@ -132,7 +132,7 @@ void TrinitoWindow::loadPacks(const QString &packType,
     // Conectar la señal itemChanged del QListWidget para detectar cambios en
     // los checkboxes
     connect(listWidget, &QListWidget::itemChanged, this,
-            [=](QListWidgetItem *changedItem) {
+            [=, this](QListWidgetItem *changedItem) {
                 // Obtener el estado actual del checkbox
                 Qt::CheckState state = changedItem->checkState();
                 bool newState = (state == Qt::Checked);
@@ -277,7 +277,7 @@ QWidget *TrinitoWindow::createPackTab(const QString &targetSubdir,
     auto *installButton = new QPushButton(tr("Seleccionar archivo..."));
     layout->addWidget(installButton);
 
-    connect(installButton, &QPushButton::clicked, this, [=]() {
+    connect(installButton, &QPushButton::clicked, this, [=, this]() {
         QString path = QFileDialog::getOpenFileName(
             this, tr("Seleccionar pack"), QDir::homePath(),
             tr("Archivos compatibles (*.zip *.mcpack);;Todos los archivos "
@@ -313,12 +313,12 @@ QWidget *TrinitoWindow::createPackTab(const QString &targetSubdir,
     // Botón para recargar la lista
     QPushButton *refreshButton = new QPushButton(tr("Recargar Lista"));
     connect(refreshButton, &QPushButton::clicked, this,
-            [=]() { loadPacks(targetSubdir, listWidget); });
+            [=, this]() { loadPacks(targetSubdir, listWidget); });
     layout->addWidget(refreshButton);
 
     // Botón para eliminar seleccionado
     QPushButton *deleteButton = new QPushButton(tr("Eliminar Seleccionado"));
-    connect(deleteButton, &QPushButton::clicked, this, [=]() {
+    connect(deleteButton, &QPushButton::clicked, this, [=, this]() {
         if (listWidget->selectedItems().isEmpty()) {
             QMessageBox::warning(this, tr("Advertencia"),
                                  tr("No hay ningún elemento seleccionado."));
@@ -383,7 +383,7 @@ QWidget *TrinitoWindow::createDevTab() {
     // Botón para Development Behavior Pack
     auto *behButton =
         new QPushButton(tr("Añadir Development Behavior Pack (archivo)..."));
-    connect(behButton, &QPushButton::clicked, this, [=]() {
+    connect(behButton, &QPushButton::clicked, this, [=, this]() {
         QString path = QFileDialog::getOpenFileName(
             this, tr("Añadir Development Behavior Pack"), QDir::homePath(),
             tr("Archivos compatibles (*.zip *.mcpack);;Todos los archivos "
@@ -397,7 +397,7 @@ QWidget *TrinitoWindow::createDevTab() {
     // Botón para Development Resource Pack
     auto *resButton =
         new QPushButton(tr("Añadir Development Resource Pack (archivo)..."));
-    connect(resButton, &QPushButton::clicked, this, [=]() {
+    connect(resButton, &QPushButton::clicked, this, [=, this]() {
         QString path = QFileDialog::getOpenFileName(
             this, tr("Añadir Development Resource Pack"), QDir::homePath(),
             tr("Archivos compatibles (*.zip *.mcpack);;Todos los archivos "
@@ -439,8 +439,8 @@ QWidget *TrinitoWindow::createDevTab() {
     loadPacks("development_resource_packs", resListWidget);
 
     // Botón para recargar la lista
-    QPushButton *refreshButton = new QPushButton("Recargar Listas");
-    connect(refreshButton, &QPushButton::clicked, this, [=]() {
+    QPushButton *refreshButton = new QPushButton(tr("Recargar Listas"));
+    connect(refreshButton, &QPushButton::clicked, this, [=, this]() {
         loadPacks("development_behavior_packs", behListWidget);
         loadPacks("development_resource_packs", resListWidget);
     });
@@ -451,11 +451,12 @@ QWidget *TrinitoWindow::createDevTab() {
 
     // Botón para eliminar un pack seleccionado en la lista de Behavior Packs
     QPushButton *deleteBehButton =
-        new QPushButton("Eliminar Behavior Pack Seleccionado");
-    connect(deleteBehButton, &QPushButton::clicked, this, [=]() {
+        new QPushButton(tr("Eliminar Behavior Pack Seleccionado"));
+    connect(deleteBehButton, &QPushButton::clicked, this, [=, this]() {
         if (behListWidget->selectedItems().isEmpty()) {
-            QMessageBox::warning(this, "Advertencia",
-                                 "No hay ningún Behavior Pack seleccionado.");
+            QMessageBox::warning(
+                this, tr("Advertencia"),
+                tr("No hay ningún Behavior Pack seleccionado."));
             return;
         }
 
@@ -501,10 +502,11 @@ QWidget *TrinitoWindow::createDevTab() {
     // Botón para eliminar un pack seleccionado en la lista de Resource Packs
     QPushButton *deleteResButton =
         new QPushButton(tr("Eliminar Resource Pack Seleccionado"));
-    connect(deleteResButton, &QPushButton::clicked, this, [=]() {
+    connect(deleteResButton, &QPushButton::clicked, this, [=, this]() {
         if (resListWidget->selectedItems().isEmpty()) {
-            QMessageBox::warning(this, "Advertencia",
-                                 "No hay ningún Resource Pack seleccionado.");
+            QMessageBox::warning(
+                this, tr("Advertencia"),
+                tr("No hay ningún Resource Pack seleccionado."));
             return;
         }
 
@@ -566,7 +568,7 @@ QWidget *TrinitoWindow::createWorldTab() {
     auto *button = new QPushButton(tr("Añadir carpeta del mundo..."));
     layout->addWidget(button);
 
-    connect(button, &QPushButton::clicked, this, [=]() {
+    connect(button, &QPushButton::clicked, this, [=, this]() {
         QString path = QFileDialog::getExistingDirectory(
             this, tr("Seleccionar carpeta del mundo"), QDir::homePath());
         if (!path.isEmpty()) {
@@ -593,16 +595,16 @@ QWidget *TrinitoWindow::createWorldTab() {
     // Botón para recargar la lista
     QPushButton *refreshButton = new QPushButton(tr("Recargar Lista"));
     connect(refreshButton, &QPushButton::clicked, this,
-            [=]() { loadPacks("minecraftWorlds", listWidget); });
+            [=, this]() { loadPacks("minecraftWorlds", listWidget); });
     layout->addWidget(refreshButton);
 
     // Botón para borrar un mundo seleccionado
     QPushButton *deleteButton =
         new QPushButton(tr("Borrar Mundo Seleccionado"));
-    connect(deleteButton, &QPushButton::clicked, this, [=]() {
+    connect(deleteButton, &QPushButton::clicked, this, [=, this]() {
         if (listWidget->selectedItems().isEmpty()) {
-            QMessageBox::warning(this, "Advertencia",
-                                 "No hay ningún mundo seleccionado.");
+            QMessageBox::warning(this, tr("Advertencia"),
+                                 tr("No hay ningún mundo seleccionado."));
             return;
         }
 

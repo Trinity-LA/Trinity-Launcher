@@ -29,4 +29,6 @@ qt_add_translations(
   TS_FILE_DIR
   "${TS_DIR}"
   RESOURCE_PREFIX
-  "/i18n")
+  "/i18n"
+  SOURCES
+  ${PROJECT_TRANSLATABLE_FILES})

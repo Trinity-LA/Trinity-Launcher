@@ -25,33 +25,34 @@ void Exporter::exportVersion(const QString &versionName) {
     QString versionPath = vm.getVersionPath(versionName);
 
     if (!QDir(versionPath).exists()) {
-        QMessageBox::critical(parentWidget, "Error", "La versión no existe.");
+        QMessageBox::critical(parentWidget, tr("Error"),
+                              tr("La versión no existe."));
         return;
     }
 
     // Preguntar si exportar con datos del APK
     int r = QMessageBox::question(
-        parentWidget, "Exportar versión",
-        QString("¿Exportar '%1' con datos del APK?\n\n"
-                "Sí: Incluye la versión completa (datos del juego).\n"
-                "No: Solo exporta mods, mapas, etc.")
+        parentWidget, tr("Exportar versión"),
+        QString(tr("¿Exportar '%1' con datos del APK?\n\n"
+                   "Sí: Incluye la versión completa (datos del juego).\n"
+                   "No: Solo exporta mods, mapas, etc."))
             .arg(versionName),
         QMessageBox::Yes | QMessageBox::No, QMessageBox::Yes);
     bool exportWithApk = (r == QMessageBox::Yes);
 
     QString zipPath = QFileDialog::getSaveFileName(
-        parentWidget, "Guardar como archivo", versionName + ".tar.gz",
-        "Archivos TAR (*.tar.gz);;Todos los archivos (*)");
+        parentWidget, tr("Guardar como archivo"), versionName + ".tar.gz",
+        tr("Archivos TAR (*.tar.gz);;Todos los archivos (*)"));
     if (zipPath.isEmpty())
         return;
 
     // Crear diálogo de progreso
     QDialog progressDlg(parentWidget);
-    progressDlg.setWindowTitle("Exportando...");
+    progressDlg.setWindowTitle(tr("Exportando..."));
     progressDlg.setFixedSize(300, 100);
 
     auto *layout = new QVBoxLayout(&progressDlg);
-    QLabel *label = new QLabel("Exportando versión...");
+    QLabel *label = new QLabel(tr("Exportando versión..."));
     QProgressBar *progressBar = new QProgressBar();
     progressBar->setRange(0, 0); // Indefinido
     layout->addWidget(label);
@@ -75,8 +76,8 @@ void Exporter::exportVersion(const QString &versionName) {
     if (exportWithApk) {
         QString versionContentDest = exportDir + "/version_content";
         if (!copyDirectory(versionPath, versionContentDest)) {
-            QMessageBox::critical(parentWidget, "Error",
-                                  "No se pudo copiar la versión.");
+            QMessageBox::critical(parentWidget, tr("Error"),
+                                  tr("No se pudo copiar la versión."));
             QDir(tempDir).removeRecursively();
             return;
         }
@@ -90,8 +91,8 @@ void Exporter::exportVersion(const QString &versionName) {
     QString gamesDest = exportDir + "/games";
 
     if (!copyDirectory(gamesPath, gamesDest)) {
-        QMessageBox::critical(parentWidget, "Error",
-                              "No se pudo copiar los recursos.");
+        QMessageBox::critical(parentWidget, tr("Error"),
+                              tr("No se pudo copiar los recursos."));
         QDir(tempDir).removeRecursively();
         return;
     }
@@ -108,11 +109,11 @@ void Exporter::exportVersion(const QString &versionName) {
 
             if (compressProcess->exitCode() == 0) {
                 emit exportFinished(true,
-                                    QString("Versión %1 exportada como %2")
+                                    QString(tr("Versión %1 exportada como %2"))
                                         .arg(versionName, zipPath));
             } else {
                 QString err = compressProcess->readAllStandardError();
-                emit exportFinished(false, "Falló la exportación:\n" + err);
+                emit exportFinished(false, tr("Falló la exportación:\n") + err);
             }
 
             // Limpiar temporal
@@ -130,8 +131,8 @@ void Exporter::exportVersion(const QString &versionName) {
 
 void Exporter::importVersion() {
     QString zipPath = QFileDialog::getOpenFileName(
-        parentWidget, "Seleccionar archivo TAR", "",
-        "Archivos TAR (*.tar.gz *.tar);;Todos los archivos (*)");
+        parentWidget, tr("Seleccionar archivo TAR"), "",
+        tr("Archivos TAR (*.tar.gz *.tar);;Todos los archivos (*)"));
     if (zipPath.isEmpty())
         return;
 
@@ -150,9 +151,9 @@ void Exporter::importVersion() {
     bool gamesExists = QDir(destGamesDir).exists();
 
     if (versionExists || gamesExists) {
-        int r = QMessageBox::warning(parentWidget, "Advertencia",
-                                     QString("¡Este proceso puede tardar!.\n"
-                                             "¿Quiere continuar?")
+        int r = QMessageBox::warning(parentWidget, tr("Advertencia"),
+                                     QString(tr("¡Este proceso puede tardar!.\n"
+                                                "¿Quiere continuar?"))
                                          .arg(fileName),
                                      QMessageBox::Yes | QMessageBox::No,
                                      QMessageBox::No);
@@ -163,11 +164,11 @@ void Exporter::importVersion() {
 
     // Crear diálogo de progreso
     QDialog *progressDlg = new QDialog(parentWidget);
-    progressDlg->setWindowTitle("Importando...");
+    progressDlg->setWindowTitle(tr("Importando..."));
     progressDlg->setFixedSize(300, 100);
 
     auto *layout = new QVBoxLayout(progressDlg);
-    QLabel *label = new QLabel("Importando versión...");
+    QLabel *label = new QLabel(tr("Importando versión..."));
     QProgressBar *progressBar = new QProgressBar();
     progressBar->setRange(0, 0); // Indefinido
     layout->addWidget(label);
@@ -193,7 +194,7 @@ void Exporter::importVersion() {
          destVersionDir, destGamesDir, versionExists, gamesExists]() {
             if (process->exitCode() != 0) {
                 QString err = process->readAllStandardError();
-                emit importFinished(false, "Falló la extracción:\n" + err);
+                emit importFinished(false, tr("Falló la extracción:\n") + err);
                 QDir(tempDir).removeRecursively();
                 // Cerrar diálogo de progreso aquí
                 progressDlg->accept();
@@ -255,7 +256,7 @@ void Exporter::importVersion() {
                             if (!copyDirectory(srcItem, dstItem)) {
                                 emit importFinished(
                                     false,
-                                    "No se pudo mover/copiar directorio: " +
+                                    tr("No se pudo mover/copiar directorio: ") +
                                         info.fileName());
                                 success = false;
                                 break;
@@ -263,8 +264,9 @@ void Exporter::importVersion() {
                         } else {
                             if (!QFile::copy(srcItem, dstItem)) {
                                 emit importFinished(
-                                    false, "No se pudo mover/copiar archivo: " +
-                                               info.fileName());
+                                    false,
+                                    tr("No se pudo mover/copiar archivo: ") +
+                                        info.fileName());
                                 success = false;
                                 break;
                             }
@@ -304,19 +306,19 @@ void Exporter::importVersion() {
                         // copyDirectory y borrar origen
                         if (info.isDir()) {
                             if (!copyDirectory(srcItem, dstItem)) {
-                                emit importFinished(false,
-                                                    "No se pudo mover/copiar "
-                                                    "directorio de recursos: " +
-                                                        info.fileName());
+                                emit importFinished(
+                                    false, tr("No se pudo mover/copiar "
+                                              "directorio de recursos: ") +
+                                               info.fileName());
                                 success = false;
                                 break;
                             }
                         } else {
                             if (!QFile::copy(srcItem, dstItem)) {
-                                emit importFinished(false,
-                                                    "No se pudo mover/copiar "
-                                                    "archivo de recursos: " +
-                                                        info.fileName());
+                                emit importFinished(
+                                    false, tr("No se pudo mover/copiar "
+                                              "archivo de recursos: ") +
+                                               info.fileName());
                                 success = false;
                                 break;
                             }
@@ -336,7 +338,7 @@ void Exporter::importVersion() {
 
             if (success) {
                 emit importFinished(
-                    true, QString("Versión %1 importada correctamente.")
+                    true, QString(tr("Versión %1 importada correctamente."))
                               .arg(fileName));
             }
 

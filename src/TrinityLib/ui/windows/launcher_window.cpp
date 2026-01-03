@@ -21,6 +21,7 @@
 #include <QProcess>
 #include <QProgressBar>
 #include <QPushButton>
+#include <QSettings>
 #include <QStandardPaths>
 #include <QVBoxLayout>
 
@@ -29,7 +30,7 @@ LauncherWindow::LauncherWindow(QWidget *parent)
     setupUi();
     setupConnections();
     loadInstalledVersions();
-    exporter = new Exporter(this); // Añadir esta línea
+    exporter = new Exporter(this);
 
     // Conectar señales de exporter
 
@@ -110,6 +111,28 @@ void LauncherWindow::setupUi() {
     topBarLayout->addWidget(titleLabel);
 
     topBarLayout->addStretch();
+
+    // --- Switcher languages
+    languageCombo = new QComboBox();
+    languageCombo->addItem("Español", "es"); // Index 0, data "es"
+    languageCombo->addItem("English", "en"); // Index 1, data "en"
+    languageCombo->setFixedWidth(120);
+
+    QSettings settings;
+    QString currentLang = settings.value("language", "es").toString();
+    int index = languageCombo->findData(currentLang);
+    if (index != -1) {
+        languageCombo->blockSignals(true);
+        languageCombo->setCurrentIndex(index);
+        languageCombo->blockSignals(false);
+    }
+
+    languageCombo->setStyleSheet(
+        "QComboBox { background-color: #1e293b; color: white; border-radius: "
+        "5px; padding: 5px; }"
+        "QComboBox::drop-down { border: 0px; }");
+
+    topBarLayout->addWidget(languageCombo);
 
     extractButton = new QPushButton(tr("+ Extraer APK"));
     extractButton->setObjectName("ActionButton"); // Accent color
@@ -221,6 +244,8 @@ void LauncherWindow::setupConnections() {
             &LauncherWindow::onExportClicked);
     connect(deleteButton, &QPushButton::clicked, this,
             &LauncherWindow::onDeleteClicked);
+    connect(languageCombo, QOverload<int>::of(&QComboBox::currentIndexChanged),
+            this, &LauncherWindow::onLanguageChanged);
 }
 
 void LauncherWindow::loadInstalledVersions() {
@@ -326,7 +351,8 @@ void LauncherWindow::showExtractDialog() {
         return;
     }
 
-    QMessageBox::information(this, tr("Éxito"), tr("¡Versión extraída correctamente!"));
+    QMessageBox::information(this, tr("Éxito"),
+                             tr("¡Versión extraída correctamente!"));
     loadInstalledVersions(); // Recargar lista.
 }
 
@@ -354,7 +380,7 @@ void LauncherWindow::launchTools() {
 
 void LauncherWindow::onEditConfigClicked() {
     if (versionList->selectedItems().isEmpty()) {
-        QMessageBox::warning(this,tr( "Advertencia"),
+        QMessageBox::warning(this, tr("Advertencia"),
                              tr("No hay ninguna versión seleccionada."));
         return;
     }
@@ -366,8 +392,8 @@ void LauncherWindow::onEditConfigClicked() {
     dialog.resize(500, 300);
 
     auto *layout = new QVBoxLayout(&dialog);
-    QLabel *label =
-        new QLabel(tr("Parámetros de ejecución (antes de mcpelauncher-client):"));
+    QLabel *label = new QLabel(
+        tr("Parámetros de ejecución (antes de mcpelauncher-client):"));
     layout->addWidget(label);
 
     // Obtener argumentos actuales
@@ -375,7 +401,8 @@ void LauncherWindow::onEditConfigClicked() {
     QString currentArgs = config.getLaunchArgs();
 
     QLineEdit *argsEdit = new QLineEdit(currentArgs);
-    argsEdit->setPlaceholderText("Ej: DRI_PRIME=1 vblank_mode=0 MESA_LOADER_DRIVER_OVERRIDE=zink");
+    argsEdit->setPlaceholderText(
+        "Ej: DRI_PRIME=1 vblank_mode=0 MESA_LOADER_DRIVER_OVERRIDE=zink");
     layout->addWidget(argsEdit);
 
     auto *buttonBox =
@@ -402,8 +429,8 @@ void LauncherWindow::onEditConfigClicked() {
     connect(buttonBox, &QDialogButtonBox::rejected, &dialog, &QDialog::reject);
 
     if (dialog.exec() == QDialog::Accepted) {
-        statusLabel->setText(
-            QString(tr("Configuración de %1 actualizada.")).arg(selectedVersion));
+        statusLabel->setText(QString(tr("Configuración de %1 actualizada."))
+                                 .arg(selectedVersion));
     }
 }
 
@@ -428,9 +455,10 @@ void LauncherWindow::onDeleteClicked() {
 
     int r = QMessageBox::warning(
         this, tr("Advertencia"),
-        QString(tr("¿Estás seguro de eliminar la versión '%1'?\nEsta acción no se puede deshacer.").arg(selectedVersion)),
-        QMessageBox::Yes | QMessageBox::No, 
-        QMessageBox::No);
+        QString(tr("¿Estás seguro de eliminar la versión '%1'?\nEsta acción no "
+                   "se puede deshacer.")
+                    .arg(selectedVersion)),
+        QMessageBox::Yes | QMessageBox::No, QMessageBox::No);
     if (r == QMessageBox::No)
         return;
 
@@ -439,13 +467,16 @@ void LauncherWindow::onDeleteClicked() {
     QString errorMsg;
     if (!vm.deleteVersion(selectedVersion, errorMsg)) {
         QMessageBox::critical(this, tr("Error"),
-                              tr("No se pudo eliminar la versión:\n") + errorMsg);
+                              tr("No se pudo eliminar la versión:\n") +
+                                  errorMsg);
         return;
     }
 
-    QMessageBox::information(this, tr("Éxito"),tr("Versión eliminada correctamente."));
+    QMessageBox::information(this, tr("Éxito"),
+                             tr("Versión eliminada correctamente."));
     loadInstalledVersions(); // Recargar lista
-    statusLabel->setText(QString(tr("Versión %1 eliminada.")).arg(selectedVersion));
+    statusLabel->setText(
+        QString(tr("Versión %1 eliminada.")).arg(selectedVersion));
 }
 
 bool LauncherWindow::copyDirectory(const QString &srcPath,
@@ -505,7 +536,8 @@ void LauncherWindow::createDesktopShortcut() {
     if (QFile::exists(shortcutPath)) {
         int r = QMessageBox::question(
             this, tr("Confirmar"),
-            QString(tr("Ya existe un acceso directo para '%1'.\n¿Reemplazarlo?"))
+            QString(
+                tr("Ya existe un acceso directo para '%1'.\n¿Reemplazarlo?"))
                 .arg(selectedVersion),
             QMessageBox::Yes | QMessageBox::No, QMessageBox::No);
         if (r == QMessageBox::No)
@@ -550,5 +582,19 @@ void LauncherWindow::createDesktopShortcut() {
     // Mensaje de éxito
     QMessageBox::information(
         this, tr("Éxito"),
-        QString(tr("Acceso directo creado en la carpeta Descargas").arg(shortcutPath)));
+        QString(tr("Acceso directo creado en la carpeta Descargas")
+                    .arg(shortcutPath)));
+}
+
+void LauncherWindow::onLanguageChanged(int index) {
+    QString langCode = languageCombo->itemData(index).toString();
+
+    QSettings settings;
+    settings.setValue("language", langCode);
+
+    QMessageBox::information(
+        this, tr("Idioma cambiado"),
+        tr("El idioma se ha cambiado a '%1'.\nPor favor, reinicia la "
+           "aplicación para aplicar los cambios.")
+            .arg(languageCombo->currentText()));
 }
