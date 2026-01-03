@@ -12,14 +12,13 @@ set(CMAKE_AUTOUIC ON)
 
 include_directories(include)
 
-find_package(Qt6 COMPONENTS Core Widgets LinguistTools REQUIRED) 
+find_package(
+  Qt6
+  COMPONENTS Core Widgets LinguistTools
+  REQUIRED)
 
-
-set(TS_FILES
-    "${CMAKE_CURRENT_SOURCE_DIR}/i18n/trinity_es.ts"
-    "${CMAKE_CURRENT_SOURCE_DIR}/i18n/trinity_en.ts"
-)
-
+# We define which language use
+qt_standard_project_setup(I18N_TRANSLATED_LANGUAGES en)
 
 add_subdirectory(src/TrinityLib/core)
 add_subdirectory(src/TrinityLib/ui)

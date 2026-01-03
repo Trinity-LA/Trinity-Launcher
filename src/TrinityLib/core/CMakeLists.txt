@@ -1,4 +1,4 @@
-set(INC_DIR "../../../include")
+set(INC_DIR "${CMAKE_SOURCE_DIR}/include")
 
 set(CORE_HEADERS
     "${INC_DIR}/TrinityLib/core/version_manager.hpp"

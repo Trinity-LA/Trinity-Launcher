@@ -1,4 +1,7 @@
-set(INC_DIR "../../../include")
+set(INC_DIR "${CMAKE_SOURCE_DIR}/include")
+set(TS_DIR "${CMAKE_SOURCE_DIR}/resources/i18n")
+
+file(MAKE_DIRECTORY ${TS_DIR})
 
 set(UI_HEADERS
     "${INC_DIR}/TrinityLib/ui/windows/launcher_window.hpp"
@@ -18,3 +21,12 @@ target_link_libraries(
   TrinityUI
   PUBLIC Qt6::Core Qt6::Widgets
   PRIVATE TrinityCore)
+
+qt_add_translations(
+  TrinityUI
+  TS_FILE_BASE
+  "trinity"
+  TS_FILE_DIR
+  "${TS_DIR}"
+  RESOURCE_PREFIX
+  "/i18n")
