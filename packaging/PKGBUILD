@@ -1,0 +1,49 @@
+# Maintainer: CasaDeIosel <soyjoelcastillo26@gmail.com>
+pkgname=trinity-launcher-git
+pkgver=r77.8890eff # Esto se actualizará solo
+pkgrel=1
+pkgdesc="Entorno gráfico modular para Minecraft Bedrock en Linux (Trinity UI)"
+arch=('x86_64')
+url="https://github.com/Trinity-LA/Trinity-Launcher"
+license=('BSD-3-Clause')
+depends=('qt6-base' 'qt6-svg' 'qt6-tools' 'qt6-wayland' 'qt6-5compat' 'hicolor-icon-theme')
+makedepends=('git' 'cmake' 'clang' 'ninja')
+provides=("${pkgname%-git}")
+conflicts=("${pkgname%-git}")
+source=("git+https://github.com/Trinity-LA/Trinity-Launcher.git") # Usamos el repo oficial como fuente
+md5sums=('SKIP')
+
+pkgver() {
+    cd "$srcdir/Trinity-Launcher"
+    printf "r%s.%s" "$(git rev-list --count HEAD)" "$(git rev-parse --short HEAD)"
+}
+
+build() {
+    cd "$srcdir/Trinity-Launcher"
+    
+    # Configuramos CMake como dice el manual (usando Clang)
+    export CC=clang
+    export CXX=clang++
+    
+    cmake -B build -S . \
+        -DCMAKE_BUILD_TYPE=Release \
+        -DCMAKE_INSTALL_PREFIX=/usr \
+        -GNinja
+        
+    cmake --build build
+}
+
+package() {
+    cd "$srcdir/Trinity-Launcher"
+    
+    # 1. Crear la carpeta de destino en el sistema falso
+    install -d "$pkgdir/usr/bin"
+    
+    # 2. Buscar los ejecutables y copiarlos (pueden estar en build/app o build/src)
+    # Buscamos donde se compiló 'trinchete' y 'trinito'
+    find build -name "trinchete" -exec install -Dm755 {} "$pkgdir/usr/bin/trinchete" \;
+    find build -name "trinito" -exec install -Dm755 {} "$pkgdir/usr/bin/trinito" \;
+    
+    # 3. Instalar la licencia (esto sí estaba bien)
+    install -Dm644 LICENSE.md "$pkgdir/usr/share/licenses/$pkgname/LICENSE"
+}
