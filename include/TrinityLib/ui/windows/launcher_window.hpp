@@ -2,6 +2,7 @@
 #define LAUNCHER_WINDOW_H
 
 #include "TrinityLib/core/exporter.hpp"
+#include <QComboBox>
 #include <QHBoxLayout>
 #include <QLabel>
 #include <QListWidget>
@@ -31,6 +32,7 @@ class LauncherWindow : public QWidget {
         void onDeleteClicked();
         void onImportClicked();
         void createDesktopShortcut();
+        void onLanguageChanged(int index);
 
     private:
         // Layouts
@@ -57,6 +59,8 @@ class LauncherWindow : public QWidget {
         // Status Bar
         QLabel *statusLabel;
         QPushButton *shortcutButton;
+        QComboBox *languageCombo;
+
         void setupUi();
         void setupConnections();
         void updateContextPanel(const QString &versionName);
