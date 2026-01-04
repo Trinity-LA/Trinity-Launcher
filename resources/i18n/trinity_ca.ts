@@ -143,48 +143,48 @@ Vols continuar?</translation>
     <message>
         <location filename="../../src/TrinityLib/ui/dialogs/extract_dialog.cpp" line="12"/>
         <source>Nueva versión desde APK</source>
-        <translation ></translation>
+        <translation>Nova versió mitjançant APK</translation>
     </message>
     <message>
         <location filename="../../src/TrinityLib/ui/dialogs/extract_dialog.cpp" line="17"/>
         <source>Seleccionar APK...</source>
-        <translation ></translation>
+        <translation>Seleccionar APK...</translation>
     </message>
     <message>
         <location filename="../../src/TrinityLib/ui/dialogs/extract_dialog.cpp" line="18"/>
         <source>Ningún archivo seleccionado</source>
-        <translation ></translation>
+        <translation>Cap fitxer seleccionat</translation>
     </message>
     <message>
         <location filename="../../src/TrinityLib/ui/dialogs/extract_dialog.cpp" line="29"/>
         <source>Nombre de la versión:</source>
-        <translation ></translation>
+        <translation>Nom de la versió:</translation>
     </message>
     <message>
         <location filename="../../src/TrinityLib/ui/dialogs/extract_dialog.cpp" line="36"/>
         <location filename="../../src/TrinityLib/ui/dialogs/extract_dialog.cpp" line="40"/>
         <source>Error</source>
-        <translation >Error</translation>
+        <translation>Error</translation>
     </message>
     <message>
         <location filename="../../src/TrinityLib/ui/dialogs/extract_dialog.cpp" line="36"/>
         <source>Debes seleccionar un archivo APK.</source>
-        <translation ></translation>
+        <translation>Has de seleccionar un fitxer APK.</translation>
     </message>
     <message>
         <location filename="../../src/TrinityLib/ui/dialogs/extract_dialog.cpp" line="40"/>
         <source>Debes ingresar un nombre para la versión.</source>
-        <translation ></translation>
+        <translation>Has d&apos;introduir un nom per a la versió</translation>
     </message>
     <message>
         <location filename="../../src/TrinityLib/ui/dialogs/extract_dialog.cpp" line="49"/>
         <source>Seleccionar APK de Minecraft</source>
-        <translation ></translation>
+        <translation >Seleccionar un APK de Minecraft</translation>
     </message>
     <message>
         <location filename="../../src/TrinityLib/ui/dialogs/extract_dialog.cpp" line="49"/>
         <source>Archivos APK (*.apk)</source>
-        <translation ></translation>
+        <translation >Fitxers APK (*.apk)</translation>
     </message>
 </context>
 <context>
@@ -649,7 +649,7 @@ Sobreescriure-lo?</translation>
         <location filename="../../src/TrinityLib/ui/windows/trinito_window.cpp" line="666"/>
         <source>¡%1 instalado correctamente en:
 %2</source>
-        <translation>%1 instal·lat correctament a :
+        <translation>%1 instal·lat correctament a:
 %2</translation>
     </message>
 </context>
@@ -659,7 +659,7 @@ Sobreescriure-lo?</translation>
         <location filename="../../src/TrinityLib/ui/widgets/version_selector.cpp" line="17"/>
         <location filename="../../src/TrinityLib/ui/widgets/version_selector.cpp" line="23"/>
         <source>No hay versiones instaladas</source>
-        <translation ></translation>
+        <translation>No hi ha versions instal·lades</translation>
     </message>
 </context>
 </TS>
