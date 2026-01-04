@@ -116,6 +116,7 @@ void LauncherWindow::setupUi() {
     languageCombo = new QComboBox();
     languageCombo->addItem("Español", "es"); // Index 0, data "es"
     languageCombo->addItem("English", "en"); // Index 1, data "en"
+    languageCombo->addItem("Català", "ca"); // Index 2, data "ca"
     languageCombo->setFixedWidth(120);
 
     QSettings settings;

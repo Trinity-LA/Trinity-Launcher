@@ -20,6 +20,11 @@ int main(int argc, char *argv[]) {
             app.installTranslator(&translator);
         }
     }
+    else if (lang == "ca") {
+        if (translator.load(":/i18n/trinity_ca")) {
+            app.installTranslator(&translator);
+        }
+    }
 
     QIcon appIcon(":/icons/appicon");
     app.setWindowIcon(appIcon);
