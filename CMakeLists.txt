@@ -18,8 +18,7 @@ find_package(
   REQUIRED)
 
 # We define which language use
-qt_standard_project_setup(I18N_TRANSLATED_LANGUAGES ca)
-qt_standard_project_setup(I18N_TRANSLATED_LANGUAGES en)
+qt_standard_project_setup(I18N_TRANSLATED_LANGUAGES en ca)
 
 set(TRINITY_SRC_DIR "${CMAKE_CURRENT_SOURCE_DIR}/src")
 set(TRINITY_INC_DIR "${CMAKE_CURRENT_SOURCE_DIR}/include")

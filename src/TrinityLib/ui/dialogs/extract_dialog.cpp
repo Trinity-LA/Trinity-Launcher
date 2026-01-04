@@ -9,13 +9,13 @@
 #include <QDir>
 
 ExtractDialog::ExtractDialog(QWidget *parent) : QDialog(parent) {
-    setWindowTitle("Nueva versión desde APK");
+    setWindowTitle(tr("Nueva versión desde APK"));
     resize(400, 150);
 
     auto *layout = new QFormLayout(this);
 
-    auto *apkButton = new QPushButton("Seleccionar APK...");
-    apkLabel = new QLabel("Ningún archivo seleccionado");
+    auto *apkButton = new QPushButton(tr("Seleccionar APK..."));
+    apkLabel = new QLabel(tr("Ningún archivo seleccionado"));
     apkLabel->setWordWrap(true);
 
     connect(apkButton, &QPushButton::clicked, this, &ExtractDialog::onSelectApk);
@@ -26,18 +26,18 @@ ExtractDialog::ExtractDialog(QWidget *parent) : QDialog(parent) {
 
     layout->addRow("APK:", apkButton);
     layout->addRow(apkLabel);
-    layout->addRow("Nombre de la versión:", nameEdit);
+    layout->addRow(tr("Nombre de la versión:"), nameEdit);
 
     auto *buttonBox = new QDialogButtonBox(QDialogButtonBox::Ok | QDialogButtonBox::Cancel);
     layout->addWidget(buttonBox);
 
     connect(buttonBox, &QDialogButtonBox::accepted, this, [this]() {
         if (apkPath.isEmpty()) {
-            QMessageBox::warning(this, "Error", "Debes seleccionar un archivo APK.");
+            QMessageBox::warning(this, tr("Error"), tr("Debes seleccionar un archivo APK."));
             return;
         }
         if (versionName.isEmpty()) {
-            QMessageBox::warning(this, "Error", "Debes ingresar un nombre para la versión.");
+            QMessageBox::warning(this, tr("Error"), tr("Debes ingresar un nombre para la versión."));
             return;
         }
         accept();
@@ -46,7 +46,7 @@ ExtractDialog::ExtractDialog(QWidget *parent) : QDialog(parent) {
 }
 
 void ExtractDialog::onSelectApk() {
-    QString file = QFileDialog::getOpenFileName(this, "Seleccionar APK de Minecraft", QDir::homePath(), "Archivos APK (*.apk)");
+    QString file = QFileDialog::getOpenFileName(this, tr("Seleccionar APK de Minecraft"), QDir::homePath(), tr("Archivos APK (*.apk)"));
     if (!file.isEmpty()) {
         apkPath = file;
         apkLabel->setText(QFileInfo(file).fileName());

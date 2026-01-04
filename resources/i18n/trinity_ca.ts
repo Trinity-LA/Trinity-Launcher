@@ -139,220 +139,269 @@ Vols continuar?</translation>
     </message>
 </context>
 <context>
+    <name>ExtractDialog</name>
+    <message>
+        <location filename="../../src/TrinityLib/ui/dialogs/extract_dialog.cpp" line="12"/>
+        <source>Nueva versión desde APK</source>
+        <translation ></translation>
+    </message>
+    <message>
+        <location filename="../../src/TrinityLib/ui/dialogs/extract_dialog.cpp" line="17"/>
+        <source>Seleccionar APK...</source>
+        <translation ></translation>
+    </message>
+    <message>
+        <location filename="../../src/TrinityLib/ui/dialogs/extract_dialog.cpp" line="18"/>
+        <source>Ningún archivo seleccionado</source>
+        <translation ></translation>
+    </message>
+    <message>
+        <location filename="../../src/TrinityLib/ui/dialogs/extract_dialog.cpp" line="29"/>
+        <source>Nombre de la versión:</source>
+        <translation ></translation>
+    </message>
+    <message>
+        <location filename="../../src/TrinityLib/ui/dialogs/extract_dialog.cpp" line="36"/>
+        <location filename="../../src/TrinityLib/ui/dialogs/extract_dialog.cpp" line="40"/>
+        <source>Error</source>
+        <translation >Error</translation>
+    </message>
+    <message>
+        <location filename="../../src/TrinityLib/ui/dialogs/extract_dialog.cpp" line="36"/>
+        <source>Debes seleccionar un archivo APK.</source>
+        <translation ></translation>
+    </message>
+    <message>
+        <location filename="../../src/TrinityLib/ui/dialogs/extract_dialog.cpp" line="40"/>
+        <source>Debes ingresar un nombre para la versión.</source>
+        <translation ></translation>
+    </message>
+    <message>
+        <location filename="../../src/TrinityLib/ui/dialogs/extract_dialog.cpp" line="49"/>
+        <source>Seleccionar APK de Minecraft</source>
+        <translation ></translation>
+    </message>
+    <message>
+        <location filename="../../src/TrinityLib/ui/dialogs/extract_dialog.cpp" line="49"/>
+        <source>Archivos APK (*.apk)</source>
+        <translation ></translation>
+    </message>
+</context>
+<context>
     <name>LauncherWindow</name>
     <message>
-        <location filename="../../src/TrinityLib/ui/windows/launcher_window.cpp" line="137"/>
+        <location filename="../../src/TrinityLib/ui/windows/launcher_window.cpp" line="138"/>
         <source>+ Extraer APK</source>
         <translation>+ Extreure APK</translation>
     </message>
     <message>
-        <location filename="../../src/TrinityLib/ui/windows/launcher_window.cpp" line="141"/>
+        <location filename="../../src/TrinityLib/ui/windows/launcher_window.cpp" line="142"/>
         <source>Importar</source>
         <translation>Importar</translation>
     </message>
     <message>
-        <location filename="../../src/TrinityLib/ui/windows/launcher_window.cpp" line="145"/>
+        <location filename="../../src/TrinityLib/ui/windows/launcher_window.cpp" line="146"/>
         <source>Herramientas</source>
         <translation>Eines</translation>
     </message>
     <message>
-        <location filename="../../src/TrinityLib/ui/windows/launcher_window.cpp" line="178"/>
+        <location filename="../../src/TrinityLib/ui/windows/launcher_window.cpp" line="179"/>
         <source>Selecciona una versión</source>
         <translation>Escull una versió</translation>
     </message>
     <message>
-        <location filename="../../src/TrinityLib/ui/windows/launcher_window.cpp" line="191"/>
+        <location filename="../../src/TrinityLib/ui/windows/launcher_window.cpp" line="192"/>
         <source>JUGAR</source>
         <translation>JUGAR</translation>
     </message>
     <message>
-        <location filename="../../src/TrinityLib/ui/windows/launcher_window.cpp" line="198"/>
+        <location filename="../../src/TrinityLib/ui/windows/launcher_window.cpp" line="199"/>
         <source>Crear Acceso Directo</source>
         <translation>Accés directe</translation>
     </message>
     <message>
-        <location filename="../../src/TrinityLib/ui/windows/launcher_window.cpp" line="203"/>
+        <location filename="../../src/TrinityLib/ui/windows/launcher_window.cpp" line="204"/>
         <source>Editar Configuración</source>
         <translation>Editar Configuració</translation>
     </message>
     <message>
-        <location filename="../../src/TrinityLib/ui/windows/launcher_window.cpp" line="208"/>
+        <location filename="../../src/TrinityLib/ui/windows/launcher_window.cpp" line="209"/>
         <source>Exportar</source>
         <translation>Exportar</translation>
     </message>
     <message>
-        <location filename="../../src/TrinityLib/ui/windows/launcher_window.cpp" line="210"/>
+        <location filename="../../src/TrinityLib/ui/windows/launcher_window.cpp" line="211"/>
         <source>Eliminar</source>
         <translation>Eliminar</translation>
     </message>
     <message>
-        <location filename="../../src/TrinityLib/ui/windows/launcher_window.cpp" line="222"/>
+        <location filename="../../src/TrinityLib/ui/windows/launcher_window.cpp" line="223"/>
         <source>Listo</source>
         <translation>A punt</translation>
     </message>
     <message>
-        <location filename="../../src/TrinityLib/ui/windows/launcher_window.cpp" line="280"/>
+        <location filename="../../src/TrinityLib/ui/windows/launcher_window.cpp" line="281"/>
         <source>Sin versiones</source>
         <translation>Sense versions</translation>
     </message>
     <message>
-        <location filename="../../src/TrinityLib/ui/windows/launcher_window.cpp" line="283"/>
+        <location filename="../../src/TrinityLib/ui/windows/launcher_window.cpp" line="284"/>
         <source>No hay versiones instaladas.</source>
         <translation>Sense versions instal·lades.</translation>
     </message>
     <message>
-        <location filename="../../src/TrinityLib/ui/windows/launcher_window.cpp" line="294"/>
+        <location filename="../../src/TrinityLib/ui/windows/launcher_window.cpp" line="295"/>
         <source>Versión seleccionada: %1 | Ruta: %2</source>
         <translation>Versió seleccionada: %1 | Ruta: %2</translation>
     </message>
     <message>
-        <location filename="../../src/TrinityLib/ui/windows/launcher_window.cpp" line="311"/>
-        <location filename="../../src/TrinityLib/ui/windows/launcher_window.cpp" line="383"/>
-        <location filename="../../src/TrinityLib/ui/windows/launcher_window.cpp" line="439"/>
-        <location filename="../../src/TrinityLib/ui/windows/launcher_window.cpp" line="450"/>
-        <location filename="../../src/TrinityLib/ui/windows/launcher_window.cpp" line="457"/>
-        <location filename="../../src/TrinityLib/ui/windows/launcher_window.cpp" line="510"/>
+        <location filename="../../src/TrinityLib/ui/windows/launcher_window.cpp" line="312"/>
+        <location filename="../../src/TrinityLib/ui/windows/launcher_window.cpp" line="384"/>
+        <location filename="../../src/TrinityLib/ui/windows/launcher_window.cpp" line="440"/>
+        <location filename="../../src/TrinityLib/ui/windows/launcher_window.cpp" line="451"/>
+        <location filename="../../src/TrinityLib/ui/windows/launcher_window.cpp" line="458"/>
+        <location filename="../../src/TrinityLib/ui/windows/launcher_window.cpp" line="511"/>
         <source>Advertencia</source>
         <translation>Avís</translation>
     </message>
     <message>
-        <location filename="../../src/TrinityLib/ui/windows/launcher_window.cpp" line="312"/>
+        <location filename="../../src/TrinityLib/ui/windows/launcher_window.cpp" line="313"/>
         <source>Ya existe una versión llamada &apos;%1&apos;.
 ¿Reemplazarla?</source>
         <translation>Ja existeix una versió anomenada &apos;%1&apos;.
 Vols sobreescriure-la?</translation>
     </message>
     <message>
-        <location filename="../../src/TrinityLib/ui/windows/launcher_window.cpp" line="321"/>
+        <location filename="../../src/TrinityLib/ui/windows/launcher_window.cpp" line="322"/>
         <source>Extrayendo APK...</source>
         <translation>Extraient APK...</translation>
     </message>
     <message>
-        <location filename="../../src/TrinityLib/ui/windows/launcher_window.cpp" line="325"/>
+        <location filename="../../src/TrinityLib/ui/windows/launcher_window.cpp" line="326"/>
         <source>Extrayendo versión...</source>
         <translation>Extraient versió...</translation>
     </message>
     <message>
-        <location filename="../../src/TrinityLib/ui/windows/launcher_window.cpp" line="349"/>
-        <location filename="../../src/TrinityLib/ui/windows/launcher_window.cpp" line="469"/>
+        <location filename="../../src/TrinityLib/ui/windows/launcher_window.cpp" line="350"/>
+        <location filename="../../src/TrinityLib/ui/windows/launcher_window.cpp" line="470"/>
         <source>Error</source>
         <translation>Error</translation>
     </message>
     <message>
-        <location filename="../../src/TrinityLib/ui/windows/launcher_window.cpp" line="350"/>
+        <location filename="../../src/TrinityLib/ui/windows/launcher_window.cpp" line="351"/>
         <source>Falló la extracción:
 </source>
         <translation>Extracció fallida:
 </translation>
     </message>
     <message>
-        <location filename="../../src/TrinityLib/ui/windows/launcher_window.cpp" line="354"/>
-        <location filename="../../src/TrinityLib/ui/windows/launcher_window.cpp" line="424"/>
-        <location filename="../../src/TrinityLib/ui/windows/launcher_window.cpp" line="475"/>
-        <location filename="../../src/TrinityLib/ui/windows/launcher_window.cpp" line="584"/>
+        <location filename="../../src/TrinityLib/ui/windows/launcher_window.cpp" line="355"/>
+        <location filename="../../src/TrinityLib/ui/windows/launcher_window.cpp" line="425"/>
+        <location filename="../../src/TrinityLib/ui/windows/launcher_window.cpp" line="476"/>
+        <location filename="../../src/TrinityLib/ui/windows/launcher_window.cpp" line="585"/>
         <source>Éxito</source>
         <translation>Èxit</translation>
     </message>
     <message>
-        <location filename="../../src/TrinityLib/ui/windows/launcher_window.cpp" line="355"/>
+        <location filename="../../src/TrinityLib/ui/windows/launcher_window.cpp" line="356"/>
         <source>¡Versión extraída correctamente!</source>
         <translation>Versió extreta amb èxit!</translation>
     </message>
     <message>
-        <location filename="../../src/TrinityLib/ui/windows/launcher_window.cpp" line="384"/>
-        <location filename="../../src/TrinityLib/ui/windows/launcher_window.cpp" line="440"/>
-        <location filename="../../src/TrinityLib/ui/windows/launcher_window.cpp" line="451"/>
-        <location filename="../../src/TrinityLib/ui/windows/launcher_window.cpp" line="511"/>
+        <location filename="../../src/TrinityLib/ui/windows/launcher_window.cpp" line="385"/>
+        <location filename="../../src/TrinityLib/ui/windows/launcher_window.cpp" line="441"/>
+        <location filename="../../src/TrinityLib/ui/windows/launcher_window.cpp" line="452"/>
+        <location filename="../../src/TrinityLib/ui/windows/launcher_window.cpp" line="512"/>
         <source>No hay ninguna versión seleccionada.</source>
         <translation>No hi ha versió seleccionada.</translation>
     </message>
     <message>
-        <location filename="../../src/TrinityLib/ui/windows/launcher_window.cpp" line="391"/>
+        <location filename="../../src/TrinityLib/ui/windows/launcher_window.cpp" line="392"/>
         <source>Editar configuración de </source>
         <translation>Editar configuració de </translation>
     </message>
     <message>
-        <location filename="../../src/TrinityLib/ui/windows/launcher_window.cpp" line="396"/>
+        <location filename="../../src/TrinityLib/ui/windows/launcher_window.cpp" line="397"/>
         <source>Parámetros de ejecución (antes de mcpelauncher-client):</source>
         <translation>Paràmetres d&apos;execució (abans de mcpelauncher-client):</translation>
     </message>
     <message>
-        <location filename="../../src/TrinityLib/ui/windows/launcher_window.cpp" line="421"/>
+        <location filename="../../src/TrinityLib/ui/windows/launcher_window.cpp" line="422"/>
         <source>No se pudo guardar la configuración:
 </source>
         <translation>No s&apos;ha pogut guardar la configuració:
 </translation>
     </message>
     <message>
-        <location filename="../../src/TrinityLib/ui/windows/launcher_window.cpp" line="425"/>
+        <location filename="../../src/TrinityLib/ui/windows/launcher_window.cpp" line="426"/>
         <source>Configuración guardada.</source>
         <translation>Configuració desada.</translation>
     </message>
     <message>
-        <location filename="../../src/TrinityLib/ui/windows/launcher_window.cpp" line="432"/>
+        <location filename="../../src/TrinityLib/ui/windows/launcher_window.cpp" line="433"/>
         <source>Configuración de %1 actualizada.</source>
         <translation>Configuració de %1 actualitzada.</translation>
     </message>
     <message>
-        <location filename="../../src/TrinityLib/ui/windows/launcher_window.cpp" line="458"/>
+        <location filename="../../src/TrinityLib/ui/windows/launcher_window.cpp" line="459"/>
         <source>¿Estás seguro de eliminar la versión &apos;%1&apos;?
 Esta acción no se puede deshacer.</source>
         <translation>Estàs segur d&apos;eliminar la versió &apos;%1&apos;?
 Aquesta acció no es pot desfer.</translation>
     </message>
     <message>
-        <location filename="../../src/TrinityLib/ui/windows/launcher_window.cpp" line="470"/>
+        <location filename="../../src/TrinityLib/ui/windows/launcher_window.cpp" line="471"/>
         <source>No se pudo eliminar la versión:
 </source>
         <translation>No s&apos;ha pogut eliminar la versió:
 </translation>
     </message>
     <message>
-        <location filename="../../src/TrinityLib/ui/windows/launcher_window.cpp" line="476"/>
+        <location filename="../../src/TrinityLib/ui/windows/launcher_window.cpp" line="477"/>
         <source>Versión eliminada correctamente.</source>
         <translation>Versió eliminada correctament.</translation>
     </message>
     <message>
-        <location filename="../../src/TrinityLib/ui/windows/launcher_window.cpp" line="479"/>
+        <location filename="../../src/TrinityLib/ui/windows/launcher_window.cpp" line="480"/>
         <source>Versión %1 eliminada.</source>
         <translation>Versió %1 eliminada.</translation>
     </message>
     <message>
-        <location filename="../../src/TrinityLib/ui/windows/launcher_window.cpp" line="524"/>
+        <location filename="../../src/TrinityLib/ui/windows/launcher_window.cpp" line="525"/>
         <source>La versión &apos;%1&apos; no es válida o no está completa.</source>
         <translation>La versió &apos;%1&apos; is invàlida o incompleta.</translation>
     </message>
     <message>
-        <location filename="../../src/TrinityLib/ui/windows/launcher_window.cpp" line="538"/>
+        <location filename="../../src/TrinityLib/ui/windows/launcher_window.cpp" line="539"/>
         <source>Confirmar</source>
         <translation>Confirmar</translation>
     </message>
     <message>
-        <location filename="../../src/TrinityLib/ui/windows/launcher_window.cpp" line="540"/>
+        <location filename="../../src/TrinityLib/ui/windows/launcher_window.cpp" line="541"/>
         <source>Ya existe un acceso directo para &apos;%1&apos;.
 ¿Reemplazarlo?</source>
         <translation>Ja existeix un accés directe per &apos;%1&apos;.
 Vols substituir-lo?</translation>
     </message>
     <message>
-        <location filename="../../src/TrinityLib/ui/windows/launcher_window.cpp" line="573"/>
+        <location filename="../../src/TrinityLib/ui/windows/launcher_window.cpp" line="574"/>
         <source>No se pudo crear el archivo de acceso directo en:
 </source>
         <translation>No s&apos;ha pogut crear l&apos;arxiu de l&apos;accés directe a:
 </translation>
     </message>
     <message>
-        <location filename="../../src/TrinityLib/ui/windows/launcher_window.cpp" line="585"/>
+        <location filename="../../src/TrinityLib/ui/windows/launcher_window.cpp" line="586"/>
         <source>Acceso directo creado en la carpeta Descargas</source>
         <translation>Accés directe creat a la carpeta Baixades</translation>
     </message>
     <message>
-        <location filename="../../src/TrinityLib/ui/windows/launcher_window.cpp" line="596"/>
+        <location filename="../../src/TrinityLib/ui/windows/launcher_window.cpp" line="597"/>
         <source>Idioma cambiado</source>
         <translation>Idioma canviat</translation>
     </message>
     <message>
-        <location filename="../../src/TrinityLib/ui/windows/launcher_window.cpp" line="597"/>
+        <location filename="../../src/TrinityLib/ui/windows/launcher_window.cpp" line="598"/>
         <source>El idioma se ha cambiado a &apos;%1&apos;.
 Por favor, reinicia la aplicación para aplicar los cambios.</source>
         <translation>La llengua seleccionada serà aplicada la propera vegada que s&apos;obri l&apos;aplicació.</translation>
@@ -602,6 +651,15 @@ Sobreescriure-lo?</translation>
 %2</source>
         <translation>%1 instal·lat correctament a :
 %2</translation>
+    </message>
+</context>
+<context>
+    <name>VersionSelector</name>
+    <message>
+        <location filename="../../src/TrinityLib/ui/widgets/version_selector.cpp" line="17"/>
+        <location filename="../../src/TrinityLib/ui/widgets/version_selector.cpp" line="23"/>
+        <source>No hay versiones instaladas</source>
+        <translation ></translation>
     </message>
 </context>
 </TS>
