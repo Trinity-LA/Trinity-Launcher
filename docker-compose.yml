@@ -1,0 +1,23 @@
+services:
+  proyecto:
+    build: .
+    image: proyecto-debian:latest 
+    container_name: dev
+    volumes:
+      # Volumen persistente para datos
+      - dev-v:/data
+      # Montar tu código actual
+      - .:/project
+      # Cache de cargo para builds más rápidos
+      - cargo-cache:/root/.cargo/registry
+      # Cache de rust para compilación incremental
+      - rust-cache:/project/target
+    working_dir: /project
+    stdin_open: true
+    tty: true
+    command: /bin/bash
+
+volumes:
+  dev-v:
+  cargo-cache:
+  rust-cache:

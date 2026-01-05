@@ -1,0 +1,4126 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE TS>
+<TS version="2.1" language="ca" sourcelanguage="es">
+<context>
+    <name>Exporter</name>
+    <message>
+        <location filename="../../src/TrinityLib/core/exporter.cpp" line="28"/>
+        <location filename="../../src/TrinityLib/core/exporter.cpp" line="79"/>
+        <location filename="../../src/TrinityLib/core/exporter.cpp" line="94"/>
+        <source>Error</source>
+        <translation>Error</translation>
+    </message>
+    <message>
+        <location filename="../../src/TrinityLib/core/exporter.cpp" line="29"/>
+        <source>La versión no existe.</source>
+        <translation>Aquesta versió no existeix.</translation>
+    </message>
+    <message>
+        <location filename="../../src/TrinityLib/core/exporter.cpp" line="35"/>
+        <source>Exportar versión</source>
+        <translation>Exportar versió</translation>
+    </message>
+    <message>
+        <location filename="../../src/TrinityLib/core/exporter.cpp" line="36"/>
+        <source>¿Exportar &apos;%1&apos; con datos del APK?
+
+Sí: Incluye la versión completa (datos del juego).
+No: Solo exporta mods, mapas, etc.</source>
+        <translation>Exportar &apos;%1&apos; amb les dades de l&apos;APK?
+
+Sí: Inclou versió completa (dades del joc).
+No: Només exporta els mods, mapes, etc.</translation>
+    </message>
+    <message>
+        <location filename="../../src/TrinityLib/core/exporter.cpp" line="44"/>
+        <source>Guardar como archivo</source>
+        <translation>Desa com a fitxer</translation>
+    </message>
+    <message>
+        <location filename="../../src/TrinityLib/core/exporter.cpp" line="45"/>
+        <source>Archivos TAR (*.tar.gz);;Todos los archivos (*)</source>
+        <translation>TAR (*.tar.gz);;Tots els fitxers (*)</translation>
+    </message>
+    <message>
+        <location filename="../../src/TrinityLib/core/exporter.cpp" line="51"/>
+        <source>Exportando...</source>
+        <translation>Exportant...</translation>
+    </message>
+    <message>
+        <location filename="../../src/TrinityLib/core/exporter.cpp" line="55"/>
+        <source>Exportando versión...</source>
+        <translation>Exportant versió...</translation>
+    </message>
+    <message>
+        <location filename="../../src/TrinityLib/core/exporter.cpp" line="80"/>
+        <source>No se pudo copiar la versión.</source>
+        <translation>No s&apos;ha pogut copiar la versió.</translation>
+    </message>
+    <message>
+        <location filename="../../src/TrinityLib/core/exporter.cpp" line="95"/>
+        <source>No se pudo copiar los recursos.</source>
+        <translation>No s&apos;han pogut copiar els recursos.</translation>
+    </message>
+    <message>
+        <location filename="../../src/TrinityLib/core/exporter.cpp" line="112"/>
+        <source>Versión %1 exportada como %2</source>
+        <translation>Versió %1 exportada com %2</translation>
+    </message>
+    <message>
+        <location filename="../../src/TrinityLib/core/exporter.cpp" line="116"/>
+        <source>Falló la exportación:
+</source>
+        <translation>Exportació fallida:
+</translation>
+    </message>
+    <message>
+        <location filename="../../src/TrinityLib/core/exporter.cpp" line="134"/>
+        <source>Seleccionar archivo TAR</source>
+        <translation>Seleccionar fitxer TAR</translation>
+    </message>
+    <message>
+        <location filename="../../src/TrinityLib/core/exporter.cpp" line="135"/>
+        <source>Archivos TAR (*.tar.gz *.tar);;Todos los archivos (*)</source>
+        <translation>Arxius TAR (*.tar.gz *.tar);;Tots els fitxers (*)</translation>
+    </message>
+    <message>
+        <location filename="../../src/TrinityLib/core/exporter.cpp" line="154"/>
+        <source>Advertencia</source>
+        <translation>Compte!</translation>
+    </message>
+    <message>
+        <location filename="../../src/TrinityLib/core/exporter.cpp" line="155"/>
+        <source>¡Este proceso puede tardar!.
+¿Quiere continuar?</source>
+        <translation>Aquest procés pot trigar una estona.
+Vols continuar?</translation>
+    </message>
+    <message>
+        <location filename="../../src/TrinityLib/core/exporter.cpp" line="167"/>
+        <source>Importando...</source>
+        <translation>Important...</translation>
+    </message>
+    <message>
+        <location filename="../../src/TrinityLib/core/exporter.cpp" line="171"/>
+        <source>Importando versión...</source>
+        <translation>Important versió...</translation>
+    </message>
+    <message>
+        <location filename="../../src/TrinityLib/core/exporter.cpp" line="197"/>
+        <source>Falló la extracción:
+</source>
+        <translation>Extraccío fallida:
+</translation>
+    </message>
+    <message>
+        <location filename="../../src/TrinityLib/core/exporter.cpp" line="259"/>
+        <source>No se pudo mover/copiar directorio: </source>
+        <translation>No s&apos;ha pogut moure/copiar el directory: </translation>
+    </message>
+    <message>
+        <location filename="../../src/TrinityLib/core/exporter.cpp" line="268"/>
+        <source>No se pudo mover/copiar archivo: </source>
+        <translation>No s&apos;ha pogut moure/copiar el fitxer: </translation>
+    </message>
+    <message>
+        <location filename="../../src/TrinityLib/core/exporter.cpp" line="310"/>
+        <source>No se pudo mover/copiar directorio de recursos: </source>
+        <translation>No s&apos;ha pogut moure/copiar el directori de recursos: </translation>
+    </message>
+    <message>
+        <location filename="../../src/TrinityLib/core/exporter.cpp" line="319"/>
+        <source>No se pudo mover/copiar archivo de recursos: </source>
+        <translation>No s&apos;ha pogut moure/copiar l&apos;arxiu de recursos: </translation>
+    </message>
+    <message>
+        <location filename="../../src/TrinityLib/core/exporter.cpp" line="341"/>
+        <source>Versión %1 importada correctamente.</source>
+        <translation>Versió %1 importada correctament.</translation>
+    </message>
+</context>
+<context>
+    <name>ExtractDialog</name>
+    <message>
+        <location filename="../../src/TrinityLib/ui/dialogs/extract_dialog.cpp" line="12"/>
+        <source>Nueva versión desde APK</source>
+        <translation>Nova versió mitjançant APK</translation>
+    </message>
+    <message>
+        <location filename="../../src/TrinityLib/ui/dialogs/extract_dialog.cpp" line="17"/>
+        <source>Seleccionar APK...</source>
+        <translation>Seleccionar APK...</translation>
+    </message>
+    <message>
+        <location filename="../../src/TrinityLib/ui/dialogs/extract_dialog.cpp" line="18"/>
+        <source>Ningún archivo seleccionado</source>
+        <translation>Cap fitxer seleccionat</translation>
+    </message>
+    <message>
+        <location filename="../../src/TrinityLib/ui/dialogs/extract_dialog.cpp" line="29"/>
+        <source>Nombre de la versión:</source>
+        <translation>Nom de la versió:</translation>
+    </message>
+    <message>
+        <location filename="../../src/TrinityLib/ui/dialogs/extract_dialog.cpp" line="36"/>
+        <location filename="../../src/TrinityLib/ui/dialogs/extract_dialog.cpp" line="40"/>
+        <source>Error</source>
+        <translation>Error</translation>
+    </message>
+    <message>
+        <location filename="../../src/TrinityLib/ui/dialogs/extract_dialog.cpp" line="36"/>
+        <source>Debes seleccionar un archivo APK.</source>
+        <translation>Has de seleccionar un fitxer APK.</translation>
+    </message>
+    <message>
+        <location filename="../../src/TrinityLib/ui/dialogs/extract_dialog.cpp" line="40"/>
+        <source>Debes ingresar un nombre para la versión.</source>
+        <translation>Has d&apos;introduir un nom per a la versió</translation>
+    </message>
+    <message>
+        <location filename="../../src/TrinityLib/ui/dialogs/extract_dialog.cpp" line="49"/>
+        <source>Seleccionar APK de Minecraft</source>
+        <translation >Seleccionar un APK de Minecraft</translation>
+    </message>
+    <message>
+        <location filename="../../src/TrinityLib/ui/dialogs/extract_dialog.cpp" line="49"/>
+        <source>Archivos APK (*.apk)</source>
+        <translation >Fitxers APK (*.apk)</translation>
+    </message>
+</context>
+<context>
+    <name>LauncherWindow</name>
+    <message>
+        <location filename="../../src/TrinityLib/ui/windows/launcher_window.cpp" line="138"/>
+        <source>+ Extraer APK</source>
+        <translation>+ Extreure APK</translation>
+    </message>
+    <message>
+        <location filename="../../src/TrinityLib/ui/windows/launcher_window.cpp" line="142"/>
+        <source>Importar</source>
+        <translation>Importar</translation>
+    </message>
+    <message>
+        <location filename="../../src/TrinityLib/ui/windows/launcher_window.cpp" line="146"/>
+        <source>Herramientas</source>
+        <translation>Eines</translation>
+    </message>
+    <message>
+        <location filename="../../src/TrinityLib/ui/windows/launcher_window.cpp" line="179"/>
+        <source>Selecciona una versión</source>
+        <translation>Escull una versió</translation>
+    </message>
+    <message>
+        <location filename="../../src/TrinityLib/ui/windows/launcher_window.cpp" line="192"/>
+        <source>JUGAR</source>
+        <translation>JUGAR</translation>
+    </message>
+    <message>
+        <location filename="../../src/TrinityLib/ui/windows/launcher_window.cpp" line="199"/>
+        <source>Crear Acceso Directo</source>
+        <translation>Accés directe</translation>
+    </message>
+    <message>
+        <location filename="../../src/TrinityLib/ui/windows/launcher_window.cpp" line="204"/>
+        <source>Editar Configuración</source>
+        <translation>Editar Configuració</translation>
+    </message>
+    <message>
+        <location filename="../../src/TrinityLib/ui/windows/launcher_window.cpp" line="209"/>
+        <source>Exportar</source>
+        <translation>Exportar</translation>
+    </message>
+    <message>
+        <location filename="../../src/TrinityLib/ui/windows/launcher_window.cpp" line="211"/>
+        <source>Eliminar</source>
+        <translation>Eliminar</translation>
+    </message>
+    <message>
+        <location filename="../../src/TrinityLib/ui/windows/launcher_window.cpp" line="223"/>
+        <source>Listo</source>
+        <translation>A punt</translation>
+    </message>
+    <message>
+        <location filename="../../src/TrinityLib/ui/windows/launcher_window.cpp" line="281"/>
+        <source>Sin versiones</source>
+        <translation>Sense versions</translation>
+    </message>
+    <message>
+        <location filename="../../src/TrinityLib/ui/windows/launcher_window.cpp" line="284"/>
+        <source>No hay versiones instaladas.</source>
+        <translation>Sense versions instal·lades.</translation>
+    </message>
+    <message>
+        <location filename="../../src/TrinityLib/ui/windows/launcher_window.cpp" line="295"/>
+        <source>Versión seleccionada: %1 | Ruta: %2</source>
+        <translation>Versió seleccionada: %1 | Ruta: %2</translation>
+    </message>
+    <message>
+        <location filename="../../src/TrinityLib/ui/windows/launcher_window.cpp" line="312"/>
+        <location filename="../../src/TrinityLib/ui/windows/launcher_window.cpp" line="384"/>
+        <location filename="../../src/TrinityLib/ui/windows/launcher_window.cpp" line="440"/>
+        <location filename="../../src/TrinityLib/ui/windows/launcher_window.cpp" line="451"/>
+        <location filename="../../src/TrinityLib/ui/windows/launcher_window.cpp" line="458"/>
+        <location filename="../../src/TrinityLib/ui/windows/launcher_window.cpp" line="511"/>
+        <source>Advertencia</source>
+        <translation>Avís</translation>
+    </message>
+    <message>
+        <location filename="../../src/TrinityLib/ui/windows/launcher_window.cpp" line="313"/>
+        <source>Ya existe una versión llamada &apos;%1&apos;.
+¿Reemplazarla?</source>
+        <translation>Ja existeix una versió anomenada &apos;%1&apos;.
+Vols sobreescriure-la?</translation>
+    </message>
+    <message>
+        <location filename="../../src/TrinityLib/ui/windows/launcher_window.cpp" line="322"/>
+        <source>Extrayendo APK...</source>
+        <translation>Extraient APK...</translation>
+    </message>
+    <message>
+        <location filename="../../src/TrinityLib/ui/windows/launcher_window.cpp" line="326"/>
+        <source>Extrayendo versión...</source>
+        <translation>Extraient versió...</translation>
+    </message>
+    <message>
+        <location filename="../../src/TrinityLib/ui/windows/launcher_window.cpp" line="350"/>
+        <location filename="../../src/TrinityLib/ui/windows/launcher_window.cpp" line="470"/>
+        <source>Error</source>
+        <translation>Error</translation>
+    </message>
+    <message>
+        <location filename="../../src/TrinityLib/ui/windows/launcher_window.cpp" line="351"/>
+        <source>Falló la extracción:
+</source>
+        <translation>Extracció fallida:
+</translation>
+    </message>
+    <message>
+        <location filename="../../src/TrinityLib/ui/windows/launcher_window.cpp" line="355"/>
+        <location filename="../../src/TrinityLib/ui/windows/launcher_window.cpp" line="425"/>
+        <location filename="../../src/TrinityLib/ui/windows/launcher_window.cpp" line="476"/>
+        <location filename="../../src/TrinityLib/ui/windows/launcher_window.cpp" line="585"/>
+        <source>Éxito</source>
+        <translation>Èxit</translation>
+    </message>
+    <message>
+        <location filename="../../src/TrinityLib/ui/windows/launcher_window.cpp" line="356"/>
+        <source>¡Versión extraída correctamente!</source>
+        <translation>Versió extreta amb èxit!</translation>
+    </message>
+    <message>
+        <location filename="../../src/TrinityLib/ui/windows/launcher_window.cpp" line="385"/>
+        <location filename="../../src/TrinityLib/ui/windows/launcher_window.cpp" line="441"/>
+        <location filename="../../src/TrinityLib/ui/windows/launcher_window.cpp" line="452"/>
+        <location filename="../../src/TrinityLib/ui/windows/launcher_window.cpp" line="512"/>
+        <source>No hay ninguna versión seleccionada.</source>
+        <translation>No hi ha versió seleccionada.</translation>
+    </message>
+    <message>
+        <location filename="../../src/TrinityLib/ui/windows/launcher_window.cpp" line="392"/>
+        <source>Editar configuración de </source>
+        <translation>Editar configuració de </translation>
+    </message>
+    <message>
+        <location filename="../../src/TrinityLib/ui/windows/launcher_window.cpp" line="397"/>
+        <source>Parámetros de ejecución (antes de mcpelauncher-client):</source>
+        <translation>Paràmetres d&apos;execució (abans de mcpelauncher-client):</translation>
+    </message>
+    <message>
+        <location filename="../../src/TrinityLib/ui/windows/launcher_window.cpp" line="422"/>
+        <source>No se pudo guardar la configuración:
+</source>
+        <translation>No s&apos;ha pogut guardar la configuració:
+</translation>
+    </message>
+    <message>
+        <location filename="../../src/TrinityLib/ui/windows/launcher_window.cpp" line="426"/>
+        <source>Configuración guardada.</source>
+        <translation>Configuració desada.</translation>
+    </message>
+    <message>
+        <location filename="../../src/TrinityLib/ui/windows/launcher_window.cpp" line="433"/>
+        <source>Configuración de %1 actualizada.</source>
+        <translation>Configuració de %1 actualitzada.</translation>
+    </message>
+    <message>
+        <location filename="../../src/TrinityLib/ui/windows/launcher_window.cpp" line="459"/>
+        <source>¿Estás seguro de eliminar la versión &apos;%1&apos;?
+Esta acción no se puede deshacer.</source>
+        <translation>Estàs segur d&apos;eliminar la versió &apos;%1&apos;?
+Aquesta acció no es pot desfer.</translation>
+    </message>
+    <message>
+        <location filename="../../src/TrinityLib/ui/windows/launcher_window.cpp" line="471"/>
+        <source>No se pudo eliminar la versión:
+</source>
+        <translation>No s&apos;ha pogut eliminar la versió:
+</translation>
+    </message>
+    <message>
+        <location filename="../../src/TrinityLib/ui/windows/launcher_window.cpp" line="477"/>
+        <source>Versión eliminada correctamente.</source>
+        <translation>Versió eliminada correctament.</translation>
+    </message>
+    <message>
+        <location filename="../../src/TrinityLib/ui/windows/launcher_window.cpp" line="480"/>
+        <source>Versión %1 eliminada.</source>
+        <translation>Versió %1 eliminada.</translation>
+    </message>
+    <message>
+        <location filename="../../src/TrinityLib/ui/windows/launcher_window.cpp" line="525"/>
+        <source>La versión &apos;%1&apos; no es válida o no está completa.</source>
+        <translation>La versió &apos;%1&apos; is invàlida o incompleta.</translation>
+    </message>
+    <message>
+        <location filename="../../src/TrinityLib/ui/windows/launcher_window.cpp" line="539"/>
+        <source>Confirmar</source>
+        <translation>Confirmar</translation>
+    </message>
+    <message>
+        <location filename="../../src/TrinityLib/ui/windows/launcher_window.cpp" line="541"/>
+        <source>Ya existe un acceso directo para &apos;%1&apos;.
+¿Reemplazarlo?</source>
+        <translation>Ja existeix un accés directe per &apos;%1&apos;.
+Vols substituir-lo?</translation>
+    </message>
+    <message>
+        <location filename="../../src/TrinityLib/ui/windows/launcher_window.cpp" line="574"/>
+        <source>No se pudo crear el archivo de acceso directo en:
+</source>
+        <translation>No s&apos;ha pogut crear l&apos;arxiu de l&apos;accés directe a:
+</translation>
+    </message>
+    <message>
+        <location filename="../../src/TrinityLib/ui/windows/launcher_window.cpp" line="586"/>
+        <source>Acceso directo creado en la carpeta Descargas</source>
+        <translation>Accés directe creat a la carpeta Baixades</translation>
+    </message>
+    <message>
+        <location filename="../../src/TrinityLib/ui/windows/launcher_window.cpp" line="597"/>
+        <source>Idioma cambiado</source>
+        <translation>Idioma canviat</translation>
+    </message>
+    <message>
+        <location filename="../../src/TrinityLib/ui/windows/launcher_window.cpp" line="598"/>
+        <source>El idioma se ha cambiado a &apos;%1&apos;.
+Por favor, reinicia la aplicación para aplicar los cambios.</source>
+        <translation>La llengua seleccionada serà aplicada la propera vegada que s&apos;obri l&apos;aplicació.</translation>
+    </message>
+</context>
+<context>
+    <name>TrinitoWindow</name>
+    <message>
+        <location filename="../../src/TrinityLib/ui/windows/trinito_window.cpp" line="22"/>
+        <source> Gestor de Contenido para Bedrock</source>
+        <translation> Gestor de continguts per a Bedrock</translation>
+    </message>
+    <message>
+        <location filename="../../src/TrinityLib/ui/windows/trinito_window.cpp" line="58"/>
+        <source>Texturas</source>
+        <translation>Textures</translation>
+    </message>
+    <message>
+        <location filename="../../src/TrinityLib/ui/windows/trinito_window.cpp" line="59"/>
+        <source>Desarrollo</source>
+        <translation>Desenvolupament</translation>
+    </message>
+    <message>
+        <location filename="../../src/TrinityLib/ui/windows/trinito_window.cpp" line="60"/>
+        <source>Mundos</source>
+        <translation>Mons</translation>
+    </message>
+    <message>
+        <location filename="../../src/TrinityLib/ui/windows/trinito_window.cpp" line="68"/>
+        <source>Lista de %1 instalados:</source>
+        <translation>Llista de %1 instal·lats:</translation>
+    </message>
+    <message>
+        <location filename="../../src/TrinityLib/ui/windows/trinito_window.cpp" line="88"/>
+        <location filename="../../src/TrinityLib/ui/windows/trinito_window.cpp" line="314"/>
+        <location filename="../../src/TrinityLib/ui/windows/trinito_window.cpp" line="596"/>
+        <source>Recargar Lista</source>
+        <translation>Recarregar llista</translation>
+    </message>
+    <message>
+        <location filename="../../src/TrinityLib/ui/windows/trinito_window.cpp" line="274"/>
+        <source>Instalar nuevo </source>
+        <translation>Instal·lar nou </translation>
+    </message>
+    <message>
+        <location filename="../../src/TrinityLib/ui/windows/trinito_window.cpp" line="277"/>
+        <source>Seleccionar archivo...</source>
+        <translation>Seleccionar fitxer...</translation>
+    </message>
+    <message>
+        <location filename="../../src/TrinityLib/ui/windows/trinito_window.cpp" line="282"/>
+        <source>Seleccionar pack</source>
+        <translation>Seleccionar pack</translation>
+    </message>
+    <message>
+        <location filename="../../src/TrinityLib/ui/windows/trinito_window.cpp" line="283"/>
+        <location filename="../../src/TrinityLib/ui/windows/trinito_window.cpp" line="389"/>
+        <location filename="../../src/TrinityLib/ui/windows/trinito_window.cpp" line="403"/>
+        <source>Archivos compatibles (*.zip *.mcpack);;Todos los archivos (*)</source>
+        <translation>Arxius compatibles (*.zip *.mcpack);;Tots els fitxers (*)</translation>
+    </message>
+    <message>
+        <location filename="../../src/TrinityLib/ui/windows/trinito_window.cpp" line="294"/>
+        <source>Gestionar </source>
+        <translation>Gestionar </translation>
+    </message>
+    <message>
+        <location filename="../../src/TrinityLib/ui/windows/trinito_window.cpp" line="294"/>
+        <source> instalados:</source>
+        <translation> instal·lats:</translation>
+    </message>
+    <message>
+        <location filename="../../src/TrinityLib/ui/windows/trinito_window.cpp" line="320"/>
+        <source>Eliminar Seleccionado</source>
+        <translation>Eliminar seleccionat</translation>
+    </message>
+    <message>
+        <location filename="../../src/TrinityLib/ui/windows/trinito_window.cpp" line="323"/>
+        <location filename="../../src/TrinityLib/ui/windows/trinito_window.cpp" line="330"/>
+        <location filename="../../src/TrinityLib/ui/windows/trinito_window.cpp" line="458"/>
+        <location filename="../../src/TrinityLib/ui/windows/trinito_window.cpp" line="465"/>
+        <location filename="../../src/TrinityLib/ui/windows/trinito_window.cpp" line="508"/>
+        <location filename="../../src/TrinityLib/ui/windows/trinito_window.cpp" line="515"/>
+        <location filename="../../src/TrinityLib/ui/windows/trinito_window.cpp" line="606"/>
+        <location filename="../../src/TrinityLib/ui/windows/trinito_window.cpp" line="613"/>
+        <location filename="../../src/TrinityLib/ui/windows/trinito_window.cpp" line="648"/>
+        <source>Advertencia</source>
+        <translation>Avís</translation>
+    </message>
+    <message>
+        <location filename="../../src/TrinityLib/ui/windows/trinito_window.cpp" line="324"/>
+        <source>No hay ningún elemento seleccionado.</source>
+        <translation>No hi ha cap element seleccionat.</translation>
+    </message>
+    <message>
+        <location filename="../../src/TrinityLib/ui/windows/trinito_window.cpp" line="331"/>
+        <source>¿Estás seguro de eliminar &apos;%1&apos;?
+Esta acción no se puede deshacer.</source>
+        <translation>Estàs segur d&apos;eliminar &apos;%1&apos;?
+Aquesta acció no es pot desfer.</translation>
+    </message>
+    <message>
+        <location filename="../../src/TrinityLib/ui/windows/trinito_window.cpp" line="355"/>
+        <location filename="../../src/TrinityLib/ui/windows/trinito_window.cpp" line="490"/>
+        <location filename="../../src/TrinityLib/ui/windows/trinito_window.cpp" line="540"/>
+        <location filename="../../src/TrinityLib/ui/windows/trinito_window.cpp" line="628"/>
+        <location filename="../../src/TrinityLib/ui/windows/trinito_window.cpp" line="665"/>
+        <source>Éxito</source>
+        <translation>Èxit</translation>
+    </message>
+    <message>
+        <location filename="../../src/TrinityLib/ui/windows/trinito_window.cpp" line="356"/>
+        <source>&apos;%1&apos; eliminado correctamente.</source>
+        <translation>&apos;%1&apos; eliminat amb èxit.</translation>
+    </message>
+    <message>
+        <location filename="../../src/TrinityLib/ui/windows/trinito_window.cpp" line="385"/>
+        <source>Añadir Development Behavior Pack (archivo)...</source>
+        <translation>Afegir Development Behavior Pack (fitxer)...</translation>
+    </message>
+    <message>
+        <location filename="../../src/TrinityLib/ui/windows/trinito_window.cpp" line="388"/>
+        <source>Añadir Development Behavior Pack</source>
+        <translation>Afegir Development Behavior Pack</translation>
+    </message>
+    <message>
+        <location filename="../../src/TrinityLib/ui/windows/trinito_window.cpp" line="399"/>
+        <source>Añadir Development Resource Pack (archivo)...</source>
+        <translation>Afegir Development Resource Pack (fitxer)...</translation>
+    </message>
+    <message>
+        <location filename="../../src/TrinityLib/ui/windows/trinito_window.cpp" line="402"/>
+        <source>Añadir Development Resource Pack</source>
+        <translation>Afegir Development Resource Pack</translation>
+    </message>
+    <message>
+        <location filename="../../src/TrinityLib/ui/windows/trinito_window.cpp" line="416"/>
+        <source>Gestionar Development Packs:</source>
+        <translation>Gestionar Development Packs:</translation>
+    </message>
+    <message>
+        <location filename="../../src/TrinityLib/ui/windows/trinito_window.cpp" line="442"/>
+        <source>Recargar Listas</source>
+        <translation>Recarregar llistes</translation>
+    </message>
+    <message>
+        <location filename="../../src/TrinityLib/ui/windows/trinito_window.cpp" line="454"/>
+        <source>Eliminar Behavior Pack Seleccionado</source>
+        <translation>Eliminar Behavior Pack seleccionat</translation>
+    </message>
+    <message>
+        <location filename="../../src/TrinityLib/ui/windows/trinito_window.cpp" line="459"/>
+        <source>No hay ningún Behavior Pack seleccionado.</source>
+        <translation>No hi cap Behavior Pack seleccionat.</translation>
+    </message>
+    <message>
+        <location filename="../../src/TrinityLib/ui/windows/trinito_window.cpp" line="466"/>
+        <source>¿Estás seguro de eliminar el Behavior Pack &apos;%1&apos;?
+Esta acción no se puede deshacer.</source>
+        <translation>Estàs segur d&apos;eliminar el Behavior Pack &apos;%1&apos;?
+Aquesta acció no es pot desfer.</translation>
+    </message>
+    <message>
+        <location filename="../../src/TrinityLib/ui/windows/trinito_window.cpp" line="491"/>
+        <location filename="../../src/TrinityLib/ui/windows/trinito_window.cpp" line="541"/>
+        <source>eliminado correctamente.</source>
+        <translation>eliminat amb èxit.</translation>
+    </message>
+    <message>
+        <location filename="../../src/TrinityLib/ui/windows/trinito_window.cpp" line="497"/>
+        <source>No se pudo eliminar</source>
+        <translation>No s&apos;ha pogut eliminar</translation>
+    </message>
+    <message>
+        <location filename="../../src/TrinityLib/ui/windows/trinito_window.cpp" line="504"/>
+        <source>Eliminar Resource Pack Seleccionado</source>
+        <translation>Eliminar Resource Pack seleccionat</translation>
+    </message>
+    <message>
+        <location filename="../../src/TrinityLib/ui/windows/trinito_window.cpp" line="509"/>
+        <source>No hay ningún Resource Pack seleccionado.</source>
+        <translation>No hi ha cap Resource Pack seleccionat.</translation>
+    </message>
+    <message>
+        <location filename="../../src/TrinityLib/ui/windows/trinito_window.cpp" line="516"/>
+        <source>¿Estás seguro de eliminar el Resource Pack &apos;%1&apos;?
+Esta acción no se puede deshacer.</source>
+        <translation>Estàs segur d&apos;eliminar el Resource Pack &apos;%1&apos;?
+Aquesta acció no es pot desfer.</translation>
+    </message>
+    <message>
+        <location filename="../../src/TrinityLib/ui/windows/trinito_window.cpp" line="563"/>
+        <source>Mundos Guardados</source>
+        <translation>Mons guardats</translation>
+    </message>
+    <message>
+        <location filename="../../src/TrinityLib/ui/windows/trinito_window.cpp" line="568"/>
+        <source>Añadir carpeta del mundo...</source>
+        <translation>Afegir carpeta del món...</translation>
+    </message>
+    <message>
+        <location filename="../../src/TrinityLib/ui/windows/trinito_window.cpp" line="573"/>
+        <source>Seleccionar carpeta del mundo</source>
+        <translation>Seleccionar carpeta del món</translation>
+    </message>
+    <message>
+        <location filename="../../src/TrinityLib/ui/windows/trinito_window.cpp" line="582"/>
+        <source>Gestionar Mundos:</source>
+        <translation>Gestionar mons:</translation>
+    </message>
+    <message>
+        <location filename="../../src/TrinityLib/ui/windows/trinito_window.cpp" line="603"/>
+        <source>Borrar Mundo Seleccionado</source>
+        <translation>Esborrar món seleccionat</translation>
+    </message>
+    <message>
+        <location filename="../../src/TrinityLib/ui/windows/trinito_window.cpp" line="607"/>
+        <source>No hay ningún mundo seleccionado.</source>
+        <translation>No hi ha cap món seleccionat.</translation>
+    </message>
+    <message>
+        <location filename="../../src/TrinityLib/ui/windows/trinito_window.cpp" line="614"/>
+        <source>¿Estás seguro de eliminar el mundo &apos;%1&apos;?
+Esta acción no 0se puede deshacer.</source>
+        <translation>Estàs segur d&apos;eliminar el món &apos;%1&apos;?
+Aquesta acció no es pot desfer.</translation>
+    </message>
+    <message>
+        <location filename="../../src/TrinityLib/ui/windows/trinito_window.cpp" line="629"/>
+        <source>Mundo eliminado correctamente.</source>
+        <translation>Món eliminat correctament.</translation>
+    </message>
+    <message>
+        <location filename="../../src/TrinityLib/ui/windows/trinito_window.cpp" line="649"/>
+        <source>Ya existe un elemento llamado:
+%1
+
+¿Reemplazarlo?</source>
+        <translation>Ja existeix un element anomenat:
+%1
+
+Sobreescriure-lo?</translation>
+    </message>
+    <message>
+        <location filename="../../src/TrinityLib/ui/windows/trinito_window.cpp" line="666"/>
+        <source>¡%1 instalado correctamente en:
+%2</source>
+        <translation>%1 instal·lat correctament a:
+%2</translation>
+    </message>
+</context>
+<context>
+    <name>VersionSelector</name>
+    <message>
+        <location filename="../../src/TrinityLib/ui/widgets/version_selector.cpp" line="17"/>
+        <location filename="../../src/TrinityLib/ui/widgets/version_selector.cpp" line="23"/>
+        <source>No hay versiones instaladas</source>
+        <translation>No hi ha versions instal·lades</translation>
+    </message>
+</context>
+</TS>
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE TS>
+<TS version="2.1" language="en_US" sourcelanguage="en_US">
+<context>
+    <name>Exporter</name>
+    <message>
+        <location filename="../../src/TrinityLib/core/exporter.cpp" line="28"/>
+        <location filename="../../src/TrinityLib/core/exporter.cpp" line="79"/>
+        <location filename="../../src/TrinityLib/core/exporter.cpp" line="94"/>
+        <source>Error</source>
+        <translation>Error</translation>
+    </message>
+    <message>
+        <location filename="../../src/TrinityLib/core/exporter.cpp" line="29"/>
+        <source>La versión no existe.</source>
+        <translation>Version does not exist.</translation>
+    </message>
+    <message>
+        <location filename="../../src/TrinityLib/core/exporter.cpp" line="35"/>
+        <source>Exportar versión</source>
+        <translation>Export version</translation>
+    </message>
+    <message>
+        <location filename="../../src/TrinityLib/core/exporter.cpp" line="36"/>
+        <source>¿Exportar &apos;%1&apos; con datos del APK?
+
+Sí: Incluye la versión completa (datos del juego).
+No: Solo exporta mods, mapas, etc.</source>
+        <translation>Export &apos;%1&apos; with APK data?
+
+Yes: Includes full version (game data).
+No: Only exports mods, maps, etc.</translation>
+    </message>
+    <message>
+        <location filename="../../src/TrinityLib/core/exporter.cpp" line="44"/>
+        <source>Guardar como archivo</source>
+        <translation>Save as file</translation>
+    </message>
+    <message>
+        <location filename="../../src/TrinityLib/core/exporter.cpp" line="45"/>
+        <source>Archivos TAR (*.tar.gz);;Todos los archivos (*)</source>
+        <translation>TAR Files (*.tar.gz);;All files (*)</translation>
+    </message>
+    <message>
+        <location filename="../../src/TrinityLib/core/exporter.cpp" line="51"/>
+        <source>Exportando...</source>
+        <translation>Exporting...</translation>
+    </message>
+    <message>
+        <location filename="../../src/TrinityLib/core/exporter.cpp" line="55"/>
+        <source>Exportando versión...</source>
+        <translation>Exporting version...</translation>
+    </message>
+    <message>
+        <location filename="../../src/TrinityLib/core/exporter.cpp" line="80"/>
+        <source>No se pudo copiar la versión.</source>
+        <translation>Could not copy version.</translation>
+    </message>
+    <message>
+        <location filename="../../src/TrinityLib/core/exporter.cpp" line="95"/>
+        <source>No se pudo copiar los recursos.</source>
+        <translation>Could not copy resources.</translation>
+    </message>
+    <message>
+        <location filename="../../src/TrinityLib/core/exporter.cpp" line="112"/>
+        <source>Versión %1 exportada como %2</source>
+        <translation>Version %1 exported as %2</translation>
+    </message>
+    <message>
+        <location filename="../../src/TrinityLib/core/exporter.cpp" line="116"/>
+        <source>Falló la exportación:
+</source>
+        <translation>Export failed:
+</translation>
+    </message>
+    <message>
+        <location filename="../../src/TrinityLib/core/exporter.cpp" line="134"/>
+        <source>Seleccionar archivo TAR</source>
+        <translation>Select TAR file</translation>
+    </message>
+    <message>
+        <location filename="../../src/TrinityLib/core/exporter.cpp" line="135"/>
+        <source>Archivos TAR (*.tar.gz *.tar);;Todos los archivos (*)</source>
+        <translation>TAR Files (*.tar.gz *.tar);;All files (*)</translation>
+    </message>
+    <message>
+        <location filename="../../src/TrinityLib/core/exporter.cpp" line="154"/>
+        <source>Advertencia</source>
+        <translation>Warning</translation>
+    </message>
+    <message>
+        <location filename="../../src/TrinityLib/core/exporter.cpp" line="155"/>
+        <source>¡Este proceso puede tardar!.
+¿Quiere continuar?</source>
+        <translation>This process may take a while.
+Do you want to continue?</translation>
+    </message>
+    <message>
+        <location filename="../../src/TrinityLib/core/exporter.cpp" line="167"/>
+        <source>Importando...</source>
+        <translation>Importing...</translation>
+    </message>
+    <message>
+        <location filename="../../src/TrinityLib/core/exporter.cpp" line="171"/>
+        <source>Importando versión...</source>
+        <translation>Importing version...</translation>
+    </message>
+    <message>
+        <location filename="../../src/TrinityLib/core/exporter.cpp" line="197"/>
+        <source>Falló la extracción:
+</source>
+        <translation>Extraction failed:
+</translation>
+    </message>
+    <message>
+        <location filename="../../src/TrinityLib/core/exporter.cpp" line="259"/>
+        <source>No se pudo mover/copiar directorio: </source>
+        <translation>Could not move/copy directory: </translation>
+    </message>
+    <message>
+        <location filename="../../src/TrinityLib/core/exporter.cpp" line="268"/>
+        <source>No se pudo mover/copiar archivo: </source>
+        <translation>Could not move/copy file: </translation>
+    </message>
+    <message>
+        <location filename="../../src/TrinityLib/core/exporter.cpp" line="310"/>
+        <source>No se pudo mover/copiar directorio de recursos: </source>
+        <translation>Could not move/copy resource directory: </translation>
+    </message>
+    <message>
+        <location filename="../../src/TrinityLib/core/exporter.cpp" line="319"/>
+        <source>No se pudo mover/copiar archivo de recursos: </source>
+        <translation>Could not move/copy resource file: </translation>
+    </message>
+    <message>
+        <location filename="../../src/TrinityLib/core/exporter.cpp" line="341"/>
+        <source>Versión %1 importada correctamente.</source>
+        <translation>Version %1 imported successfully.</translation>
+    </message>
+</context>
+<context>
+    <name>ExtractDialog</name>
+    <message>
+        <location filename="../../src/TrinityLib/ui/dialogs/extract_dialog.cpp" line="12"/>
+        <source>Nueva versión desde APK</source>
+        <translation>New version from APK</translation>
+    </message>
+    <message>
+        <location filename="../../src/TrinityLib/ui/dialogs/extract_dialog.cpp" line="17"/>
+        <source>Seleccionar APK...</source>
+        <translation>Select APK...</translation>
+    </message>
+    <message>
+        <location filename="../../src/TrinityLib/ui/dialogs/extract_dialog.cpp" line="18"/>
+        <source>Ningún archivo seleccionado</source>
+        <translation>No files selected</translation>
+    </message>
+    <message>
+        <location filename="../../src/TrinityLib/ui/dialogs/extract_dialog.cpp" line="29"/>
+        <source>Nombre de la versión:</source>
+        <translation>Version name:</translation>
+    </message>
+    <message>
+        <location filename="../../src/TrinityLib/ui/dialogs/extract_dialog.cpp" line="36"/>
+        <location filename="../../src/TrinityLib/ui/dialogs/extract_dialog.cpp" line="40"/>
+        <source>Error</source>
+        <translation>Error</translation>
+    </message>
+    <message>
+        <location filename="../../src/TrinityLib/ui/dialogs/extract_dialog.cpp" line="36"/>
+        <source>Debes seleccionar un archivo APK.</source>
+        <translation>You must select an APK file.</translation>
+    </message>
+    <message>
+        <location filename="../../src/TrinityLib/ui/dialogs/extract_dialog.cpp" line="40"/>
+        <source>Debes ingresar un nombre para la versión.</source>
+        <translation>You must enter a name for the version.</translation>
+    </message>
+    <message>
+        <location filename="../../src/TrinityLib/ui/dialogs/extract_dialog.cpp" line="49"/>
+        <source>Seleccionar APK de Minecraft</source>
+        <translation>Select Minecraft APK</translation>
+    </message>
+    <message>
+        <location filename="../../src/TrinityLib/ui/dialogs/extract_dialog.cpp" line="49"/>
+        <source>Archivos APK (*.apk)</source>
+        <translation>APK files (*.apk)</translation>
+    </message>
+</context>
+<context>
+    <name>LauncherWindow</name>
+    <message>
+        <location filename="../../src/TrinityLib/ui/windows/launcher_window.cpp" line="138"/>
+        <source>+ Extraer APK</source>
+        <translation>+ Extract APK</translation>
+    </message>
+    <message>
+        <location filename="../../src/TrinityLib/ui/windows/launcher_window.cpp" line="142"/>
+        <source>Importar</source>
+        <translation>Import</translation>
+    </message>
+    <message>
+        <location filename="../../src/TrinityLib/ui/windows/launcher_window.cpp" line="146"/>
+        <source>Herramientas</source>
+        <translation>Tools</translation>
+    </message>
+    <message>
+        <location filename="../../src/TrinityLib/ui/windows/launcher_window.cpp" line="179"/>
+        <source>Selecciona una versión</source>
+        <translation>Select a version</translation>
+    </message>
+    <message>
+        <location filename="../../src/TrinityLib/ui/windows/launcher_window.cpp" line="192"/>
+        <source>JUGAR</source>
+        <translation>PLAY</translation>
+    </message>
+    <message>
+        <location filename="../../src/TrinityLib/ui/windows/launcher_window.cpp" line="199"/>
+        <source>Crear Acceso Directo</source>
+        <translation>Create Shortcut</translation>
+    </message>
+    <message>
+        <location filename="../../src/TrinityLib/ui/windows/launcher_window.cpp" line="204"/>
+        <source>Editar Configuración</source>
+        <translation>Edit Configuration</translation>
+    </message>
+    <message>
+        <location filename="../../src/TrinityLib/ui/windows/launcher_window.cpp" line="209"/>
+        <source>Exportar</source>
+        <translation>Export</translation>
+    </message>
+    <message>
+        <location filename="../../src/TrinityLib/ui/windows/launcher_window.cpp" line="211"/>
+        <source>Eliminar</source>
+        <translation>Delete</translation>
+    </message>
+    <message>
+        <location filename="../../src/TrinityLib/ui/windows/launcher_window.cpp" line="223"/>
+        <source>Listo</source>
+        <translation>Ready</translation>
+    </message>
+    <message>
+        <location filename="../../src/TrinityLib/ui/windows/launcher_window.cpp" line="281"/>
+        <source>Sin versiones</source>
+        <translation>No versions</translation>
+    </message>
+    <message>
+        <location filename="../../src/TrinityLib/ui/windows/launcher_window.cpp" line="284"/>
+        <source>No hay versiones instaladas.</source>
+        <translation>No versions installed.</translation>
+    </message>
+    <message>
+        <location filename="../../src/TrinityLib/ui/windows/launcher_window.cpp" line="295"/>
+        <source>Versión seleccionada: %1 | Ruta: %2</source>
+        <translation>Selected version: %1 | Path: %2</translation>
+    </message>
+    <message>
+        <location filename="../../src/TrinityLib/ui/windows/launcher_window.cpp" line="312"/>
+        <location filename="../../src/TrinityLib/ui/windows/launcher_window.cpp" line="384"/>
+        <location filename="../../src/TrinityLib/ui/windows/launcher_window.cpp" line="440"/>
+        <location filename="../../src/TrinityLib/ui/windows/launcher_window.cpp" line="451"/>
+        <location filename="../../src/TrinityLib/ui/windows/launcher_window.cpp" line="458"/>
+        <location filename="../../src/TrinityLib/ui/windows/launcher_window.cpp" line="511"/>
+        <source>Advertencia</source>
+        <translation>Warning</translation>
+    </message>
+    <message>
+        <location filename="../../src/TrinityLib/ui/windows/launcher_window.cpp" line="313"/>
+        <source>Ya existe una versión llamada &apos;%1&apos;.
+¿Reemplazarla?</source>
+        <translation>A version named &apos;%1&apos; already exists.
+Replace it?</translation>
+    </message>
+    <message>
+        <location filename="../../src/TrinityLib/ui/windows/launcher_window.cpp" line="322"/>
+        <source>Extrayendo APK...</source>
+        <translation>Extracting APK...</translation>
+    </message>
+    <message>
+        <location filename="../../src/TrinityLib/ui/windows/launcher_window.cpp" line="326"/>
+        <source>Extrayendo versión...</source>
+        <translation>Extracting version...</translation>
+    </message>
+    <message>
+        <location filename="../../src/TrinityLib/ui/windows/launcher_window.cpp" line="350"/>
+        <location filename="../../src/TrinityLib/ui/windows/launcher_window.cpp" line="470"/>
+        <source>Error</source>
+        <translation>Error</translation>
+    </message>
+    <message>
+        <location filename="../../src/TrinityLib/ui/windows/launcher_window.cpp" line="351"/>
+        <source>Falló la extracción:
+</source>
+        <translation>Extraction failed:
+</translation>
+    </message>
+    <message>
+        <location filename="../../src/TrinityLib/ui/windows/launcher_window.cpp" line="355"/>
+        <location filename="../../src/TrinityLib/ui/windows/launcher_window.cpp" line="425"/>
+        <location filename="../../src/TrinityLib/ui/windows/launcher_window.cpp" line="476"/>
+        <location filename="../../src/TrinityLib/ui/windows/launcher_window.cpp" line="585"/>
+        <source>Éxito</source>
+        <translation>Success</translation>
+    </message>
+    <message>
+        <location filename="../../src/TrinityLib/ui/windows/launcher_window.cpp" line="356"/>
+        <source>¡Versión extraída correctamente!</source>
+        <translation>Version extracted successfully!</translation>
+    </message>
+    <message>
+        <location filename="../../src/TrinityLib/ui/windows/launcher_window.cpp" line="385"/>
+        <location filename="../../src/TrinityLib/ui/windows/launcher_window.cpp" line="441"/>
+        <location filename="../../src/TrinityLib/ui/windows/launcher_window.cpp" line="452"/>
+        <location filename="../../src/TrinityLib/ui/windows/launcher_window.cpp" line="512"/>
+        <source>No hay ninguna versión seleccionada.</source>
+        <translation>No version selected.</translation>
+    </message>
+    <message>
+        <location filename="../../src/TrinityLib/ui/windows/launcher_window.cpp" line="392"/>
+        <source>Editar configuración de </source>
+        <translation>Edit configuration for </translation>
+    </message>
+    <message>
+        <location filename="../../src/TrinityLib/ui/windows/launcher_window.cpp" line="397"/>
+        <source>Parámetros de ejecución (antes de mcpelauncher-client):</source>
+        <translation>Launch parameters (before mcpelauncher-client):</translation>
+    </message>
+    <message>
+        <location filename="../../src/TrinityLib/ui/windows/launcher_window.cpp" line="422"/>
+        <source>No se pudo guardar la configuración:
+</source>
+        <translation>Could not save configuration:
+</translation>
+    </message>
+    <message>
+        <location filename="../../src/TrinityLib/ui/windows/launcher_window.cpp" line="426"/>
+        <source>Configuración guardada.</source>
+        <translation>Configuration saved.</translation>
+    </message>
+    <message>
+        <location filename="../../src/TrinityLib/ui/windows/launcher_window.cpp" line="433"/>
+        <source>Configuración de %1 actualizada.</source>
+        <translation>Configuration for %1 updated.</translation>
+    </message>
+    <message>
+        <location filename="../../src/TrinityLib/ui/windows/launcher_window.cpp" line="459"/>
+        <source>¿Estás seguro de eliminar la versión &apos;%1&apos;?
+Esta acción no se puede deshacer.</source>
+        <translation>Are you sure you want to delete version &apos;%1&apos;?
+This action cannot be undone.</translation>
+    </message>
+    <message>
+        <location filename="../../src/TrinityLib/ui/windows/launcher_window.cpp" line="471"/>
+        <source>No se pudo eliminar la versión:
+</source>
+        <translation>Could not delete version:
+</translation>
+    </message>
+    <message>
+        <location filename="../../src/TrinityLib/ui/windows/launcher_window.cpp" line="477"/>
+        <source>Versión eliminada correctamente.</source>
+        <translation>Version deleted successfully.</translation>
+    </message>
+    <message>
+        <location filename="../../src/TrinityLib/ui/windows/launcher_window.cpp" line="480"/>
+        <source>Versión %1 eliminada.</source>
+        <translation>Version %1 deleted.</translation>
+    </message>
+    <message>
+        <location filename="../../src/TrinityLib/ui/windows/launcher_window.cpp" line="525"/>
+        <source>La versión &apos;%1&apos; no es válida o no está completa.</source>
+        <translation>Version &apos;%1&apos; is invalid or incomplete.</translation>
+    </message>
+    <message>
+        <location filename="../../src/TrinityLib/ui/windows/launcher_window.cpp" line="539"/>
+        <source>Confirmar</source>
+        <translation>Confirm</translation>
+    </message>
+    <message>
+        <location filename="../../src/TrinityLib/ui/windows/launcher_window.cpp" line="541"/>
+        <source>Ya existe un acceso directo para &apos;%1&apos;.
+¿Reemplazarlo?</source>
+        <translation>A shortcut for &apos;%1&apos; already exists.
+Replace it?</translation>
+    </message>
+    <message>
+        <location filename="../../src/TrinityLib/ui/windows/launcher_window.cpp" line="574"/>
+        <source>No se pudo crear el archivo de acceso directo en:
+</source>
+        <translation>Could not create shortcut file at:
+</translation>
+    </message>
+    <message>
+        <location filename="../../src/TrinityLib/ui/windows/launcher_window.cpp" line="586"/>
+        <source>Acceso directo creado en la carpeta Descargas</source>
+        <translation>Shortcut created in Downloads folder</translation>
+    </message>
+    <message>
+        <location filename="../../src/TrinityLib/ui/windows/launcher_window.cpp" line="597"/>
+        <source>Idioma cambiado</source>
+        <translation>Language Changed</translation>
+    </message>
+    <message>
+        <location filename="../../src/TrinityLib/ui/windows/launcher_window.cpp" line="598"/>
+        <source>El idioma se ha cambiado a &apos;%1&apos;.
+Por favor, reinicia la aplicación para aplicar los cambios.</source>
+        <translation>The language has been changed to ‘%1’.
+Please restart the application to apply the changes.</translation>
+    </message>
+</context>
+<context>
+    <name>TrinitoWindow</name>
+    <message>
+        <location filename="../../src/TrinityLib/ui/windows/trinito_window.cpp" line="22"/>
+        <source> Gestor de Contenido para Bedrock</source>
+        <translation> Bedrock Content Manager</translation>
+    </message>
+    <message>
+        <location filename="../../src/TrinityLib/ui/windows/trinito_window.cpp" line="58"/>
+        <source>Texturas</source>
+        <translation>Textures</translation>
+    </message>
+    <message>
+        <location filename="../../src/TrinityLib/ui/windows/trinito_window.cpp" line="59"/>
+        <source>Desarrollo</source>
+        <translation>Development</translation>
+    </message>
+    <message>
+        <location filename="../../src/TrinityLib/ui/windows/trinito_window.cpp" line="60"/>
+        <source>Mundos</source>
+        <translation>Worlds</translation>
+    </message>
+    <message>
+        <location filename="../../src/TrinityLib/ui/windows/trinito_window.cpp" line="68"/>
+        <source>Lista de %1 instalados:</source>
+        <translation>List of installed %1:</translation>
+    </message>
+    <message>
+        <location filename="../../src/TrinityLib/ui/windows/trinito_window.cpp" line="88"/>
+        <location filename="../../src/TrinityLib/ui/windows/trinito_window.cpp" line="314"/>
+        <location filename="../../src/TrinityLib/ui/windows/trinito_window.cpp" line="596"/>
+        <source>Recargar Lista</source>
+        <translation>Reload List</translation>
+    </message>
+    <message>
+        <location filename="../../src/TrinityLib/ui/windows/trinito_window.cpp" line="274"/>
+        <source>Instalar nuevo </source>
+        <translation>Install new </translation>
+    </message>
+    <message>
+        <location filename="../../src/TrinityLib/ui/windows/trinito_window.cpp" line="277"/>
+        <source>Seleccionar archivo...</source>
+        <translation>Select file...</translation>
+    </message>
+    <message>
+        <location filename="../../src/TrinityLib/ui/windows/trinito_window.cpp" line="282"/>
+        <source>Seleccionar pack</source>
+        <translation>Select pack</translation>
+    </message>
+    <message>
+        <location filename="../../src/TrinityLib/ui/windows/trinito_window.cpp" line="283"/>
+        <location filename="../../src/TrinityLib/ui/windows/trinito_window.cpp" line="389"/>
+        <location filename="../../src/TrinityLib/ui/windows/trinito_window.cpp" line="403"/>
+        <source>Archivos compatibles (*.zip *.mcpack);;Todos los archivos (*)</source>
+        <translation>Compatible files (*.zip *.mcpack);;All files (*)</translation>
+    </message>
+    <message>
+        <location filename="../../src/TrinityLib/ui/windows/trinito_window.cpp" line="294"/>
+        <source>Gestionar </source>
+        <translation>Manage </translation>
+    </message>
+    <message>
+        <location filename="../../src/TrinityLib/ui/windows/trinito_window.cpp" line="294"/>
+        <source> instalados:</source>
+        <translation> installed:</translation>
+    </message>
+    <message>
+        <location filename="../../src/TrinityLib/ui/windows/trinito_window.cpp" line="320"/>
+        <source>Eliminar Seleccionado</source>
+        <translation>Delete Selected</translation>
+    </message>
+    <message>
+        <location filename="../../src/TrinityLib/ui/windows/trinito_window.cpp" line="323"/>
+        <location filename="../../src/TrinityLib/ui/windows/trinito_window.cpp" line="330"/>
+        <location filename="../../src/TrinityLib/ui/windows/trinito_window.cpp" line="458"/>
+        <location filename="../../src/TrinityLib/ui/windows/trinito_window.cpp" line="465"/>
+        <location filename="../../src/TrinityLib/ui/windows/trinito_window.cpp" line="508"/>
+        <location filename="../../src/TrinityLib/ui/windows/trinito_window.cpp" line="515"/>
+        <location filename="../../src/TrinityLib/ui/windows/trinito_window.cpp" line="606"/>
+        <location filename="../../src/TrinityLib/ui/windows/trinito_window.cpp" line="613"/>
+        <location filename="../../src/TrinityLib/ui/windows/trinito_window.cpp" line="648"/>
+        <source>Advertencia</source>
+        <translation>Warning</translation>
+    </message>
+    <message>
+        <location filename="../../src/TrinityLib/ui/windows/trinito_window.cpp" line="324"/>
+        <source>No hay ningún elemento seleccionado.</source>
+        <translation>No item selected.</translation>
+    </message>
+    <message>
+        <location filename="../../src/TrinityLib/ui/windows/trinito_window.cpp" line="331"/>
+        <source>¿Estás seguro de eliminar &apos;%1&apos;?
+Esta acción no se puede deshacer.</source>
+        <translation>Are you sure you want to delete &apos;%1&apos;?
+This action cannot be undone.</translation>
+    </message>
+    <message>
+        <location filename="../../src/TrinityLib/ui/windows/trinito_window.cpp" line="355"/>
+        <location filename="../../src/TrinityLib/ui/windows/trinito_window.cpp" line="490"/>
+        <location filename="../../src/TrinityLib/ui/windows/trinito_window.cpp" line="540"/>
+        <location filename="../../src/TrinityLib/ui/windows/trinito_window.cpp" line="628"/>
+        <location filename="../../src/TrinityLib/ui/windows/trinito_window.cpp" line="665"/>
+        <source>Éxito</source>
+        <translation>Success</translation>
+    </message>
+    <message>
+        <location filename="../../src/TrinityLib/ui/windows/trinito_window.cpp" line="356"/>
+        <source>&apos;%1&apos; eliminado correctamente.</source>
+        <translation>&apos;%1&apos; deleted successfully.</translation>
+    </message>
+    <message>
+        <location filename="../../src/TrinityLib/ui/windows/trinito_window.cpp" line="385"/>
+        <source>Añadir Development Behavior Pack (archivo)...</source>
+        <translation>Add Development Behavior Pack (file)...</translation>
+    </message>
+    <message>
+        <location filename="../../src/TrinityLib/ui/windows/trinito_window.cpp" line="388"/>
+        <source>Añadir Development Behavior Pack</source>
+        <translation>Add Development Behavior Pack</translation>
+    </message>
+    <message>
+        <location filename="../../src/TrinityLib/ui/windows/trinito_window.cpp" line="399"/>
+        <source>Añadir Development Resource Pack (archivo)...</source>
+        <translation>Add Development Resource Pack (file)...</translation>
+    </message>
+    <message>
+        <location filename="../../src/TrinityLib/ui/windows/trinito_window.cpp" line="402"/>
+        <source>Añadir Development Resource Pack</source>
+        <translation>Add Development Resource Pack</translation>
+    </message>
+    <message>
+        <location filename="../../src/TrinityLib/ui/windows/trinito_window.cpp" line="416"/>
+        <source>Gestionar Development Packs:</source>
+        <translation>Manage Development Packs:</translation>
+    </message>
+    <message>
+        <location filename="../../src/TrinityLib/ui/windows/trinito_window.cpp" line="442"/>
+        <source>Recargar Listas</source>
+        <translation>Reload Lists</translation>
+    </message>
+    <message>
+        <location filename="../../src/TrinityLib/ui/windows/trinito_window.cpp" line="454"/>
+        <source>Eliminar Behavior Pack Seleccionado</source>
+        <translation>Delete Selected Behavior Pack</translation>
+    </message>
+    <message>
+        <location filename="../../src/TrinityLib/ui/windows/trinito_window.cpp" line="459"/>
+        <source>No hay ningún Behavior Pack seleccionado.</source>
+        <translation>No Behavior Pack selected.</translation>
+    </message>
+    <message>
+        <location filename="../../src/TrinityLib/ui/windows/trinito_window.cpp" line="466"/>
+        <source>¿Estás seguro de eliminar el Behavior Pack &apos;%1&apos;?
+Esta acción no se puede deshacer.</source>
+        <translation>Are you sure you want to delete Behavior Pack &apos;%1&apos;?
+This action cannot be undone.</translation>
+    </message>
+    <message>
+        <location filename="../../src/TrinityLib/ui/windows/trinito_window.cpp" line="491"/>
+        <location filename="../../src/TrinityLib/ui/windows/trinito_window.cpp" line="541"/>
+        <source>eliminado correctamente.</source>
+        <translation>deleted successfully.</translation>
+    </message>
+    <message>
+        <location filename="../../src/TrinityLib/ui/windows/trinito_window.cpp" line="497"/>
+        <source>No se pudo eliminar</source>
+        <translation>Could not delete</translation>
+    </message>
+    <message>
+        <location filename="../../src/TrinityLib/ui/windows/trinito_window.cpp" line="504"/>
+        <source>Eliminar Resource Pack Seleccionado</source>
+        <translation>Delete Selected Resource Pack</translation>
+    </message>
+    <message>
+        <location filename="../../src/TrinityLib/ui/windows/trinito_window.cpp" line="509"/>
+        <source>No hay ningún Resource Pack seleccionado.</source>
+        <translation>No Resource Pack selected.</translation>
+    </message>
+    <message>
+        <location filename="../../src/TrinityLib/ui/windows/trinito_window.cpp" line="516"/>
+        <source>¿Estás seguro de eliminar el Resource Pack &apos;%1&apos;?
+Esta acción no se puede deshacer.</source>
+        <translation>Are you sure you want to delete Resource Pack &apos;%1&apos;?
+This action cannot be undone.</translation>
+    </message>
+    <message>
+        <location filename="../../src/TrinityLib/ui/windows/trinito_window.cpp" line="563"/>
+        <source>Mundos Guardados</source>
+        <translation>Saved Worlds</translation>
+    </message>
+    <message>
+        <location filename="../../src/TrinityLib/ui/windows/trinito_window.cpp" line="568"/>
+        <source>Añadir carpeta del mundo...</source>
+        <translation>Add world folder...</translation>
+    </message>
+    <message>
+        <location filename="../../src/TrinityLib/ui/windows/trinito_window.cpp" line="573"/>
+        <source>Seleccionar carpeta del mundo</source>
+        <translation>Select world folder</translation>
+    </message>
+    <message>
+        <location filename="../../src/TrinityLib/ui/windows/trinito_window.cpp" line="582"/>
+        <source>Gestionar Mundos:</source>
+        <translation>Manage Worlds:</translation>
+    </message>
+    <message>
+        <location filename="../../src/TrinityLib/ui/windows/trinito_window.cpp" line="603"/>
+        <source>Borrar Mundo Seleccionado</source>
+        <translation>Delete Selected World</translation>
+    </message>
+    <message>
+        <location filename="../../src/TrinityLib/ui/windows/trinito_window.cpp" line="607"/>
+        <source>No hay ningún mundo seleccionado.</source>
+        <translation>No world selected.</translation>
+    </message>
+    <message>
+        <location filename="../../src/TrinityLib/ui/windows/trinito_window.cpp" line="614"/>
+        <source>¿Estás seguro de eliminar el mundo &apos;%1&apos;?
+Esta acción no 0se puede deshacer.</source>
+        <translation>Are you sure you want to delete world &apos;%1&apos;?
+This action cannot be undone.</translation>
+    </message>
+    <message>
+        <location filename="../../src/TrinityLib/ui/windows/trinito_window.cpp" line="629"/>
+        <source>Mundo eliminado correctamente.</source>
+        <translation>World deleted successfully.</translation>
+    </message>
+    <message>
+        <location filename="../../src/TrinityLib/ui/windows/trinito_window.cpp" line="649"/>
+        <source>Ya existe un elemento llamado:
+%1
+
+¿Reemplazarlo?</source>
+        <translation>An item already exists named:
+%1
+
+Replace it?</translation>
+    </message>
+    <message>
+        <location filename="../../src/TrinityLib/ui/windows/trinito_window.cpp" line="666"/>
+        <source>¡%1 instalado correctamente en:
+%2</source>
+        <translation>%1 installed successfully in:
+%2</translation>
+    </message>
+</context>
+<context>
+    <name>VersionSelector</name>
+    <message>
+        <location filename="../../src/TrinityLib/ui/widgets/version_selector.cpp" line="17"/>
+        <location filename="../../src/TrinityLib/ui/widgets/version_selector.cpp" line="23"/>
+        <source>No hay versiones instaladas</source>
+        <translation>No versions installed</translation>
+    </message>
+</context>
+</TS>
+#ifndef LAUNCHER_WINDOW_H
+#define LAUNCHER_WINDOW_H
+
+#include "TrinityLib/core/exporter.hpp"
+#include <QComboBox>
+#include <QHBoxLayout>
+#include <QLabel>
+#include <QListWidget>
+#include <QPushButton>
+#include <QVBoxLayout>
+#include <QWidget>
+class LauncherWindow : public QWidget {
+        Q_OBJECT
+
+    public:
+        explicit LauncherWindow(QWidget *parent = nullptr);
+
+        /**
+         * Carga las versiones instaladas desde el directorio mcpelauncher
+         */
+        void loadInstalledVersions();
+
+    private slots:
+        void onVersionSelected(QListWidgetItem *item);
+        void showExtractDialog();
+        void launchGame();
+        void launchTools();
+
+        // Nuevos slots para los botones
+        void onEditConfigClicked();
+        void onExportClicked();
+        void onDeleteClicked();
+        void onImportClicked();
+        void createDesktopShortcut();
+        void onLanguageChanged(int index);
+
+    private:
+        // Layouts
+        QHBoxLayout *mainLayout;
+        QVBoxLayout *rightPanelLayout;
+        void deletePack(const QString &packType, const QString &packName);
+        // Left Side - Version List
+        QListWidget *versionList;
+
+        // Right Side - Context Panel
+        QWidget *contextPanel;
+        QLabel *versionIconLabel;
+        QLabel *versionNameLabel;
+        QLabel *versionTypeLabel;
+        QPushButton *playButton;
+        QPushButton *editButton;   // Placeholder for now
+        QPushButton *exportButton; // Placeholder
+        QPushButton *deleteButton; // Placeholder
+        QPushButton *importButton; //
+        // Top Bar
+        QPushButton *extractButton;
+        QPushButton *toolsButton;
+        Exporter *exporter;
+        // Status Bar
+        QLabel *statusLabel;
+        QPushButton *shortcutButton;
+        QComboBox *languageCombo;
+
+        void setupUi();
+        void setupConnections();
+        void updateContextPanel(const QString &versionName);
+        bool copyDirectory(const QString &srcPath, const QString &dstPath);
+        bool extractZip(const QString &zipPath, const QString &destDir);
+};
+
+#endif // LAUNCHER_WINDOW_H
+#ifndef TRINITOWINDOW_H
+#define TRINITOWINDOW_H
+
+#include <QWidget>
+#include <QListWidget>
+#include <QPushButton>
+
+class TrinitoWindow : public QWidget {
+    Q_OBJECT
+
+public:
+    explicit TrinitoWindow(QWidget *parent = nullptr);
+
+private:
+    QWidget *createPackTab(const QString &targetSubdir, const QString &labelText);
+    QWidget *createDevTab();
+    QWidget *createWorldTab();
+    QWidget *createShadersModsTab();
+    void installItem(const QString &sourcePath, const QString &targetSubdir);
+
+    QWidget *createManageTab(const QString &packType, const QString &displayName);
+    void loadPacks(const QString &packType, QListWidget *listWidget);
+    void togglePack(const QString &packType, const QString &packName, bool enable);
+
+    QString getShadersDir();
+
+    QListWidget *modsList = nullptr;
+    QListWidget *addonsList = nullptr;
+    QListWidget *resourcesList = nullptr;
+    QListWidget *mapsList = nullptr;
+
+    QListWidget *shadersList = nullptr;
+    QPushButton *installShaderpackButton = nullptr;
+    QPushButton *removeShaderpackButton = nullptr;
+    QPushButton *refreshShaderListButton = nullptr;
+
+    QListWidget *availableModsList = nullptr;
+    QPushButton *downloadModButton = nullptr;
+    QListWidget *installedModsList = nullptr;
+    QPushButton *removeInstalledModButton = nullptr;
+
+private slots:
+    void onInstallShaderpackClicked();
+    void onRemoveShaderpackClicked();
+    void onRefreshShaderListClicked();
+    void onDownloadModClicked();
+    void onRemoveInstalledModClicked();
+
+    void populateInstalledShaders();
+    void populateAvailableMods();
+    void populateInstalledMods();
+};
+
+#endif // TRINITOWINDOW_H
+#ifndef EXTRACT_DIALOG_H
+#define EXTRACT_DIALOG_H
+
+#include <QDialog>
+#include <QLineEdit>
+#include <QLabel>
+
+class ExtractDialog : public QDialog {
+    Q_OBJECT
+
+public:
+    explicit ExtractDialog(QWidget *parent = nullptr);
+
+    QString getApkPath() const;
+    QString getVersionName() const;
+
+private:
+    QString apkPath;
+    QString versionName;
+    QLabel *apkLabel;
+    QLineEdit *nameEdit;
+
+    void onSelectApk();
+};
+
+#endif // EXTRACT_DIALOG_H
+#ifndef VERSION_SELECTOR_H
+#define VERSION_SELECTOR_H
+
+#include <QComboBox>
+
+class VersionSelector : public QComboBox {
+    Q_OBJECT
+
+public:
+    explicit VersionSelector(QWidget *parent = nullptr);
+    void refreshVersions();
+    QString getSelectedVersion() const;
+};
+
+#endif // VERSION_SELECTOR_H
+#ifndef PACK_INSTALLER_H
+#define PACK_INSTALLER_H
+
+#include <QString>
+#include <QObject>
+
+class PackInstaller : public QObject {
+    Q_OBJECT
+
+public:
+    explicit PackInstaller(QObject *parent = nullptr);
+
+    enum InstallResult {
+        Success,
+        NotFound,
+        CreateDirFailed,
+        CopyFailed,
+        UserCancelled
+    };
+
+    // Installs a file or directory to the target subdirectory in the game folder.
+    // Returns true if successful, false otherwise.
+    // If overwrite is needed, it might need interaction or a flag.
+    // For logic separation, we should probably pass a callback or flag for overwrite.
+    // But since the UI handled the dialog, maybe we just return a status indicating "Exists"
+    // and let the UI ask, then call again with overwrite=true?
+    // Or we can pass a std::function for query?
+    // For simplicity, let's add a force flag.
+    
+    bool installItem(const QString &sourcePath, const QString &targetSubdir, bool forceOverwrite, QString &errorMsg);
+    
+    bool itemExists(const QString &sourcePath, const QString &targetSubdir);
+    QString getTargetName(const QString &sourcePath);
+
+private:
+    QString baseGameDir;
+    bool copyDirectory(const QString &srcPath, const QString &dstPath);
+};
+
+#endif // PACK_INSTALLER_H
+#ifndef GAME_LAUNCHER_H
+#define GAME_LAUNCHER_H
+
+#include <QString>
+#include <QObject>
+
+class GameLauncher : public QObject {
+    Q_OBJECT
+
+public:
+    explicit GameLauncher(QObject *parent = nullptr);
+
+    bool launchGame(const QString &versionName, QString &errorMsg);
+    bool launchTrinito(QString &errorMsg);
+};
+
+#endif // GAME_LAUNCHER_H
+#ifndef EXPORTER_H
+#define EXPORTER_H
+
+#include <QObject>
+#include <QThread>
+#include <QWidget>
+
+class Exporter : public QObject {
+        Q_OBJECT
+
+    public:
+        explicit Exporter(QWidget *parent = nullptr);
+
+        void exportVersion(const QString &versionName);
+        void importVersion();
+
+    signals:
+        void exportFinished(bool success, const QString &message);
+        void importFinished(bool success, const QString &message);
+
+    private:
+        QWidget *parentWidget;
+        bool copyDirectory(const QString &srcPath, const QString &dstPath);
+};
+
+// Clase auxiliar para copiar directorios en otro hilo
+class CopyWorker : public QObject {
+        Q_OBJECT
+
+    public:
+        QString srcPath;
+        QString dstPath;
+
+    signals:
+        void copyFinished(bool success);
+
+    public slots:
+        void doCopy();
+};
+
+#endif // EXPORTER_H
+#ifndef VERSION_CONFIG_H
+#define VERSION_CONFIG_H
+
+#include <QObject>
+#include <QString>
+#include <QMap>
+
+class VersionConfig : public QObject {
+    Q_OBJECT
+
+public:
+    explicit VersionConfig(const QString &versionName, QObject *parent = nullptr);
+    ~VersionConfig();
+
+    // Get/Set additional launch arguments
+    QString getLaunchArgs() const;
+    void setLaunchArgs(const QString &args);
+
+    // Save and load from file
+    bool save();
+    bool load();
+
+private:
+    QString versionName;
+    QString launchArgs;
+    QString configPath() const;
+};
+
+#endif // VERSION_CONFIG_H#ifndef VERSION_MANAGER_H
+#define VERSION_MANAGER_H
+
+#include <QObject>
+#include <QString>
+#include <QStringList>
+
+class VersionManager : public QObject {
+    Q_OBJECT
+
+public:
+    explicit VersionManager(QObject *parent = nullptr);
+
+    QStringList getInstalledVersions() const;
+    QString getVersionPath(const QString &versionName) const;
+    bool isVersionValid(const QString &versionName) const;
+
+    // Extraer APK (mover desde launcher_window)
+    bool extractApk(const QString &apkPath, const QString &versionName, QString &errorMsg);
+
+    // Eliminar versión (mover desde launcher_window)
+    bool deleteVersion(const QString &versionName, QString &errorMsg);
+
+    // Editar configuración de versión (mover desde launcher_window)
+    bool editVersion(const QString &versionName, const QString &newArgs, QString &errorMsg);
+
+signals:
+    // Nuevo signal para reportar progreso (si es posible detectarlo)
+    void extractionProgress(const QString &statusMessage);
+
+private:
+    // Función auxiliar para copiar directorios
+    bool copyDirectory(const QString &srcPath, const QString &dstPath);
+};
+
+#endif // VERSION_MANAGER_H
+#include "TrinityLib/ui/windows/trinito_window.hpp"
+#include <QApplication>
+#include <QIcon>
+#include <QLocale>
+#include <QSettings>
+#include <QTranslator>
+
+int main(int argc, char *argv[]) {
+    QApplication app(argc, argv);
+
+    QCoreApplication::setOrganizationName("Trench");
+    QCoreApplication::setApplicationName("Trinity Launcher");
+
+    QTranslator translator;
+    QSettings settings;
+    QString lang = settings.value("language", "es").toString();
+
+    if (lang == "en") {
+        if (translator.load(":/i18n/trinity_en")) {
+            app.installTranslator(&translator);
+        }
+    }
+    else if (lang == "ca") {
+        if (translator.load(":/i18n/trinity_ca")) {
+            app.installTranslator(&translator);
+        }
+    }
+
+    QIcon appIcon(":/icons/appicon");
+    app.setWindowIcon(appIcon);
+
+    TrinitoWindow window;
+    window.show();
+    return app.exec();
+}
+#include "TrinityLib/ui/windows/launcher_window.hpp"
+#include <QApplication>
+#include <QIcon>
+#include <QLocale>
+#include <QSettings>
+#include <QTranslator>
+
+int main(int argc, char *argv[]) {
+    QApplication app(argc, argv);
+
+    QCoreApplication::setOrganizationName("Trench");
+    QCoreApplication::setApplicationName("Trinity Launcher");
+
+    QTranslator translator;
+    QSettings settings;
+
+    QString lang = settings.value("language", "es").toString();
+
+    if (lang == "en") {
+        if (translator.load(":/i18n/trinity_en")) {
+            app.installTranslator(&translator);
+        }
+    }
+    else if (lang == "ca") {
+        if (translator.load(":/i18n/trinity_ca")) {
+            app.installTranslator(&translator);
+        }
+    }
+
+    QIcon appIcon(":/icons/appicon");
+    app.setWindowIcon(appIcon);
+
+    LauncherWindow window;
+    window.show();
+    return app.exec();
+}
+#include "TrinityLib/ui/windows/launcher_window.hpp"
+#include "TrinityLib/core//exporter.hpp"
+#include "TrinityLib/core/game_launcher.hpp"
+#include "TrinityLib/core/version_config.hpp"
+#include "TrinityLib/core/version_manager.hpp"
+#include "TrinityLib/ui/dialogs/extract_dialog.hpp"
+
+#include <QApplication>
+#include <QDateTime>
+#include <QDebug>
+#include <QDialog>
+#include <QDialogButtonBox>
+#include <QDirIterator>
+#include <QFileDialog>
+#include <QFileInfo>
+#include <QHBoxLayout>
+#include <QLabel>
+#include <QLineEdit>
+#include <QListWidget>
+#include <QMessageBox>
+#include <QProcess>
+#include <QProgressBar>
+#include <QPushButton>
+#include <QSettings>
+#include <QStandardPaths>
+#include <QVBoxLayout>
+
+LauncherWindow::LauncherWindow(QWidget *parent)
+    : QWidget(parent) {
+    setupUi();
+    setupConnections();
+    loadInstalledVersions();
+    exporter = new Exporter(this);
+
+    // Conectar señales de exporter
+
+    connect(exporter, &Exporter::exportFinished, this,
+            [this](bool success, const QString &msg) {
+                if (success) {
+                    QMessageBox::information(this, "Éxito", msg);
+                    statusLabel->setText(msg);
+                } else {
+                    QMessageBox::critical(this, "Error", msg);
+                }
+            });
+
+    connect(exporter, &Exporter::importFinished, this,
+            [this](bool success, const QString &msg) {
+                if (success) {
+                    QMessageBox::information(this, "Éxito", msg);
+                    loadInstalledVersions(); // Recargar lista
+                    statusLabel->setText(msg);
+                } else {
+                    QMessageBox::critical(this, "Error", msg);
+                }
+            });
+}
+
+void LauncherWindow::setupUi() {
+    setWindowTitle("Trinity Launcher - Minecraft Bedrock");
+    resize(960, 560);
+    setMinimumSize(960, 560); // Tamaño mínimo
+
+    // Global Dark Theme
+    setStyleSheet(
+        "QWidget { background-color: #020617; color: #ffffff; "
+        "font-family: 'Inter', 'Roboto', sans-serif; }"
+        "QListWidget { background-color: #090f20; border: 1px solid "
+        "#1e293b; border-radius: 8px; padding: 5px; outline: 0; }"
+        "QListWidget::item { padding: 10px; border-radius: 5px; "
+        "margin-bottom: 5px; border: none; }"
+        "QListWidget::item:selected { background-color: #8b5cf6; "
+        "color: #ffffff; }"
+        "QListWidget::item:hover { background-color: #1e293b; }"
+        "QPushButton { background-color: #1e293b; border: none; "
+        "border-radius: 6px; padding: 8px 16px; color: #ffffff; "
+        "font-weight: bold; }"
+        "QPushButton:hover { background-color: #334155; }"
+        "QPushButton:pressed { background-color: #0f172a; }"
+        "QPushButton#ActionButton { background-color: #8b5cf6; color: "
+        "#ffffff; }" // Violet accent
+        "QPushButton#ActionButton:hover { background-color: #a78bfa; }"
+        "QLabel#Title { font-size: 18px; font-weight: bold; color: "
+        "#8b5cf6; background: transparent; }"
+        "QLabel#VersionName { font-size: 24px; font-weight: bold; "
+        "background: transparent; }"
+        "QLabel#VersionType { font-size: 14px; color: #94a3b8; "
+        "background: transparent; }"
+        "QLabel#Status { font-size: 12px; color: #64748b; padding: "
+        "5px; background: transparent; }"
+        "QWidget#ContextPanel { background-color: #090f20; "
+        "border-radius: 12px; }");
+
+    // Main Vertical Layout (Top Bar, Content, Status Bar)
+    QVBoxLayout *rootLayout = new QVBoxLayout(this);
+    rootLayout->setContentsMargins(20, 20, 20, 10);
+    rootLayout->setSpacing(15);
+
+    // --- Top Bar ---
+    QHBoxLayout *topBarLayout = new QHBoxLayout();
+
+    QLabel *logoLabel = new QLabel();
+    logoLabel->setFixedSize(40, 40);
+    // Use border-image to ensure the image respects the border-radius
+    logoLabel->setStyleSheet(
+        "border-image: url(:/branding/logo); border-radius: 60px;");
+    topBarLayout->addWidget(logoLabel);
+
+    QLabel *titleLabel = new QLabel("Trinity Launcher");
+    titleLabel->setObjectName("Title");
+    topBarLayout->addWidget(titleLabel);
+
+    topBarLayout->addStretch();
+
+    // --- Switcher languages
+    languageCombo = new QComboBox();
+    languageCombo->addItem("Español", "es"); // Index 0, data "es"
+    languageCombo->addItem("English", "en"); // Index 1, data "en"
+    languageCombo->addItem("Català", "ca"); // Index 2, data "ca"
+    languageCombo->setFixedWidth(120);
+
+    QSettings settings;
+    QString currentLang = settings.value("language", "es").toString();
+    int index = languageCombo->findData(currentLang);
+    if (index != -1) {
+        languageCombo->blockSignals(true);
+        languageCombo->setCurrentIndex(index);
+        languageCombo->blockSignals(false);
+    }
+
+    languageCombo->setStyleSheet(
+        "QComboBox { background-color: #1e293b; color: white; border-radius: "
+        "5px; padding: 5px; }"
+        "QComboBox::drop-down { border: 0px; }");
+
+    topBarLayout->addWidget(languageCombo);
+
+    extractButton = new QPushButton(tr("+ Extraer APK"));
+    extractButton->setObjectName("ActionButton"); // Accent color
+    topBarLayout->addWidget(extractButton);
+
+    importButton = new QPushButton(tr("Importar")); // Import button
+    importButton->setObjectName("ActionButton");
+    topBarLayout->addWidget(importButton);
+
+    toolsButton = new QPushButton(tr("Herramientas"));
+    toolsButton->setObjectName("ActionButton"); // Apply accent style
+    topBarLayout->addWidget(toolsButton);
+
+    rootLayout->addLayout(topBarLayout);
+
+    // --- Content Area (Split View) ---
+    QHBoxLayout *contentLayout = new QHBoxLayout();
+    contentLayout->setSpacing(20);
+
+    // Left: Version List
+    versionList = new QListWidget();
+    versionList->setIconSize(QSize(48, 48));
+    versionList->setFixedWidth(400);
+    contentLayout->addWidget(versionList);
+
+    // Right: Context Panel
+    contextPanel = new QWidget();
+    contextPanel->setObjectName("ContextPanel");
+    QVBoxLayout *panelLayout = new QVBoxLayout(contextPanel);
+    panelLayout->setContentsMargins(30, 30, 30, 30);
+    panelLayout->setSpacing(15);
+
+    // Version Icon (Large)
+    versionIconLabel = new QLabel();
+    versionIconLabel->setFixedSize(80, 80);
+    versionIconLabel->setPixmap(QPixmap(":/icons/creeper"));
+    versionIconLabel->setScaledContents(true);
+    versionIconLabel->setStyleSheet("background: transparent;");
+    versionIconLabel->setAlignment(Qt::AlignCenter);
+    panelLayout->addWidget(versionIconLabel, 0, Qt::AlignCenter);
+
+    // Version Info
+    versionNameLabel = new QLabel(tr("Selecciona una versión"));
+    versionNameLabel->setObjectName("VersionName");
+    versionNameLabel->setAlignment(Qt::AlignCenter);
+    panelLayout->addWidget(versionNameLabel);
+
+    versionTypeLabel = new QLabel("");
+    versionTypeLabel->setObjectName("VersionType");
+    versionTypeLabel->setAlignment(Qt::AlignCenter);
+    panelLayout->addWidget(versionTypeLabel);
+
+    panelLayout->addSpacing(20);
+
+    // Actions
+    playButton = new QPushButton(tr("JUGAR"));
+    playButton->setObjectName("ActionButton");
+    playButton->setMinimumHeight(35);
+    playButton->setEnabled(false);
+    panelLayout->addWidget(playButton);
+
+    // Botón "Crear Acceso Directo" (debajo de JUGAR)
+    shortcutButton = new QPushButton(tr("Crear Acceso Directo"));
+    shortcutButton->setObjectName("ActionButton");
+    shortcutButton->setMinimumHeight(35);
+    panelLayout->addWidget(shortcutButton);
+
+    editButton = new QPushButton(tr("Editar Configuración"));
+    editButton->setObjectName("ActionButton");
+    panelLayout->addWidget(editButton);
+
+    QHBoxLayout *secondaryActions = new QHBoxLayout();
+    exportButton = new QPushButton(tr("Exportar"));
+    exportButton->setObjectName("ActionButton");
+    deleteButton = new QPushButton(tr("Eliminar"));
+    deleteButton->setObjectName("ActionButton");
+    secondaryActions->addWidget(exportButton);
+    secondaryActions->addWidget(deleteButton);
+    panelLayout->addLayout(secondaryActions);
+
+    panelLayout->addStretch();
+
+    contentLayout->addWidget(contextPanel);
+    rootLayout->addLayout(contentLayout);
+
+    // --- Status Bar ---
+    statusLabel = new QLabel(tr("Listo"));
+    statusLabel->setObjectName("Status");
+    rootLayout->addWidget(statusLabel);
+}
+
+void LauncherWindow::setupConnections() {
+    connect(extractButton, &QPushButton::clicked, this,
+            &LauncherWindow::showExtractDialog);
+    connect(toolsButton, &QPushButton::clicked, this,
+            &LauncherWindow::launchTools);
+    connect(playButton, &QPushButton::clicked, this,
+            &LauncherWindow::launchGame);
+    connect(versionList, &QListWidget::itemClicked, this,
+            &LauncherWindow::onVersionSelected);
+    connect(importButton, &QPushButton::clicked, this,
+            &LauncherWindow::onImportClicked);
+    connect(shortcutButton, &QPushButton::clicked, this,
+            &LauncherWindow::createDesktopShortcut);
+    // Conecta los nuevos botones
+    connect(editButton, &QPushButton::clicked, this,
+            &LauncherWindow::onEditConfigClicked);
+    connect(exportButton, &QPushButton::clicked, this,
+            &LauncherWindow::onExportClicked);
+    connect(deleteButton, &QPushButton::clicked, this,
+            &LauncherWindow::onDeleteClicked);
+    connect(languageCombo, QOverload<int>::of(&QComboBox::currentIndexChanged),
+            this, &LauncherWindow::onLanguageChanged);
+}
+
+void LauncherWindow::loadInstalledVersions() {
+    versionList->clear();
+    VersionManager vm;
+    QStringList versions = vm.getInstalledVersions();
+
+    for (const QString &v : versions) {
+        QListWidgetItem *item = new QListWidgetItem(v);
+        // Try to set an icon if available, otherwise use a default style
+        item->setIcon(QIcon(":/icons/cube"));
+        item->setTextAlignment(Qt::AlignLeft | Qt::AlignVCenter);
+        versionList->addItem(item);
+    }
+
+    if (versionList->count() > 0) {
+        versionList->setCurrentRow(0);
+        onVersionSelected(versionList->item(0));
+    } else {
+        updateContextPanel("");
+    }
+}
+
+void LauncherWindow::onVersionSelected(QListWidgetItem *item) {
+    if (!item)
+        return;
+    updateContextPanel(item->text());
+}
+
+void LauncherWindow::updateContextPanel(const QString &versionName) {
+    if (versionName.isEmpty()) {
+        versionNameLabel->setText(tr("Sin versiones"));
+        versionTypeLabel->setText("");
+        playButton->setEnabled(false);
+        statusLabel->setText(tr("No hay versiones instaladas."));
+        return;
+    }
+
+    versionNameLabel->setText(versionName);
+    versionTypeLabel->setText("Bedrock Edition"); // Placeholder type
+    playButton->setEnabled(true);
+
+    // Update status bar with size info (mockup)
+    VersionManager vm;
+    QString path = vm.getVersionPath(versionName);
+    statusLabel->setText(QString(tr("Versión seleccionada: %1 | Ruta: %2"))
+                             .arg(versionName)
+                             .arg(path));
+}
+
+void LauncherWindow::showExtractDialog() {
+    ExtractDialog dialog(this);
+    if (dialog.exec() != QDialog::Accepted)
+        return;
+
+    QString apkPath = dialog.getApkPath();
+    QString versionName = dialog.getVersionName();
+
+    // Verificar si ya existe la versión
+    VersionManager vm;
+    if (vm.getInstalledVersions().contains(versionName)) {
+        int r = QMessageBox::warning(
+            this, tr("Advertencia"),
+            QString(tr("Ya existe una versión llamada '%1'.\n¿Reemplazarla?"))
+                .arg(versionName),
+            QMessageBox::Yes | QMessageBox::No, QMessageBox::No);
+        if (r == QMessageBox::No)
+            return;
+    }
+
+    // Crear diálogo de progreso
+    QDialog progressDlg(this);
+    progressDlg.setWindowTitle(tr("Extrayendo APK..."));
+    progressDlg.setFixedSize(300, 100);
+
+    auto *layout = new QVBoxLayout(&progressDlg);
+    QLabel *label = new QLabel(tr("Extrayendo versión..."));
+    QProgressBar *progressBar = new QProgressBar();
+    progressBar->setRange(0, 0); // Indefinido
+    layout->addWidget(label);
+    layout->addWidget(progressBar);
+
+    progressDlg.show();
+    QApplication::processEvents(); // Actualizar UI
+
+    // Conectar signal de progreso (opcional)
+    QObject::connect(&vm, &VersionManager::extractionProgress, &progressDlg,
+                     [&label](const QString &msg) {
+                         label->setText(msg);
+                         QApplication::processEvents(); // Actualizar UI
+                     });
+
+    // Extraer versión
+    QString errorMsg;
+    bool success = vm.extractApk(apkPath, versionName, errorMsg);
+
+    // Cerrar diálogo de progreso
+    progressDlg.accept();
+
+    if (!success) {
+        QMessageBox::critical(this, tr("Error"),
+                              tr("Falló la extracción:\n") + errorMsg);
+        return;
+    }
+
+    QMessageBox::information(this, tr("Éxito"),
+                             tr("¡Versión extraída correctamente!"));
+    loadInstalledVersions(); // Recargar lista.
+}
+
+void LauncherWindow::launchGame() {
+    if (versionList->selectedItems().isEmpty())
+        return;
+    QString selectedVersion = versionList->selectedItems().first()->text();
+
+    GameLauncher launcher;
+    QString errorMsg;
+    if (!launcher.launchGame(selectedVersion, errorMsg)) {
+        QMessageBox::critical(this, "Error", errorMsg);
+        return;
+    }
+    QApplication::quit();
+}
+
+void LauncherWindow::launchTools() {
+    GameLauncher launcher;
+    QString errorMsg;
+    if (!launcher.launchTrinito(errorMsg)) {
+        QMessageBox::critical(this, "Error", errorMsg);
+    }
+}
+
+void LauncherWindow::onEditConfigClicked() {
+    if (versionList->selectedItems().isEmpty()) {
+        QMessageBox::warning(this, tr("Advertencia"),
+                             tr("No hay ninguna versión seleccionada."));
+        return;
+    }
+    QString selectedVersion = versionList->selectedItems().first()->text();
+
+    // Diálogo simple de edición
+    QDialog dialog(this);
+    dialog.setWindowTitle(tr("Editar configuración de ") + selectedVersion);
+    dialog.resize(500, 300);
+
+    auto *layout = new QVBoxLayout(&dialog);
+    QLabel *label = new QLabel(
+        tr("Parámetros de ejecución (antes de mcpelauncher-client):"));
+    layout->addWidget(label);
+
+    // Obtener argumentos actuales
+    VersionConfig config(selectedVersion);
+    QString currentArgs = config.getLaunchArgs();
+
+    QLineEdit *argsEdit = new QLineEdit(currentArgs);
+    argsEdit->setPlaceholderText(
+        "Ej: DRI_PRIME=1 vblank_mode=0 MESA_LOADER_DRIVER_OVERRIDE=zink");
+    layout->addWidget(argsEdit);
+
+    auto *buttonBox =
+        new QDialogButtonBox(QDialogButtonBox::Ok | QDialogButtonBox::Cancel);
+    layout->addWidget(buttonBox);
+
+    connect(buttonBox, &QDialogButtonBox::accepted, &dialog, [&]() {
+        QString newArgs = argsEdit->text().trimmed();
+        config.setLaunchArgs(newArgs);
+
+        // Editar versión
+        VersionManager vm;
+        QString errorMsg;
+        if (!vm.editVersion(selectedVersion, newArgs, errorMsg)) {
+            QMessageBox::critical(&dialog, "Error",
+                                  tr("No se pudo guardar la configuración:\n") +
+                                      errorMsg);
+        } else {
+            QMessageBox::information(&dialog, tr("Éxito"),
+                                     tr("Configuración guardada."));
+            dialog.accept();
+        }
+    });
+    connect(buttonBox, &QDialogButtonBox::rejected, &dialog, &QDialog::reject);
+
+    if (dialog.exec() == QDialog::Accepted) {
+        statusLabel->setText(QString(tr("Configuración de %1 actualizada."))
+                                 .arg(selectedVersion));
+    }
+}
+
+void LauncherWindow::onExportClicked() {
+    if (versionList->selectedItems().isEmpty()) {
+        QMessageBox::warning(this, tr("Advertencia"),
+                             tr("No hay ninguna versión seleccionada."));
+        return;
+    }
+    QString selectedVersion = versionList->selectedItems().first()->text();
+
+    exporter->exportVersion(selectedVersion);
+}
+
+void LauncherWindow::onDeleteClicked() {
+    if (versionList->selectedItems().isEmpty()) {
+        QMessageBox::warning(this, tr("Advertencia"),
+                             tr("No hay ninguna versión seleccionada."));
+        return;
+    }
+    QString selectedVersion = versionList->selectedItems().first()->text();
+
+    int r = QMessageBox::warning(
+        this, tr("Advertencia"),
+        QString(tr("¿Estás seguro de eliminar la versión '%1'?\nEsta acción no "
+                   "se puede deshacer.")
+                    .arg(selectedVersion)),
+        QMessageBox::Yes | QMessageBox::No, QMessageBox::No);
+    if (r == QMessageBox::No)
+        return;
+
+    // Eliminar versión
+    VersionManager vm;
+    QString errorMsg;
+    if (!vm.deleteVersion(selectedVersion, errorMsg)) {
+        QMessageBox::critical(this, tr("Error"),
+                              tr("No se pudo eliminar la versión:\n") +
+                                  errorMsg);
+        return;
+    }
+
+    QMessageBox::information(this, tr("Éxito"),
+                             tr("Versión eliminada correctamente."));
+    loadInstalledVersions(); // Recargar lista
+    statusLabel->setText(
+        QString(tr("Versión %1 eliminada.")).arg(selectedVersion));
+}
+
+bool LauncherWindow::copyDirectory(const QString &srcPath,
+                                   const QString &dstPath) {
+    QDir srcDir(srcPath);
+    if (!srcDir.exists())
+        return false;
+    if (!QDir().mkpath(dstPath))
+        return false;
+
+    for (const QFileInfo &info : srcDir.entryInfoList(QDir::Dirs | QDir::Files |
+                                                      QDir::NoDotAndDotDot)) {
+        QString srcItem = srcPath + "/" + info.fileName();
+        QString dstItem = dstPath + "/" + info.fileName();
+
+        if (info.isDir()) {
+            if (!copyDirectory(srcItem, dstItem))
+                return false;
+        } else {
+            if (!QFile::copy(srcItem, dstItem))
+                return false;
+        }
+    }
+    return true;
+}
+
+void LauncherWindow::onImportClicked() { exporter->importVersion(); }
+
+void LauncherWindow::createDesktopShortcut() {
+    if (versionList->selectedItems().isEmpty()) {
+        QMessageBox::warning(this, tr("Advertencia"),
+                             tr("No hay ninguna versión seleccionada."));
+        return;
+    }
+
+    QString selectedVersion = versionList->selectedItems().first()->text();
+
+    // Obtener la ruta de la versión
+    VersionManager vm;
+    QString versionPath = vm.getVersionPath(selectedVersion);
+
+    if (!vm.isVersionValid(selectedVersion)) {
+        QMessageBox::critical(
+            this, "Error",
+            QString(tr("La versión '%1' no es válida o no está completa."))
+                .arg(selectedVersion));
+        return;
+    }
+
+    // Ruta de la carpeta Downloads (segura para Flatpak)
+    QString downloadsDir =
+        QStandardPaths::writableLocation(QStandardPaths::DownloadLocation);
+    QString shortcutPath =
+        downloadsDir + "/Minecraft " + selectedVersion + ".desktop";
+
+    // Verificar si ya existe
+    if (QFile::exists(shortcutPath)) {
+        int r = QMessageBox::question(
+            this, tr("Confirmar"),
+            QString(
+                tr("Ya existe un acceso directo para '%1'.\n¿Reemplazarlo?"))
+                .arg(selectedVersion),
+            QMessageBox::Yes | QMessageBox::No, QMessageBox::No);
+        if (r == QMessageBox::No)
+            return;
+    }
+
+    // Construir el comando para el .desktop
+    QString execCmd = "flatpak run --command=mcpelauncher-client "
+                      "com.trench.trinity.launcher -dg \"" +
+                      versionPath + "\"";
+
+    // Usar un icono genérico de juego
+    QString iconIdentifier =
+        "applications-games"; // O puedes probar con "minecraft"
+
+    // Crear contenido del archivo .desktop
+    QString desktopContent =
+        QString("[Desktop Entry]\n"
+                "Type=Application\n"
+                "Name=Minecraft %1\n" // %1 es el nombre de la versión
+                "Exec=%2\n"           // %2 es el comando exec
+                "Icon=%3\n" // %3 es el identificador del icono genérico
+                "Terminal=false\n"
+                "Categories=Game;\n"
+                "Comment=Jugar a Minecraft %1 desde Trinity Launcher\n"
+                "StartupNotify=true\n")
+            .arg(selectedVersion, execCmd, iconIdentifier);
+
+    QFile desktopFile(shortcutPath);
+    if (!desktopFile.open(QIODevice::WriteOnly | QIODevice::Text)) {
+        QMessageBox::critical(
+            this, "Error",
+            tr("No se pudo crear el archivo de acceso directo en:\n") +
+                shortcutPath);
+        return;
+    }
+
+    QTextStream out(&desktopFile);
+    out << desktopContent;
+    desktopFile.close();
+
+    // Mensaje de éxito
+    QMessageBox::information(
+        this, tr("Éxito"),
+        QString(tr("Acceso directo creado en la carpeta Descargas")
+                    .arg(shortcutPath)));
+}
+
+void LauncherWindow::onLanguageChanged(int index) {
+    QString langCode = languageCombo->itemData(index).toString();
+
+    QSettings settings;
+    settings.setValue("language", langCode);
+
+    QMessageBox::information(
+        this, tr("Idioma cambiado"),
+        tr("El idioma se ha cambiado a '%1'.\nPor favor, reinicia la "
+           "aplicación para aplicar los cambios.")
+            .arg(languageCombo->currentText()));
+}
+#include "TrinityLib/ui/windows/trinito_window.hpp"
+#include "TrinityLib/core/pack_installer.hpp"
+
+#include <QApplication>
+#include <QCheckBox>
+#include <QDir>
+#include <QFile>
+#include <QFileDialog>
+#include <QFileInfo>
+#include <QLabel>
+#include <QListWidget>
+#include <QMessageBox>
+#include <QProcess>
+#include <QPushButton>
+#include <QStandardItemModel>
+#include <QStandardPaths>
+#include <QTabWidget>
+#include <QVBoxLayout>
+
+#include <QRandomGenerator>
+#include <QProgressDialog>
+#include <QTimer>
+#include <QtConcurrent/QtConcurrent>
+
+TrinitoWindow::TrinitoWindow(QWidget *parent)
+    : QWidget(parent) {
+    setWindowTitle(tr(" Gestor de Contenido para Bedrock"));
+    resize(820, 500);
+
+    // Global Dark Theme (Violet Accent)
+    setStyleSheet(
+        "QWidget { background-color: #020617; color: #ffffff; font-family: "
+        "'Inter', 'Roboto', sans-serif; }"
+        "QTabWidget::pane { border: 1px solid #1e293b; background-color: "
+        "#090f20; border-radius: 8px; top: -1px; }"
+        "QTabBar::tab { background: #1e293b; color: #94a3b8; padding: 10px "
+        "20px; "
+        "border-top-left-radius: 6px; border-top-right-radius: 6px; "
+        "margin-right: 4px; border: none; }"
+        "QTabBar::tab:selected { background: #8b5cf6; color: #ffffff; }"
+        "QTabBar::tab:hover { background: #334155; }"
+        "QPushButton { background-color: #1e293b; border: none; border-radius: "
+        "6px; padding: 8px 16px; color: #ffffff; font-weight: bold; }"
+        "QPushButton:hover { background-color: #334155; }"
+        "QPushButton:pressed { background-color: #0f172a; }"
+        "QLabel { color: #e2e8f0; font-size: 14px; margin-bottom: 5px; }"
+        "QListWidget { background-color: #090f20; border: 1px solid #1e293b; "
+        "border-radius: 8px; padding: 5px; outline: 0; }"
+        "QListWidget::item { padding: 10px; border-radius: 5px; "
+        "margin-bottom: 5px; border: none; }"
+        "QListWidget::item:selected { background-color: #8b5cf6; "
+        "color: #ffffff; }"
+        "QListWidget::item:hover { background-color: #1e293b; }");
+
+    auto *layout = new QVBoxLayout(this);
+    QTabWidget *tabs = new QTabWidget();
+    layout->addWidget(tabs);
+
+    // Pestañas de instalación (como antes)
+    tabs->addTab(createPackTab("behavior_packs", "Behavior Pack (mods)"),
+                 "Mods");
+    tabs->addTab(createPackTab("resource_packs", "Resource Pack"),
+                 tr("Texturas"));
+    tabs->addTab(createDevTab(), tr("Desarrollo"));
+    tabs->addTab(createWorldTab(), tr("Mundos"));
+    // Añadir la nueva pestaña de Shaders/Mods
+    tabs->addTab(createShadersModsTab(), "Shaders/Libs");
+}
+
+QWidget *TrinitoWindow::createManageTab(const QString &packType,
+                                        const QString &displayName) {
+    auto *widget = new QWidget();
+    auto *layout = new QVBoxLayout(widget);
+
+    QLabel *label = new QLabel(tr("Lista de %1 instalados:").arg(displayName));
+    layout->addWidget(label);
+
+    QListWidget *listWidget = new QListWidget();
+    layout->addWidget(listWidget);
+
+    // Asignar la lista a la variable miembro correspondiente para usarla en
+    // loadPacks
+    if (packType == "behavior_packs") {
+        modsList = listWidget;
+    } else if (packType == "resource_packs") {
+        resourcesList = listWidget;
+    } else if (packType == "minecraftWorlds") {
+        mapsList = listWidget;
+    }
+
+    // Cargar packs al mostrar la pestaña (opcional, o al construir)
+    loadPacks(packType, listWidget);
+
+    // Botón para recargar la lista
+    QPushButton *refreshButton = new QPushButton(tr("Recargar Lista"));
+    connect(refreshButton, &QPushButton::clicked, this,
+            [=, this]() { loadPacks(packType, listWidget); });
+    layout->addWidget(refreshButton);
+
+    return widget;
+}
+
+void TrinitoWindow::loadPacks(const QString &packType,
+                              QListWidget *listWidget) {
+    listWidget->clear(); // Limpiar lista actual
+
+    QString baseDataDir =
+        QStandardPaths::writableLocation(QStandardPaths::GenericDataLocation) +
+        "/mcpelauncher/games/com.mojang";
+    QString packDirPath = baseDataDir + "/" + packType;
+
+    QDir packDir(packDirPath);
+    if (!packDir.exists()) {
+        // QMessageBox::information(this, "Info", "No se encontraron " +
+        // packType + ".");
+        return; // Si no existe la carpeta, salir
+    }
+
+    QStringList entries =
+        packDir.entryList(QDir::Dirs | QDir::Files | QDir::NoDotAndDotDot);
+
+    for (const QString &entry : entries) {
+        QFileInfo info(packDirPath + "/" + entry);
+        bool isEnabled = true;
+
+        // Verificar si está deshabilitado (renombrado)
+        if (entry.endsWith(".disabled")) {
+            isEnabled = false;
+        }
+
+        // Crear item de lista
+        QListWidgetItem *item = new QListWidgetItem();
+        item->setCheckState(isEnabled ? Qt::Checked : Qt::Unchecked);
+        item->setText(entry); // Mostrar nombre original o con .disabled
+
+        listWidget->addItem(item);
+    }
+
+    // Conectar la señal itemChanged del QListWidget para detectar cambios en
+    // los checkboxes
+    connect(listWidget, &QListWidget::itemChanged, this,
+            [=, this](QListWidgetItem *changedItem) {
+                // Obtener el estado actual del checkbox
+                Qt::CheckState state = changedItem->checkState();
+                bool newState = (state == Qt::Checked);
+
+                // Obtener el nombre del pack
+                QString packName = changedItem->text();
+
+                // Llamar a togglePack para renombrar
+                togglePack(packType, packName, newState);
+
+                // Opcional: Actualizar el nombre mostrado si cambia el estado
+                QString newName = packName;
+                if (newState) {
+                    // Si está habilitado y el nombre termina en .disabled,
+                    // removerlo
+                    if (packName.endsWith(".disabled")) {
+                        newName = packName.chopped(9); // .disabled.length() = 9
+                    }
+                } else {
+                    // Si está deshabilitado y el nombre no termina en
+                    // .disabled, añadirlo
+                    if (!packName.endsWith(".disabled")) {
+                        newName = packName + ".disabled";
+                    }
+                }
+                // Actualizar el texto del item (esto puede causar un nuevo
+                // itemChanged si no se maneja cuidadosamente) Para evitar
+                // loops, podrías comparar newName con el texto actual antes de
+                // cambiarlo
+                if (changedItem->text() != newName) {
+                    changedItem->setText(newName);
+                }
+            });
+}
+
+void TrinitoWindow::togglePack(const QString &packType, const QString &packName,
+                               bool enable) {
+    QString baseDataDir =
+        QStandardPaths::writableLocation(QStandardPaths::GenericDataLocation) +
+        "/mcpelauncher/games/com.mojang";
+    QString packDirPath = baseDataDir + "/" + packType;
+
+    QString oldPath = packDirPath + "/" + packName;
+    QString newPath = oldPath;
+
+    if (enable) {
+        // Habilitar: descomprimir el .disabled
+        if (packName.endsWith(".disabled")) {
+            // El newPath es el nombre original (sin .disabled)
+            newPath = oldPath.chopped(9); // Quita ".disabled" (longitud 9)
+
+            // Comando: tar -xzf <archivo_comprimido> -C <directorio_destino>
+            QProcess process;
+            process.start("tar", {"-xzf", oldPath, "-C", packDirPath});
+            process.waitForFinished(-1);
+
+            if (process.exitCode() == 0) {
+                // Eliminar el archivo .disabled después de descomprimir
+                QFile::remove(oldPath);
+                // QMessageBox::information(this, "Éxito", QString("Pack '%1'
+                // habilitado.").arg(packName));
+            } else {
+                QString err = process.readAllStandardError();
+                QMessageBox::critical(
+                    this, "Error",
+                    QString("No se pudo habilitar el pack '%1'.\nError al "
+                            "descomprimir:\n%2")
+                        .arg(packName)
+                        .arg(err.isEmpty() ? "Error desconocido." : err));
+                return;
+            }
+        }
+        // Si no termina en .disabled, no hacer nada (ya está habilitado)
+    } else {
+        // Deshabilitar: comprimir a .disabled
+        if (!packName.endsWith(".disabled")) {
+            // El newPath es el nombre original + .disabled
+            newPath = oldPath + ".disabled";
+
+            // Comando: tar -czf <archivo_salida> -C <directorio_padre>
+            // <nombre_carpeta_o_archivo> Ejemplo: tar -czf
+            // pack1.mcpack.disabled.tar.gz -C /ruta/contenedora pack1.mcpack
+            QFileInfo fileInfo(oldPath);
+            QString parentDir =
+                fileInfo.absolutePath(); // Directorio padre del pack
+            QString baseName =
+                fileInfo.fileName(); // Nombre del pack (archivo o carpeta)
+
+            QProcess process;
+            process.start("tar", {"-czf", newPath, "-C", parentDir, baseName});
+            process.waitForFinished(-1);
+
+            if (process.exitCode() == 0) {
+                // Eliminar el archivo/carpeta original después de comprimir
+                if (QDir(oldPath).exists()) {
+                    QDir(oldPath).removeRecursively();
+                } else {
+                    QFile::remove(oldPath);
+                }
+                // QMessageBox::information(this, "Éxito", QString("Pack '%1'
+                // deshabilitado.").arg(packName));
+            } else {
+                QString err = process.readAllStandardError();
+                QMessageBox::critical(
+                    this, "Error",
+                    QString("No se pudo deshabilitar el pack '%1'.\nError al "
+                            "comprimir:\n%2")
+                        .arg(packName)
+                        .arg(err.isEmpty() ? "Error desconocido." : err));
+                return;
+            }
+        }
+        // Si ya termina en .disabled, no hacer nada (ya está deshabilitado)
+    }
+
+    // Opcional: Actualizar la lista de packs en la UI si estás en la pestaña
+    // correspondiente Por ejemplo, si estás en la pestaña "Gestionar Mods": if
+    // (currentTab == "Gestionar Mods") {
+    //     loadPacks("behavior_packs", modsList);
+    // }
+    // O simplemente mostrar un mensaje de éxito general aquí si prefieres no
+    // recargar constantemente.
+}
+
+// ... resto del código (createPackTab, createDevTab, createWorldTab,
+// installItem) ...
+
+QWidget *TrinitoWindow::createPackTab(const QString &targetSubdir,
+                                      const QString &labelText) {
+    auto *widget = new QWidget();
+    auto *layout = new QVBoxLayout(widget);
+
+    // Título
+    QLabel *titleLabel = new QLabel(labelText);
+    titleLabel->setStyleSheet("font-weight: bold; font-size: 16px;");
+    layout->addWidget(titleLabel);
+
+    // Sección de instalación
+    QLabel *installLabel = new QLabel(tr("Instalar nuevo ") + labelText + ":");
+    layout->addWidget(installLabel);
+
+    auto *installButton = new QPushButton(tr("Seleccionar archivo..."));
+    layout->addWidget(installButton);
+
+    connect(installButton, &QPushButton::clicked, this, [=, this]() {
+        QString path = QFileDialog::getOpenFileName(
+            this, tr("Seleccionar pack"), QDir::homePath(),
+            tr("Archivos compatibles (*.zip *.mcpack);;Todos los archivos "
+               "(*)"));
+        if (!path.isEmpty()) {
+            installItem(path, targetSubdir);
+        }
+    });
+
+    layout->addSpacing(15);
+
+    // Sección de gestión
+    QLabel *manageLabel =
+        new QLabel(tr("Gestionar ") + labelText + tr(" instalados:"));
+    layout->addWidget(manageLabel);
+
+    QListWidget *listWidget = new QListWidget();
+    layout->addWidget(listWidget);
+
+    // Asignar la lista a la variable miembro correspondiente para usarla en
+    // loadPacks
+    if (targetSubdir == "behavior_packs") {
+        modsList = listWidget;
+    } else if (targetSubdir == "resource_packs") {
+        resourcesList = listWidget;
+    } else if (targetSubdir == "minecraftWorlds") {
+        mapsList = listWidget;
+    }
+
+    // Cargar packs al mostrar la pestaña
+    loadPacks(targetSubdir, listWidget);
+
+    // Botón para recargar la lista
+    QPushButton *refreshButton = new QPushButton(tr("Recargar Lista"));
+    connect(refreshButton, &QPushButton::clicked, this,
+            [=, this]() { loadPacks(targetSubdir, listWidget); });
+    layout->addWidget(refreshButton);
+
+    // Botón para eliminar seleccionado
+    QPushButton *deleteButton = new QPushButton(tr("Eliminar Seleccionado"));
+    connect(deleteButton, &QPushButton::clicked, this, [=, this]() {
+        if (listWidget->selectedItems().isEmpty()) {
+            QMessageBox::warning(this, tr("Advertencia"),
+                                 tr("No hay ningún elemento seleccionado."));
+            return;
+        }
+
+        QString selectedEntry = listWidget->selectedItems().first()->text();
+        int r = QMessageBox::warning(
+            this, tr("Advertencia"),
+            QString(tr("¿Estás seguro de eliminar '%1'?\nEsta acción no se "
+                       "puede deshacer."))
+                .arg(selectedEntry),
+            QMessageBox::Yes | QMessageBox::No, QMessageBox::No);
+        if (r == QMessageBox::No)
+            return;
+
+        // Eliminar el archivo/carpeta
+        QString baseDataDir = QStandardPaths::writableLocation(
+                                  QStandardPaths::GenericDataLocation) +
+                              "/mcpelauncher/games/com.mojang";
+        QString fullPath =
+            baseDataDir + "/" + targetSubdir + "/" + selectedEntry;
+
+        QFileInfo info(fullPath);
+        bool success = false;
+        if (info.isDir()) {
+            success = QDir(fullPath).removeRecursively();
+        } else {
+            success = QFile::remove(fullPath);
+        }
+
+        if (success) {
+            QMessageBox::information(
+                this, tr("Éxito"),
+                QString(tr("'%1' eliminado correctamente."))
+                    .arg(selectedEntry));
+            // Recargar la lista
+            loadPacks(targetSubdir, listWidget);
+        } else {
+            QMessageBox::critical(
+                this, "Error",
+                QString("No se pudo eliminar '%1'.").arg(selectedEntry));
+        }
+    });
+    layout->addWidget(deleteButton);
+
+    return widget;
+}
+
+QWidget *TrinitoWindow::createDevTab() {
+    auto *widget = new QWidget();
+    auto *layout = new QVBoxLayout(widget);
+
+    // Título
+    QLabel *titleLabel = new QLabel("Development Packs");
+    titleLabel->setStyleSheet("font-weight: bold; font-size: 16px;");
+    layout->addWidget(titleLabel);
+
+    // Contenedor horizontal para los dos botones de instalación
+    auto *buttonLayout = new QHBoxLayout();
+
+    // Botón para Development Behavior Pack
+    auto *behButton =
+        new QPushButton(tr("Añadir Development Behavior Pack (archivo)..."));
+    connect(behButton, &QPushButton::clicked, this, [=, this]() {
+        QString path = QFileDialog::getOpenFileName(
+            this, tr("Añadir Development Behavior Pack"), QDir::homePath(),
+            tr("Archivos compatibles (*.zip *.mcpack);;Todos los archivos "
+               "(*)"));
+        if (!path.isEmpty()) {
+            installItem(path, "development_behavior_packs");
+        }
+    });
+    buttonLayout->addWidget(behButton);
+
+    // Botón para Development Resource Pack
+    auto *resButton =
+        new QPushButton(tr("Añadir Development Resource Pack (archivo)..."));
+    connect(resButton, &QPushButton::clicked, this, [=, this]() {
+        QString path = QFileDialog::getOpenFileName(
+            this, tr("Añadir Development Resource Pack"), QDir::homePath(),
+            tr("Archivos compatibles (*.zip *.mcpack);;Todos los archivos "
+               "(*)"));
+        if (!path.isEmpty()) {
+            installItem(path, "development_resource_packs");
+        }
+    });
+    buttonLayout->addWidget(resButton);
+
+    layout->addLayout(buttonLayout);
+
+    layout->addSpacing(15);
+
+    // Sección de gestión
+    QLabel *manageLabel = new QLabel(tr("Gestionar Development Packs:"));
+    manageLabel->setStyleSheet("font-weight: bold; font-size: 14px;");
+    layout->addWidget(manageLabel);
+
+    // Crear un contenedor para las dos listas
+    auto *devLayout = new QHBoxLayout();
+
+    // Lista de Development Behavior Packs
+    auto *behListWidget = new QListWidget();
+    devLayout->addWidget(behListWidget);
+    // Asignar a variable miembro si necesitas recargarla
+    // No es necesario si no vas a recargarla, pero por consistencia:
+    // developmentBehaviorList = behListWidget;
+
+    // Lista de Development Resource Packs
+    auto *resListWidget = new QListWidget();
+    devLayout->addWidget(resListWidget);
+    // developmentResourceList = resListWidget;
+
+    layout->addLayout(devLayout);
+
+    // Cargar packs al mostrar la pestaña
+    loadPacks("development_behavior_packs", behListWidget);
+    loadPacks("development_resource_packs", resListWidget);
+
+    // Botón para recargar la lista
+    QPushButton *refreshButton = new QPushButton(tr("Recargar Listas"));
+    connect(refreshButton, &QPushButton::clicked, this, [=, this]() {
+        loadPacks("development_behavior_packs", behListWidget);
+        loadPacks("development_resource_packs", resListWidget);
+    });
+    layout->addWidget(refreshButton);
+
+    // Contenedor horizontal para los dos botones de eliminar
+    auto *deleteLayout = new QHBoxLayout();
+
+    // Botón para eliminar un pack seleccionado en la lista de Behavior Packs
+    QPushButton *deleteBehButton =
+        new QPushButton(tr("Eliminar Behavior Pack Seleccionado"));
+    connect(deleteBehButton, &QPushButton::clicked, this, [=, this]() {
+        if (behListWidget->selectedItems().isEmpty()) {
+            QMessageBox::warning(
+                this, tr("Advertencia"),
+                tr("No hay ningún Behavior Pack seleccionado."));
+            return;
+        }
+
+        QString selectedEntry = behListWidget->selectedItems().first()->text();
+        int r = QMessageBox::warning(
+            this, tr("Advertencia"),
+            QString(tr("¿Estás seguro de eliminar el Behavior Pack '%1'?\nEsta "
+                       "acción no se puede deshacer."))
+                .arg(selectedEntry),
+            QMessageBox::Yes | QMessageBox::No, QMessageBox::No);
+        if (r == QMessageBox::No)
+            return;
+
+        // Eliminar el archivo/carpeta
+        QString baseDataDir = QStandardPaths::writableLocation(
+                                  QStandardPaths::GenericDataLocation) +
+                              "/mcpelauncher/games/com.mojang";
+        QString fullPath =
+            baseDataDir + "/development_behavior_packs/" + selectedEntry;
+
+        QFileInfo info(fullPath);
+        bool success = false;
+        if (info.isDir()) {
+            success = QDir(fullPath).removeRecursively();
+        } else {
+            success = QFile::remove(fullPath);
+        }
+
+        if (success) {
+            QMessageBox::information(
+                this, tr("Éxito"),
+                QString(tr("eliminado correctamente.")).arg(selectedEntry));
+            // Recargar la lista
+            loadPacks("development_behavior_packs", behListWidget);
+        } else {
+            QMessageBox::critical(
+                this, "Error",
+                QString(tr("No se pudo eliminar")).arg(selectedEntry));
+        }
+    });
+    deleteLayout->addWidget(deleteBehButton);
+
+    // Botón para eliminar un pack seleccionado en la lista de Resource Packs
+    QPushButton *deleteResButton =
+        new QPushButton(tr("Eliminar Resource Pack Seleccionado"));
+    connect(deleteResButton, &QPushButton::clicked, this, [=, this]() {
+        if (resListWidget->selectedItems().isEmpty()) {
+            QMessageBox::warning(
+                this, tr("Advertencia"),
+                tr("No hay ningún Resource Pack seleccionado."));
+            return;
+        }
+
+        QString selectedEntry = resListWidget->selectedItems().first()->text();
+        int r = QMessageBox::warning(
+            this, tr("Advertencia"),
+            QString(tr("¿Estás seguro de eliminar el Resource Pack '%1'?\nEsta "
+                       "acción no se puede deshacer."))
+                .arg(selectedEntry),
+            QMessageBox::Yes | QMessageBox::No, QMessageBox::No);
+        if (r == QMessageBox::No)
+            return;
+
+        // Eliminar el archivo/carpeta
+        QString baseDataDir = QStandardPaths::writableLocation(
+                                  QStandardPaths::GenericDataLocation) +
+                              "/mcpelauncher/games/com.mojang";
+        QString fullPath =
+            baseDataDir + "/development_resource_packs/" + selectedEntry;
+
+        QFileInfo info(fullPath);
+        bool success = false;
+        if (info.isDir()) {
+            success = QDir(fullPath).removeRecursively();
+        } else {
+            success = QFile::remove(fullPath);
+        }
+
+        if (success) {
+            QMessageBox::information(
+                this, tr("Éxito"),
+                QString(tr("eliminado correctamente.")).arg(selectedEntry));
+            // Recargar la lista
+            loadPacks("development_resource_packs", resListWidget);
+        } else {
+            QMessageBox::critical(
+                this, "Error",
+                QString("No se pudo eliminar el Resource Pack '%1'.")
+                    .arg(selectedEntry));
+        }
+    });
+    deleteLayout->addWidget(deleteResButton);
+
+    layout->addLayout(deleteLayout);
+
+    return widget;
+}
+
+QWidget *TrinitoWindow::createWorldTab() {
+    auto *widget = new QWidget();
+    auto *layout = new QVBoxLayout(widget);
+
+    // Título
+    QLabel *titleLabel = new QLabel(tr("Mundos Guardados"));
+    titleLabel->setStyleSheet("font-weight: bold; font-size: 16px;");
+    layout->addWidget(titleLabel);
+
+    // Botón para seleccionar carpeta del mundo
+    auto *button = new QPushButton(tr("Añadir carpeta del mundo..."));
+    layout->addWidget(button);
+
+    connect(button, &QPushButton::clicked, this, [=, this]() {
+        QString path = QFileDialog::getExistingDirectory(
+            this, tr("Seleccionar carpeta del mundo"), QDir::homePath());
+        if (!path.isEmpty()) {
+            installItem(path, "minecraftWorlds");
+        }
+    });
+
+    layout->addSpacing(15);
+
+    // Sección de gestión
+    QLabel *manageLabel = new QLabel(tr("Gestionar Mundos:"));
+    manageLabel->setStyleSheet("font-weight: bold; font-size: 14px;");
+    layout->addWidget(manageLabel);
+
+    QListWidget *listWidget = new QListWidget();
+    layout->addWidget(listWidget);
+
+    // Asignar a variable miembro
+    mapsList = listWidget;
+
+    // Cargar mundos al mostrar la pestaña
+    loadPacks("minecraftWorlds", listWidget);
+
+    // Botón para recargar la lista
+    QPushButton *refreshButton = new QPushButton(tr("Recargar Lista"));
+    connect(refreshButton, &QPushButton::clicked, this,
+            [=, this]() { loadPacks("minecraftWorlds", listWidget); });
+    layout->addWidget(refreshButton);
+
+    // Botón para borrar un mundo seleccionado
+    QPushButton *deleteButton =
+        new QPushButton(tr("Borrar Mundo Seleccionado"));
+    connect(deleteButton, &QPushButton::clicked, this, [=, this]() {
+        if (listWidget->selectedItems().isEmpty()) {
+            QMessageBox::warning(this, tr("Advertencia"),
+                                 tr("No hay ningún mundo seleccionado."));
+            return;
+        }
+
+        QString selectedWorld = listWidget->selectedItems().first()->text();
+        int r = QMessageBox::warning(
+            this, tr("Advertencia"),
+            QString(tr("¿Estás seguro de eliminar el mundo '%1'?\nEsta acción "
+                       "no 0se puede deshacer."))
+                .arg(selectedWorld),
+            QMessageBox::Yes | QMessageBox::No, QMessageBox::No);
+        if (r == QMessageBox::No)
+            return;
+
+        // Borrar el mundo
+        QString baseDataDir = QStandardPaths::writableLocation(
+                                  QStandardPaths::GenericDataLocation) +
+                              "/mcpelauncher/games/com.mojang";
+        QString worldPath = baseDataDir + "/minecraftWorlds/" + selectedWorld;
+
+        if (QDir(worldPath).removeRecursively()) {
+            QMessageBox::information(this, tr("Éxito"),
+                                     tr("Mundo eliminado correctamente."));
+            // Actualizar la lista
+            loadPacks("minecraftWorlds", listWidget);
+        } else {
+            QMessageBox::critical(this, "Error",
+                                  "No se pudo eliminar el mundo.");
+        }
+    });
+    layout->addWidget(deleteButton);
+
+    return widget;
+}
+
+void TrinitoWindow::installItem(const QString &sourcePath,
+                                const QString &targetSubdir) {
+    PackInstaller installer;
+
+    if (installer.itemExists(sourcePath, targetSubdir)) {
+        int r = QMessageBox::warning(
+            this, tr("Advertencia"),
+            QString(tr("Ya existe un elemento llamado:\n%1\n\n¿Reemplazarlo?"))
+                .arg(installer.getTargetName(sourcePath)),
+            QMessageBox::Yes | QMessageBox::No, QMessageBox::No);
+        if (r == QMessageBox::No)
+            return;
+    }
+
+    QString errorMsg;
+    // We pass true for forceOverwrite because we already asked the user if it
+    // existed. If it didn't exist, forceOverwrite=true is fine (it just
+    // copies). Wait, my PackInstaller logic: if exists and !force, return
+    // error. If exists and force, delete and copy. So passing true is correct
+    // here after user confirmation.
+
+    if (installer.installItem(sourcePath, targetSubdir, true, errorMsg)) {
+        QMessageBox::information(
+            this, tr("Éxito"),
+            QString(tr("¡%1 instalado correctamente en:\n%2"))
+                .arg(installer.getTargetName(sourcePath))
+                .arg(targetSubdir));
+    } else {
+        QMessageBox::critical(this, "Error", tr("Falló la instalación:\n") + errorMsg);
+    }
+}
+
+// --- NUEVAS FUNCIONES PARA SHADERS/MODS ---
+
+// Función auxiliar para obtener directorio de shaders
+QString TrinitoWindow::getShadersDir() {
+    QString flatpakDir = QDir::homePath() + "/.var/app/com.trench.trinity.launcher/data/mcpelauncher";
+    QString shadersDir = flatpakDir + "/shaders";
+
+    // Si la carpeta base de Trinity Flatpak existe, usamos shaders dentro de ella
+    if (QDir(flatpakDir).exists()) {
+        return shadersDir;
+    } else {
+        // Si no, usamos la carpeta local
+        return QDir::homePath() + "/.local/share/mcpelauncher/shaders";
+    }
+}
+
+QWidget *TrinitoWindow::createShadersModsTab() {
+    auto *widget = new QWidget();
+    auto *layout = new QVBoxLayout(widget);
+
+    // Horizontal layout to split into left (Shaders) and right (Libs)
+    auto *mainSplitLayout = new QHBoxLayout();
+
+    // --- Left: Shaders Section ---
+    auto *shadersSection = new QWidget();
+    auto *shadersLayout = new QVBoxLayout(shadersSection);
+    shadersLayout->setSpacing(10);
+
+    QLabel *shadersTitle = new QLabel(tr("Gestionar Shaders:"));
+    shadersTitle->setStyleSheet("font-weight: bold; font-size: 14px;");
+    shadersLayout->addWidget(shadersTitle);
+
+    shadersList = new QListWidget();
+    shadersLayout->addWidget(shadersList);
+
+    auto *shadersButtonsLayout = new QHBoxLayout();
+    installShaderpackButton = new QPushButton(tr("Instalar Shaderpack..."));
+    removeShaderpackButton = new QPushButton(tr("Eliminar Shaderpack Seleccionado"));
+    refreshShaderListButton = new QPushButton(tr("Actualizar Lista"));
+    shadersButtonsLayout->addWidget(installShaderpackButton);
+    shadersButtonsLayout->addWidget(removeShaderpackButton);
+    shadersButtonsLayout->addWidget(refreshShaderListButton);
+    shadersLayout->addLayout(shadersButtonsLayout);
+
+    mainSplitLayout->addWidget(shadersSection);
+
+    // --- Right: Libs Section ---
+    auto *libsSection = new QWidget();
+    auto *libsLayout = new QVBoxLayout(libsSection);
+    libsLayout->setSpacing(10);
+
+    QLabel *libsTitle = new QLabel(tr("Gestionar Libs:")); // Cambiado Mods por Libs
+    libsTitle->setStyleSheet("font-weight: bold; font-size: 14px;");
+    libsLayout->addWidget(libsTitle);
+
+    // Available Libs
+    QLabel *availableLibsLabel = new QLabel(tr("Libs Disponibles:")); // Cambiado
+    libsLayout->addWidget(availableLibsLabel);
+    availableModsList = new QListWidget(); // El nombre de la variable puede mantenerse por simplicidad interna
+    libsLayout->addWidget(availableModsList);
+
+    downloadModButton = new QPushButton(tr("Descargar Lib Seleccionada")); // Cambiado
+    libsLayout->addWidget(downloadModButton);
+
+    // Installed Libs
+    QLabel *installedLibsLabel = new QLabel(tr("Libs Instaladas:")); // Cambiado
+    libsLayout->addWidget(installedLibsLabel);
+    installedModsList = new QListWidget(); // El nombre de la variable puede mantenerse por simplicidad interna
+    libsLayout->addWidget(installedModsList);
+
+    removeInstalledModButton = new QPushButton(tr("Eliminar Lib Seleccionada")); // Cambiado
+    libsLayout->addWidget(removeInstalledModButton);
+
+    mainSplitLayout->addWidget(libsSection);
+
+    layout->addLayout(mainSplitLayout);
+
+    // Connect signals (las funciones miembro siguen siendo las mismas, solo cambia la UI)
+    connect(installShaderpackButton, &QPushButton::clicked, this, &TrinitoWindow::onInstallShaderpackClicked);
+    connect(removeShaderpackButton, &QPushButton::clicked, this, &TrinitoWindow::onRemoveShaderpackClicked);
+    connect(refreshShaderListButton, &QPushButton::clicked, this, &TrinitoWindow::onRefreshShaderListClicked);
+    connect(downloadModButton, &QPushButton::clicked, this, &TrinitoWindow::onDownloadModClicked);
+    connect(removeInstalledModButton, &QPushButton::clicked, this, &TrinitoWindow::onRemoveInstalledModClicked);
+
+    // Initialize data
+    populateInstalledShaders();
+    populateAvailableMods(); // Esta función seguirá cargando la lista de "mods" disponibles, pero ahora se mostrará como "libs"
+    populateInstalledMods(); // Esta función seguirá cargando la lista de "mods" instalados, pero ahora se mostrará como "libs"
+
+    return widget;
+}
+
+void TrinitoWindow::populateInstalledShaders() {
+    QString shadersDir = getShadersDir(); // Detectar carpeta correcta
+    QDir dir(shadersDir);
+
+    shadersList->clear();
+
+    if (!dir.exists()) {
+        shadersList->addItem("(0 shaders)");
+        return;
+    }
+
+    QFileInfoList files = dir.entryInfoList(QStringList() << "*.material.bin", QDir::Files);
+    for (const QFileInfo &file : files) {
+        shadersList->addItem(file.fileName());
+    }
+}
+
+void TrinitoWindow::populateAvailableMods() {
+    QStringList availableMods = {
+        "libmcpelauncherlegacyx86_64.so",
+        "libmcpelauncherlegacyarm64-v8a.so",
+        "libmcpelaunchernhc.so",
+        "libmcpelauncherstrafesprintfix.so",
+        "libmcpelauncherzoom.so",
+        "libmcpelaunchershadersmod.so",
+        "libmcpelauncherdcblock.so",
+        "libfullbright.so"
+    };
+
+    availableModsList->clear();
+
+    for (const QString &mod : availableMods) {
+        availableModsList->addItem(mod);
+    }
+}
+
+void TrinitoWindow::populateInstalledMods() {
+    QString modsDir = QDir::homePath() + "/.var/app/com.trench.trinity.launcher/data/mcpelauncher/mods";
+    QDir dir(modsDir);
+
+    installedModsList->clear();
+
+    if (!dir.exists()) {
+        installedModsList->addItem("(0 mods )");
+        return;
+    }
+
+    QFileInfoList files = dir.entryInfoList(QStringList() << "*.so" << "*.so.disabled", QDir::Files);
+    for (const QFileInfo &file : files) {
+        installedModsList->addItem(file.fileName());
+    }
+}
+
+void TrinitoWindow::onInstallShaderpackClicked() {
+    QFileDialog dialog(this);
+    dialog.setFileMode(QFileDialog::ExistingFile);
+    dialog.setNameFilter("Minecraft Shaderpacks (*.mcpack)");
+    dialog.setDirectory(QDir::homePath());
+
+    if (dialog.exec()) {
+        QString filePath = dialog.selectedFiles().first();
+
+        if (filePath.isEmpty()) return;
+
+        QString shadersDir = getShadersDir(); // Detectar carpeta correcta
+        QDir().mkpath(shadersDir);
+
+        QString tempDirPath = QDir::tempPath() + "/shaderpack_extract_" + QString::number(QRandomGenerator::global()->bounded(INT_MAX));
+        QDir().mkpath(tempDirPath);
+
+        // Extraer .mcpack con unzip
+        QProcess process;
+        process.start("unzip", QStringList() << filePath << "-d" << tempDirPath);
+        process.waitForFinished();
+
+        if (process.exitCode() != 0) {
+            QMessageBox::critical(this, "Error", tr("No se pudo extraer el archivo .mcpack."));
+            QDir(tempDirPath).removeRecursively(); // Limpiar
+            return;
+        }
+
+        // Buscar recursivamente todos los .material.bin en la estructura
+        QDirIterator it(tempDirPath, QStringList() << "*.material.bin", QDir::Files, QDirIterator::Subdirectories);
+        QStringList materialBins;
+
+        while (it.hasNext()) {
+            materialBins << it.next();
+        }
+
+        // Copiar cada .material.bin a la carpeta de shaders
+        for (const QString &srcPath : materialBins) {
+            QFileInfo fileInfo(srcPath);
+            QString fileName = fileInfo.fileName();
+            QString dstPath = shadersDir + "/" + fileName;
+
+            // Si el archivo ya existe, no lo copiamos (o lo sobrescribimos)
+            if (QFile::exists(dstPath)) {
+                QFile::remove(dstPath);
+            }
+
+            QProcess process;
+            process.start("cp", QStringList() << srcPath << dstPath);
+            process.waitForFinished();
+
+            if (process.exitCode() != 0) {
+                // Verificar si el archivo se creó de todas formas
+                if (!QFile::exists(dstPath)) {
+                    QMessageBox::warning(this, tr("Advertencia"), tr("No se pudo copiar ") + fileName + " (output: " + QString::number(process.exitCode()) + ")");
+                }
+                // Si existe, ignoramos el error
+            }
+        }
+
+        // Limpiar directorio temporal
+        QDir(tempDirPath).removeRecursively();
+
+        QMessageBox::information(this, tr("Éxito"), tr("Shaderpack instalado correctamente."));
+        populateInstalledShaders(); // Actualizar lista
+    }
+}
+
+void TrinitoWindow::onRemoveShaderpackClicked() {
+    if (shadersList->selectedItems().isEmpty()) {
+        QMessageBox::warning(this, tr("Advertencia"), tr("No hay ningún shader seleccionado."));
+        return;
+    }
+
+    QString selectedShader = shadersList->selectedItems().first()->text();
+    QString shadersDir = getShadersDir();
+    QString shaderPath = shadersDir + "/" + selectedShader;
+
+    if (QFile::remove(shaderPath)) {
+        QMessageBox::information(this, tr("Éxito"), tr("Shader eliminado correctamente."));
+        populateInstalledShaders(); // Actualizar lista
+    } else {
+        QMessageBox::critical(this, "Error", tr("No se pudo eliminar el shader."));
+    }
+}
+
+void TrinitoWindow::onRefreshShaderListClicked() {
+    populateInstalledShaders();
+}
+
+void TrinitoWindow::onDownloadModClicked() {
+    if (availableModsList->selectedItems().isEmpty()) {
+        QMessageBox::warning(this, tr("Advertencia"), tr("Por favor, selecciona un mod para descargar."));
+        return;
+    }
+
+    QString selected = availableModsList->selectedItems().first()->text();
+    // Asegúrate de que la URL sea correcta
+    QString url = "https://huggingface.co/datasets/JaviercPLUS/mods-mcpe/resolve/main/" + selected;
+
+    QString modsDir = QDir::homePath() + "/.var/app/com.trench.trinity.launcher/data/mcpelauncher/mods";
+    QDir().mkpath(modsDir);
+
+    QString destination = modsDir + "/" + selected;
+
+    // Crear diálogo de progreso indeterminado
+    QProgressDialog progress(tr("Descargando ") + selected, tr("Cancelar"), 0, 0, this);
+    progress.setWindowModality(Qt::WindowModal);
+    progress.show();
+
+    // Descargar en hilo secundario
+    QFuture<void> future = QtConcurrent::run([=]() {
+        QProcess process;
+        process.start("curl", QStringList() << "-L" << url << "-o" << destination);
+        process.waitForFinished(-1);
+    });
+
+    // Esperar a que termine sin congelar la interfaz
+    while (!future.isFinished()) {
+        QCoreApplication::processEvents(); // Actualizar la interfaz
+        QThread::msleep(100); // Pausa breve
+    }
+
+    // Verificar si el archivo se descargó
+    if (!QFile::exists(destination)) {
+        QMessageBox::critical(this, "Error", tr("No se pudo descargar el mod."));
+        return;
+    }
+
+    progress.close();
+    QMessageBox::information(this, tr("Éxito"), tr("Mod instalado correctamente."));
+    populateInstalledMods();
+}
+
+void TrinitoWindow::onRemoveInstalledModClicked() {
+    if (installedModsList->selectedItems().isEmpty()) {
+        QMessageBox::warning(this, tr("Advertencia"), tr("Por favor, selecciona un mod para eliminar."));
+        return;
+    }
+
+    QString selected = installedModsList->selectedItems().first()->text();
+    QString modsDir = QDir::homePath() + "/.var/app/com.trench.trinity.launcher/data/mcpelauncher/mods";
+    QString filePath = modsDir + "/" + selected;
+
+    QFile file(filePath);
+    if (file.exists() && file.remove()) {
+        QMessageBox::information(this, tr("Eliminado"), selected + tr(" ha sido eliminado."));
+        populateInstalledMods();
+    } else {
+        QMessageBox::critical(this, "Error", tr("No se pudo eliminar ") + selected);
+    }
+}
+#include "TrinityLib/ui/dialogs/extract_dialog.hpp"
+#include <QVBoxLayout>
+#include <QFormLayout>
+#include <QPushButton>
+#include <QFileDialog>
+#include <QDialogButtonBox>
+#include <QMessageBox>
+#include <QFileInfo>
+#include <QDir>
+
+ExtractDialog::ExtractDialog(QWidget *parent) : QDialog(parent) {
+    setWindowTitle(tr("Nueva versión desde APK"));
+    resize(400, 150);
+
+    auto *layout = new QFormLayout(this);
+
+    auto *apkButton = new QPushButton(tr("Seleccionar APK..."));
+    apkLabel = new QLabel(tr("Ningún archivo seleccionado"));
+    apkLabel->setWordWrap(true);
+
+    connect(apkButton, &QPushButton::clicked, this, &ExtractDialog::onSelectApk);
+
+    nameEdit = new QLineEdit();
+    nameEdit->setPlaceholderText("Ej: 1.21.0");
+    connect(nameEdit, &QLineEdit::textChanged, [this](const QString &text) { versionName = text.trimmed(); });
+
+    layout->addRow("APK:", apkButton);
+    layout->addRow(apkLabel);
+    layout->addRow(tr("Nombre de la versión:"), nameEdit);
+
+    auto *buttonBox = new QDialogButtonBox(QDialogButtonBox::Ok | QDialogButtonBox::Cancel);
+    layout->addWidget(buttonBox);
+
+    connect(buttonBox, &QDialogButtonBox::accepted, this, [this]() {
+        if (apkPath.isEmpty()) {
+            QMessageBox::warning(this, tr("Error"), tr("Debes seleccionar un archivo APK."));
+            return;
+        }
+        if (versionName.isEmpty()) {
+            QMessageBox::warning(this, tr("Error"), tr("Debes ingresar un nombre para la versión."));
+            return;
+        }
+        accept();
+    });
+    connect(buttonBox, &QDialogButtonBox::rejected, this, &QDialog::reject);
+}
+
+void ExtractDialog::onSelectApk() {
+    QString file = QFileDialog::getOpenFileName(this, tr("Seleccionar APK de Minecraft"), QDir::homePath(), tr("Archivos APK (*.apk)"));
+    if (!file.isEmpty()) {
+        apkPath = file;
+        apkLabel->setText(QFileInfo(file).fileName());
+    }
+}
+
+QString ExtractDialog::getApkPath() const {
+    return apkPath;
+}
+
+QString ExtractDialog::getVersionName() const {
+    return versionName;
+}
+#include "TrinityLib/ui/widgets/version_selector.hpp"
+#include "TrinityLib/core/version_manager.hpp"
+
+VersionSelector::VersionSelector(QWidget *parent) : QComboBox(parent) {
+    refreshVersions();
+}
+
+void VersionSelector::refreshVersions() {
+    clear();
+    VersionManager vm;
+    QStringList versions = vm.getInstalledVersions();
+
+    if (!versions.isEmpty()) {
+        addItems(versions);
+        setEnabled(true);
+    } else {
+        addItem(tr("No hay versiones instaladas"));
+        setEnabled(false);
+    }
+}
+
+QString VersionSelector::getSelectedVersion() const {
+    if (!isEnabled() || currentText() == tr("No hay versiones instaladas")) {
+        return QString();
+    }
+    return currentText();
+}
+#include "TrinityLib/core/exporter.hpp"
+#include "TrinityLib/core/version_manager.hpp"
+#include <QApplication>
+#include <QDialog>
+#include <QDir>
+#include <QDirIterator>
+#include <QFileDialog>
+#include <QFileInfo>
+#include <QLabel>
+#include <QMessageBox>
+#include <QMetaObject>
+#include <QProcess>
+#include <QProgressBar>
+#include <QStandardPaths>
+#include <QTemporaryDir>
+#include <QThread>
+#include <QVBoxLayout>
+
+Exporter::Exporter(QWidget *parent)
+    : QObject(parent),
+      parentWidget(parent) {}
+
+void Exporter::exportVersion(const QString &versionName) {
+    VersionManager vm;
+    QString versionPath = vm.getVersionPath(versionName);
+
+    if (!QDir(versionPath).exists()) {
+        QMessageBox::critical(parentWidget, tr("Error"),
+                              tr("La versión no existe."));
+        return;
+    }
+
+    // Preguntar si exportar con datos del APK
+    int r = QMessageBox::question(
+        parentWidget, tr("Exportar versión"),
+        QString(tr("¿Exportar '%1' con datos del APK?\n\n"
+                   "Sí: Incluye la versión completa (datos del juego).\n"
+                   "No: Solo exporta mods, mapas, etc."))
+            .arg(versionName),
+        QMessageBox::Yes | QMessageBox::No, QMessageBox::Yes);
+    bool exportWithApk = (r == QMessageBox::Yes);
+
+    QString zipPath = QFileDialog::getSaveFileName(
+        parentWidget, tr("Guardar como archivo"), versionName + ".tar.gz",
+        tr("Archivos TAR (*.tar.gz);;Todos los archivos (*)"));
+    if (zipPath.isEmpty())
+        return;
+
+    // Crear diálogo de progreso
+    QDialog progressDlg(parentWidget);
+    progressDlg.setWindowTitle(tr("Exportando..."));
+    progressDlg.setFixedSize(300, 100);
+
+    auto *layout = new QVBoxLayout(&progressDlg);
+    QLabel *label = new QLabel(tr("Exportando versión..."));
+    QProgressBar *progressBar = new QProgressBar();
+    progressBar->setRange(0, 0); // Indefinido
+    layout->addWidget(label);
+    layout->addWidget(progressBar);
+
+    progressDlg.show();
+    QApplication::processEvents(); // Actualizar UI
+
+    // Crear directorio temporal
+    QString tempDir = QDir::tempPath() + "/trinity_export_" + versionName;
+    if (QDir(tempDir).exists()) {
+        QDir(tempDir).removeRecursively();
+    }
+    QDir().mkpath(tempDir);
+
+    // Crear estructura: tmp/trinity_export_<nombre>/
+    QString exportDir = tempDir + "/tmp/trinity_export_" + versionName;
+    QDir().mkpath(exportDir);
+
+    // Copiar version_content si se incluye (sin enlaces)
+    if (exportWithApk) {
+        QString versionContentDest = exportDir + "/version_content";
+        if (!copyDirectory(versionPath, versionContentDest)) {
+            QMessageBox::critical(parentWidget, tr("Error"),
+                                  tr("No se pudo copiar la versión."));
+            QDir(tempDir).removeRecursively();
+            return;
+        }
+    }
+
+    // Copiar games/com.mojang (sin enlaces)
+    QString baseDataDir =
+        QStandardPaths::writableLocation(QStandardPaths::GenericDataLocation) +
+        "/mcpelauncher";
+    QString gamesPath = baseDataDir + "/games/com.mojang";
+    QString gamesDest = exportDir + "/games";
+
+    if (!copyDirectory(gamesPath, gamesDest)) {
+        QMessageBox::critical(parentWidget, tr("Error"),
+                              tr("No se pudo copiar los recursos."));
+        QDir(tempDir).removeRecursively();
+        return;
+    }
+
+    // Comprimir con tar en otro hilo
+    QProcess *compressProcess = new QProcess(this);
+
+    connect(
+        compressProcess,
+        QOverload<int, QProcess::ExitStatus>::of(&QProcess::finished), this,
+        [this, compressProcess, versionName, zipPath, tempDir, &progressDlg]() {
+            // Cerrar diálogo de progreso
+            progressDlg.accept();
+
+            if (compressProcess->exitCode() == 0) {
+                emit exportFinished(true,
+                                    QString(tr("Versión %1 exportada como %2"))
+                                        .arg(versionName, zipPath));
+            } else {
+                QString err = compressProcess->readAllStandardError();
+                emit exportFinished(false, tr("Falló la exportación:\n") + err);
+            }
+
+            // Limpiar temporal
+            QDir(tempDir).removeRecursively();
+
+            // Eliminar el proceso al terminar
+            compressProcess->deleteLater();
+        });
+
+    compressProcess->start("tar", {"-czf", zipPath, "-C", exportDir, "."});
+
+    // Mantener el diálogo abierto
+    progressDlg.exec();
+}
+
+void Exporter::importVersion() {
+    QString zipPath = QFileDialog::getOpenFileName(
+        parentWidget, tr("Seleccionar archivo TAR"), "",
+        tr("Archivos TAR (*.tar.gz *.tar);;Todos los archivos (*)"));
+    if (zipPath.isEmpty())
+        return;
+
+    // Extraer nombre de la versión del nombre del archivo (sin extensión)
+    QString fileName =
+        QFileInfo(zipPath).baseName(); // Ej: "1.21.121" de "1.21.121.tar.gz"
+
+    // Verificar si ya existen versiones o recursos
+    QString baseDataDir =
+        QStandardPaths::writableLocation(QStandardPaths::GenericDataLocation) +
+        "/mcpelauncher";
+    QString destVersionDir = baseDataDir + "/versions/" + fileName;
+    QString destGamesDir = baseDataDir + "/games/com.mojang";
+
+    bool versionExists = QDir(destVersionDir).exists();
+    bool gamesExists = QDir(destGamesDir).exists();
+
+    if (versionExists || gamesExists) {
+        int r = QMessageBox::warning(parentWidget, tr("Advertencia"),
+                                     QString(tr("¡Este proceso puede tardar!.\n"
+                                                "¿Quiere continuar?"))
+                                         .arg(fileName),
+                                     QMessageBox::Yes | QMessageBox::No,
+                                     QMessageBox::No);
+        if (r == QMessageBox::No) {
+            return;
+        }
+    }
+
+    // Crear diálogo de progreso
+    QDialog *progressDlg = new QDialog(parentWidget);
+    progressDlg->setWindowTitle(tr("Importando..."));
+    progressDlg->setFixedSize(300, 100);
+
+    auto *layout = new QVBoxLayout(progressDlg);
+    QLabel *label = new QLabel(tr("Importando versión..."));
+    QProgressBar *progressBar = new QProgressBar();
+    progressBar->setRange(0, 0); // Indefinido
+    layout->addWidget(label);
+    layout->addWidget(progressBar);
+
+    progressDlg->show();
+    QApplication::processEvents(); // Actualizar UI
+
+    // Directorio temporal para extracción
+    QString tempDir = QDir::tempPath() + "/trinity_import_" + fileName;
+    if (QDir(tempDir).exists()) {
+        QDir(tempDir).removeRecursively();
+    }
+    QDir().mkpath(tempDir);
+
+    // Descomprimir el TAR en otro hilo
+    QProcess *process = new QProcess(this);
+
+    connect(
+        process, QOverload<int, QProcess::ExitStatus>::of(&QProcess::finished),
+        this,
+        [this, process, fileName, tempDir, progressDlg, baseDataDir,
+         destVersionDir, destGamesDir, versionExists, gamesExists]() {
+            if (process->exitCode() != 0) {
+                QString err = process->readAllStandardError();
+                emit importFinished(false, tr("Falló la extracción:\n") + err);
+                QDir(tempDir).removeRecursively();
+                // Cerrar diálogo de progreso aquí
+                progressDlg->accept();
+                progressDlg->deleteLater();
+                process->deleteLater();
+                return;
+            }
+
+            // Buscar recursivamente los directorios "version_content" y "games"
+            QString versionContentPath;
+            QString gamesPath;
+
+            QDirIterator it(tempDir, QDir::Dirs | QDir::NoDotAndDotDot,
+                            QDirIterator::Subdirectories);
+            while (it.hasNext()) {
+                QString dir = it.next();
+                if (QFileInfo(dir).fileName() == "version_content") {
+                    versionContentPath = dir;
+                } else if (QFileInfo(dir).fileName() == "games") {
+                    gamesPath = dir;
+                }
+            }
+
+            // Ruta base de datos de la app
+            QString baseDataDir = QStandardPaths::writableLocation(
+                                      QStandardPaths::GenericDataLocation) +
+                                  "/mcpelauncher";
+
+            // Rutas de destino
+            QString destVersionDir = baseDataDir + "/versions/" + fileName;
+            QString destGamesDir = baseDataDir + "/games/com.mojang";
+
+            // Mover contenido de version_content → versions/<nombre> (si
+            // existe)
+            bool success = true;
+            if (!versionContentPath.isEmpty()) {
+                if (versionExists) {
+                    QDir(destVersionDir)
+                        .removeRecursively(); // Eliminar versión anterior
+                }
+                // Crear directorio de destino
+                QDir().mkpath(destVersionDir);
+
+                // Mover *contenido* de version_content a destVersionDir (no la
+                // carpeta en sí)
+                QDir srcVersionDir(versionContentPath);
+                QFileInfoList entries = srcVersionDir.entryInfoList(
+                    QDir::Dirs | QDir::Files | QDir::NoDotAndDotDot);
+                for (const QFileInfo &info : entries) {
+                    QString srcItem = info.absoluteFilePath();
+                    QString dstItem =
+                        destVersionDir + "/" +
+                        info.fileName(); // Mover directamente a destVersionDir
+
+                    if (!QDir().rename(srcItem, dstItem)) {
+                        // Si rename falla (ej. entre dispositivos), usar
+                        // copyDirectory y borrar origen
+                        if (info.isDir()) {
+                            if (!copyDirectory(srcItem, dstItem)) {
+                                emit importFinished(
+                                    false,
+                                    tr("No se pudo mover/copiar directorio: ") +
+                                        info.fileName());
+                                success = false;
+                                break;
+                            }
+                        } else {
+                            if (!QFile::copy(srcItem, dstItem)) {
+                                emit importFinished(
+                                    false,
+                                    tr("No se pudo mover/copiar archivo: ") +
+                                        info.fileName());
+                                success = false;
+                                break;
+                            }
+                        }
+                        // Borrar origen (solo si se copió exitosamente)
+                        if (info.isDir()) {
+                            QDir(srcItem).removeRecursively();
+                        } else {
+                            QFile::remove(srcItem);
+                        }
+                    }
+                }
+            }
+
+            // Mover contenido de games → games/com.mojang (si existe)
+            if (!gamesPath.isEmpty()) {
+                if (gamesExists) {
+                    QDir(destGamesDir)
+                        .removeRecursively(); // Eliminar recursos anteriores
+                }
+                // Crear directorio de destino
+                QDir().mkpath(destGamesDir);
+
+                // Mover *contenido* de gamesPath a destGamesDir (no la carpeta
+                // en sí)
+                QDir srcGamesDir(gamesPath);
+                QFileInfoList entries = srcGamesDir.entryInfoList(
+                    QDir::Dirs | QDir::Files | QDir::NoDotAndDotDot);
+                for (const QFileInfo &info : entries) {
+                    QString srcItem = info.absoluteFilePath();
+                    QString dstItem =
+                        destGamesDir + "/" +
+                        info.fileName(); // Mover directamente a destGamesDir
+
+                    if (!QDir().rename(srcItem, dstItem)) {
+                        // Si rename falla (ej. entre dispositivos), usar
+                        // copyDirectory y borrar origen
+                        if (info.isDir()) {
+                            if (!copyDirectory(srcItem, dstItem)) {
+                                emit importFinished(
+                                    false, tr("No se pudo mover/copiar "
+                                              "directorio de recursos: ") +
+                                               info.fileName());
+                                success = false;
+                                break;
+                            }
+                        } else {
+                            if (!QFile::copy(srcItem, dstItem)) {
+                                emit importFinished(
+                                    false, tr("No se pudo mover/copiar "
+                                              "archivo de recursos: ") +
+                                               info.fileName());
+                                success = false;
+                                break;
+                            }
+                        }
+                        // Borrar origen (solo si se copió exitosamente)
+                        if (info.isDir()) {
+                            QDir(srcItem).removeRecursively();
+                        } else {
+                            QFile::remove(srcItem);
+                        }
+                    }
+                }
+            }
+
+            // Limpiar temporal
+            QDir(tempDir).removeRecursively();
+
+            if (success) {
+                emit importFinished(
+                    true, QString(tr("Versión %1 importada correctamente."))
+                              .arg(fileName));
+            }
+
+            // Cerrar diálogo de progreso aquí (al final de todo)
+            progressDlg->accept();
+            progressDlg->deleteLater();
+
+            // Eliminar el proceso al terminar
+            process->deleteLater();
+        });
+
+    process->start("tar", {"-xzf", zipPath, "-C", tempDir});
+}
+bool Exporter::copyDirectory(const QString &srcPath, const QString &dstPath) {
+    QDir srcDir(srcPath);
+    if (!srcDir.exists())
+        return false;
+    if (!QDir().mkpath(dstPath))
+        return false;
+
+    // Copiar archivos y subdirectorios
+    QFileInfoList entries =
+        srcDir.entryInfoList(QDir::Dirs | QDir::Files | QDir::NoDotAndDotDot);
+    for (const QFileInfo &info : entries) {
+        QString srcItem = info.absoluteFilePath();
+        QString dstItem = dstPath + "/" + info.fileName();
+
+        if (info.isDir()) {
+            if (!copyDirectory(srcItem, dstItem))
+                return false;
+        } else {
+            if (!QFile::copy(srcItem, dstItem))
+                return false;
+        }
+
+        // Permitir que la UI responda
+        QApplication::processEvents();
+    }
+    return true;
+}
+
+// ... resto del código ...
+
+void CopyWorker::doCopy() {
+    QDir srcDir(srcPath);
+    if (!srcDir.exists()) {
+        emit copyFinished(false);
+        return;
+    }
+    if (!QDir().mkpath(dstPath)) {
+        emit copyFinished(false);
+        return;
+    }
+
+    // Copiar archivos y subdirectorios
+    QFileInfoList entries =
+        srcDir.entryInfoList(QDir::Dirs | QDir::Files | QDir::NoDotAndDotDot);
+    for (const QFileInfo &info : entries) {
+        QString srcItem = info.absoluteFilePath();
+        QString dstItem = dstPath + "/" + info.fileName();
+
+        if (info.isDir()) {
+            if (!QDir().mkpath(dstItem)) {
+                emit copyFinished(false);
+                return;
+            }
+            // Copiar recursivamente
+            QProcess process;
+            process.start("cp", {"-r", srcItem, dstItem});
+            process.waitForFinished(-1);
+            if (process.exitCode() != 0) {
+                emit copyFinished(false);
+                return;
+            }
+        } else {
+            if (!QFile::copy(srcItem, dstItem)) {
+                emit copyFinished(false);
+                return;
+            }
+        }
+    }
+    emit copyFinished(true);
+}
+#include "TrinityLib/core/version_config.hpp"
+#include <QFile>
+#include <QTextStream>
+#include <QDir>
+#include <QStandardPaths>
+
+VersionConfig::VersionConfig(const QString &versionName, QObject *parent)
+    : QObject(parent), versionName(versionName) {
+    load();
+}
+
+VersionConfig::~VersionConfig() {}
+
+QString VersionConfig::getLaunchArgs() const {
+    return launchArgs;
+}
+
+void VersionConfig::setLaunchArgs(const QString &args) {
+    launchArgs = args;
+}
+
+bool VersionConfig::save() {
+    QDir().mkpath(QFileInfo(configPath()).dir().path());
+    QFile file(configPath());
+    if (!file.open(QIODevice::WriteOnly | QIODevice::Text)) {
+        return false;
+    }
+    QTextStream out(&file);
+    out << launchArgs;
+    file.close();
+    return true;
+}
+
+bool VersionConfig::load() {
+    QFile file(configPath());
+    if (!file.open(QIODevice::ReadOnly | QIODevice::Text)) {
+        return false;
+    }
+    QTextStream in(&file);
+    launchArgs = in.readAll().trimmed();
+    file.close();
+    return true;
+}
+
+QString VersionConfig::configPath() const {
+    return QStandardPaths::writableLocation(QStandardPaths::GenericDataLocation)
+           + "/mcpelauncher/versions/" + versionName + "/trinity-config.txt";
+}
+#include "TrinityLib/core/pack_installer.hpp"
+#include <QStandardPaths>
+#include <QDir>
+#include <QFile>
+#include <QFileInfo>
+#include <QDebug>
+
+PackInstaller::PackInstaller(QObject *parent) : QObject(parent) {
+    baseGameDir = QStandardPaths::writableLocation(QStandardPaths::GenericDataLocation)
+                  + "/mcpelauncher/games/com.mojang";
+}
+
+QString PackInstaller::getTargetName(const QString &sourcePath) {
+    return QFileInfo(sourcePath).fileName();
+}
+
+bool PackInstaller::itemExists(const QString &sourcePath, const QString &targetSubdir) {
+    QString targetDir = baseGameDir + "/" + targetSubdir;
+    QString finalDest = targetDir + "/" + getTargetName(sourcePath);
+    return QFileInfo::exists(finalDest);
+}
+
+bool PackInstaller::installItem(const QString &sourcePath, const QString &targetSubdir, bool forceOverwrite, QString &errorMsg) {
+    QFileInfo sourceInfo(sourcePath);
+    if (!sourceInfo.exists()) {
+        errorMsg = "La ruta seleccionada no existe.";
+        return false;
+    }
+
+    QString targetDir = baseGameDir + "/" + targetSubdir;
+    if (!QDir().mkpath(targetDir)) {
+        errorMsg = "No se pudo crear el directorio de destino.";
+        return false;
+    }
+
+    QString finalDest = targetDir + "/" + sourceInfo.fileName();
+
+    if (QFileInfo::exists(finalDest)) {
+        if (!forceOverwrite) {
+            errorMsg = "El elemento ya existe.";
+            return false;
+        }
+        // Remove existing
+        if (QFileInfo(finalDest).isDir()) {
+            if (!QDir(finalDest).removeRecursively()) {
+                errorMsg = "No se pudo eliminar el directorio existente.";
+                return false;
+            }
+        } else {
+            if (!QFile::remove(finalDest)) {
+                errorMsg = "No se pudo eliminar el archivo existente.";
+                return false;
+            }
+        }
+    }
+
+    bool success = false;
+    if (sourceInfo.isDir()) {
+        success = copyDirectory(sourcePath, finalDest);
+    } else {
+        success = QFile::copy(sourcePath, finalDest);
+    }
+
+    if (!success) {
+        errorMsg = "Falló la copia del archivo o carpeta.";
+        return false;
+    }
+
+    return true;
+}
+
+bool PackInstaller::copyDirectory(const QString &srcPath, const QString &dstPath) {
+    QDir srcDir(srcPath);
+    if (!srcDir.exists()) return false;
+    QDir().mkpath(dstPath);
+    for (const QFileInfo &info : srcDir.entryInfoList(QDir::Dirs | QDir::Files | QDir::NoDotAndDotDot)) {
+        QString srcItem = srcPath + "/" + info.fileName();
+        QString dstItem = dstPath + "/" + info.fileName();
+        if (info.isDir()) {
+            if (!copyDirectory(srcItem, dstItem)) return false;
+        } else {
+            if (!QFile::copy(srcItem, dstItem)) return false;
+        }
+    }
+    return true;
+}
+#include "TrinityLib/core/version_manager.hpp"
+#include "TrinityLib/core/version_config.hpp"
+#include <QStandardPaths>
+#include <QDir>
+#include <QProcess>
+#include <QFileInfo>
+#include <QDebug>
+#include <QCoreApplication>
+#include <QThread> // Para QThread::msleep (si es necesario)
+
+VersionManager::VersionManager(QObject *parent) : QObject(parent) {}
+
+QStringList VersionManager::getInstalledVersions() const {
+    QString versionsDir = QStandardPaths::writableLocation(QStandardPaths::GenericDataLocation)
+    + "/mcpelauncher/versions";
+    QDir dir(versionsDir);
+    if (dir.exists()) {
+        return dir.entryList(QDir::Dirs | QDir::NoDotAndDotDot);
+    }
+    return QStringList();
+}
+
+QString VersionManager::getVersionPath(const QString &versionName) const {
+    return QStandardPaths::writableLocation(QStandardPaths::GenericDataLocation)
+    + "/mcpelauncher/versions/" + versionName;
+}
+
+bool VersionManager::isVersionValid(const QString &versionName) const {
+    QString libPath = getVersionPath(versionName) + "/lib/x86_64/libminecraftpe.so";
+    return QFileInfo::exists(libPath);
+}
+
+bool VersionManager::extractApk(const QString &apkPath, const QString &versionName, QString &errorMsg) {
+    QString destDir = getVersionPath(versionName);
+    if (!QDir().mkpath(destDir)) {
+        errorMsg = "No se pudo crear el directorio de destino.";
+        return false;
+    }
+
+    QString extractorPath = QStandardPaths::findExecutable("mcpelauncher-extract");
+    if (extractorPath.isEmpty()) {
+        errorMsg = "mcpelauncher-extract no encontrado.";
+        return false;
+    }
+
+    // Crear proceso de extracción
+    QProcess process;
+
+    // Iniciar proceso
+    process.start(extractorPath, {apkPath, destDir});
+
+    // Esperar a que termine (sin bloquear la UI)
+    process.waitForStarted(-1);
+
+    // Reportar estado inicial
+    emit extractionProgress("Iniciando extracción...");
+
+    // Esperar a que termine (sin bloquear la UI)
+    while (process.state() == QProcess::Running) {
+        QCoreApplication::processEvents(QEventLoop::ExcludeUserInputEvents);
+        QThread::msleep(100); // Pausa breve para no saturar la CPU
+    }
+
+    process.waitForFinished(-1);
+
+    if (process.exitCode() == 0) {
+        emit extractionProgress("Extracción completada.");
+        return true;
+    } else {
+        QString err = process.readAllStandardError();
+        if (err.isEmpty()) err = "Error desconocido durante la extracción.";
+        errorMsg = err;
+        emit extractionProgress("Error durante la extracción.");
+        return false;
+    }
+}
+
+bool VersionManager::deleteVersion(const QString &versionName, QString &errorMsg) {
+    QString versionPath = getVersionPath(versionName);
+
+    if (!QDir(versionPath).removeRecursively()) {
+        errorMsg = "No se pudo eliminar la versión.";
+        return false;
+    }
+
+    return true;
+}
+
+bool VersionManager::editVersion(const QString &versionName, const QString &newArgs, QString &errorMsg) {
+    // Suponiendo que usas VersionConfig para guardar la configuración
+    VersionConfig config(versionName);
+    config.setLaunchArgs(newArgs);
+
+    if (!config.save()) {
+        errorMsg = "No se pudo guardar la configuración.";
+        return false;
+    }
+
+    return true;
+}
+#include "TrinityLib/core/game_launcher.hpp"
+#include "TrinityLib/core/version_config.hpp"
+#include "TrinityLib/core/version_manager.hpp"
+#include <QCoreApplication>
+#include <QFileInfo>
+#include <QProcess>
+#include <QStandardPaths>
+
+GameLauncher::GameLauncher(QObject *parent)
+    : QObject(parent) {}
+
+bool GameLauncher::launchGame(const QString &versionName, QString &errorMsg) {
+    VersionManager vm;
+    // if (!vm.isVersionValid(versionName)) {
+    //       errorMsg = QString("Los datos de '%1' están incompletos o no
+    //       existen.").arg(versionName);
+    //    return false;
+    //   }
+
+    QString dataDir = vm.getVersionPath(versionName);
+    QString clientPath = QStandardPaths::findExecutable("mcpelauncher-client");
+
+    if (clientPath.isEmpty()) {
+        errorMsg = "mcpelauncher-client no encontrado.";
+        return false;
+    }
+
+    // Leer argumentos adicionales
+    VersionConfig config(versionName);
+    QString extraEnv = config.getLaunchArgs();
+
+    QStringList args;
+    args << "-dg" << dataDir;
+
+    // Si hay variables de entorno, usar QProcessEnvironment o lanzar con `env`
+    if (!extraEnv.isEmpty()) {
+        // Ejecutar con QProcess, usando shell para que `env` funcione
+        QProcess process;
+        QStringList fullCommand = {"env"};
+        fullCommand += extraEnv.split(' ', Qt::SkipEmptyParts);
+        fullCommand += clientPath;
+        fullCommand += args;
+
+        return process.startDetached("sh", {"-c", fullCommand.join(' ')});
+    }
+
+    return QProcess::startDetached(clientPath, args);
+}
+
+bool GameLauncher::launchTrinito(QString &errorMsg) {
+    QString appDir = QCoreApplication::applicationDirPath();
+    QString toolsPath = appDir + "/trinito";
+
+    // Check if we are in flatpak, maybe the path is different or we should use
+    // flatpak-spawn? The README says: flatpak run --command=trinito
+    // com.trench.trinity.launcher But from inside the app, we might just call
+    // the binary if it's in the same dir. If running locally: ./trinito
+
+    if (!QFileInfo::exists(toolsPath)) {
+        // Fallback to searching in PATH if not in app dir (e.g. installed in
+        // /usr/bin)
+        toolsPath = QStandardPaths::findExecutable("trinito");
+    }
+
+    if (toolsPath.isEmpty() || !QFileInfo::exists(toolsPath)) {
+        errorMsg = "Trinito no encontrado.";
+        return false;
+    }
+
+    return QProcess::startDetached(toolsPath);
+}
