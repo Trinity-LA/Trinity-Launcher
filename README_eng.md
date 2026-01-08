@@ -16,7 +16,7 @@ To install and learn the detailed steps, visit our [official website](https://tr
 
 Includes two complementary applications:
 
-- **`Trinchete`** 🚀 → **Principal Launcher**: Advanced version management, export/import, shortcuts.
+- **`Trinchete`** 🚀 → **Main Launcher**: Advanced version management, export/import, shortcuts.
 - **`Trinito`** 📦 → **Content manager**: Instalation, activation/deactivation and removal of mods, textures, development packs, and worlds.
 
 ---
@@ -127,7 +127,7 @@ trinito
 Trinity Launcher requires the binaries `mcpelauncher-client`, `mcpelauncher-extract`, and `mcpelauncher-webview`.
 
 ### Recomendation
-Usa the maintained:  
+Use the maintained:  
 [https://github.com/franckey02/mcpelauncher-patch](https://github.com/franckey02/mcpelauncher-patch)  
 (Compatible with recent versions of Minecraft, including **1.21.131+** and betas).
 
