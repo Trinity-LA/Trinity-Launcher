@@ -7,7 +7,7 @@ docker-compose run --rm proyecto
 
   ./build.sh --clean --release
 
-# Construir imagen
+# Construir imagen sin compose
 
 docker build \
   --build-arg USER_ID=$(id -u) \
