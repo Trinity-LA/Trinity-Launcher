@@ -786,7 +786,7 @@ void TrinitoWindow::populateInstalledShaders() {
         shadersList->addItem(file.fileName());
     }
 }
-
+// this part it use https://github.com/minecraft-linux/mcpelauncher-moddb content under license MIT credits to creators
 void TrinitoWindow::populateAvailableMods() {
     QStringList availableMods = {
         "libmcpelaunchershadersmod.so",
