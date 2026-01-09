@@ -1,20 +1,20 @@
 
-# Construir imagen con compose
+# Build image with docker-compose
 docker-compose build
 
-# Ejecutar imagen con compose
+# Run image with docker-compose
 docker-compose run --rm proyecto
+# Build Trinity
+  sh build.sh --clean --release
 
-  ./build.sh --clean --release
-
-# Construir imagen sin compose
+# Build image without docker-compose
 
 docker build \
   --build-arg USER_ID=$(id -u) \
   --build-arg GROUP_ID=$(id -g) \
   -t trinity .
 
-# Ejecutar imagen
+# Run image without docker-compose
 
 docker run --rm -it \
   -v "$(pwd)":/project \
