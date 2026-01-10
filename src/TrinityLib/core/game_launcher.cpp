@@ -9,6 +9,8 @@
 GameLauncher::GameLauncher(QObject *parent)
     : QObject(parent) {}
 
+// Launches mcpelauncher-client from the mcpelauncher runtime.
+// See: https://github.com/minecraft-linux/mcpelauncher-manifest (GPLv3)
 bool GameLauncher::launchGame(const QString &versionName, QString &errorMsg) {
     VersionManager vm;
     // if (!vm.isVersionValid(versionName)) {

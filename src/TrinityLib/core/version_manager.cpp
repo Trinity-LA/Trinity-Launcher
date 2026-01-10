@@ -25,11 +25,15 @@ QString VersionManager::getVersionPath(const QString &versionName) const {
     + "/mcpelauncher/versions/" + versionName;
 }
 
+// Check for the main runtime library (libminecraftpe.so).
+// See: https://github.com/minecraft-linux/mcpelauncher-manifest (GPLv3)
 bool VersionManager::isVersionValid(const QString &versionName) const {
     QString libPath = getVersionPath(versionName) + "/lib/x86_64/libminecraftpe.so";
     return QFileInfo::exists(libPath);
 }
 
+// Use mcpelauncher-extract to extract an APK into the version directory.
+// See: https://github.com/minecraft-linux/mcpelauncher-extract (MIT) 
 bool VersionManager::extractApk(const QString &apkPath, const QString &versionName, QString &errorMsg) {
     QString destDir = getVersionPath(versionName);
     if (!QDir().mkpath(destDir)) {
