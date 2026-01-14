@@ -10,6 +10,8 @@ set(CMAKE_AUTOMOC ON)
 set(CMAKE_AUTORCC ON)
 set(CMAKE_AUTOUIC ON)
 
+set(TRINITY_INCLUDE_DIR "${CMAKE_CURRENT_SOURCE_DIR}/include")
+
 include_directories(include)
 
 find_package(
