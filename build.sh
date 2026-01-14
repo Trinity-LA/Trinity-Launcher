@@ -15,6 +15,7 @@ NC='\033[0m' # No Color
 # Variables por defecto
 BUILD_TYPE="Release"
 CLEAN_BUILD=false
+UPDATE_TRANSLATIONS=false
 BUILD_DIR="build"
 
 # Función de ayuda
@@ -22,10 +23,11 @@ show_help() {
     echo -e "${BLUE}Uso: ./build.sh [OPCIONES]${NC}"
     echo ""
     echo "Opciones:"
-    echo "  --debug    Compila en modo Debug (con símbolos para depurar)"
-    echo "  --release  Compila en modo Release (optimizado, por defecto)"
-    echo "  --clean    Borra la carpeta build/ y compila desde cero"
-    echo "  --help     Muestra esta ayuda"
+    echo "  --debug      Compila en modo Debug (con símbolos para depurar)"
+    echo "  --release    Compila en modo Release (optimizado, por defecto)"
+    echo "  --clean      Borra la carpeta build/ y compila desde cero"
+    echo "  --update-ts  Escanea el código y actualiza los archivos .ts de traducción"
+    echo "  --help       Muestra esta ayuda"
     echo ""
 }
 
@@ -41,6 +43,9 @@ while [[ "$#" -gt 0 ]]; do
         --clean)
             CLEAN_BUILD=true
             shift ;;
+        --update-ts)
+            UPDATE_TRANSLATIONS=true
+            shift ;;
         --help)
             show_help
             exit 0 ;;
@@ -51,7 +56,32 @@ while [[ "$#" -gt 0 ]]; do
     esac
 done
 
-# 2. Verificar entorno
+# 2. Actualizar Traducciones (Si se solicita)
+if [ "$UPDATE_TRANSLATIONS" = true ]; then
+    echo -e "${YELLOW}🌍 Actualizando archivos de traducción (.ts)...${NC}"
+    
+    # 1. Intentar encontrar lupdate en el PATH normal
+    if command -v lupdate &> /dev/null; then
+        LUPDATE_CMD="lupdate"
+    # 2. Si falla, intentar encontrarlo en la ruta específica de Arch Linux / Qt6
+    elif [ -f "/usr/lib/qt6/bin/lupdate" ]; then
+        LUPDATE_CMD="/usr/lib/qt6/bin/lupdate"
+    else
+        echo -e "${RED}Error: 'lupdate' no encontrado. Instala 'qt6-tools' (Arch) o 'qt6-tools-dev' (Debian).${NC}"
+        exit 1
+    fi
+
+    echo -e "${BLUE}   Usando: $LUPDATE_CMD${NC}"
+
+    # Ejecutar lupdate usando la variable que encontramos
+    $LUPDATE_CMD src/ include/ -recursive -ts resources/i18n/trinity_en.ts resources/i18n/trinity_ca.ts
+    
+    echo -e "${GREEN}✅ Archivos .ts actualizados.${NC}"
+  # Se termina acá porque solo actualizará los archivos .ts
+  exit 0
+fi
+
+# 3. Verificar entorno
 if [ ! -f "CMakeLists.txt" ]; then
     echo -e "${RED}Error: No se encuentra CMakeLists.txt. Ejecuta este script desde la raíz del proyecto.${NC}"
     exit 1
@@ -59,25 +89,23 @@ fi
 
 echo -e "${BLUE}=== Iniciando proceso de construcción ($BUILD_TYPE) ===${NC}"
 
-# 3. Limpieza (si se solicita)
+# 4. Limpieza (si se solicita)
 if [ "$CLEAN_BUILD" = true ]; then
     echo -e "${YELLOW}🧹 Limpiando compilaciones anteriores (--clean)...${NC}"
     rm -rf "$BUILD_DIR"
     rm -f trinchete trinito
 fi
 
-# 4. Crear directorio build si no existe
+# 5. Crear directorio build si no existe
 if [ ! -d "$BUILD_DIR" ]; then
     mkdir -p "$BUILD_DIR"
 fi
 
-# 5. Configurar CMake
-# Usamos -S . (source) y -B build (build dir) que es la sintaxis moderna
+# 6. Configurar CMake
 echo -e "${BLUE}🔧 Configurando proyecto...${NC}"
 cmake -S . -B "$BUILD_DIR" -DCMAKE_BUILD_TYPE=$BUILD_TYPE -Wno-dev
 
-# 6. Compilar
-# --parallel usa automáticamente todos los núcleos disponibles
+# 7. Compilar
 echo -e "${BLUE}🔨 Compilando...${NC}"
 if cmake --build "$BUILD_DIR" --parallel; then
     echo -e "${GREEN}✅ Compilación exitosa.${NC}"
@@ -86,7 +114,7 @@ else
     exit 1
 fi
 
-# 7. Mover binarios (Opcional, por comodidad)
+# 8. Mover binarios (Opcional, por comodidad)
 echo -e "${BLUE}📦 Organizando ejecutables...${NC}"
 
 # Verificar si los binarios existen antes de moverlos

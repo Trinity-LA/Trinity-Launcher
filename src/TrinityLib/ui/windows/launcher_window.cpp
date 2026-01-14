@@ -592,10 +592,26 @@ void LauncherWindow::onLanguageChanged(int index) {
 
     QSettings settings;
     settings.setValue("language", langCode);
+    settings.sync();
 
-    QMessageBox::information(
-        this, tr("Idioma cambiado"),
-        tr("El idioma se ha cambiado a '%1'.\nPor favor, reinicia la "
-           "aplicación para aplicar los cambios.")
-            .arg(languageCombo->currentText()));
+    int r = QMessageBox::question(
+        this, 
+        tr("Se necesita reiniciar"),
+        tr("El idioma cambiará a '%1'.\n¿Deseas reiniciar la aplicación ahora para aplicar los cambios?")
+            .arg(languageCombo->currentText()),
+        QMessageBox::Yes | QMessageBox::No, 
+        QMessageBox::Yes
+    );
+
+    if (r == QMessageBox::Yes) {
+        QString program = QCoreApplication::applicationFilePath();
+        QStringList arguments = QCoreApplication::arguments();
+
+        QStringList args = arguments.mid(1);
+
+        QProcess::startDetached(program, args);
+
+        QApplication::quit();
+    }       
+
 }
