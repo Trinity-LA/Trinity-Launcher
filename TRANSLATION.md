@@ -1,6 +1,6 @@
 # Translation
 
-One way to contribute is translating the emulator. If you know other language, your contribution will be appreciated. It is more important the quality than the quantity. For this reason, AI translations will not be accepted.
+One way to contribute is translating the launcher. If you know other language, your contribution will be appreciated. It is more important the quality than the quantity. For this reason, AI translations will not be accepted.
 
 This process explained in this guide could be lightly different because this project is in developement. For example, if exists a refactor of the code. For now, I indicate how to do that as simply as possible.
 
@@ -16,7 +16,7 @@ The foreign languages can be found in the ```resources/i18n/``` folder. When I h
 trinity_en.ts
 ```
 
-Copy the file and paste in the same folder putting a different name. The name must have the same prefix and the code of the language. If you do not know what it is, check [this page](https://www.andiamo.co.uk/resources/iso-language-codes/). If you do not need to indicate an specific country, use the standard code for this language.
+Copy the file and paste in the same folder putting a different name. The name must have the same prefix and the code of the language. If you do not know what it is, check [this page](https://www.loc.gov/standards/iso639-2/php/code_list.php) or [here](https://localizely.com/iso-639-1-list/), which indicate the ISO 639-1 Language Code List. If you do not need to indicate an specific country, use the standard code for this language.
 
 In my case, Catalan has the code *ca*. The name of file is ```trinity_ca.ts```.
   
