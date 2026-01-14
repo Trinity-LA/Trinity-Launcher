@@ -10,6 +10,8 @@ set(CMAKE_AUTOMOC ON)
 set(CMAKE_AUTORCC ON)
 set(CMAKE_AUTOUIC ON)
 
+set(TRINITY_INCLUDE_DIR "${CMAKE_CURRENT_SOURCE_DIR}/include")
+
 include_directories(include)
 
 find_package(
@@ -29,4 +31,7 @@ file(GLOB_RECURSE PROJECT_TRANSLATABLE_FILES "${TRINITY_SRC_DIR}/*.cpp"
 add_subdirectory(src/TrinityLib/core)
 add_subdirectory(src/TrinityLib/ui)
 
+add_subdirectory(external)
 add_subdirectory(app)
+
+add_subdirectory(tests)

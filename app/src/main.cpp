@@ -20,8 +20,7 @@ int main(int argc, char *argv[]) {
         if (translator.load(":/i18n/trinity_en")) {
             app.installTranslator(&translator);
         }
-    }
-    else if (lang == "ca") {
+    } else if (lang == "ca") {
         if (translator.load(":/i18n/trinity_ca")) {
             app.installTranslator(&translator);
         }
