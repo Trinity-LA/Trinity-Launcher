@@ -34,12 +34,12 @@ No: Només exporta els mods, mapes, etc.</translation>
     <message>
         <location filename="../../src/TrinityLib/core/exporter.cpp" line="44"/>
         <source>Guardar como archivo</source>
-        <translation>Desa com a fitxer</translation>
+        <translation>Desar com a fitxer</translation>
     </message>
     <message>
         <location filename="../../src/TrinityLib/core/exporter.cpp" line="45"/>
         <source>Archivos TAR (*.tar.gz);;Todos los archivos (*)</source>
-        <translation>TAR (*.tar.gz);;Tots els fitxers (*)</translation>
+        <translation>Arxius TAR (*.tar.gz);;Tots els fitxers (*)</translation>
     </message>
     <message>
         <location filename="../../src/TrinityLib/core/exporter.cpp" line="51"/>
@@ -86,7 +86,7 @@ No: Només exporta els mods, mapes, etc.</translation>
     <message>
         <location filename="../../src/TrinityLib/core/exporter.cpp" line="154"/>
         <source>Advertencia</source>
-        <translation>Compte!</translation>
+        <translation>Avís</translation>
     </message>
     <message>
         <location filename="../../src/TrinityLib/core/exporter.cpp" line="155"/>
@@ -398,13 +398,14 @@ Vols substituir-lo?</translation>
     <message>
         <location filename="../../src/TrinityLib/ui/windows/launcher_window.cpp" line="599"/>
         <source>Se necesita reiniciar</source>
-        <translation type="unfinished"></translation>
+        <translation>Es requereix reiniciar</translation>
     </message>
     <message>
         <location filename="../../src/TrinityLib/ui/windows/launcher_window.cpp" line="600"/>
         <source>El idioma cambiará a &apos;%1&apos;.
 ¿Deseas reiniciar la aplicación ahora para aplicar los cambios?</source>
-        <translation type="unfinished"></translation>
+        <translation>La llengua canviarà a &apos;%1&apos;.
+Vols reiniciar l&apos;aplicació ara per aplicar els canvis?</translation>
     </message>
 </context>
 <context>
@@ -663,127 +664,127 @@ Sobreescriure-lo?</translation>
         <location filename="../../src/TrinityLib/ui/windows/trinito_window.cpp" line="677"/>
         <source>Falló la instalación:
 </source>
-        <translation type="unfinished"></translation>
+        <translation>Instal·lació fallida:</translation>
     </message>
     <message>
         <location filename="../../src/TrinityLib/ui/windows/trinito_window.cpp" line="709"/>
         <source>Gestionar Shaders:</source>
-        <translation type="unfinished"></translation>
+        <translation>Gestionar shaders:</translation>
     </message>
     <message>
         <location filename="../../src/TrinityLib/ui/windows/trinito_window.cpp" line="717"/>
         <source>Instalar Shaderpack...</source>
-        <translation type="unfinished"></translation>
+        <translation>Instal·lar Shaderpack...</translation>
     </message>
     <message>
         <location filename="../../src/TrinityLib/ui/windows/trinito_window.cpp" line="718"/>
         <source>Eliminar Shaderpack Seleccionado</source>
-        <translation type="unfinished"></translation>
+        <translation>Eliminar Shaderpack seleccionat</translation>
     </message>
     <message>
         <location filename="../../src/TrinityLib/ui/windows/trinito_window.cpp" line="719"/>
         <source>Actualizar Lista</source>
-        <translation type="unfinished"></translation>
+        <translation>Actualitzar llista</translation>
     </message>
     <message>
         <location filename="../../src/TrinityLib/ui/windows/trinito_window.cpp" line="732"/>
         <source>Gestionar Libs:</source>
-        <translation type="unfinished"></translation>
+        <translation>Gestió de llibreries:</translation>
     </message>
     <message>
         <location filename="../../src/TrinityLib/ui/windows/trinito_window.cpp" line="737"/>
         <source>Libs Disponibles:</source>
-        <translation type="unfinished"></translation>
+        <translation>Llibreries disponibles</translation>
     </message>
     <message>
         <location filename="../../src/TrinityLib/ui/windows/trinito_window.cpp" line="742"/>
         <source>Descargar Lib Seleccionada</source>
-        <translation type="unfinished"></translation>
+        <translation>Descarregar llibreria seleccionada</translation>
     </message>
     <message>
         <location filename="../../src/TrinityLib/ui/windows/trinito_window.cpp" line="746"/>
         <source>Libs Instaladas:</source>
-        <translation type="unfinished"></translation>
+        <translation>Llibreries instal·lades:</translation>
     </message>
     <message>
         <location filename="../../src/TrinityLib/ui/windows/trinito_window.cpp" line="751"/>
         <source>Eliminar Lib Seleccionada</source>
-        <translation type="unfinished"></translation>
+        <translation>Eliminar llibreria seleccionada</translation>
     </message>
     <message>
         <location filename="../../src/TrinityLib/ui/windows/trinito_window.cpp" line="849"/>
         <source>No se pudo extraer el archivo .mcpack.</source>
-        <translation type="unfinished"></translation>
+        <translation>No s&apos;ha pogut extreure l&apos;arxiu .mcpack</translation>
     </message>
     <message>
         <location filename="../../src/TrinityLib/ui/windows/trinito_window.cpp" line="880"/>
         <source>No se pudo copiar </source>
-        <translation type="unfinished"></translation>
+        <translation>No s&apos;ha pogut copiar </translation>
     </message>
     <message>
         <location filename="../../src/TrinityLib/ui/windows/trinito_window.cpp" line="889"/>
         <source>Shaderpack instalado correctamente.</source>
-        <translation type="unfinished"></translation>
+        <translation>Shaderpack instal·lat correctament.</translation>
     </message>
     <message>
         <location filename="../../src/TrinityLib/ui/windows/trinito_window.cpp" line="896"/>
         <source>No hay ningún shader seleccionado.</source>
-        <translation type="unfinished"></translation>
+        <translation>No hi ha cap shader seleccionat</translation>
     </message>
     <message>
         <location filename="../../src/TrinityLib/ui/windows/trinito_window.cpp" line="905"/>
         <source>Shader eliminado correctamente.</source>
-        <translation type="unfinished"></translation>
+        <translation>Shader eliminat correctament.</translation>
     </message>
     <message>
         <location filename="../../src/TrinityLib/ui/windows/trinito_window.cpp" line="908"/>
         <source>No se pudo eliminar el shader.</source>
-        <translation type="unfinished"></translation>
+        <translation>No s&apos;ha pogut eliminar el shader.</translation>
     </message>
     <message>
         <location filename="../../src/TrinityLib/ui/windows/trinito_window.cpp" line="918"/>
         <source>Por favor, selecciona un mod para descargar.</source>
-        <translation type="unfinished"></translation>
+        <translation>Si us plau, seleccioni una modificació per descarregar.</translation>
     </message>
     <message>
         <location filename="../../src/TrinityLib/ui/windows/trinito_window.cpp" line="932"/>
         <source>Descargando </source>
-        <translation type="unfinished"></translation>
+        <translation>Descarregant</translation>
     </message>
     <message>
         <location filename="../../src/TrinityLib/ui/windows/trinito_window.cpp" line="932"/>
         <source>Cancelar</source>
-        <translation type="unfinished"></translation>
+        <translation>Cancel·lar</translation>
     </message>
     <message>
         <location filename="../../src/TrinityLib/ui/windows/trinito_window.cpp" line="951"/>
         <source>No se pudo descargar el mod.</source>
-        <translation type="unfinished"></translation>
+        <translation>No s&apos;ha pogut descarregar la modificació.</translation>
     </message>
     <message>
         <location filename="../../src/TrinityLib/ui/windows/trinito_window.cpp" line="956"/>
         <source>Mod instalado correctamente.</source>
-        <translation type="unfinished"></translation>
+        <translation>Modificació instal·lada correctament.</translation>
     </message>
     <message>
         <location filename="../../src/TrinityLib/ui/windows/trinito_window.cpp" line="962"/>
         <source>Por favor, selecciona un mod para eliminar.</source>
-        <translation type="unfinished"></translation>
+        <translation>Si us plau, seleccioni una modificació per eliminar.</translation>
     </message>
     <message>
         <location filename="../../src/TrinityLib/ui/windows/trinito_window.cpp" line="972"/>
         <source>Eliminado</source>
-        <translation type="unfinished"></translation>
+        <translation>Eliminant</translation>
     </message>
     <message>
         <location filename="../../src/TrinityLib/ui/windows/trinito_window.cpp" line="972"/>
         <source> ha sido eliminado.</source>
-        <translation type="unfinished"></translation>
+        <translation> ha estat eliminat.</translation>
     </message>
     <message>
         <location filename="../../src/TrinityLib/ui/windows/trinito_window.cpp" line="975"/>
         <source>No se pudo eliminar </source>
-        <translation type="unfinished"></translation>
+        <translation>No s&apos;ha pogut eliminar </translation>
     </message>
 </context>
 <context>
@@ -791,32 +792,32 @@ Sobreescriure-lo?</translation>
     <message>
         <location filename="../../src/TrinityLib/core/version_manager.cpp" line="60"/>
         <source>Iniciando extracción...</source>
-        <translation type="unfinished"></translation>
+        <translation>Iniciant extracció...</translation>
     </message>
     <message>
         <location filename="../../src/TrinityLib/core/version_manager.cpp" line="71"/>
         <source>Extracción completada.</source>
-        <translation type="unfinished"></translation>
+        <translation>Extracció completa.</translation>
     </message>
     <message>
         <location filename="../../src/TrinityLib/core/version_manager.cpp" line="75"/>
         <source>Error desconocido durante la extracción.</source>
-        <translation type="unfinished"></translation>
+        <translation>Error desconegut durant l&apos;extracció.</translation>
     </message>
     <message>
         <location filename="../../src/TrinityLib/core/version_manager.cpp" line="77"/>
         <source>Error durante la extracción.</source>
-        <translation type="unfinished"></translation>
+        <translation>Error durant l&apos;extracció.</translation>
     </message>
     <message>
         <location filename="../../src/TrinityLib/core/version_manager.cpp" line="86"/>
         <source>No se pudo eliminar la versión.</source>
-        <translation type="unfinished"></translation>
+        <translation>No s&apos;ha pogut eliminar la versió.</translation>
     </message>
     <message>
         <location filename="../../src/TrinityLib/core/version_manager.cpp" line="99"/>
         <source>No se pudo guardar la configuración.</source>
-        <translation type="unfinished"></translation>
+        <translation>No s&apos;ha pogut guardar la configuració.</translation>
     </message>
 </context>
 <context>

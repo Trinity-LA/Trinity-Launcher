@@ -70,6 +70,32 @@ No: Només exporta els mods, mapes, etc.</translation>
     </message>
 ```
 
+If you found a tag like this: ```<translation type="unfinished">```, delete the ```type="unfinished``` only when you complete your translation.
+
+For example in ```trinity_ca.ts```...
+
+```xml
+    <message>
+        <location filename="../../src/TrinityLib/ui/windows/launcher_window.cpp" line="600"/>
+        <source>El idioma cambiará a &apos;%1&apos;.
+¿Deseas reiniciar la aplicación ahora para aplicar los cambios?</source>
+        <translation type="unfinished"></translation>
+    </message>
+```
+
+Will be this:
+
+```xml
+    <message>
+        <location filename="../../src/TrinityLib/ui/windows/launcher_window.cpp" line="600"/>
+        <source>El idioma cambiará a &apos;%1&apos;.
+¿Deseas reiniciar la aplicación ahora para aplicar los cambios?</source>
+        <translation>La llengua canviarà a &apos;%1&apos;.
+Vols reiniciar l&apos;aplicació ara per aplicar els canvis?</translation>
+    </message>
+```
+
+
 3. ### Make the new file can be found during compilation
 
 Only you need to add the code of your language (in my case, *ca*) on the ```CMakeLists.txt```.
