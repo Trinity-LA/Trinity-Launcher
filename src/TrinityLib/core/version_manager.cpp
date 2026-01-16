@@ -11,18 +11,18 @@
 
 VersionManager::VersionManager(QObject *parent) : QObject(parent) {}
 
-QString VersionManager::getVersionPath(const QString &versionName) {
+QString VersionManager::getVersionPath(const QString &versionName) const {
     // Assuming standard location under GenericDataLocation
     return QStandardPaths::writableLocation(QStandardPaths::GenericDataLocation) + "/mcpelauncher/versions/" + versionName;
 }
 
-bool VersionManager::isVersionValid(const QString &versionName) {
+bool VersionManager::isVersionValid(const QString &versionName) const {
     QString path = getVersionPath(versionName);
     // Check for the presence of the lib folder containing the game library
     return QDir(path + "/version_content/lib").exists();
 }
 
-QStringList VersionManager::getInstalledVersions() {
+QStringList VersionManager::getInstalledVersions() const{
     QString versionsDir = QStandardPaths::writableLocation(QStandardPaths::GenericDataLocation) + "/mcpelauncher/versions/";
     QDir dir(versionsDir);
     QStringList versions = dir.entryList(QDir::Dirs | QDir::NoDotAndDotDot);
