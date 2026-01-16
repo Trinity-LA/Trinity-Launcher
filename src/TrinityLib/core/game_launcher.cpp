@@ -5,38 +5,45 @@
 #include <QFileInfo>
 #include <QProcess>
 #include <QStandardPaths>
-
+#include <QDir> 
 GameLauncher::GameLauncher(QObject *parent)
     : QObject(parent) {}
 
-// Launches mcpelauncher-client from the mcpelauncher runtime.
-// See: https://github.com/minecraft-linux/mcpelauncher-manifest (GPLv3)
 bool GameLauncher::launchGame(const QString &versionName, QString &errorMsg) {
     VersionManager vm;
-    // if (!vm.isVersionValid(versionName)) {
-    //       errorMsg = QString("Los datos de '%1' están incompletos o no
-    //       existen.").arg(versionName);
-    //    return false;
-    //   }
-
     QString dataDir = vm.getVersionPath(versionName);
-    QString clientPath = QStandardPaths::findExecutable("mcpelauncher-client");
 
-    if (clientPath.isEmpty()) {
-        errorMsg = "mcpelauncher-client no encontrado.";
+    // Search for mcpelauncher-client in the same directory as the Trinity executable first
+    QString appDir = QCoreApplication::applicationDirPath();
+    QString bundledClientPath = appDir + "/mcpelauncher-client";
+
+    QString clientPath;
+    if (QFileInfo::exists(bundledClientPath) && QFileInfo(bundledClientPath).isExecutable()) {
+        clientPath = bundledClientPath;
+        // qDebug() << "Using bundled mcpelauncher-client:" << clientPath; // Optional debug output
+    } else {
+        // Fallback to searching in the system PATH if not found bundled
+        clientPath = QStandardPaths::findExecutable("mcpelauncher-client");
+        // qDebug() << "Using system mcpelauncher-client:" << clientPath; // Optional debug output
+    }
+    // --- CORRECTION ENDS HERE ---
+
+    // Validate if the client path was found
+    if (clientPath.isEmpty() || !QFileInfo::exists(clientPath)) {
+        errorMsg = "mcpelauncher-client not found.";
         return false;
     }
 
-    // Leer argumentos adicionales
+    // Read additional launch arguments
     VersionConfig config(versionName);
     QString extraEnv = config.getLaunchArgs();
 
     QStringList args;
     args << "-dg" << dataDir;
 
-    // Si hay variables de entorno, usar QProcessEnvironment o lanzar con `env`
+    // If there are extra environment variables, launch with `env`
     if (!extraEnv.isEmpty()) {
-        // Ejecutar con QProcess, usando shell para que `env` funcione
+        // Execute with QProcess, using shell for `env` to work
         QProcess process;
         QStringList fullCommand = {"env"};
         fullCommand += extraEnv.split(' ', Qt::SkipEmptyParts);
@@ -50,22 +57,17 @@ bool GameLauncher::launchGame(const QString &versionName, QString &errorMsg) {
 }
 
 bool GameLauncher::launchTrinito(QString &errorMsg) {
+    // Search for trinito in the same directory as the Trinity executable first
     QString appDir = QCoreApplication::applicationDirPath();
     QString toolsPath = appDir + "/trinito";
 
-    // Check if we are in flatpak, maybe the path is different or we should use
-    // flatpak-spawn? The README says: flatpak run --command=trinito
-    // com.trench.trinity.launcher But from inside the app, we might just call
-    // the binary if it's in the same dir. If running locally: ./trinito
-
     if (!QFileInfo::exists(toolsPath)) {
-        // Fallback to searching in PATH if not in app dir (e.g. installed in
-        // /usr/bin)
+        // Fallback to searching in the system PATH if not found bundled
         toolsPath = QStandardPaths::findExecutable("trinito");
     }
 
     if (toolsPath.isEmpty() || !QFileInfo::exists(toolsPath)) {
-        errorMsg = "Trinito no encontrado.";
+        errorMsg = "Trinito not found.";
         return false;
     }
 

@@ -7,98 +7,107 @@
 #include <QDebug>
 #include <QCoreApplication>
 #include <QThread> // Para QThread::msleep (si es necesario)
+#include <QDirIterator>
 
 VersionManager::VersionManager(QObject *parent) : QObject(parent) {}
 
-QStringList VersionManager::getInstalledVersions() const {
-    QString versionsDir = QStandardPaths::writableLocation(QStandardPaths::GenericDataLocation)
-    + "/mcpelauncher/versions";
+QString VersionManager::getVersionPath(const QString &versionName) {
+    // Assuming standard location under GenericDataLocation
+    return QStandardPaths::writableLocation(QStandardPaths::GenericDataLocation) + "/mcpelauncher/versions/" + versionName;
+}
+
+bool VersionManager::isVersionValid(const QString &versionName) {
+    QString path = getVersionPath(versionName);
+    // Check for the presence of the lib folder containing the game library
+    return QDir(path + "/version_content/lib").exists();
+}
+
+QStringList VersionManager::getInstalledVersions() {
+    QString versionsDir = QStandardPaths::writableLocation(QStandardPaths::GenericDataLocation) + "/mcpelauncher/versions/";
     QDir dir(versionsDir);
-    if (dir.exists()) {
-        return dir.entryList(QDir::Dirs | QDir::NoDotAndDotDot);
+    QStringList versions = dir.entryList(QDir::Dirs | QDir::NoDotAndDotDot);
+
+    // Filter valid versions (those containing lib/x86_64/libminecraftpe.so)
+    QStringList validVersions;
+    for (const QString &version : versions) {
+        if (isVersionValid(version)) {
+            validVersions << version;
+        }
     }
-    return QStringList();
+    return validVersions;
 }
 
-QString VersionManager::getVersionPath(const QString &versionName) const {
-    return QStandardPaths::writableLocation(QStandardPaths::GenericDataLocation)
-    + "/mcpelauncher/versions/" + versionName;
-}
-
-// Check for the main runtime library (libminecraftpe.so).
-// See: https://github.com/minecraft-linux/mcpelauncher-manifest (GPLv3)
-bool VersionManager::isVersionValid(const QString &versionName) const {
-    QString libPath = getVersionPath(versionName) + "/lib/x86_64/libminecraftpe.so";
-    return QFileInfo::exists(libPath);
-}
-
-// Use mcpelauncher-extract to extract an APK into the version directory.
-// See: https://github.com/minecraft-linux/mcpelauncher-extract (MIT) 
 bool VersionManager::extractApk(const QString &apkPath, const QString &versionName, QString &errorMsg) {
     QString destDir = getVersionPath(versionName);
     if (!QDir().mkpath(destDir)) {
-        errorMsg = "No se pudo crear el directorio de destino.";
+        errorMsg = "Could not create destination directory.";
         return false;
     }
 
-    QString extractorPath = QStandardPaths::findExecutable("mcpelauncher-extract");
+    // Search for mcpelauncher-extract in the same directory as the Trinity executable first
+    QString appDir = QCoreApplication::applicationDirPath();
+    QString bundledExtractorPath = appDir + "/mcpelauncher-extract";
+
+    QString extractorPath;
+    if (QFileInfo::exists(bundledExtractorPath) && QFileInfo(bundledExtractorPath).isExecutable()) {
+        extractorPath = bundledExtractorPath;
+        // qDebug() << "Using bundled mcpelauncher-extract:" << extractorPath; // Optional debug output
+    } else {
+        // Fallback to searching in the system PATH if not found bundled
+        extractorPath = QStandardPaths::findExecutable("mcpelauncher-extract");
+        // qDebug() << "Using system mcpelauncher-extract:" << extractorPath; // Optional debug output
+    }
+
+    // Validate if the extractor path was found
     if (extractorPath.isEmpty()) {
-        errorMsg = "mcpelauncher-extract no encontrado.";
+        errorMsg = "mcpelauncher-extract not found.";
         return false;
     }
 
-    // Crear proceso de extracción
+
+    // Create extraction process
     QProcess process;
 
-    // Iniciar proceso
+    // Start the process
     process.start(extractorPath, {apkPath, destDir});
 
-    // Esperar a que termine (sin bloquear la UI)
+    // Wait for the process to start (without blocking the UI)
     process.waitForStarted(-1);
 
-    // Reportar estado inicial
-    emit extractionProgress("Iniciando extracción...");
+    // Report initial status
+    emit extractionProgress("Starting extraction...");
 
-    // Esperar a que termine (sin bloquear la UI)
-    while (process.state() == QProcess::Running) {
-        QCoreApplication::processEvents(QEventLoop::ExcludeUserInputEvents);
-        QThread::msleep(100); // Pausa breve para no saturar la CPU
-    }
-
+    // Wait for the process to finish (without blocking the UI)
     process.waitForFinished(-1);
 
-    if (process.exitCode() == 0) {
-        emit extractionProgress("Extracción completada.");
-        return true;
-    } else {
+    if (process.exitCode() != 0) {
         QString err = process.readAllStandardError();
-        if (err.isEmpty()) err = "Error desconocido durante la extracción.";
+        if (err.isEmpty()) err = "Unknown error during extraction.";
         errorMsg = err;
-        emit extractionProgress("Error durante la extracción.");
+        emit extractionProgress("Error during extraction.");
         return false;
     }
+
+    emit extractionProgress("Extraction finished.");
+    return true;
 }
 
 bool VersionManager::deleteVersion(const QString &versionName, QString &errorMsg) {
     QString versionPath = getVersionPath(versionName);
-
     if (!QDir(versionPath).removeRecursively()) {
-        errorMsg = "No se pudo eliminar la versión.";
+        errorMsg = "Could not delete the version.";
         return false;
     }
-
     return true;
 }
 
 bool VersionManager::editVersion(const QString &versionName, const QString &newArgs, QString &errorMsg) {
-    // Suponiendo que usas VersionConfig para guardar la configuración
+    // Assuming you use VersionConfig to save the configuration
     VersionConfig config(versionName);
     config.setLaunchArgs(newArgs);
-
     if (!config.save()) {
-        errorMsg = "No se pudo guardar la configuración.";
+        errorMsg = "Could not save the configuration.";
         return false;
     }
-
     return true;
 }
