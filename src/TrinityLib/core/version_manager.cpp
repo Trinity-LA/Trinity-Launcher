@@ -12,7 +12,6 @@
 VersionManager::VersionManager(QObject *parent) : QObject(parent) {}
 
 QString VersionManager::getVersionPath(const QString &versionName) const {
-    // Assuming standard location under GenericDataLocation
     return QStandardPaths::writableLocation(QStandardPaths::GenericDataLocation) + "/mcpelauncher/versions/" + versionName;
 }
 
