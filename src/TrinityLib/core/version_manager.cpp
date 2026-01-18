@@ -11,29 +11,26 @@
 
 VersionManager::VersionManager(QObject *parent) : QObject(parent) {}
 
-QString VersionManager::getVersionPath(const QString &versionName) const {
-    return QStandardPaths::writableLocation(QStandardPaths::GenericDataLocation) + "/mcpelauncher/versions/" + versionName;
-}
-
-bool VersionManager::isVersionValid(const QString &versionName) const {
-    QString path = getVersionPath(versionName);
-    // Check for the presence of the lib folder containing the game library
-    return QDir(path + "/version_content/lib").exists();
-}
-
-QStringList VersionManager::getInstalledVersions() const{
-    QString versionsDir = QStandardPaths::writableLocation(QStandardPaths::GenericDataLocation) + "/mcpelauncher/versions/";
+QStringList VersionManager::getInstalledVersions() const {
+    QString versionsDir = QStandardPaths::writableLocation(QStandardPaths::GenericDataLocation)
+    + "/mcpelauncher/versions";
     QDir dir(versionsDir);
-    QStringList versions = dir.entryList(QDir::Dirs | QDir::NoDotAndDotDot);
-
-    // Filter valid versions (those containing lib/x86_64/libminecraftpe.so)
-    QStringList validVersions;
-    for (const QString &version : versions) {
-        if (isVersionValid(version)) {
-            validVersions << version;
-        }
+    if (dir.exists()) {
+        return dir.entryList(QDir::Dirs | QDir::NoDotAndDotDot);
     }
-    return validVersions;
+    return QStringList();
+}
+
+QString VersionManager::getVersionPath(const QString &versionName) const {
+    return QStandardPaths::writableLocation(QStandardPaths::GenericDataLocation)
+    + "/mcpelauncher/versions/" + versionName;
+}
+
+// Check for the main runtime library (libminecraftpe.so).
+// See: https://github.com/minecraft-linux/mcpelauncher-manifest (GPLv3)
+bool VersionManager::isVersionValid(const QString &versionName) const {
+    QString libPath = getVersionPath(versionName) + "/lib/x86_64/libminecraftpe.so";
+    return QFileInfo::exists(libPath);
 }
 
 bool VersionManager::extractApk(const QString &apkPath, const QString &versionName, QString &errorMsg) {
