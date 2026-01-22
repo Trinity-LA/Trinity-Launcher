@@ -95,20 +95,45 @@ Incluye dos aplicaciones complementarias:
 ---
 
 ## ⚙️ Compilación e Instalación
-Puedes seguir nuestro manual en:
-https://trinity-la.github.io/
-### Requisitos
+
+Puedes seguir nuestro manual detallado en: [https://trinity-la.github.io/](https://trinity-la.github.io/)
+
+### Requisitos Previos
+
+El sistema instalará automáticamente las dependencias, pero necesitarás tener `make` y `git` instalados inicialmente.
+Depndencias usadas:
 - CMake 3.17+
 - Clang
 - Qt6 (Core, Widgets)
 
-### Proceso
+### 🚀 Método Rápido (Recomendado)
+
 ```sh
-# Dar permisos de ejecución
+# 1. Primera vez (Instala dependencias, compila y ejecuta)
+make start
+
+# 2. Uso diario (Solo compila y ejecuta localmente, para devs)
+make run
+
+# 3. Instalar en el sistema (Opcional, requiere sudo)
+make install
+
+```
+
+### 🛠️ Método Manual (Script)
+
+Si prefieres usar el script directamente para mayor control:
+
+```sh
+# Dar permisos
 chmod +x build.sh
 
-# Compilar e instalar en el sistema
-sudo ./build.sh
+# Instalar dependencias y compilar
+./build.sh --deps --release
+
+# Compilar y ejecutar
+./build.sh --release --run
+
 ```
 
 > 📦 Instala `trinchete` y `trinito` en `/usr/local/bin`, y registra el `.desktop` y el icono en el sistema.
@@ -119,6 +144,15 @@ trinchete
 trinito
 ```
 
+### 📦 Comandos disponibles
+
+| Comando | Descripción |
+| --- | --- |
+| `make start` | Setup completo: Dependencias + Build + Run. |
+| `make run` | Compila y ejecuta la versión local (dev). |
+| `make install` | Instala Trinity en `/usr/local/bin` para todo el sistema. |
+| `make clean` | Limpia la carpeta de compilación y arregla permisos. |
+| `make uninstall` | Elimina Trinity completamente del sistema. |
 ---
 
 ## 🔧 Mcpelauncher Requerido
