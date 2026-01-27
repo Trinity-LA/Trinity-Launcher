@@ -467,12 +467,12 @@ Esta acción no se puede deshacer.</source>
     <message>
         <location filename="../../src/TrinityLib/ui/windows/trinito_window.cpp" line="301"/>
         <source>Gestionar </source>
-        <translation>Керувати </translation>
+        <translation>Керувати встановленими </translation>
     </message>
     <message>
         <location filename="../../src/TrinityLib/ui/windows/trinito_window.cpp" line="301"/>
         <source> instalados:</source>
-        <translation> встановлені:</translation>
+        <translation></translation>
     </message>
     <message>
         <location filename="../../src/TrinityLib/ui/windows/trinito_window.cpp" line="327"/>

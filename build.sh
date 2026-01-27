@@ -1,3 +1,5 @@
+#!/bin/bash
+
 # ==========================================
 # 🛠️ Trinity Launcher Build Script
 # ==========================================
@@ -305,6 +307,19 @@ fi
 if [ ! -d "$BUILD_DIR" ]; then
     mkdir -p "$BUILD_DIR"
 fi
+
+# 5.5 Compilación de traducciones
+echo -e "${BLUE}🌍 Genero archivos de traducción...${NC}"
+if command -v lrelease &> /dev/null; then
+    LRELEASE_CMD="lrelease"
+elif [ -f "/usr/lib/qt6/bin/lrelease" ]; then
+    LRELEASE_CMD="/usr/lib/qt6/bin/lrelease"
+else
+    echo -e "${YELLOW}⚠️ lrelease no encontrado, omito la generación de .qm${NC}"
+    LRELEASE_CMD="true"
+fi
+
+$LRELEASE_CMD resources/i18n/*.ts
 
 # 6. Configurar CMake
 echo -e "${BLUE}🔧 Configurando proyecto...${NC}"
