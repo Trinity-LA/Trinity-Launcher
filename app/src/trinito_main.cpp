@@ -13,17 +13,11 @@ int main(int argc, char *argv[]) {
 
     QTranslator translator;
     QSettings settings;
-    QString lang = settings.value("language", "es").toString();
 
-    if (lang == "en") {
-        if (translator.load(":/i18n/trinity_en")) {
-            app.installTranslator(&translator);
-        }
-    }
-    else if (lang == "ca") {
-        if (translator.load(":/i18n/trinity_ca")) {
-            app.installTranslator(&translator);
-        }
+    // Ditto
+    QString lang = settings.value("language", "es").toString();
+    if (translator.load(":/i18n/trinity_" + lang)) {
+        app.installTranslator(&translator);
     }
 
     QIcon appIcon(":/icons/appicon");
