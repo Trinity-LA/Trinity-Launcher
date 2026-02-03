@@ -17,8 +17,8 @@
 #include <QTabWidget>
 #include <QVBoxLayout>
 
-#include <QRandomGenerator>
 #include <QProgressDialog>
+#include <QRandomGenerator>
 #include <QTimer>
 #include <QtConcurrent/QtConcurrent>
 
@@ -57,14 +57,14 @@ TrinitoWindow::TrinitoWindow(QWidget *parent)
     layout->addWidget(tabs);
 
     // Pestañas de instalación (como antes)
-    tabs->addTab(createPackTab("behavior_packs", "Behavior Pack (mods)"),
-                 "Mods");
-    tabs->addTab(createPackTab("resource_packs", "Resource Pack"),
+    tabs->addTab(createPackTab("behavior_packs", tr("Behavior Pack (mods)")),
+                 tr("Mods"));
+    tabs->addTab(createPackTab("resource_packs", tr("Resource Pack")),
                  tr("Texturas"));
     tabs->addTab(createDevTab(), tr("Desarrollo"));
     tabs->addTab(createWorldTab(), tr("Mundos"));
     // Añadir la nueva pestaña de Shaders/Mods
-    tabs->addTab(createShadersModsTab(), "Shaders/Libs");
+    tabs->addTab(createShadersModsTab(), tr("Shaders/Libs"));
 }
 
 QWidget *TrinitoWindow::createManageTab(const QString &packType,
@@ -380,7 +380,7 @@ QWidget *TrinitoWindow::createDevTab() {
     auto *layout = new QVBoxLayout(widget);
 
     // Título
-    QLabel *titleLabel = new QLabel("Development Packs");
+    QLabel *titleLabel = new QLabel(tr("Development Packs"));
     titleLabel->setStyleSheet("font-weight: bold; font-size: 16px;");
     layout->addWidget(titleLabel);
 
@@ -674,7 +674,8 @@ void TrinitoWindow::installItem(const QString &sourcePath,
                 .arg(installer.getTargetName(sourcePath))
                 .arg(targetSubdir));
     } else {
-        QMessageBox::critical(this, "Error", tr("Falló la instalación:\n") + errorMsg);
+        QMessageBox::critical(this, "Error",
+                              tr("Falló la instalación:\n") + errorMsg);
     }
 }
 
@@ -682,10 +683,13 @@ void TrinitoWindow::installItem(const QString &sourcePath,
 
 // Función auxiliar para obtener directorio de shaders
 QString TrinitoWindow::getShadersDir() {
-    QString flatpakDir = QDir::homePath() + "/.var/app/com.trench.trinity.launcher/data/mcpelauncher";
+    QString flatpakDir =
+        QDir::homePath() +
+        "/.var/app/com.trench.trinity.launcher/data/mcpelauncher";
     QString shadersDir = flatpakDir + "/shaders";
 
-    // Si la carpeta base de Trinity Flatpak existe, usamos shaders dentro de ella
+    // Si la carpeta base de Trinity Flatpak existe, usamos shaders dentro de
+    // ella
     if (QDir(flatpakDir).exists()) {
         return shadersDir;
     } else {
@@ -715,7 +719,8 @@ QWidget *TrinitoWindow::createShadersModsTab() {
 
     auto *shadersButtonsLayout = new QHBoxLayout();
     installShaderpackButton = new QPushButton(tr("Instalar Shaderpack..."));
-    removeShaderpackButton = new QPushButton(tr("Eliminar Shaderpack Seleccionado"));
+    removeShaderpackButton =
+        new QPushButton(tr("Eliminar Shaderpack Seleccionado"));
     refreshShaderListButton = new QPushButton(tr("Actualizar Lista"));
     shadersButtonsLayout->addWidget(installShaderpackButton);
     shadersButtonsLayout->addWidget(removeShaderpackButton);
@@ -729,43 +734,57 @@ QWidget *TrinitoWindow::createShadersModsTab() {
     auto *libsLayout = new QVBoxLayout(libsSection);
     libsLayout->setSpacing(10);
 
-    QLabel *libsTitle = new QLabel(tr("Gestionar Libs:")); // Cambiado Mods por Libs
+    QLabel *libsTitle =
+        new QLabel(tr("Gestionar Libs:")); // Cambiado Mods por Libs
     libsTitle->setStyleSheet("font-weight: bold; font-size: 14px;");
     libsLayout->addWidget(libsTitle);
 
     // Available Libs
-    QLabel *availableLibsLabel = new QLabel(tr("Libs Disponibles:")); // Cambiado
+    QLabel *availableLibsLabel =
+        new QLabel(tr("Libs Disponibles:")); // Cambiado
     libsLayout->addWidget(availableLibsLabel);
-    availableModsList = new QListWidget(); // El nombre de la variable puede mantenerse por simplicidad interna
+    availableModsList = new QListWidget(); // El nombre de la variable puede
+                                           // mantenerse por simplicidad interna
     libsLayout->addWidget(availableModsList);
 
-    downloadModButton = new QPushButton(tr("Descargar Lib Seleccionada")); // Cambiado
+    downloadModButton =
+        new QPushButton(tr("Descargar Lib Seleccionada")); // Cambiado
     libsLayout->addWidget(downloadModButton);
 
     // Installed Libs
     QLabel *installedLibsLabel = new QLabel(tr("Libs Instaladas:")); // Cambiado
     libsLayout->addWidget(installedLibsLabel);
-    installedModsList = new QListWidget(); // El nombre de la variable puede mantenerse por simplicidad interna
+    installedModsList = new QListWidget(); // El nombre de la variable puede
+                                           // mantenerse por simplicidad interna
     libsLayout->addWidget(installedModsList);
 
-    removeInstalledModButton = new QPushButton(tr("Eliminar Lib Seleccionada")); // Cambiado
+    removeInstalledModButton =
+        new QPushButton(tr("Eliminar Lib Seleccionada")); // Cambiado
     libsLayout->addWidget(removeInstalledModButton);
 
     mainSplitLayout->addWidget(libsSection);
 
     layout->addLayout(mainSplitLayout);
 
-    // Connect signals (las funciones miembro siguen siendo las mismas, solo cambia la UI)
-    connect(installShaderpackButton, &QPushButton::clicked, this, &TrinitoWindow::onInstallShaderpackClicked);
-    connect(removeShaderpackButton, &QPushButton::clicked, this, &TrinitoWindow::onRemoveShaderpackClicked);
-    connect(refreshShaderListButton, &QPushButton::clicked, this, &TrinitoWindow::onRefreshShaderListClicked);
-    connect(downloadModButton, &QPushButton::clicked, this, &TrinitoWindow::onDownloadModClicked);
-    connect(removeInstalledModButton, &QPushButton::clicked, this, &TrinitoWindow::onRemoveInstalledModClicked);
+    // Connect signals (las funciones miembro siguen siendo las mismas, solo
+    // cambia la UI)
+    connect(installShaderpackButton, &QPushButton::clicked, this,
+            &TrinitoWindow::onInstallShaderpackClicked);
+    connect(removeShaderpackButton, &QPushButton::clicked, this,
+            &TrinitoWindow::onRemoveShaderpackClicked);
+    connect(refreshShaderListButton, &QPushButton::clicked, this,
+            &TrinitoWindow::onRefreshShaderListClicked);
+    connect(downloadModButton, &QPushButton::clicked, this,
+            &TrinitoWindow::onDownloadModClicked);
+    connect(removeInstalledModButton, &QPushButton::clicked, this,
+            &TrinitoWindow::onRemoveInstalledModClicked);
 
     // Initialize data
     populateInstalledShaders();
-    populateAvailableMods(); // Esta función seguirá cargando la lista de "mods" disponibles, pero ahora se mostrará como "libs"
-    populateInstalledMods(); // Esta función seguirá cargando la lista de "mods" instalados, pero ahora se mostrará como "libs"
+    populateAvailableMods(); // Esta función seguirá cargando la lista de "mods"
+                             // disponibles, pero ahora se mostrará como "libs"
+    populateInstalledMods(); // Esta función seguirá cargando la lista de "mods"
+                             // instalados, pero ahora se mostrará como "libs"
 
     return widget;
 }
@@ -781,23 +800,20 @@ void TrinitoWindow::populateInstalledShaders() {
         return;
     }
 
-    QFileInfoList files = dir.entryInfoList(QStringList() << "*.material.bin", QDir::Files);
+    QFileInfoList files =
+        dir.entryInfoList(QStringList() << "*.material.bin", QDir::Files);
     for (const QFileInfo &file : files) {
         shadersList->addItem(file.fileName());
     }
 }
-// this part it use https://github.com/minecraft-linux/mcpelauncher-moddb content under license MIT credits to creators
+// this part it use https://github.com/minecraft-linux/mcpelauncher-moddb
+// content under license MIT credits to creators
 void TrinitoWindow::populateAvailableMods() {
     QStringList availableMods = {
-        "libmcpelaunchershadersmod.so",
-        "libmcpelauncherdcblock.so",
-        "libmcpelauncherlegacyx86_64.so",
-        "libmcpelauncherlegacyarm64-v8a.so",
-        "libmcpelaunchernhc.so",
-        "libmcpelauncherstrafesprintfix.so",
-        "libmcpelauncherzoom.so",
-        "libfullbright.so"
-    };
+        "libmcpelaunchershadersmod.so",   "libmcpelauncherdcblock.so",
+        "libmcpelauncherlegacyx86_64.so", "libmcpelauncherlegacyarm64-v8a.so",
+        "libmcpelaunchernhc.so",          "libmcpelauncherstrafesprintfix.so",
+        "libmcpelauncherzoom.so",         "libfullbright.so"};
 
     availableModsList->clear();
 
@@ -807,7 +823,9 @@ void TrinitoWindow::populateAvailableMods() {
 }
 
 void TrinitoWindow::populateInstalledMods() {
-    QString modsDir = QDir::homePath() + "/.var/app/com.trench.trinity.launcher/data/mcpelauncher/mods";
+    QString modsDir =
+        QDir::homePath() +
+        "/.var/app/com.trench.trinity.launcher/data/mcpelauncher/mods";
     QDir dir(modsDir);
 
     installedModsList->clear();
@@ -817,7 +835,8 @@ void TrinitoWindow::populateInstalledMods() {
         return;
     }
 
-    QFileInfoList files = dir.entryInfoList(QStringList() << "*.so" << "*.so.disabled", QDir::Files);
+    QFileInfoList files = dir.entryInfoList(
+        QStringList() << "*.so" << "*.so.disabled", QDir::Files);
     for (const QFileInfo &file : files) {
         installedModsList->addItem(file.fileName());
     }
@@ -832,27 +851,33 @@ void TrinitoWindow::onInstallShaderpackClicked() {
     if (dialog.exec()) {
         QString filePath = dialog.selectedFiles().first();
 
-        if (filePath.isEmpty()) return;
+        if (filePath.isEmpty())
+            return;
 
         QString shadersDir = getShadersDir(); // Detectar carpeta correcta
         QDir().mkpath(shadersDir);
 
-        QString tempDirPath = QDir::tempPath() + "/shaderpack_extract_" + QString::number(QRandomGenerator::global()->bounded(INT_MAX));
+        QString tempDirPath =
+            QDir::tempPath() + "/shaderpack_extract_" +
+            QString::number(QRandomGenerator::global()->bounded(INT_MAX));
         QDir().mkpath(tempDirPath);
 
         // Extraer .mcpack con unzip
         QProcess process;
-        process.start("unzip", QStringList() << filePath << "-d" << tempDirPath);
+        process.start("unzip", QStringList()
+                                   << filePath << "-d" << tempDirPath);
         process.waitForFinished();
 
         if (process.exitCode() != 0) {
-            QMessageBox::critical(this, "Error", tr("No se pudo extraer el archivo .mcpack."));
+            QMessageBox::critical(this, "Error",
+                                  tr("No se pudo extraer el archivo .mcpack."));
             QDir(tempDirPath).removeRecursively(); // Limpiar
             return;
         }
 
         // Buscar recursivamente todos los .material.bin en la estructura
-        QDirIterator it(tempDirPath, QStringList() << "*.material.bin", QDir::Files, QDirIterator::Subdirectories);
+        QDirIterator it(tempDirPath, QStringList() << "*.material.bin",
+                        QDir::Files, QDirIterator::Subdirectories);
         QStringList materialBins;
 
         while (it.hasNext()) {
@@ -877,7 +902,10 @@ void TrinitoWindow::onInstallShaderpackClicked() {
             if (process.exitCode() != 0) {
                 // Verificar si el archivo se creó de todas formas
                 if (!QFile::exists(dstPath)) {
-                    QMessageBox::warning(this, tr("Advertencia"), tr("No se pudo copiar ") + fileName + " (output: " + QString::number(process.exitCode()) + ")");
+                    QMessageBox::warning(
+                        this, tr("Advertencia"),
+                        tr("No se pudo copiar ") + fileName + " (output: " +
+                            QString::number(process.exitCode()) + ")");
                 }
                 // Si existe, ignoramos el error
             }
@@ -886,14 +914,16 @@ void TrinitoWindow::onInstallShaderpackClicked() {
         // Limpiar directorio temporal
         QDir(tempDirPath).removeRecursively();
 
-        QMessageBox::information(this, tr("Éxito"), tr("Shaderpack instalado correctamente."));
+        QMessageBox::information(this, tr("Éxito"),
+                                 tr("Shaderpack instalado correctamente."));
         populateInstalledShaders(); // Actualizar lista
     }
 }
 
 void TrinitoWindow::onRemoveShaderpackClicked() {
     if (shadersList->selectedItems().isEmpty()) {
-        QMessageBox::warning(this, tr("Advertencia"), tr("No hay ningún shader seleccionado."));
+        QMessageBox::warning(this, tr("Advertencia"),
+                             tr("No hay ningún shader seleccionado."));
         return;
     }
 
@@ -902,76 +932,91 @@ void TrinitoWindow::onRemoveShaderpackClicked() {
     QString shaderPath = shadersDir + "/" + selectedShader;
 
     if (QFile::remove(shaderPath)) {
-        QMessageBox::information(this, tr("Éxito"), tr("Shader eliminado correctamente."));
+        QMessageBox::information(this, tr("Éxito"),
+                                 tr("Shader eliminado correctamente."));
         populateInstalledShaders(); // Actualizar lista
     } else {
-        QMessageBox::critical(this, "Error", tr("No se pudo eliminar el shader."));
+        QMessageBox::critical(this, "Error",
+                              tr("No se pudo eliminar el shader."));
     }
 }
 
-void TrinitoWindow::onRefreshShaderListClicked() {
-    populateInstalledShaders();
-}
+void TrinitoWindow::onRefreshShaderListClicked() { populateInstalledShaders(); }
 
 void TrinitoWindow::onDownloadModClicked() {
     if (availableModsList->selectedItems().isEmpty()) {
-        QMessageBox::warning(this, tr("Advertencia"), tr("Por favor, selecciona un mod para descargar."));
+        QMessageBox::warning(
+            this, tr("Advertencia"),
+            tr("Por favor, selecciona un mod para descargar."));
         return;
     }
 
     QString selected = availableModsList->selectedItems().first()->text();
     // Asegúrate de que la URL sea correcta
-    QString url = "https://huggingface.co/datasets/JaviercPLUS/mods-mcpe/resolve/main/" + selected;
+    QString url =
+        "https://huggingface.co/datasets/JaviercPLUS/mods-mcpe/resolve/main/" +
+        selected;
 
-    QString modsDir = QDir::homePath() + "/.var/app/com.trench.trinity.launcher/data/mcpelauncher/mods";
+    QString modsDir =
+        QDir::homePath() +
+        "/.var/app/com.trench.trinity.launcher/data/mcpelauncher/mods";
     QDir().mkpath(modsDir);
 
     QString destination = modsDir + "/" + selected;
 
     // Crear diálogo de progreso indeterminado
-    QProgressDialog progress(tr("Descargando ") + selected, tr("Cancelar"), 0, 0, this);
+    QProgressDialog progress(tr("Descargando ") + selected, tr("Cancelar"), 0,
+                             0, this);
     progress.setWindowModality(Qt::WindowModal);
     progress.show();
 
     // Descargar en hilo secundario
     QFuture<void> future = QtConcurrent::run([=]() {
         QProcess process;
-        process.start("curl", QStringList() << "-L" << url << "-o" << destination);
+        process.start("curl", QStringList()
+                                  << "-L" << url << "-o" << destination);
         process.waitForFinished(-1);
     });
 
     // Esperar a que termine sin congelar la interfaz
     while (!future.isFinished()) {
         QCoreApplication::processEvents(); // Actualizar la interfaz
-        QThread::msleep(100); // Pausa breve
+        QThread::msleep(100);              // Pausa breve
     }
 
     // Verificar si el archivo se descargó
     if (!QFile::exists(destination)) {
-        QMessageBox::critical(this, "Error", tr("No se pudo descargar el mod."));
+        QMessageBox::critical(this, "Error",
+                              tr("No se pudo descargar el mod."));
         return;
     }
 
     progress.close();
-    QMessageBox::information(this, tr("Éxito"), tr("Mod instalado correctamente."));
+    QMessageBox::information(this, tr("Éxito"),
+                             tr("Mod instalado correctamente."));
     populateInstalledMods();
 }
 
 void TrinitoWindow::onRemoveInstalledModClicked() {
     if (installedModsList->selectedItems().isEmpty()) {
-        QMessageBox::warning(this, tr("Advertencia"), tr("Por favor, selecciona un mod para eliminar."));
+        QMessageBox::warning(this, tr("Advertencia"),
+                             tr("Por favor, selecciona un mod para eliminar."));
         return;
     }
 
     QString selected = installedModsList->selectedItems().first()->text();
-    QString modsDir = QDir::homePath() + "/.var/app/com.trench.trinity.launcher/data/mcpelauncher/mods";
+    QString modsDir =
+        QDir::homePath() +
+        "/.var/app/com.trench.trinity.launcher/data/mcpelauncher/mods";
     QString filePath = modsDir + "/" + selected;
 
     QFile file(filePath);
     if (file.exists() && file.remove()) {
-        QMessageBox::information(this, tr("Eliminado"), selected + tr(" ha sido eliminado."));
+        QMessageBox::information(this, tr("Eliminado"),
+                                 selected + tr(" ha sido eliminado."));
         populateInstalledMods();
     } else {
-        QMessageBox::critical(this, "Error", tr("No se pudo eliminar ") + selected);
+        QMessageBox::critical(this, "Error",
+                              tr("No se pudo eliminar ") + selected);
     }
 }

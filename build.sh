@@ -277,7 +277,7 @@ if [ "$UPDATE_TRANSLATIONS" = true ]; then
     echo -e "${BLUE}   Usando: $LUPDATE_CMD${NC}"
 
     # Ejecutar lupdate usando la variable que encontramos
-    $LUPDATE_CMD src/ include/ -recursive -ts resources/i18n/trinity_en.ts resources/i18n/trinity_ca.ts
+    $LUPDATE_CMD src/ include/ -recursive -ts resources/i18n/*.ts
     
     echo -e "${GREEN}✅ Archivos .ts actualizados.${NC}"
   # Se termina acá porque solo actualizará los archivos .ts
@@ -309,17 +309,17 @@ if [ ! -d "$BUILD_DIR" ]; then
 fi
 
 # 5.5 Compilación de traducciones
-echo -e "${BLUE}🌍 Genero archivos de traducción...${NC}"
-if command -v lrelease &> /dev/null; then
-    LRELEASE_CMD="lrelease"
-elif [ -f "/usr/lib/qt6/bin/lrelease" ]; then
-    LRELEASE_CMD="/usr/lib/qt6/bin/lrelease"
-else
-    echo -e "${YELLOW}⚠️ lrelease no encontrado, omito la generación de .qm${NC}"
-    LRELEASE_CMD="true"
-fi
-
-$LRELEASE_CMD resources/i18n/*.ts
+# echo -e "${BLUE}🌍 Genero archivos de traducción...${NC}"
+# if command -v lrelease &> /dev/null; then
+#     LRELEASE_CMD="lrelease"
+# elif [ -f "/usr/lib/qt6/bin/lrelease" ]; then
+#     LRELEASE_CMD="/usr/lib/qt6/bin/lrelease"
+# else
+#     echo -e "${YELLOW}⚠️ lrelease no encontrado, omito la generación de .qm${NC}"
+#     LRELEASE_CMD="true"
+# fi
+#
+# $LRELEASE_CMD resources/i18n/*.ts
 
 # 6. Configurar CMake
 echo -e "${BLUE}🔧 Configurando proyecto...${NC}"

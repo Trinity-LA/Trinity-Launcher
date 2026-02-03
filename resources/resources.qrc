@@ -8,9 +8,4 @@
     <qresource prefix="/branding">
         <file alias="logo">branding/logo_full.png</file>
     </qresource>
-    <qresource prefix="/i18n">
-        <file alias="trinity_en.qm">i18n/trinity_en.qm</file>
-        <file alias="trinity_uk.qm">i18n/trinity_uk.qm</file>
-        <file alias="trinity_ca.qm">i18n/trinity_ca.qm</file>
-    </qresource>
 </RCC>
