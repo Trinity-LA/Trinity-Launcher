@@ -2,6 +2,7 @@
 #define LAUNCHER_WINDOW_H
 
 #include "TrinityLib/core/exporter.hpp"
+#include "TrinityLib/core/game_launcher.hpp"
 #include <QComboBox>
 #include <QHBoxLayout>
 #include <QLabel>
@@ -60,6 +61,8 @@ class LauncherWindow : public QWidget {
         QLabel *statusLabel;
         QPushButton *shortcutButton;
         QComboBox *languageCombo;
+
+        GameLauncher *m_gameLauncher;
 
         void setupUi();
         void setupConnections();
