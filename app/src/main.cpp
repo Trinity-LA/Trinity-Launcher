@@ -3,11 +3,16 @@
 #include <QIcon>
 #include <QLocale>
 #include <QSettings>
+#include <QString>
 #include <QTranslator>
+#include <TrinityLib/core/discord_manager.hpp>
+#include <qobject.h>
 
 int main(int argc, char *argv[]) {
     QApplication app(argc, argv);
 
+    DiscordManager::instance().init(1460749513667907658);
+    DiscordManager::instance().updateActivityMain();
     QCoreApplication::setOrganizationName("Trench");
     QCoreApplication::setApplicationName("Trinity Launcher");
 
@@ -20,8 +25,7 @@ int main(int argc, char *argv[]) {
         if (translator.load(":/i18n/trinity_en")) {
             app.installTranslator(&translator);
         }
-    }
-    else if (lang == "ca") {
+    } else if (lang == "ca") {
         if (translator.load(":/i18n/trinity_ca")) {
             app.installTranslator(&translator);
         }

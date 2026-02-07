@@ -1,6 +1,4 @@
 #include "TrinityLib/ui/windows/launcher_window.hpp"
-#include "TrinityLib/core//exporter.hpp"
-#include "TrinityLib/core/game_launcher.hpp"
 #include "TrinityLib/core/version_config.hpp"
 #include "TrinityLib/core/version_manager.hpp"
 #include "TrinityLib/ui/dialogs/extract_dialog.hpp"
@@ -32,6 +30,15 @@ LauncherWindow::LauncherWindow(QWidget *parent)
     loadInstalledVersions();
     exporter = new Exporter(this);
 
+    m_gameLauncher = new GameLauncher(this);
+
+    connect(m_gameLauncher, &GameLauncher::gameFinished, this,
+            [this](int code, QProcess::ExitStatus status) {
+                // 1. Volver a mostrar el launcher
+                this->show();
+                this->raise(); // Traer al frente
+                this->activateWindow();
+            });
     // Conectar señales de exporter
 
     connect(exporter, &Exporter::exportFinished, this,
@@ -116,7 +123,7 @@ void LauncherWindow::setupUi() {
     languageCombo = new QComboBox();
     languageCombo->addItem("Español", "es"); // Index 0, data "es"
     languageCombo->addItem("English", "en"); // Index 1, data "en"
-    languageCombo->addItem("Català", "ca"); // Index 2, data "ca"
+    languageCombo->addItem("Català", "ca");  // Index 2, data "ca"
     languageCombo->setFixedWidth(120);
 
     QSettings settings;
@@ -362,13 +369,14 @@ void LauncherWindow::launchGame() {
         return;
     QString selectedVersion = versionList->selectedItems().first()->text();
 
-    GameLauncher launcher;
     QString errorMsg;
-    if (!launcher.launchGame(selectedVersion, errorMsg)) {
+
+    if (!m_gameLauncher->launchGame(selectedVersion, errorMsg)) {
         QMessageBox::critical(this, "Error", errorMsg);
         return;
     }
-    QApplication::quit();
+    // QApplication::quit();
+    this->hide();
 }
 
 void LauncherWindow::launchTools() {

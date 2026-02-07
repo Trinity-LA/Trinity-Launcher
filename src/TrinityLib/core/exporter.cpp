@@ -12,6 +12,7 @@
 #include <QProcess>
 #include <QProgressBar>
 #include <QStandardPaths>
+#include <QString>
 #include <QTemporaryDir>
 #include <QThread>
 #include <QVBoxLayout>
