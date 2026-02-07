@@ -1,5 +1,4 @@
 #include "TrinityLib/ui/windows/launcher_window.hpp"
-#include "TrinityLib/core/discord_manager.hpp"
 #include "TrinityLib/core/version_config.hpp"
 #include "TrinityLib/core/version_manager.hpp"
 #include "TrinityLib/ui/dialogs/extract_dialog.hpp"
@@ -39,16 +38,6 @@ LauncherWindow::LauncherWindow(QWidget *parent)
                 this->show();
                 this->raise(); // Traer al frente
                 this->activateWindow();
-
-                // 2. Restaurar estado de Discord
-                DiscordManager::instance().updateActivityMain();
-
-                // Opcional: Mostrar mensaje si crasheó
-                if (status == QProcess::CrashExit) {
-                    QMessageBox::warning(
-                        this, tr("Aviso"),
-                        tr("El juego se cerró inesperadamente."));
-                }
             });
     // Conectar señales de exporter
 

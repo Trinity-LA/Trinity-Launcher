@@ -33,8 +33,10 @@ GameLauncher::GameLauncher(QObject *parent)
                 // Si el juego termina bien, detenemos el timer de asesinato
                 if (m_killTimer->isActive())
                     m_killTimer->stop();
+
                 m_isClosing = false;
 
+                DiscordManager::instance().updateActivityMain();
                 emit gameFinished(code, status);
             });
 }
@@ -46,31 +48,30 @@ GameLauncher::~GameLauncher() {
 }
 
 void GameLauncher::onGameOutput() {
-    // Leemos todo lo que el juego está escupiendo
+    // Read all the terminal logs
     QByteArray data = m_process->readAllStandardOutput();
     QString output = QString::fromLocal8Bit(data);
 
     std::cout << data.toStdString();
 
-    // Buscamos la señal de muerte en el log
+    // Messages logs of bedrock close
     if (!m_isClosing && (output.contains("Invoking stop activity callbacks") ||
-                         output.contains("The graphics context was lost"))) {
+                         output.contains("The graphics context was lost") ||
+                         output.contains("Quit request received") ||
+                         output.contains("Android window closed"))) {
 
         m_isClosing = true;
+        DiscordManager::instance().updateActivityMain();
 
-        // Le damos 3 segundos para morir con dignidad, si no, lo matamos.
+        m_process->terminate();
+        m_killTimer->setInterval(2000);
         m_killTimer->start();
     }
 }
 
 void GameLauncher::forceKillGame() {
-    if (m_process->state() != QProcess::NotRunning) {
-        std::cout
-            << "[Trinity] Detectado cierre colgado (Zombie). Forzando cierre..."
-            << std::endl;
+    if (m_process->state() != QProcess::NotRunning)
         m_process->kill(); // SIGKILL
-        // Esto disparará la señal 'finished' inmediatamente
-    }
 }
 
 bool GameLauncher::launchGame(const QString &versionName, QString &errorMsg) {
