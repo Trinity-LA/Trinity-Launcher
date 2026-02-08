@@ -8,8 +8,8 @@ DiscordManager &DiscordManager::instance() {
 }
 
 void DiscordManager::init(std::int64_t clientId) {
-    discord::Result result{
-        discord::Core::Create(clientId, DiscordCreateFlags_Default, &m_core)};
+    discord::Result result{discord::Core::Create(
+        clientId, DiscordCreateFlags_NoRequireDiscord, &m_core)};
 
     if (result == discord::Result::Ok) {
         m_updateTimer = new QTimer(this);
