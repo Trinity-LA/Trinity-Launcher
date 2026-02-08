@@ -1,24 +1,43 @@
+# 1. Using Compose
 
-# Build image with docker-compose
-``` docker-compose build ```
+## Build image
 
-# Run image with docker-compose
-``` docker-compose run --rm proyecto  ``` 
-# Build Trinity
-``` sh build.sh --clean --release ```  
+```
+UID=$(id -u) GID=$(id -g) docker compose build
+```
 
-# Build image without docker-compose
+## Run image
 
-``` docker build \
-  --build-arg USER_ID=$(id -u) \
-  --build-arg GROUP_ID=$(id -g) \
-  -t trinity .
-``` 
+```
+UID=$(id -u) GID=$(id -g) docker compose run --rm trinity
+```
 
-# Run image without docker-compose and build trinity
+# 2. Using dockerfile
+
+## Build image
+
+```
+docker build \
+  --build-arg UID=$(id -u) \
+  --build-arg GID=$(id -g) \
+  -t trinity-launcher .
+```
+
+## Run image
+
 ```
 docker run --rm -it \
+  --user $(id -u):$(id -g) \
+  -e DISPLAY=$DISPLAY \
   -v "$(pwd)":/project \
-  trinity \
-  ./build.sh --clean --release
-``` 
+  -v cargo-cache:/home/trinity/.cargo/registry \
+  trinity-launcher \
+  /bin/bash
+```
+
+# Building Trinity launcher
+
+```
+./build.sh --clean --release
+```
+

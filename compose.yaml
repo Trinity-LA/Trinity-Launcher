@@ -1,0 +1,32 @@
+services:
+  trinity:
+    build:
+      context: .
+      args:
+        UID: "${UID:-1000}"
+        GID: "${GID:-1000}"
+    user: "${UID:-1000}:${GID:-1000}"
+    image: trinity-launcher:latest
+    container_name: trinity-dev
+    working_dir: /home/trinity/project
+    command: /bin/bash
+    stdin_open: true
+    tty: true
+
+    environment:
+      - DISPLAY=${DISPLAY}
+      - XDG_RUNTIME_DIR=/tmp/runtime-trinity
+      - QT_X11_NO_MITSHM=1
+
+    volumes:
+      - .:/home/trinity/project
+      - /tmp/.X11-unix:/tmp/.X11-unix
+      - ${XDG_RUNTIME_DIR}/discord-ipc-0:/tmp/runtime-trinity/discord-ipc-0
+      - cargo-cache:/home/trinity/.cargo/registry
+      - rust-cache:/home/trinity/project/target
+      - dev-v:/data
+
+volumes:
+  dev-v:
+  cargo-cache:
+  rust-cache:
