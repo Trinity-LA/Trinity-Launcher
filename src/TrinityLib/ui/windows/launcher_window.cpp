@@ -8,6 +8,7 @@
 #include <QDebug>
 #include <QDialog>
 #include <QDialogButtonBox>
+#include <QDir>
 #include <QDirIterator>
 #include <QFileDialog>
 #include <QFileInfo>
@@ -15,6 +16,7 @@
 #include <QLabel>
 #include <QLineEdit>
 #include <QListWidget>
+#include <QLocale>
 #include <QMessageBox>
 #include <QProcess>
 #include <QProgressBar>
@@ -119,26 +121,53 @@ void LauncherWindow::setupUi() {
 
     topBarLayout->addStretch();
 
-    // --- Switcher languages
     languageCombo = new QComboBox();
-    languageCombo->addItem("Español", "es"); // Index 0, data "es"
-    languageCombo->addItem("English", "en"); // Index 1, data "en"
-    languageCombo->addItem("Català", "ca");  // Index 2, data "ca"
     languageCombo->setFixedWidth(120);
-
-    QSettings settings;
-    QString currentLang = settings.value("language", "es").toString();
-    int index = languageCombo->findData(currentLang);
-    if (index != -1) {
-        languageCombo->blockSignals(true);
-        languageCombo->setCurrentIndex(index);
-        languageCombo->blockSignals(false);
-    }
-
     languageCombo->setStyleSheet(
         "QComboBox { background-color: #1e293b; color: white; border-radius: "
         "5px; padding: 5px; }"
         "QComboBox::drop-down { border: 0px; }");
+
+    languageCombo->addItem("Español", "es");
+
+    QDir translationsDir(":/i18n");
+    QStringList fileNames =
+        translationsDir.entryList(QStringList() << "trinity_*.qm", QDir::Files);
+
+    for (const QString &file : fileNames) {
+        if (file.length() <= 11)
+            continue;
+
+        QString code = file.mid(8, file.length() - 11);
+
+        if (code == "es")
+            continue;
+
+        QLocale loc(code);
+        QString nativeName = loc.nativeLanguageName();
+
+        if (!nativeName.isEmpty()) {
+            nativeName[0] = nativeName[0].toUpper();
+        } else {
+            nativeName = code;
+        }
+
+        languageCombo->addItem(nativeName, code);
+    }
+
+    QSettings settings;
+    // Default to system language if not set, fallback to 'es'
+    QString systemLang = QLocale::system().name().split('_').first();
+    if (!QFile::exists(":/i18n/trinity_" + systemLang + ".qm") &&
+        systemLang != "es") {
+        systemLang = "es";
+    }
+
+    QString currentLang = settings.value("language", systemLang).toString();
+    int index = languageCombo->findData(currentLang);
+    if (index != -1) {
+        languageCombo->setCurrentIndex(index);
+    }
 
     topBarLayout->addWidget(languageCombo);
 
@@ -390,7 +419,7 @@ void LauncherWindow::launchTools() {
 void LauncherWindow::onEditConfigClicked() {
     if (versionList->selectedItems().isEmpty()) {
         QMessageBox::warning(this, tr("Advertencia"),
-                             tr("No hay ninguna versión seleccionada."));
+                             tr("No hay ningún versión seleccionada."));
         return;
     }
     QString selectedVersion = versionList->selectedItems().first()->text();
@@ -446,7 +475,7 @@ void LauncherWindow::onEditConfigClicked() {
 void LauncherWindow::onExportClicked() {
     if (versionList->selectedItems().isEmpty()) {
         QMessageBox::warning(this, tr("Advertencia"),
-                             tr("No hay ninguna versión seleccionada."));
+                             tr("No hay ningún versión seleccionada."));
         return;
     }
     QString selectedVersion = versionList->selectedItems().first()->text();
@@ -457,7 +486,7 @@ void LauncherWindow::onExportClicked() {
 void LauncherWindow::onDeleteClicked() {
     if (versionList->selectedItems().isEmpty()) {
         QMessageBox::warning(this, tr("Advertencia"),
-                             tr("No hay ninguna versión seleccionada."));
+                             tr("No hay ningún versión seleccionada."));
         return;
     }
     QString selectedVersion = versionList->selectedItems().first()->text();
@@ -517,7 +546,7 @@ void LauncherWindow::onImportClicked() { exporter->importVersion(); }
 void LauncherWindow::createDesktopShortcut() {
     if (versionList->selectedItems().isEmpty()) {
         QMessageBox::warning(this, tr("Advertencia"),
-                             tr("No hay ninguna versión seleccionada."));
+                             tr("No hay ningún versión seleccionada."));
         return;
     }
 
@@ -603,23 +632,17 @@ void LauncherWindow::onLanguageChanged(int index) {
     settings.sync();
 
     int r = QMessageBox::question(
-        this, 
-        tr("Se necesita reiniciar"),
-        tr("El idioma cambiará a '%1'.\n¿Deseas reiniciar la aplicación ahora para aplicar los cambios?")
+        this, tr("Se necesita reiniciar"),
+        tr("El idioma cambiará a '%1'.\n¿Deseas reiniciar la aplicación ahora "
+           "para aplicar los cambios?")
             .arg(languageCombo->currentText()),
-        QMessageBox::Yes | QMessageBox::No, 
-        QMessageBox::Yes
-    );
+        QMessageBox::Yes | QMessageBox::No, QMessageBox::Yes);
 
     if (r == QMessageBox::Yes) {
         QString program = QCoreApplication::applicationFilePath();
         QStringList arguments = QCoreApplication::arguments();
-
         QStringList args = arguments.mid(1);
-
         QProcess::startDetached(program, args);
-
         QApplication::quit();
-    }       
-
+    }
 }
