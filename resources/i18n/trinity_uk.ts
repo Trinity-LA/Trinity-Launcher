@@ -723,7 +723,7 @@ Esta acción no se puede deshacer.</source>
     <message>
         <location filename="../../src/TrinityLib/ui/windows/trinito_window.cpp" line="621"/>
         <source>¿Estás seguro de eliminar el mundo &apos;%1&apos;?
-Esta acción no 0se puede deshacer.</source>
+Esta acción no se puede deshacer.</source>
         <translation>Ви впевнені, що хочете видалити світ &apos;%1&apos;?
 Цю дію неможливо скасувати.</translation>
     </message>

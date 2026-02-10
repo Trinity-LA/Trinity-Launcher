@@ -723,7 +723,7 @@ This action cannot be undone.</translation>
     <message>
         <location filename="../../src/TrinityLib/ui/windows/trinito_window.cpp" line="621"/>
         <source>¿Estás seguro de eliminar el mundo &apos;%1&apos;?
-Esta acción no 0se puede deshacer.</source>
+Esta acción no se puede deshacer.</source>
         <translation>Are you sure you want to delete world &apos;%1&apos;?
 This action cannot be undone.</translation>
     </message>
