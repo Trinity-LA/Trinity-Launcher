@@ -6,22 +6,22 @@
     <message>
         <location filename="../../src/TrinityLib/core/discord_manager.cpp" line="59"/>
         <source>Esperando para iniciar</source>
-        <translation type="unfinished"></translation>
+        <translation>Esperant per iniciar</translation>
     </message>
     <message>
         <location filename="../../src/TrinityLib/core/discord_manager.cpp" line="60"/>
         <source>En el menú principal</source>
-        <translation type="unfinished"></translation>
+        <translation>Al menú principal</translation>
     </message>
     <message>
         <location filename="../../src/TrinityLib/core/discord_manager.cpp" line="61"/>
         <source>axe_icon</source>
-        <translation type="unfinished"></translation>
+        <translation>axe_icon</translation>
     </message>
     <message>
         <location filename="../../src/TrinityLib/core/discord_manager.cpp" line="62"/>
         <source>Configurando</source>
-        <translation type="unfinished"></translation>
+        <translation>Configurant</translation>
     </message>
 </context>
 <context>
@@ -132,7 +132,7 @@ Vols continuar?</translation>
         <location filename="../../src/TrinityLib/core/exporter.cpp" line="198"/>
         <source>Falló la extracción:
 </source>
-        <translation>Extraccío fallida:
+        <translation>Extracció fallida:
 </translation>
     </message>
     <message>
@@ -215,37 +215,37 @@ Vols continuar?</translation>
     <message>
         <location filename="../../src/TrinityLib/core/game_launcher.cpp" line="79"/>
         <source>El juego ya se está ejecutando.</source>
-        <translation type="unfinished"></translation>
+        <translation>El joc ja s&apos;està executant.</translation>
     </message>
     <message>
         <location filename="../../src/TrinityLib/core/game_launcher.cpp" line="90"/>
         <source>mcpelauncher-client no encontrado.</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">mcpelauncher-client no trobat.</translation>
     </message>
     <message>
         <location filename="../../src/TrinityLib/core/game_launcher.cpp" line="116"/>
         <source>Jugando Minecraft Bedrock</source>
-        <translation type="unfinished"></translation>
+        <translation>Jugant Minecraft Bedrock</translation>
     </message>
     <message>
         <location filename="../../src/TrinityLib/core/game_launcher.cpp" line="128"/>
         <source>No se pudo iniciar el proceso del juego.</source>
-        <translation type="unfinished"></translation>
+        <translation>No s&apos;ha pogut iniciar el procés del joc.</translation>
     </message>
     <message>
         <location filename="../../src/TrinityLib/core/game_launcher.cpp" line="130"/>
         <source>Menú de Trinity Launcher</source>
-        <translation type="unfinished"></translation>
+        <translation>Menú de Trinity Launcher</translation>
     </message>
     <message>
         <location filename="../../src/TrinityLib/core/game_launcher.cpp" line="130"/>
         <source>Esperando...</source>
-        <translation type="unfinished"></translation>
+        <translation>Esperant...</translation>
     </message>
     <message>
         <location filename="../../src/TrinityLib/core/game_launcher.cpp" line="157"/>
         <source>Trinito no encontrado.</source>
-        <translation type="unfinished"></translation>
+        <translation>Trinito no trobat.</translation>
     </message>
 </context>
 <context>
@@ -278,7 +278,7 @@ Vols continuar?</translation>
     <message>
         <location filename="../../src/TrinityLib/ui/windows/launcher_window.cpp" line="235"/>
         <source>Crear Acceso Directo</source>
-        <translation>Accés directe</translation>
+        <translation>Crear accés directe</translation>
     </message>
     <message>
         <location filename="../../src/TrinityLib/ui/windows/launcher_window.cpp" line="240"/>
@@ -308,7 +308,7 @@ Vols continuar?</translation>
     <message>
         <location filename="../../src/TrinityLib/ui/windows/launcher_window.cpp" line="320"/>
         <source>No hay versiones instaladas.</source>
-        <translation>Sense versions instal·lades.</translation>
+        <translation>No hi ha versions instal·lades.</translation>
     </message>
     <message>
         <location filename="../../src/TrinityLib/ui/windows/launcher_window.cpp" line="331"/>
@@ -374,11 +374,11 @@ Vols sobreescriure-la?</translation>
         <location filename="../../src/TrinityLib/ui/windows/launcher_window.cpp" line="489"/>
         <location filename="../../src/TrinityLib/ui/windows/launcher_window.cpp" line="549"/>
         <source>No hay ningún versión seleccionada.</source>
-        <translation type="unfinished"></translation>
+        <translation>No hi ha cap versió seleccionada.</translation>
     </message>
     <message>
         <source>No hay ninguna versión seleccionada.</source>
-        <translation type="vanished">No hi ha versió seleccionada.</translation>
+        <translation>No hi ha cap versió seleccionada.</translation>
     </message>
     <message>
         <location filename="../../src/TrinityLib/ui/windows/launcher_window.cpp" line="429"/>
@@ -483,17 +483,17 @@ Vols reiniciar l&apos;aplicació ara per aplicar els canvis?</translation>
     <message>
         <location filename="../../src/TrinityLib/ui/windows/trinito_window.cpp" line="60"/>
         <source>Behavior Pack (mods)</source>
-        <translation type="unfinished"></translation>
+        <translation>Behavior Pack (mods)</translation>
     </message>
     <message>
         <location filename="../../src/TrinityLib/ui/windows/trinito_window.cpp" line="61"/>
         <source>Mods</source>
-        <translation type="unfinished"></translation>
+        <translation>Mods</translation>
     </message>
     <message>
         <location filename="../../src/TrinityLib/ui/windows/trinito_window.cpp" line="62"/>
-        <source>Resource Pack</source>
-        <translation type="unfinished"></translation>
+        <source>Resource  type="unfinished"Pack</source>
+        <translation>Resource Pack</translation>
     </message>
     <message>
         <location filename="../../src/TrinityLib/ui/windows/trinito_window.cpp" line="63"/>
@@ -513,7 +513,7 @@ Vols reiniciar l&apos;aplicació ara per aplicar els canvis?</translation>
     <message>
         <location filename="../../src/TrinityLib/ui/windows/trinito_window.cpp" line="67"/>
         <source>Shaders/Libs</source>
-        <translation type="unfinished"></translation>
+        <translation>Shaders/Libs</translation>
     </message>
     <message>
         <location filename="../../src/TrinityLib/ui/windows/trinito_window.cpp" line="75"/>
@@ -613,7 +613,7 @@ Aquesta acció no es pot desfer.</translation>
     <message>
         <location filename="../../src/TrinityLib/ui/windows/trinito_window.cpp" line="383"/>
         <source>Development Packs</source>
-        <translation type="unfinished"></translation>
+        <translation>Development Packs</translation>
     </message>
     <message>
         <location filename="../../src/TrinityLib/ui/windows/trinito_window.cpp" line="392"/>
@@ -723,7 +723,7 @@ Aquesta acció no es pot desfer.</translation>
     <message>
         <location filename="../../src/TrinityLib/ui/windows/trinito_window.cpp" line="621"/>
         <source>¿Estás seguro de eliminar el mundo &apos;%1&apos;?
-Esta acción no 0se puede deshacer.</source>
+Esta acción no se puede deshacer.</source>
         <translation>Estàs segur d&apos;eliminar el món &apos;%1&apos;?
 Aquesta acció no es pot desfer.</translation>
     </message>
@@ -748,7 +748,7 @@ Sobreescriure-lo?</translation>
         <source>¡%1 instalado correctamente en:
 %2</source>
         <translation>%1 instal·lat correctament a:
-%2</translation>
+%2!</translation>
     </message>
     <message>
         <location filename="../../src/TrinityLib/ui/windows/trinito_window.cpp" line="678"/>
@@ -839,7 +839,7 @@ Sobreescriure-lo?</translation>
     <message>
         <location filename="../../src/TrinityLib/ui/windows/trinito_window.cpp" line="968"/>
         <source>Descargando </source>
-        <translation>Descarregant</translation>
+        <translation>Descarregant </translation>
     </message>
     <message>
         <location filename="../../src/TrinityLib/ui/windows/trinito_window.cpp" line="968"/>
