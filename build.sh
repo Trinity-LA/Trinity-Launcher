@@ -43,6 +43,9 @@ show_banner() {
 }
 
 ensure_sudo() {
+ if [ -n "$CI" ]; then
+        return 0
+    fi
     echo -e "${YELLOW}🔐 Se requieren permisos de administrador para esta acción...${NC}"
     if ! sudo -v; then
         echo -e "${RED}❌ Error: Permiso denegado.${NC}"
