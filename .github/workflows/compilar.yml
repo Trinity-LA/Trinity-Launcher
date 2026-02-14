@@ -1,0 +1,34 @@
+name: Compilar Trinity Launcher
+
+on:
+  push:
+    branches: [ main, master ]
+  pull_request:
+    branches: [ main, master ]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Clonar repositorio
+        uses: actions/checkout@v4
+
+      - name: Dar permisos de ejecución al script
+        run: chmod +x build.sh
+
+      - name: Instalar dependencias del sistema
+        run: ./build.sh --deps
+        # Nota: el script ya usa sudo internamente, en GitHub Actions funciona sin problemas.
+
+      - name: Compilar en modo Release
+        run: ./build.sh --release
+
+      - name: Subir binarios compilados (artefactos)
+        uses: actions/upload-artifact@v4
+        with:
+          name: trinity-launcher-binarios
+          path: |
+            build/app/trinchete
+            build/app/trinito
+          if-no-files-found: warn   # No falla si solo existe uno de los binarios
