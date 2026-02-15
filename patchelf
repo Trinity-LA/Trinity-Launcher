@@ -1,0 +1,12 @@
+patchelf --remove-needed /home/runner/work/Trinity-Launcher/Trinity-Launcher/external/discord_presence/discord_game_sdk.so bin/trinito
+patchelf --add-needed discord_game_sdk.so bin/trinito
+patchelf --remove-needed /home/runner/work/Trinity-Launcher/Trinity-Launcher/external/discord_presence/discord_game_sdk.so bin/trinchete
+patchelf --add-needed discord_game_sdk.so bin/trinchete
+
+patchelf --set-rpath '$ORIGIN/../lib' trinchete
+patchelf --set-rpath '$ORIGIN/../lib' trinito
+patchelf --remove-needed /home/trinity/project/external/discord_presence/discord_game_sdk.so trinchete
+patchelf --remove-needed /home/trinity/project/external/discord_presence/discord_game_sdk.so trinito
+
+patchelf --add-needed discord_game_sdk.so trinchete
+patchelf --add-needed discord_game_sdk.so trinito
