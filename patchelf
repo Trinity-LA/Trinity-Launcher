@@ -10,3 +10,6 @@ patchelf --remove-needed /home/trinity/project/external/discord_presence/discord
 
 patchelf --add-needed discord_game_sdk.so trinchete
 patchelf --add-needed discord_game_sdk.so trinito
+
+
+sudo patchelf --set-rpath '$ORIGIN/../lib' trinity && sudo  patchelf --remove-needed /home/trinity/project/external/discord_presence/discord_game_sdk.so trinity && sudo patchelf --add-needed discord_game_sdk.so trinity

@@ -16,7 +16,7 @@ include_directories(include)
 
 find_package(
   Qt6
-  COMPONENTS Core Widgets LinguistTools
+  COMPONENTS Core Widgets Concurrent LinguistTools
   REQUIRED)
 
 # We define which language use
@@ -36,7 +36,7 @@ add_subdirectory(src/TrinityLib/ui)
 add_subdirectory(app)
 
 # --- Translations ---
-# Must be after add_subdirectory(app) so trinchete/trinito targets exist
+# Must be after add_subdirectory(app) so trinity target exists
 # Using qt_add_lrelease + qt_add_resources for Qt6 < 6.7 compatibility
 set(TS_DIR "${CMAKE_SOURCE_DIR}/resources/i18n")
 
@@ -46,18 +46,12 @@ set(TS_FILES
   "${TS_DIR}/trinity_uk.ts")
 
 # Compile .ts -> .qm
-qt_add_lrelease(trinchete
+qt_add_lrelease(trinity
   TS_FILES ${TS_FILES}
   QM_FILES_OUTPUT_VARIABLE QM_FILES)
 
-# Embed .qm resources into trinchete
-qt_add_resources(trinchete "translations"
-  PREFIX "/i18n"
-  BASE "${CMAKE_CURRENT_BINARY_DIR}"
-  FILES ${QM_FILES})
-
-# Embed same .qm resources into trinito
-qt_add_resources(trinito "translations"
+# Embed .qm resources into trinity
+qt_add_resources(trinity "translations"
   PREFIX "/i18n"
   BASE "${CMAKE_CURRENT_BINARY_DIR}"
   FILES ${QM_FILES})

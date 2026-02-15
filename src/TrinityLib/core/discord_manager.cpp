@@ -1,6 +1,7 @@
 #include "TrinityLib/core/discord_manager.hpp"
 #include "discord_presence/ffi.h"
 #include "discord_presence/types.h"
+#include <QDebug>
 
 DiscordManager &DiscordManager::instance() {
     static DiscordManager inst;
@@ -11,12 +12,18 @@ void DiscordManager::init(std::int64_t clientId) {
     discord::Result result{discord::Core::Create(
         clientId, DiscordCreateFlags_NoRequireDiscord, &m_core)};
 
-    if (result == discord::Result::Ok) {
+    qDebug() << "[Discord] Core::Create result:" << static_cast<int>(result);
+
+    if (result == discord::Result::Ok && m_core) {
+        qDebug() << "[Discord] SDK initialized successfully";
         m_updateTimer = new QTimer(this);
         m_updateTimer->setTimerType(Qt::PreciseTimer);
         connect(m_updateTimer, &QTimer::timeout, this,
                 &DiscordManager::runCallbacks);
         m_updateTimer->start(16);
+    } else {
+        qDebug() << "[Discord] SDK initialization FAILED";
+        m_core = nullptr;
     }
 }
 
@@ -30,8 +37,10 @@ void DiscordManager::updateActivity(const QString &details,
                                     const QString &smallImageKey,
                                     const QString &smallImageText,
                                     bool useTimer) {
-    if (!m_core)
+    if (!m_core) {
+        qDebug() << "[Discord] updateActivity skipped - m_core is null";
         return;
+    }
 
     discord::Activity activity{};
 
@@ -50,8 +59,11 @@ void DiscordManager::updateActivity(const QString &details,
         activity.GetTimestamps().SetStart(std::time(nullptr));
     }
 
+    qDebug() << "[Discord] Sending activity:" << details << "|" << state;
     m_core->ActivityManager().UpdateActivity(activity,
-                                             [](discord::Result res) {});
+                                             [](discord::Result res) {
+        qDebug() << "[Discord] UpdateActivity result:" << static_cast<int>(res);
+    });
 }
 
 void DiscordManager::updateActivityMain() {

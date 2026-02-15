@@ -8,6 +8,7 @@
 #include <QLabel>
 #include <QListWidget>
 #include <QPushButton>
+#include <QStackedWidget>
 #include <QVBoxLayout>
 #include <QWidget>
 class LauncherWindow : public QWidget {
@@ -25,7 +26,7 @@ class LauncherWindow : public QWidget {
         void onVersionSelected(QListWidgetItem *item);
         void showExtractDialog();
         void launchGame();
-        void launchTools();
+
 
         // Nuevos slots para los botones
         void onEditConfigClicked();
@@ -55,7 +56,9 @@ class LauncherWindow : public QWidget {
         QPushButton *importButton; //
         // Top Bar
         QPushButton *extractButton;
-        QPushButton *toolsButton;
+        QStackedWidget *contentStack;
+        QPushButton *sidebarTrinityBtn;
+        QPushButton *sidebarContentBtn;
         Exporter *exporter;
         // Status Bar
         QLabel *statusLabel;

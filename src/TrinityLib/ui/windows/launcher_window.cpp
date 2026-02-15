@@ -1,4 +1,5 @@
 #include "TrinityLib/ui/windows/launcher_window.hpp"
+#include "TrinityLib/ui/windows/trinito_window.hpp"
 #include "TrinityLib/core/version_config.hpp"
 #include "TrinityLib/core/version_manager.hpp"
 #include "TrinityLib/ui/dialogs/extract_dialog.hpp"
@@ -12,6 +13,7 @@
 #include <QDirIterator>
 #include <QFileDialog>
 #include <QFileInfo>
+#include <QFrame>
 #include <QHBoxLayout>
 #include <QLabel>
 #include <QLineEdit>
@@ -23,6 +25,7 @@
 #include <QPushButton>
 #include <QSettings>
 #include <QStandardPaths>
+#include <QStackedWidget>
 #include <QVBoxLayout>
 
 LauncherWindow::LauncherWindow(QWidget *parent)
@@ -98,10 +101,61 @@ void LauncherWindow::setupUi() {
         "QLabel#Status { font-size: 12px; color: #64748b; padding: "
         "5px; background: transparent; }"
         "QWidget#ContextPanel { background-color: #090f20; "
-        "border-radius: 12px; }");
+        "border-radius: 12px; }"
+        "QWidget#Sidebar { background-color: #020617; }"
+        "QPushButton#SidebarBtn { background: transparent; border: none; "
+        "border-left: 3px solid transparent; border-radius: 0px; "
+        "padding: 14px; }"
+        "QPushButton#SidebarBtn:hover { background: #0a0f1f; }"
+        "QPushButton#SidebarBtnActive { background: transparent; border: none; "
+        "border-left: 3px solid #8b5cf6; border-radius: 0px; "
+        "padding: 14px; }");
 
-    // Main Vertical Layout (Top Bar, Content, Status Bar)
-    QVBoxLayout *rootLayout = new QVBoxLayout(this);
+    // Root: horizontal layout (sidebar | divider | content)
+    QHBoxLayout *windowLayout = new QHBoxLayout(this);
+    windowLayout->setContentsMargins(0, 0, 0, 0);
+    windowLayout->setSpacing(0);
+
+    // --- Sidebar ---
+    QWidget *sidebar = new QWidget();
+    sidebar->setObjectName("Sidebar");
+    sidebar->setFixedWidth(52);
+    QVBoxLayout *sidebarLayout = new QVBoxLayout(sidebar);
+    sidebarLayout->setContentsMargins(0, 8, 0, 8);
+    sidebarLayout->setSpacing(4);
+
+    sidebarTrinityBtn = new QPushButton(QIcon(":/icons/cube-w"), "");
+    sidebarTrinityBtn->setObjectName("SidebarBtnActive");
+    sidebarTrinityBtn->setIconSize(QSize(26, 26));
+    sidebarTrinityBtn->setFixedSize(52, 48);
+    sidebarTrinityBtn->setCursor(Qt::PointingHandCursor);
+    sidebarTrinityBtn->setToolTip(tr("Trinity"));
+
+    sidebarContentBtn = new QPushButton(QIcon(":/icons/config"), "");
+    sidebarContentBtn->setObjectName("SidebarBtn");
+    sidebarContentBtn->setIconSize(QSize(26, 26));
+    sidebarContentBtn->setFixedSize(52, 48);
+    sidebarContentBtn->setCursor(Qt::PointingHandCursor);
+    sidebarContentBtn->setToolTip(tr("Gestor de Contenido"));
+
+    sidebarLayout->addWidget(sidebarTrinityBtn);
+    sidebarLayout->addWidget(sidebarContentBtn);
+    sidebarLayout->addStretch();
+    windowLayout->addWidget(sidebar);
+
+    // --- Vertical divider ---
+    QFrame *divider = new QFrame();
+    divider->setFrameShape(QFrame::VLine);
+    divider->setStyleSheet("color: #1e293b; background-color: #1e293b; max-width: 1px;");
+    windowLayout->addWidget(divider);
+
+    // --- Content stack ---
+    contentStack = new QStackedWidget();
+    windowLayout->addWidget(contentStack);
+
+    // === Page 0: Trinity (Launcher) ===
+    QWidget *launcherTab = new QWidget();
+    QVBoxLayout *rootLayout = new QVBoxLayout(launcherTab);
     rootLayout->setContentsMargins(20, 20, 20, 10);
     rootLayout->setSpacing(15);
 
@@ -179,10 +233,6 @@ void LauncherWindow::setupUi() {
     importButton->setObjectName("ActionButton");
     topBarLayout->addWidget(importButton);
 
-    toolsButton = new QPushButton(tr("Herramientas"));
-    toolsButton->setObjectName("ActionButton"); // Apply accent style
-    topBarLayout->addWidget(toolsButton);
-
     rootLayout->addLayout(topBarLayout);
 
     // --- Content Area (Split View) ---
@@ -259,13 +309,41 @@ void LauncherWindow::setupUi() {
     statusLabel = new QLabel(tr("Listo"));
     statusLabel->setObjectName("Status");
     rootLayout->addWidget(statusLabel);
+
+    // Add launcher page to stack
+    contentStack->addWidget(launcherTab);
+
+    // === Page 1: Gestor de Contenido (Trinito) ===
+    TrinitoWindow *contentManager = new TrinitoWindow(this);
+    contentStack->addWidget(contentManager);
+
+    contentStack->setCurrentIndex(0);
+
+    // Sidebar button connections
+    connect(sidebarTrinityBtn, &QPushButton::clicked, this, [this]() {
+        contentStack->setCurrentIndex(0);
+        sidebarTrinityBtn->setObjectName("SidebarBtnActive");
+        sidebarContentBtn->setObjectName("SidebarBtn");
+        sidebarTrinityBtn->style()->unpolish(sidebarTrinityBtn);
+        sidebarTrinityBtn->style()->polish(sidebarTrinityBtn);
+        sidebarContentBtn->style()->unpolish(sidebarContentBtn);
+        sidebarContentBtn->style()->polish(sidebarContentBtn);
+    });
+    connect(sidebarContentBtn, &QPushButton::clicked, this, [this]() {
+        contentStack->setCurrentIndex(1);
+        sidebarContentBtn->setObjectName("SidebarBtnActive");
+        sidebarTrinityBtn->setObjectName("SidebarBtn");
+        sidebarTrinityBtn->style()->unpolish(sidebarTrinityBtn);
+        sidebarTrinityBtn->style()->polish(sidebarTrinityBtn);
+        sidebarContentBtn->style()->unpolish(sidebarContentBtn);
+        sidebarContentBtn->style()->polish(sidebarContentBtn);
+    });
 }
 
 void LauncherWindow::setupConnections() {
     connect(extractButton, &QPushButton::clicked, this,
             &LauncherWindow::showExtractDialog);
-    connect(toolsButton, &QPushButton::clicked, this,
-            &LauncherWindow::launchTools);
+
     connect(playButton, &QPushButton::clicked, this,
             &LauncherWindow::launchGame);
     connect(versionList, &QListWidget::itemClicked, this,
@@ -408,13 +486,7 @@ void LauncherWindow::launchGame() {
     this->hide();
 }
 
-void LauncherWindow::launchTools() {
-    GameLauncher launcher;
-    QString errorMsg;
-    if (!launcher.launchTrinito(errorMsg)) {
-        QMessageBox::critical(this, "Error", errorMsg);
-    }
-}
+
 
 void LauncherWindow::onEditConfigClicked() {
     if (versionList->selectedItems().isEmpty()) {

@@ -14,7 +14,6 @@ class GameLauncher : public QObject {
         ~GameLauncher();
 
         bool launchGame(const QString &versionName, QString &errorMsg);
-        bool launchTrinito(QString &errorMsg);
 
     signals:
         void gameFinished(int exitCode, QProcess::ExitStatus exitStatus);

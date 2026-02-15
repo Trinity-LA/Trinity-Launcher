@@ -34,10 +34,10 @@ set(DC_HEADERS
 
 add_library(DiscordPresence STATIC ${DC_CORE} ${DC_HEADERS})
 
-add_library(DiscordSDK_Bin SHARED IMPORTED)
-set_target_properties(DiscordSDK_Bin PROPERTIES IMPORTED_LOCATION
-                                                "${INC_DC}/discord_game_sdk.so")
-
-target_link_libraries(DiscordPresence PUBLIC DiscordSDK_Bin)
+# Link Discord SDK by name (not path) so the linker records just the filename
+# in DT_NEEDED instead of an absolute Docker path.
+# -l:discord_game_sdk.so = search for exact filename (no lib prefix)
+target_link_directories(DiscordPresence PUBLIC "${INC_DC}")
+target_link_libraries(DiscordPresence PUBLIC -l:discord_game_sdk.so)
 target_include_directories(
   DiscordPresence PUBLIC "$<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}>")

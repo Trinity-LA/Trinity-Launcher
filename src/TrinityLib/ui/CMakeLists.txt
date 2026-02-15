@@ -16,5 +16,5 @@ target_include_directories(TrinityUI
 
 target_link_libraries(
   TrinityUI
-  PUBLIC Qt6::Core Qt6::Widgets DiscordPresence
+  PUBLIC Qt6::Core Qt6::Widgets Qt6::Concurrent DiscordPresence
   PRIVATE TrinityCore)

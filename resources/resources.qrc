@@ -3,6 +3,8 @@
     <qresource prefix="/icons">
         <file alias="appicon">icons/appicon.png</file>
         <file alias="cube">icons/cube.png</file>
+        <file alias="cube-w">icons/cube-w.png</file>
+        <file alias="config">icons/config.png</file>
         <file alias="creeper">icons/creeper.png</file>
     </qresource>
     <qresource prefix="/branding">

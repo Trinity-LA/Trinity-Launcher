@@ -147,8 +147,7 @@ uninstall_app() {
     ensure_sudo
 
     echo -e "   Eliminando binarios..."
-    sudo rm -f /usr/local/bin/trinchete
-    sudo rm -f /usr/local/bin/trinito
+    sudo rm -f /usr/local/bin/trinity
 
     echo -e "   Eliminando recursos (iconos y accesos directos)..."
     sudo rm -f /usr/share/icons/com.trench.trinity.launcher.svg
@@ -175,7 +174,7 @@ show_help() {
     echo "  --update-ts  Escanea el código y actualiza los archivos .ts de traducción"
     echo "  --deps       Instala las dependencias del sistema (detecta distro automáticamente)"
     echo "  --install    Instala en el sistema (/usr/local/bin)"
-    echo "  --run        Ejecuta Trinchete al terminar"
+    echo "  --run        Ejecuta Trinity al terminar"
     echo "  --help       Muestra esta ayuda"
     echo ""
 }
@@ -299,7 +298,7 @@ echo -e "${BLUE}=== Iniciando proceso de construcción ($BUILD_TYPE) ===${NC}"
 if [ "$CLEAN_BUILD" = true ]; then
     echo -e "${YELLOW}🧹 Limpiando compilaciones anteriores (--clean)...${NC}"
     rm -rf "$BUILD_DIR"
-    rm -f trinchete trinito
+    rm -f trinity
     if [ "$ONLY_CLEAN" = true ]; then
         echo -e "${GREEN}✅ Limpieza completada. Saliendo.${NC}"
         exit 0
@@ -342,19 +341,19 @@ if [ "$INSTALL_SYSTEM" = true ]; then
 
     ensure_sudo
 
-    # Instalar Trinchete (Obligatorio)
-    if [ -f "$BUILD_DIR/app/trinchete" ]; then
-        sudo cp -rf "$BUILD_DIR/app/trinchete" /usr/local/bin
-        echo -e "   -> trinchete instalado en /usr/local/bin"
+    # Instalar Trinity
+    if [ -f "$BUILD_DIR/app/trinity" ]; then
+        sudo cp -rf "$BUILD_DIR/app/trinity" /usr/local/bin
+        echo -e "   -> trinity instalado en /usr/local/bin"
     else
-        echo -e "${RED}❌ Error: No se encontró el binario 'trinchete'. Compila primero.${NC}"
+        echo -e "${RED}❌ Error: No se encontró el binario 'trinity'. Compila primero.${NC}"
         exit 1
     fi
 
-    # Instalar Trinito (Opcional/Complementario)
-    if [ -f "$BUILD_DIR/app/trinito" ]; then
-        sudo cp "$BUILD_DIR/app/trinito" /usr/local/bin
-        echo -e "   -> trinito instalado en /usr/local/bin"
+    # Copiar discord_game_sdk.so junto al binario instalado
+    if [ -f "$BUILD_DIR/app/discord_game_sdk.so" ]; then
+        sudo cp -f "$BUILD_DIR/app/discord_game_sdk.so" /usr/local/bin/
+        echo -e "   -> discord_game_sdk.so instalado en /usr/local/bin"
     fi
 
     # Instalar Iconos (Verificando existencia)
@@ -390,10 +389,10 @@ if [ "$RUN_APP" = true ]; then
     
     APP_PATH=""
     # Selección del binario
-    if [ -f "$BUILD_DIR/app/trinchete" ]; then
-        APP_PATH="$BUILD_DIR/app/trinchete"
-    elif command -v trinchete &> /dev/null; then
-        APP_PATH=$(command -v trinchete)
+    if [ -f "$BUILD_DIR/app/trinity" ]; then
+        APP_PATH="$BUILD_DIR/app/trinity"
+    elif command -v trinity &> /dev/null; then
+        APP_PATH=$(command -v trinity)
     else
         echo -e "${RED}❌ No se pudo encontrar el ejecutable.${NC}"
         exit 1
@@ -401,13 +400,13 @@ if [ "$RUN_APP" = true ]; then
 
     # --- CASO A: MODO USUARIO (Sin logs, libera terminal) ---
     if [ "$DETACHED" = true ]; then
-        echo -e "${CYAN}🎮 Lanzando Trinchete...${NC}"
+        echo -e "${CYAN}🎮 Lanzando Trinity...${NC}"
         "$APP_PATH" & > /dev/null 2>&1
         echo -e "${GREEN}✅ Aplicación iniciada en segundo plano.${NC}"
     
     # --- CASO B: MODO DEV (Logs, Ctrl+C, Espera) ---
     else
-        echo -e "${CYAN}🎮 Lanzando Trinchete (Modo Desarrollo)...${NC}"
+        echo -e "${CYAN}🎮 Lanzando Trinity (Modo Desarrollo)...${NC}"
         echo -e "${YELLOW}⚡ Ejecutando: $APP_PATH${NC}"
         echo -e "${YELLOW}ℹ️  Logs en vivo. Presiona Ctrl+C para detener.${NC}"
         echo ""
