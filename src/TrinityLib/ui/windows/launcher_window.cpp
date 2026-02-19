@@ -1,12 +1,15 @@
 #include "TrinityLib/ui/windows/launcher_window.hpp"
 #include "TrinityLib/ui/windows/trinito_window.hpp"
+#include "TrinityLib/core/discord_manager.hpp"
 #include "TrinityLib/core/version_config.hpp"
 #include "TrinityLib/core/version_manager.hpp"
 #include "TrinityLib/ui/dialogs/extract_dialog.hpp"
 
 #include <QApplication>
+#include <QCheckBox>
 #include <QDateTime>
 #include <QDebug>
+#include <QDesktopServices>
 #include <QDialog>
 #include <QDialogButtonBox>
 #include <QDir>
@@ -23,10 +26,14 @@
 #include <QProcess>
 #include <QProgressBar>
 #include <QPushButton>
+#include <QScrollArea>
 #include <QSettings>
 #include <QStandardPaths>
 #include <QStackedWidget>
+#include <QUrl>
 #include <QVBoxLayout>
+#include <QStyle>
+#include <QScreen>
 
 LauncherWindow::LauncherWindow(QWidget *parent)
     : QWidget(parent) {
@@ -69,7 +76,7 @@ LauncherWindow::LauncherWindow(QWidget *parent)
 }
 
 void LauncherWindow::setupUi() {
-    setWindowTitle("Trinity Launcher - Minecraft Bedrock");
+    setWindowTitle(tr("Trinity Launcher - Minecraft Bedrock"));
     resize(960, 560);
     setMinimumSize(960, 560); // Tamaño mínimo
 
@@ -136,10 +143,26 @@ void LauncherWindow::setupUi() {
     sidebarContentBtn->setIconSize(QSize(26, 26));
     sidebarContentBtn->setFixedSize(52, 48);
     sidebarContentBtn->setCursor(Qt::PointingHandCursor);
-    sidebarContentBtn->setToolTip(tr("Gestor de Contenido"));
+    sidebarContentBtn->setToolTip(tr("Content Manager"));
+
+    sidebarDiscordBtn = new QPushButton(QIcon(":/icons/discord"), "");
+    sidebarDiscordBtn->setObjectName("SidebarBtn");
+    sidebarDiscordBtn->setIconSize(QSize(26, 26));
+    sidebarDiscordBtn->setFixedSize(52, 48);
+    sidebarDiscordBtn->setCursor(Qt::PointingHandCursor);
+    sidebarDiscordBtn->setToolTip(tr("Discord"));
+
+    sidebarAboutBtn = new QPushButton(QIcon(":/icons/heart"), "");
+    sidebarAboutBtn->setObjectName("SidebarBtn");
+    sidebarAboutBtn->setIconSize(QSize(26, 26));
+    sidebarAboutBtn->setFixedSize(52, 48);
+    sidebarAboutBtn->setCursor(Qt::PointingHandCursor);
+    sidebarAboutBtn->setToolTip(tr("About Trinity Launcher"));
 
     sidebarLayout->addWidget(sidebarTrinityBtn);
     sidebarLayout->addWidget(sidebarContentBtn);
+    sidebarLayout->addWidget(sidebarDiscordBtn);
+    sidebarLayout->addWidget(sidebarAboutBtn);
     sidebarLayout->addStretch();
     windowLayout->addWidget(sidebar);
 
@@ -169,7 +192,7 @@ void LauncherWindow::setupUi() {
         "border-image: url(:/branding/logo); border-radius: 60px;");
     topBarLayout->addWidget(logoLabel);
 
-    QLabel *titleLabel = new QLabel("Trinity Launcher");
+    QLabel *titleLabel = new QLabel(tr("Trinity Launcher"));
     titleLabel->setObjectName("Title");
     topBarLayout->addWidget(titleLabel);
 
@@ -225,11 +248,11 @@ void LauncherWindow::setupUi() {
 
     topBarLayout->addWidget(languageCombo);
 
-    extractButton = new QPushButton(tr("+ Extraer APK"));
+    extractButton = new QPushButton(tr("+ Extract APK"));
     extractButton->setObjectName("ActionButton"); // Accent color
     topBarLayout->addWidget(extractButton);
 
-    importButton = new QPushButton(tr("Importar")); // Import button
+    importButton = new QPushButton(tr("Import")); // Import button
     importButton->setObjectName("ActionButton");
     topBarLayout->addWidget(importButton);
 
@@ -262,7 +285,7 @@ void LauncherWindow::setupUi() {
     panelLayout->addWidget(versionIconLabel, 0, Qt::AlignCenter);
 
     // Version Info
-    versionNameLabel = new QLabel(tr("Selecciona una versión"));
+    versionNameLabel = new QLabel(tr("Select a version"));
     versionNameLabel->setObjectName("VersionName");
     versionNameLabel->setAlignment(Qt::AlignCenter);
     panelLayout->addWidget(versionNameLabel);
@@ -275,26 +298,26 @@ void LauncherWindow::setupUi() {
     panelLayout->addSpacing(20);
 
     // Actions
-    playButton = new QPushButton(tr("JUGAR"));
+    playButton = new QPushButton(tr("PLAY"));
     playButton->setObjectName("ActionButton");
     playButton->setMinimumHeight(35);
     playButton->setEnabled(false);
     panelLayout->addWidget(playButton);
 
     // Botón "Crear Acceso Directo" (debajo de JUGAR)
-    shortcutButton = new QPushButton(tr("Crear Acceso Directo"));
+    shortcutButton = new QPushButton(tr("Create Shortcut"));
     shortcutButton->setObjectName("ActionButton");
     shortcutButton->setMinimumHeight(35);
     panelLayout->addWidget(shortcutButton);
 
-    editButton = new QPushButton(tr("Editar Configuración"));
+    editButton = new QPushButton(tr("Edit Config"));
     editButton->setObjectName("ActionButton");
     panelLayout->addWidget(editButton);
 
     QHBoxLayout *secondaryActions = new QHBoxLayout();
-    exportButton = new QPushButton(tr("Exportar"));
+    exportButton = new QPushButton(tr("Export"));
     exportButton->setObjectName("ActionButton");
-    deleteButton = new QPushButton(tr("Eliminar"));
+    deleteButton = new QPushButton(tr("Delete"));
     deleteButton->setObjectName("ActionButton");
     secondaryActions->addWidget(exportButton);
     secondaryActions->addWidget(deleteButton);
@@ -306,7 +329,7 @@ void LauncherWindow::setupUi() {
     rootLayout->addLayout(contentLayout);
 
     // --- Status Bar ---
-    statusLabel = new QLabel(tr("Listo"));
+    statusLabel = new QLabel(tr("Ready"));
     statusLabel->setObjectName("Status");
     rootLayout->addWidget(statusLabel);
 
@@ -317,27 +340,189 @@ void LauncherWindow::setupUi() {
     TrinitoWindow *contentManager = new TrinitoWindow(this);
     contentStack->addWidget(contentManager);
 
+    // === Page 2: Discord ===
+    QWidget *discordPage = new QWidget();
+    QVBoxLayout *discordLayout = new QVBoxLayout(discordPage);
+    discordLayout->setContentsMargins(40, 40, 40, 40);
+    discordLayout->setSpacing(20);
+    discordLayout->addStretch();
+
+    // Discord icon
+    QLabel *discordIcon = new QLabel();
+    discordIcon->setFixedSize(64, 64);
+    discordIcon->setPixmap(QPixmap(":/icons/discord").scaled(64, 64, Qt::KeepAspectRatio, Qt::SmoothTransformation));
+    discordIcon->setAlignment(Qt::AlignCenter);
+    discordIcon->setStyleSheet("background: transparent;");
+    discordLayout->addWidget(discordIcon, 0, Qt::AlignCenter);
+
+    QLabel *discordTitle = new QLabel(tr("Discord"));
+    discordTitle->setObjectName("VersionName");
+    discordTitle->setAlignment(Qt::AlignCenter);
+    discordLayout->addWidget(discordTitle);
+
+    QLabel *discordDesc = new QLabel(tr("Join our community on Discord"));
+    discordDesc->setObjectName("VersionType");
+    discordDesc->setAlignment(Qt::AlignCenter);
+    discordLayout->addWidget(discordDesc);
+
+    discordLayout->addSpacing(10);
+
+    // Join Discord button
+    QPushButton *joinDiscordBtn = new QPushButton(tr("Join Discord"));
+    joinDiscordBtn->setObjectName("ActionButton");
+    joinDiscordBtn->setMinimumHeight(40);
+    joinDiscordBtn->setMaximumWidth(300);
+    joinDiscordBtn->setCursor(Qt::PointingHandCursor);
+    discordLayout->addWidget(joinDiscordBtn, 0, Qt::AlignCenter);
+    connect(joinDiscordBtn, &QPushButton::clicked, this, []() {
+        QDesktopServices::openUrl(QUrl("https://discord.gg/EpFUBjskJz"));
+    });
+
+    discordLayout->addSpacing(20);
+
+    // Rich Presence toggle
+    QHBoxLayout *toggleRow = new QHBoxLayout();
+    toggleRow->setSpacing(12);
+    QLabel *rpcLabel = new QLabel(tr("Discord Rich Presence"));
+    rpcLabel->setStyleSheet("font-size: 14px; background: transparent;");
+    QCheckBox *rpcToggle = new QCheckBox();
+    rpcToggle->setChecked(DiscordManager::instance().isEnabled());
+    rpcToggle->setStyleSheet(
+        "QCheckBox::indicator { width: 22px; height: 22px; border-radius: 11px; "
+        "background-color: #1e293b; border: 2px solid #334155; }"
+        "QCheckBox::indicator:checked { background-color: #8b5cf6; border-color: #8b5cf6; }");
+    rpcToggle->setCursor(Qt::PointingHandCursor);
+    toggleRow->addStretch();
+    toggleRow->addWidget(rpcLabel);
+    toggleRow->addWidget(rpcToggle);
+    toggleRow->addStretch();
+    discordLayout->addLayout(toggleRow);
+    connect(rpcToggle, &QCheckBox::toggled, this, [this](bool checked) {
+        DiscordManager::instance().setEnabled(checked);
+        if (!checked) {
+            QMessageBox::information(this, tr("Discord Rich Presence"),
+                tr("Cierra y vuelve a abrir el launcher para que se aplique la configuración."));
+        }
+    });
+
+    discordLayout->addStretch();
+    contentStack->addWidget(discordPage);
+
+    // === Page 3: About ===
+    QWidget *aboutPage = new QWidget();
+    QVBoxLayout *aboutLayout = new QVBoxLayout(aboutPage);
+    aboutLayout->setContentsMargins(0, 0, 0, 0);
+
+    QScrollArea *scrollArea = new QScrollArea();
+    scrollArea->setWidgetResizable(true);
+    scrollArea->setFrameShape(QFrame::NoFrame);
+    scrollArea->setStyleSheet("background: transparent;");
+
+    QWidget *scrollContent = new QWidget();
+    QVBoxLayout *scrollLayout = new QVBoxLayout(scrollContent);
+    scrollLayout->setContentsMargins(40, 40, 40, 40);
+    scrollLayout->setSpacing(20);
+
+    QLabel *aboutTitle = new QLabel(tr("About Trinity Launcher"));
+    aboutTitle->setObjectName("VersionName"); // Reusing style
+    aboutTitle->setAlignment(Qt::AlignCenter);
+    scrollLayout->addWidget(aboutTitle);
+
+    QLabel *aboutDesc = new QLabel(tr("Trinity Launcher is an open-source, community-driven launcher for Minecraft Bedrock. "
+                                      "Focused on user freedom and free redistribution, it provides a powerful interface to "
+                                      "manage multiple instances, worlds, textures, and mods seamlessly."));
+    aboutDesc->setWordWrap(true);
+    aboutDesc->setStyleSheet("font-size: 14px; color: #cbd5e1;");
+    aboutDesc->setAlignment(Qt::AlignJustify);
+    scrollLayout->addWidget(aboutDesc);
+
+    QLabel *teamTitle = new QLabel(tr("Our Team"));
+    teamTitle->setObjectName("VersionName");
+    teamTitle->setStyleSheet("font-size: 18px; font-weight: bold; color: #8b5cf6; margin-top: 20px;");
+    scrollLayout->addWidget(teamTitle);
+
+    QLabel *teamDesc = new QLabel(tr("Trinity is built by a dedicated group of developers, designers, and contributors:"));
+    teamDesc->setWordWrap(true);
+    teamDesc->setStyleSheet("font-size: 14px; color: #cbd5e1;");
+    scrollLayout->addWidget(teamDesc);
+
+    // Team list
+    QStringList teamMembers = {
+        tr("<b>Crow</b>: Project Creator & Visionary."),
+        tr("<b>JavierC</b>: Co-Creator & Development Supervisor."),
+        tr("<b>Orta</b>: Project Supervisor & Software Architect."),
+        tr("<b>MrTanuk</b>: Core Developer."),
+        tr("<b>Ezequiel</b>: Web Design & Frontend Developer."),
+        tr("<b>KevinRunforrestt</b>: Documentation, Translation & Support."),
+        tr("<b>IoselDev</b>: AUR Package Maintainer."),
+        tr("<b>HylianSoul</b>: Catalan Translation & Community Support."),
+        tr("<b>Future Contributor</b>: This spot is reserved for you. Join us!")
+    };
+
+    for (const QString &member : teamMembers) {
+        QLabel *memberLabel = new QLabel(member);
+        memberLabel->setTextFormat(Qt::RichText);
+        memberLabel->setWordWrap(true);
+        memberLabel->setStyleSheet("font-size: 14px; color: #cbd5e1; margin-left: 10px;");
+        scrollLayout->addWidget(memberLabel);
+    }
+
+    QLabel *thanksTitle = new QLabel(tr("Special Thanks"));
+    thanksTitle->setObjectName("VersionName");
+    thanksTitle->setStyleSheet("font-size: 18px; font-weight: bold; color: #8b5cf6; margin-top: 20px;");
+    scrollLayout->addWidget(thanksTitle);
+
+    QLabel *thanksDesc = new QLabel(tr("We would like to express our sincere gratitude to the team behind the "
+                                       "<b>Unofficial NIX Launcher for Minecraft</b>. Their work provides the essential runtime "
+                                       "to run Minecraft, which has been fundamental to the development of this project."));
+    thanksDesc->setTextFormat(Qt::RichText);
+    thanksDesc->setWordWrap(true);
+    thanksDesc->setStyleSheet("font-size: 14px; color: #cbd5e1;");
+    thanksDesc->setAlignment(Qt::AlignJustify);
+    scrollLayout->addWidget(thanksDesc);
+
+    scrollLayout->addStretch();
+    scrollArea->setWidget(scrollContent);
+    aboutLayout->addWidget(scrollArea);
+
+    contentStack->addWidget(aboutPage);
+
     contentStack->setCurrentIndex(0);
 
+    // Helper lambda to update all sidebar button styles
+    auto updateSidebar = [this](int activeIndex) {
+        contentStack->setCurrentIndex(activeIndex);
+        QPushButton *btns[] = {sidebarTrinityBtn, sidebarContentBtn, sidebarDiscordBtn, sidebarAboutBtn};
+        for (int i = 0; i < 4; ++i) {
+            btns[i]->setObjectName(i == activeIndex ? "SidebarBtnActive" : "SidebarBtn");
+            btns[i]->style()->unpolish(btns[i]);
+            btns[i]->style()->polish(btns[i]);
+        }
+    };
+
     // Sidebar button connections
-    connect(sidebarTrinityBtn, &QPushButton::clicked, this, [this]() {
-        contentStack->setCurrentIndex(0);
-        sidebarTrinityBtn->setObjectName("SidebarBtnActive");
-        sidebarContentBtn->setObjectName("SidebarBtn");
-        sidebarTrinityBtn->style()->unpolish(sidebarTrinityBtn);
-        sidebarTrinityBtn->style()->polish(sidebarTrinityBtn);
-        sidebarContentBtn->style()->unpolish(sidebarContentBtn);
-        sidebarContentBtn->style()->polish(sidebarContentBtn);
+    connect(sidebarTrinityBtn, &QPushButton::clicked, this, [updateSidebar]() {
+        updateSidebar(0);
     });
-    connect(sidebarContentBtn, &QPushButton::clicked, this, [this]() {
-        contentStack->setCurrentIndex(1);
-        sidebarContentBtn->setObjectName("SidebarBtnActive");
-        sidebarTrinityBtn->setObjectName("SidebarBtn");
-        sidebarTrinityBtn->style()->unpolish(sidebarTrinityBtn);
-        sidebarTrinityBtn->style()->polish(sidebarTrinityBtn);
-        sidebarContentBtn->style()->unpolish(sidebarContentBtn);
-        sidebarContentBtn->style()->polish(sidebarContentBtn);
+    connect(sidebarContentBtn, &QPushButton::clicked, this, [updateSidebar]() {
+        updateSidebar(1);
     });
+    connect(sidebarDiscordBtn, &QPushButton::clicked, this, [updateSidebar]() {
+        updateSidebar(2);
+    });
+    connect(sidebarAboutBtn, &QPushButton::clicked, this, [updateSidebar]() {
+        updateSidebar(3);
+    });
+
+    // Center the window
+    setGeometry(
+        QStyle::alignedRect(
+            Qt::LeftToRight,
+            Qt::AlignCenter,
+            size(),
+            QGuiApplication::primaryScreen()->availableGeometry()
+        )
+    );
 }
 
 void LauncherWindow::setupConnections() {
@@ -400,7 +585,7 @@ void LauncherWindow::updateContextPanel(const QString &versionName) {
     }
 
     versionNameLabel->setText(versionName);
-    versionTypeLabel->setText("Bedrock Edition"); // Placeholder type
+    versionTypeLabel->setText(tr("Bedrock Edition")); // Placeholder type
     playButton->setEnabled(true);
 
     // Update status bar with size info (mockup)

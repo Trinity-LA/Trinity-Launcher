@@ -59,6 +59,8 @@ class LauncherWindow : public QWidget {
         QStackedWidget *contentStack;
         QPushButton *sidebarTrinityBtn;
         QPushButton *sidebarContentBtn;
+        QPushButton *sidebarDiscordBtn;
+        QPushButton *sidebarAboutBtn;
         Exporter *exporter;
         // Status Bar
         QLabel *statusLabel;

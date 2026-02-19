@@ -1,5 +1,6 @@
 #include "discord_presence/core.h"
 #include <QObject>
+#include <QSettings>
 #include <QTimer>
 #include <cstdint>
 
@@ -15,8 +16,12 @@ class DiscordManager : public QObject {
         void updateActivityMain();
         void runCallbacks();
 
+        void setEnabled(bool enabled);
+        bool isEnabled() const;
+
     private:
         DiscordManager() = default;
         discord::Core *m_core{nullptr};
         QTimer *m_updateTimer{nullptr};
+        bool m_enabled{true};
 };

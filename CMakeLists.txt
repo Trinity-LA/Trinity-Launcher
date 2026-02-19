@@ -20,7 +20,7 @@ find_package(
   REQUIRED)
 
 # We define which language use
-qt_standard_project_setup(I18N_TRANSLATED_LANGUAGES en ca uk)
+qt_standard_project_setup(I18N_TRANSLATED_LANGUAGES en ca uk es)
 
 set(TRINITY_SRC_DIR "${CMAKE_CURRENT_SOURCE_DIR}/src")
 set(TRINITY_INC_DIR "${CMAKE_CURRENT_SOURCE_DIR}/include")
@@ -43,7 +43,8 @@ set(TS_DIR "${CMAKE_SOURCE_DIR}/resources/i18n")
 set(TS_FILES
   "${TS_DIR}/trinity_en.ts"
   "${TS_DIR}/trinity_ca.ts"
-  "${TS_DIR}/trinity_uk.ts")
+  "${TS_DIR}/trinity_uk.ts"
+  "${TS_DIR}/trinity_es.ts")
 
 # Compile .ts -> .qm
 qt_add_lrelease(trinity

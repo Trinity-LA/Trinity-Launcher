@@ -2,6 +2,7 @@
 #include "discord_presence/ffi.h"
 #include "discord_presence/types.h"
 #include <QDebug>
+#include <QSettings>
 
 DiscordManager &DiscordManager::instance() {
     static DiscordManager inst;
@@ -9,6 +10,9 @@ DiscordManager &DiscordManager::instance() {
 }
 
 void DiscordManager::init(std::int64_t clientId) {
+    QSettings settings;
+    m_enabled = settings.value("discord_rpc_enabled", true).toBool();
+
     discord::Result result{discord::Core::Create(
         clientId, DiscordCreateFlags_NoRequireDiscord, &m_core)};
 
@@ -37,8 +41,8 @@ void DiscordManager::updateActivity(const QString &details,
                                     const QString &smallImageKey,
                                     const QString &smallImageText,
                                     bool useTimer) {
-    if (!m_core) {
-        qDebug() << "[Discord] updateActivity skipped - m_core is null";
+    if (!m_core || !m_enabled) {
+        qDebug() << "[Discord] updateActivity skipped - m_core is null or disabled";
         return;
     }
 
@@ -67,11 +71,32 @@ void DiscordManager::updateActivity(const QString &details,
 }
 
 void DiscordManager::updateActivityMain() {
+    if (!m_enabled) return;
     DiscordManager::instance().updateActivity(
-        DiscordManager::tr("Esperando para iniciar"), // Details
-        DiscordManager::tr("En el menú principal"),   // State
-        DiscordManager::tr("axe_icon"),               // Small Image Key
-        DiscordManager::tr("Configurando"),           // Tooltip Small Image
-        false                                         // Sin cronómetro
+        DiscordManager::tr("Waiting to start"),      // Details
+        DiscordManager::tr("In the main menu"),      // State
+        DiscordManager::tr("axe_icon"),              // Small Image Key
+        DiscordManager::tr("Configuring"),           // Tooltip Small Image
+        false                                        // No timer
     );
+}
+
+void DiscordManager::setEnabled(bool enabled) {
+    m_enabled = enabled;
+    QSettings settings;
+    settings.setValue("discord_rpc_enabled", enabled);
+
+    if (m_core) {
+        if (enabled) {
+            updateActivityMain();
+        } else {
+            m_core->ActivityManager().ClearActivity([](discord::Result res) {
+                qDebug() << "[Discord] ClearActivity result:" << static_cast<int>(res);
+            });
+        }
+    }
+}
+
+bool DiscordManager::isEnabled() const {
+    return m_enabled;
 }
