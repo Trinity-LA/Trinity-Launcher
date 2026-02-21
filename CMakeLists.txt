@@ -46,13 +46,14 @@ set(TS_FILES
   "${TS_DIR}/trinity_uk.ts"
   "${TS_DIR}/trinity_es.ts")
 
-# Compile .ts -> .qm
-qt_add_lrelease(trinity
-  TS_FILES ${TS_FILES}
-  QM_FILES_OUTPUT_VARIABLE QM_FILES)
+set(QM_FILES
+  "${TS_DIR}/trinity_en.qm"
+  "${TS_DIR}/trinity_ca.qm"
+  "${TS_DIR}/trinity_uk.qm"
+  "${TS_DIR}/trinity_es.qm")
 
 # Embed .qm resources into trinity
 qt_add_resources(trinity "translations"
   PREFIX "/i18n"
-  BASE "${CMAKE_CURRENT_BINARY_DIR}"
+  BASE "${TS_DIR}"
   FILES ${QM_FILES})

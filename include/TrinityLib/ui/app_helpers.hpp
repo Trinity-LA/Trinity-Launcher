@@ -27,12 +27,10 @@ namespace Trinity::UI {
         QSettings settings; 
         QString lang = settings.value("language", systemLang).toString();
 
-        // 3. Descargar traducción (si no es español)
-        if (lang != "es") {
-            static QTranslator translator; 
-            if (translator.load(":/i18n/trinity_" + lang)) {
-                app.installTranslator(&translator);
-            }
+        // 3. Descargar traducción
+        static QTranslator translator; 
+        if (translator.load(":/i18n/trinity_" + lang)) {
+            app.installTranslator(&translator);
         }
 
         app.setWindowIcon(QIcon(":/icons/appicon"));
