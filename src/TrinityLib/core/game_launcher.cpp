@@ -84,7 +84,13 @@ bool GameLauncher::launchGame(const QString &versionName, QString &errorMsg) {
 
     VersionManager vm;
     QString dataDir = vm.getVersionPath(versionName);
-    QString clientPath = QStandardPaths::findExecutable("mcpelauncher-client");
+    QString appDir = QCoreApplication::applicationDirPath();
+    QString clientPath = appDir + "/mcpelauncher-client";
+
+    if (!QFileInfo::exists(clientPath)) {
+        clientPath = QStandardPaths::findExecutable("mcpelauncher-client");
+    }
+
 
     if (clientPath.isEmpty()) {
         errorMsg = tr("mcpelauncher-client no encontrado.");

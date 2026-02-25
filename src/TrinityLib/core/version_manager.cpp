@@ -41,7 +41,11 @@ bool VersionManager::extractApk(const QString &apkPath, const QString &versionNa
         return false;
     }
 
-    QString extractorPath = QStandardPaths::findExecutable("mcpelauncher-extract");
+    QString appDir = QCoreApplication::applicationDirPath();
+    QString extractorPath = appDir + "/mcpelauncher-extract";
+    if (!QFileInfo::exists(extractorPath)) {
+        extractorPath = QStandardPaths::findExecutable("mcpelauncher-extract");
+    }
     if (extractorPath.isEmpty()) {
         errorMsg = "mcpelauncher-extract no encontrado.";
         return false;
