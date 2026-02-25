@@ -619,7 +619,7 @@ QWidget *TrinitoWindow::createWorldTab() {
         int r = QMessageBox::warning(
             this, tr("Advertencia"),
             QString(tr("¿Estás seguro de eliminar el mundo '%1'?\nEsta acción "
-                       "no 0se puede deshacer."))
+                       "no se puede deshacer."))
                 .arg(selectedWorld),
             QMessageBox::Yes | QMessageBox::No, QMessageBox::No);
         if (r == QMessageBox::No)

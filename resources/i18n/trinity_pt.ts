@@ -328,7 +328,12 @@ No: Solo exporta mods, mapas, etc.</source>
     <message>
         <location filename="../../src/TrinityLib/ui/windows/launcher_window.cpp" line="379"/>
         <source>Haz clic para copiar el enlace</source>
-        <translation type="unfinished"></translation>
+        <translation>Clique para copiar o link</translation>
+    </message>
+    <message>
+        <location filename="../../src/TrinityLib/ui/windows/launcher_window.cpp" line="385"/>
+        <source>✓ Copiado!</source>
+        <translation>✓ Copiado!</translation>
     </message>
     <message>
         <location filename="../../src/TrinityLib/ui/windows/launcher_window.cpp" line="399"/>

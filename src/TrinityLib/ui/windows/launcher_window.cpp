@@ -7,6 +7,7 @@
 
 #include <QApplication>
 #include <QCheckBox>
+#include <QClipboard>
 #include <QDateTime>
 #include <QDebug>
 #include <QDesktopServices>
@@ -30,6 +31,7 @@
 #include <QSettings>
 #include <QStandardPaths>
 #include <QStackedWidget>
+#include <QTimer>
 #include <QUrl>
 #include <QVBoxLayout>
 #include <QStyle>
@@ -367,15 +369,26 @@ void LauncherWindow::setupUi() {
 
     discordLayout->addSpacing(10);
 
-    // Join Discord button
-    QPushButton *joinDiscordBtn = new QPushButton(tr("Join Discord"));
-    joinDiscordBtn->setObjectName("ActionButton");
-    joinDiscordBtn->setMinimumHeight(40);
-    joinDiscordBtn->setMaximumWidth(300);
-    joinDiscordBtn->setCursor(Qt::PointingHandCursor);
-    discordLayout->addWidget(joinDiscordBtn, 0, Qt::AlignCenter);
-    connect(joinDiscordBtn, &QPushButton::clicked, this, []() {
-        QDesktopServices::openUrl(QUrl("https://discord.gg/EpFUBjskJz"));
+    // Discord URL Box (Clickable via QPushButton)
+    QPushButton *discordUrlBox = new QPushButton("https://discord.gg/yBaDq2Bnuw");
+    discordUrlBox->setFlat(true);
+    discordUrlBox->setStyleSheet("background-color: #1e293b; color: #a78bfa; border: 1px dashed #475569; border-radius: 6px; padding: 8px; font-size: 14px; font-weight: bold; text-align: center;");
+    discordUrlBox->setMinimumHeight(40);
+    discordUrlBox->setMaximumWidth(300);
+    discordUrlBox->setCursor(Qt::PointingHandCursor);
+    discordUrlBox->setToolTip(tr("Haz clic para copiar el enlace"));
+    discordLayout->addWidget(discordUrlBox, 0, Qt::AlignCenter);
+    
+    connect(discordUrlBox, &QPushButton::clicked, this, [discordUrlBox]() {
+        QApplication::clipboard()->setText("https://discord.gg/yBaDq2Bnuw");
+        
+        discordUrlBox->setText(tr("✓ Copiado!"));
+        discordUrlBox->setStyleSheet("background-color: #1e293b; color: #4ade80; border: 1px dashed #4ade80; border-radius: 6px; padding: 8px; font-size: 14px; font-weight: bold; text-align: center;");
+        
+        QTimer::singleShot(1500, discordUrlBox, [discordUrlBox]() {
+            discordUrlBox->setText("https://discord.gg/yBaDq2Bnuw");
+            discordUrlBox->setStyleSheet("background-color: #1e293b; color: #a78bfa; border: 1px dashed #475569; border-radius: 6px; padding: 8px; font-size: 14px; font-weight: bold; text-align: center;");
+        });
     });
 
     discordLayout->addSpacing(20);

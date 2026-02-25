@@ -14,12 +14,12 @@
     <message>
         <location filename="../../src/TrinityLib/core/discord_manager.cpp" line="76"/>
         <source>Waiting to start</source>
-        <translation>Click to copy link</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="../../src/TrinityLib/core/discord_manager.cpp" line="77"/>
         <source>In the main menu</source>
-        <translation>Click to copy link</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="../../src/TrinityLib/core/discord_manager.cpp" line="78"/>
@@ -29,7 +29,7 @@
     <message>
         <location filename="../../src/TrinityLib/core/discord_manager.cpp" line="79"/>
         <source>Configuring</source>
-        <translation>Click to copy link</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <source>Configurando</source>
@@ -384,175 +384,180 @@ Replace it?</translation>
     <message>
         <location filename="../../src/TrinityLib/ui/windows/launcher_window.cpp" line="81"/>
         <source>Trinity Launcher - Minecraft Bedrock</source>
-        <translation>Click to copy link</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="../../src/TrinityLib/ui/windows/launcher_window.cpp" line="141"/>
         <source>Trinity</source>
-        <translation>Click to copy link</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="../../src/TrinityLib/ui/windows/launcher_window.cpp" line="148"/>
         <source>Content Manager</source>
-        <translation>Click to copy link</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="../../src/TrinityLib/ui/windows/launcher_window.cpp" line="155"/>
         <location filename="../../src/TrinityLib/ui/windows/launcher_window.cpp" line="360"/>
         <source>Discord</source>
-        <translation>Click to copy link</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="../../src/TrinityLib/ui/windows/launcher_window.cpp" line="162"/>
         <location filename="../../src/TrinityLib/ui/windows/launcher_window.cpp" line="439"/>
         <source>About Trinity Launcher</source>
-        <translation>Click to copy link</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="../../src/TrinityLib/ui/windows/launcher_window.cpp" line="197"/>
         <source>Trinity Launcher</source>
-        <translation>Click to copy link</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="../../src/TrinityLib/ui/windows/launcher_window.cpp" line="253"/>
         <source>+ Extract APK</source>
-        <translation>Click to copy link</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="../../src/TrinityLib/ui/windows/launcher_window.cpp" line="257"/>
         <source>Import</source>
-        <translation>Click to copy link</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="../../src/TrinityLib/ui/windows/launcher_window.cpp" line="290"/>
         <source>Select a version</source>
-        <translation>Click to copy link</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="../../src/TrinityLib/ui/windows/launcher_window.cpp" line="303"/>
         <source>PLAY</source>
-        <translation>Click to copy link</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="../../src/TrinityLib/ui/windows/launcher_window.cpp" line="310"/>
         <source>Create Shortcut</source>
-        <translation>Click to copy link</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="../../src/TrinityLib/ui/windows/launcher_window.cpp" line="315"/>
         <source>Edit Config</source>
-        <translation>Click to copy link</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="../../src/TrinityLib/ui/windows/launcher_window.cpp" line="320"/>
         <source>Export</source>
-        <translation>Click to copy link</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="../../src/TrinityLib/ui/windows/launcher_window.cpp" line="322"/>
         <source>Delete</source>
-        <translation>Click to copy link</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="../../src/TrinityLib/ui/windows/launcher_window.cpp" line="334"/>
         <source>Ready</source>
-        <translation>Click to copy link</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="../../src/TrinityLib/ui/windows/launcher_window.cpp" line="365"/>
         <source>Join our community on Discord</source>
-        <translation>Click to copy link</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="../../src/TrinityLib/ui/windows/launcher_window.cpp" line="379"/>
         <source>Haz clic para copiar el enlace</source>
-        <translation>Click to copy link</translation>
+        <translation>Click to copy the link</translation>
+    </message>
+    <message>
+        <location filename="../../src/TrinityLib/ui/windows/launcher_window.cpp" line="385"/>
+        <source>✓ Copiado!</source>
+        <translation>✓ Copied!</translation>
     </message>
     <message>
         <location filename="../../src/TrinityLib/ui/windows/launcher_window.cpp" line="399"/>
         <location filename="../../src/TrinityLib/ui/windows/launcher_window.cpp" line="416"/>
         <source>Discord Rich Presence</source>
-        <translation>Click to copy link</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="../../src/TrinityLib/ui/windows/launcher_window.cpp" line="417"/>
         <source>Cierra y vuelve a abrir el launcher para que se aplique la configuración.</source>
-        <translation>Click to copy link</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="../../src/TrinityLib/ui/windows/launcher_window.cpp" line="444"/>
         <source>Trinity Launcher is an open-source, community-driven launcher for Minecraft Bedrock. Focused on user freedom and free redistribution, it provides a powerful interface to manage multiple instances, worlds, textures, and mods seamlessly.</source>
-        <translation>Click to copy link</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="../../src/TrinityLib/ui/windows/launcher_window.cpp" line="452"/>
         <source>Our Team</source>
-        <translation>Click to copy link</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="../../src/TrinityLib/ui/windows/launcher_window.cpp" line="457"/>
         <source>Trinity is built by a dedicated group of developers, designers, and contributors:</source>
-        <translation>Click to copy link</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="../../src/TrinityLib/ui/windows/launcher_window.cpp" line="464"/>
         <source>&lt;b&gt;Crow&lt;/b&gt;: Project Creator &amp; Visionary.</source>
-        <translation>Click to copy link</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="../../src/TrinityLib/ui/windows/launcher_window.cpp" line="465"/>
         <source>&lt;b&gt;JavierC&lt;/b&gt;: Co-Creator &amp; Development Supervisor.</source>
-        <translation>Click to copy link</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="../../src/TrinityLib/ui/windows/launcher_window.cpp" line="466"/>
         <source>&lt;b&gt;Orta&lt;/b&gt;: Project Supervisor &amp; Software Architect.</source>
-        <translation>Click to copy link</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="../../src/TrinityLib/ui/windows/launcher_window.cpp" line="467"/>
         <source>&lt;b&gt;MrTanuk&lt;/b&gt;: Core Developer.</source>
-        <translation>Click to copy link</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="../../src/TrinityLib/ui/windows/launcher_window.cpp" line="468"/>
         <source>&lt;b&gt;Ezequiel&lt;/b&gt;: Web Design &amp; Frontend Developer.</source>
-        <translation>Click to copy link</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="../../src/TrinityLib/ui/windows/launcher_window.cpp" line="469"/>
         <source>&lt;b&gt;KevinRunforrestt&lt;/b&gt;: Documentation, Translation &amp; Support.</source>
-        <translation>Click to copy link</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="../../src/TrinityLib/ui/windows/launcher_window.cpp" line="470"/>
         <source>&lt;b&gt;IoselDev&lt;/b&gt;: AUR Package Maintainer.</source>
-        <translation>Click to copy link</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="../../src/TrinityLib/ui/windows/launcher_window.cpp" line="471"/>
         <source>&lt;b&gt;HylianSoul&lt;/b&gt;: Catalan Translation &amp; Community Support.</source>
-        <translation>Click to copy link</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="../../src/TrinityLib/ui/windows/launcher_window.cpp" line="472"/>
         <source>&lt;b&gt;Future Contributor&lt;/b&gt;: This spot is reserved for you. Join us!</source>
-        <translation>Click to copy link</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="../../src/TrinityLib/ui/windows/launcher_window.cpp" line="483"/>
         <source>Special Thanks</source>
-        <translation>Click to copy link</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="../../src/TrinityLib/ui/windows/launcher_window.cpp" line="488"/>
         <source>We would like to express our sincere gratitude to the team behind the &lt;b&gt;Unofficial NIX Launcher for Minecraft&lt;/b&gt;. Their work provides the essential runtime to run Minecraft, which has been fundamental to the development of this project.</source>
-        <translation>Click to copy link</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="../../src/TrinityLib/ui/windows/launcher_window.cpp" line="601"/>
         <source>Bedrock Edition</source>
-        <translation>Click to copy link</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="../../src/TrinityLib/ui/windows/launcher_window.cpp" line="699"/>
