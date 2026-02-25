@@ -1,43 +1,4 @@
-set(INC_DC "${CMAKE_CURRENT_SOURCE_DIR}/discord_presence")
-
-set(DC_CORE
-    "${INC_DC}/achievement_manager.cpp"
-    "${INC_DC}/activity_manager.cpp"
-    "${INC_DC}/application_manager.cpp"
-    "${INC_DC}/core.cpp"
-    "${INC_DC}/image_manager.cpp"
-    "${INC_DC}/lobby_manager.cpp"
-    "${INC_DC}/network_manager.cpp"
-    "${INC_DC}/overlay_manager.cpp"
-    "${INC_DC}/relationship_manager.cpp"
-    "${INC_DC}/storage_manager.cpp"
-    "${INC_DC}/store_manager.cpp"
-    "${INC_DC}/types.cpp"
-    "${INC_DC}/user_manager.cpp"
-    "${INC_DC}/voice_manager.cpp")
-
-set(DC_HEADERS
-    "${INC_DC}/achievement_manager.h"
-    "${INC_DC}/activity_manager.h"
-    "${INC_DC}/application_manager.h"
-    "${INC_DC}/core.h"
-    "${INC_DC}/image_manager.h"
-    "${INC_DC}/lobby_manager.h"
-    "${INC_DC}/network_manager.h"
-    "${INC_DC}/overlay_manager.h"
-    "${INC_DC}/relationship_manager.h"
-    "${INC_DC}/storage_manager.h"
-    "${INC_DC}/store_manager.h"
-    "${INC_DC}/types.h"
-    "${INC_DC}/user_manager.h"
-    "${INC_DC}/voice_manager.h")
-
-add_library(DiscordPresence STATIC ${DC_CORE} ${DC_HEADERS})
-
-# Link Discord SDK by name (not path) so the linker records just the filename
-# in DT_NEEDED instead of an absolute Docker path.
-# -l:discord_game_sdk.so = search for exact filename (no lib prefix)
-target_link_directories(DiscordPresence PUBLIC "${INC_DC}")
-target_link_libraries(DiscordPresence PUBLIC -l:discord_game_sdk.so)
-target_include_directories(
-  DiscordPresence PUBLIC "$<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}>")
+# DiscordPresence is now a no-op interface target.
+# The Game SDK (.so) has been replaced by a pure POSIX IPC implementation
+# in discord_manager.cpp — no external library needed.
+add_library(DiscordPresence INTERFACE)

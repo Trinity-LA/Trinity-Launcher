@@ -350,11 +350,7 @@ if [ "$INSTALL_SYSTEM" = true ]; then
         exit 1
     fi
 
-    # Copiar discord_game_sdk.so junto al binario instalado
-    if [ -f "$BUILD_DIR/app/discord_game_sdk.so" ]; then
-        sudo cp -f "$BUILD_DIR/app/discord_game_sdk.so" /usr/local/bin/
-        echo -e "   -> discord_game_sdk.so instalado en /usr/local/bin"
-    fi
+
 
     # Instalar Iconos (Verificando existencia)
     if [ -f "resources/branding/com.trench.trinity.launcher.svg" ]; then
