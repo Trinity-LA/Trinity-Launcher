@@ -16,6 +16,7 @@ private:
     QWidget *createDevTab();
     QWidget *createWorldTab();
     QWidget *createShadersModsTab();
+    QWidget *createDirectoryTab();
     void installItem(const QString &sourcePath, const QString &targetSubdir);
 
     QWidget *createManageTab(const QString &packType, const QString &displayName);

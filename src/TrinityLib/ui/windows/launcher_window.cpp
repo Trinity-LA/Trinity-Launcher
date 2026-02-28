@@ -8,6 +8,7 @@
 #include <QApplication>
 #include <QCheckBox>
 #include <QClipboard>
+#include <QColorDialog>
 #include <QDateTime>
 #include <QDebug>
 #include <QDesktopServices>
@@ -75,50 +76,41 @@ LauncherWindow::LauncherWindow(QWidget *parent)
                     QMessageBox::critical(this, "Error", msg);
                 }
             });
+
+    // Restaurar iconos personalizados al arranque
+    {
+        QSettings icfg;
+        struct { QString key; QPushButton *btn; } iconMap[] = {
+            { "icon/trinity", sidebarTrinityBtn },
+            { "icon/content", sidebarContentBtn },
+            { "icon/discord", sidebarDiscordBtn },
+            { "icon/about",   sidebarAboutBtn   },
+        };
+        for (auto &e : iconMap) {
+            QString path = icfg.value(e.key, "").toString();
+            if (!path.isEmpty() && QFile::exists(path))
+                e.btn->setIcon(QIcon(path));
+        }
+    }
 }
+
+
 
 void LauncherWindow::setupUi() {
     setWindowTitle(tr("Trinity Launcher - Minecraft Bedrock"));
     resize(960, 560);
     setMinimumSize(960, 560); // Tamaño mínimo
 
-    // Global Dark Theme
-    setStyleSheet(
-        "QWidget { background-color: #020617; color: #ffffff; "
-        "font-family: 'Inter', 'Roboto', sans-serif; }"
-        "QListWidget { background-color: #090f20; border: 1px solid "
-        "#1e293b; border-radius: 8px; padding: 5px; outline: 0; }"
-        "QListWidget::item { padding: 10px; border-radius: 5px; "
-        "margin-bottom: 5px; border: none; }"
-        "QListWidget::item:selected { background-color: #8b5cf6; "
-        "color: #ffffff; }"
-        "QListWidget::item:hover { background-color: #1e293b; }"
-        "QPushButton { background-color: #1e293b; border: none; "
-        "border-radius: 6px; padding: 8px 16px; color: #ffffff; "
-        "font-weight: bold; }"
-        "QPushButton:hover { background-color: #334155; }"
-        "QPushButton:pressed { background-color: #0f172a; }"
-        "QPushButton#ActionButton { background-color: #8b5cf6; color: "
-        "#ffffff; }" // Violet accent
-        "QPushButton#ActionButton:hover { background-color: #a78bfa; }"
-        "QLabel#Title { font-size: 18px; font-weight: bold; color: "
-        "#8b5cf6; background: transparent; }"
-        "QLabel#VersionName { font-size: 24px; font-weight: bold; "
-        "background: transparent; }"
-        "QLabel#VersionType { font-size: 14px; color: #94a3b8; "
-        "background: transparent; }"
-        "QLabel#Status { font-size: 12px; color: #64748b; padding: "
-        "5px; background: transparent; }"
-        "QWidget#ContextPanel { background-color: #090f20; "
-        "border-radius: 12px; }"
-        "QWidget#Sidebar { background-color: #020617; }"
-        "QPushButton#SidebarBtn { background: transparent; border: none; "
-        "border-left: 3px solid transparent; border-radius: 0px; "
-        "padding: 14px; }"
-        "QPushButton#SidebarBtn:hover { background: #0a0f1f; }"
-        "QPushButton#SidebarBtnActive { background: transparent; border: none; "
-        "border-left: 3px solid #8b5cf6; border-radius: 0px; "
-        "padding: 14px; }");
+    // Apply theme from saved settings (or defaults if not set)
+    {
+        QSettings cfg;
+        applyTheme(
+            cfg.value("theme/accent", "#8b5cf6").toString(),
+            cfg.value("theme/bg",     "#020617").toString(),
+            cfg.value("theme/panel",  "#090f20").toString(),
+            cfg.value("theme/hover",  "#1e293b").toString()
+        );
+    }
 
     // Root: horizontal layout (sidebar | divider | content)
     QHBoxLayout *windowLayout = new QHBoxLayout(this);
@@ -161,11 +153,19 @@ void LauncherWindow::setupUi() {
     sidebarAboutBtn->setCursor(Qt::PointingHandCursor);
     sidebarAboutBtn->setToolTip(tr("About Trinity Launcher"));
 
+    sidebarSettingsBtn = new QPushButton(QIcon(":/icons/settings"), "");
+    sidebarSettingsBtn->setObjectName("SidebarBtn");
+    sidebarSettingsBtn->setIconSize(QSize(26, 26));
+    sidebarSettingsBtn->setFixedSize(52, 48);
+    sidebarSettingsBtn->setCursor(Qt::PointingHandCursor);
+    sidebarSettingsBtn->setToolTip(tr("Settings"));
+
     sidebarLayout->addWidget(sidebarTrinityBtn);
     sidebarLayout->addWidget(sidebarContentBtn);
     sidebarLayout->addWidget(sidebarDiscordBtn);
     sidebarLayout->addWidget(sidebarAboutBtn);
     sidebarLayout->addStretch();
+    sidebarLayout->addWidget(sidebarSettingsBtn); // Settings al fondo
     windowLayout->addWidget(sidebar);
 
     // --- Vertical divider ---
@@ -500,13 +500,18 @@ void LauncherWindow::setupUi() {
 
     contentStack->addWidget(aboutPage);
 
+    // === Page 4: Settings ===
+    contentStack->addWidget(createSettingsPage());
+
     contentStack->setCurrentIndex(0);
 
     // Helper lambda to update all sidebar button styles
     auto updateSidebar = [this](int activeIndex) {
         contentStack->setCurrentIndex(activeIndex);
-        QPushButton *btns[] = {sidebarTrinityBtn, sidebarContentBtn, sidebarDiscordBtn, sidebarAboutBtn};
-        for (int i = 0; i < 4; ++i) {
+        QPushButton *btns[] = {sidebarTrinityBtn, sidebarContentBtn,
+                               sidebarDiscordBtn, sidebarAboutBtn,
+                               sidebarSettingsBtn};
+        for (int i = 0; i < 5; ++i) {
             btns[i]->setObjectName(i == activeIndex ? "SidebarBtnActive" : "SidebarBtn");
             btns[i]->style()->unpolish(btns[i]);
             btns[i]->style()->polish(btns[i]);
@@ -525,6 +530,9 @@ void LauncherWindow::setupUi() {
     });
     connect(sidebarAboutBtn, &QPushButton::clicked, this, [updateSidebar]() {
         updateSidebar(3);
+    });
+    connect(sidebarSettingsBtn, &QPushButton::clicked, this, [updateSidebar]() {
+        updateSidebar(4);
     });
 
     // Center the window
@@ -916,3 +924,301 @@ void LauncherWindow::onLanguageChanged(int index) {
         QApplication::quit();
     }
 }
+
+// ──────────────────────────────────────────────
+// Settings Page
+// ──────────────────────────────────────────────
+
+void LauncherWindow::applyTheme(const QString &accent,
+                                const QString &bg,
+                                const QString &panel,
+                                const QString &hover) {
+    QString ss =
+        QString(
+            "QWidget { background-color: %2; color: #ffffff; "
+            "font-family: 'Inter', 'Roboto', sans-serif; }"
+            "QListWidget { background-color: %3; border: 1px solid %4; "
+            "border-radius: 8px; padding: 5px; outline: 0; }"
+            "QListWidget::item { padding: 10px; border-radius: 5px; "
+            "margin-bottom: 5px; border: none; }"
+            "QListWidget::item:selected { background-color: %1; color: #ffffff; }"
+            "QListWidget::item:hover { background-color: %4; }"
+            "QPushButton { background-color: %4; border: none; "
+            "border-radius: 6px; padding: 8px 16px; color: #ffffff; "
+            "font-weight: bold; }"
+            "QPushButton:hover { background-color: #334155; }"
+            "QPushButton:pressed { background-color: #0f172a; }"
+            "QPushButton#ActionButton { background-color: %1; color: #ffffff; }"
+            "QPushButton#ActionButton:hover { background-color: %1; opacity: 0.85; }"
+            "QLabel#Title { font-size: 18px; font-weight: bold; color: %1; background: transparent; }"
+            "QLabel#VersionName { font-size: 24px; font-weight: bold; background: transparent; }"
+            "QLabel#VersionType { font-size: 14px; color: #94a3b8; background: transparent; }"
+            "QLabel#Status { font-size: 12px; color: #64748b; padding: 5px; background: transparent; }"
+            "QWidget#ContextPanel { background-color: %3; border-radius: 12px; }"
+            "QWidget#Sidebar { background-color: %2; }"
+            "QPushButton#SidebarBtn { background: transparent; border: none; "
+            "border-left: 3px solid transparent; border-radius: 0px; padding: 14px; }"
+            "QPushButton#SidebarBtn:hover { background: #0a0f1f; }"
+            "QPushButton#SidebarBtnActive { background: transparent; border: none; "
+            "border-left: 3px solid %1; border-radius: 0px; padding: 14px; }"
+            "QTabWidget::pane { border: 1px solid %4; background-color: %3; border-radius: 8px; top: -1px; }"
+            "QTabBar::tab { background: %4; color: #94a3b8; padding: 10px 20px; "
+            "border-top-left-radius: 6px; border-top-right-radius: 6px; margin-right: 4px; border: none; }"
+            "QTabBar::tab:selected { background: %1; color: #ffffff; }"
+            "QTabBar::tab:hover { background: #334155; }"
+        )
+        .arg(accent)   // %1
+        .arg(bg)       // %2
+        .arg(panel)    // %3
+        .arg(hover);   // %4
+
+    qApp->setStyleSheet(ss);
+
+    // Persistir
+    QSettings settings;
+    settings.setValue("theme/accent", accent);
+    settings.setValue("theme/bg",     bg);
+    settings.setValue("theme/panel",  panel);
+    settings.setValue("theme/hover",  hover);
+}
+
+QWidget *LauncherWindow::createSettingsPage() {
+    // Defaults
+    const QString DEF_ACCENT = "#8b5cf6";
+    const QString DEF_BG     = "#020617";
+    const QString DEF_PANEL  = "#090f20";
+    const QString DEF_HOVER  = "#1e293b";
+
+    QSettings cfg;
+    QString accent = cfg.value("theme/accent", DEF_ACCENT).toString();
+    QString bg     = cfg.value("theme/bg",     DEF_BG).toString();
+    QString panel  = cfg.value("theme/panel",  DEF_PANEL).toString();
+    QString hover  = cfg.value("theme/hover",  DEF_HOVER).toString();
+
+    auto *page = new QWidget();
+    auto *outerLayout = new QVBoxLayout(page);
+    outerLayout->setContentsMargins(0, 0, 0, 0);
+
+    auto *scrollArea = new QScrollArea();
+    scrollArea->setWidgetResizable(true);
+    scrollArea->setFrameShape(QFrame::NoFrame);
+    scrollArea->setStyleSheet("background: transparent;");
+
+    auto *content = new QWidget();
+    auto *layout  = new QVBoxLayout(content);
+    layout->setContentsMargins(40, 30, 40, 30);
+    layout->setSpacing(24);
+
+    // ── Título ──
+    auto *titleLabel = new QLabel(tr("Settings"));
+    titleLabel->setObjectName("VersionName");
+    titleLabel->setAlignment(Qt::AlignLeft);
+    layout->addWidget(titleLabel);
+
+    // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+    // SECCIÓN: Colores del tema
+    // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+    auto *colorSection = new QLabel(tr("UI Colors"));
+    colorSection->setStyleSheet("font-size: 16px; font-weight: bold; color: #94a3b8;");
+    layout->addWidget(colorSection);
+
+    auto *colorsSeparator = new QFrame();
+    colorsSeparator->setFrameShape(QFrame::HLine);
+    colorsSeparator->setStyleSheet("color: #1e293b;");
+    layout->addWidget(colorsSeparator);
+
+    // Helper to create a color-picker row
+    struct ColorRow {
+        QString label;
+        QString *value;
+        QString settingKey;
+    };
+
+    // Almacenar los colores actuales en variables locales (capturadas por lambda)
+    auto *accentVal = new QString(accent);
+    auto *bgVal     = new QString(bg);
+    auto *panelVal  = new QString(panel);
+    auto *hoverVal  = new QString(hover);
+
+    auto makeColorRow = [&](const QString &labelText, QString *colorRef,
+                            const QString &settingKey) {
+        auto *row = new QHBoxLayout();
+        auto *lbl = new QLabel(labelText);
+        lbl->setStyleSheet("font-size: 14px;");
+        lbl->setMinimumWidth(180);
+
+        auto *preview = new QPushButton();
+        preview->setFixedSize(36, 36);
+        preview->setStyleSheet(
+            QString("background-color: %1; border-radius: 6px; border: 2px solid #334155;")
+                .arg(*colorRef));
+        preview->setCursor(Qt::PointingHandCursor);
+        preview->setToolTip(tr("Click to change color"));
+
+        auto *hexLabel = new QLabel(*colorRef);
+        hexLabel->setStyleSheet("font-size: 12px; color: #64748b; font-family: monospace;");
+        hexLabel->setMinimumWidth(80);
+
+        connect(preview, &QPushButton::clicked, this,
+                [this, preview, hexLabel, colorRef, accentVal, bgVal, panelVal, hoverVal]() {
+                    QColor initial(*colorRef);
+                    QColor chosen = QColorDialog::getColor(initial, this, tr("Select Color"));
+                    if (!chosen.isValid()) return;
+                    *colorRef = chosen.name();
+                    preview->setStyleSheet(
+                        QString("background-color: %1; border-radius: 6px; border: 2px solid #334155;")
+                            .arg(*colorRef));
+                    hexLabel->setText(*colorRef);
+                    applyTheme(*accentVal, *bgVal, *panelVal, *hoverVal);
+                });
+
+        row->addWidget(lbl);
+        row->addWidget(preview);
+        row->addWidget(hexLabel);
+        row->addStretch();
+        layout->addLayout(row);
+    };
+
+    makeColorRow(tr("Accent color"),     accentVal, "theme/accent");
+    makeColorRow(tr("Background color"), bgVal,     "theme/bg");
+    makeColorRow(tr("Panel color"),      panelVal,  "theme/panel");
+    makeColorRow(tr("Hover color"),      hoverVal,  "theme/hover");
+
+    // Botón Reset de colores
+    auto *resetColorsBtn = new QPushButton(tr("Reset Colors to Default"));
+    resetColorsBtn->setObjectName("ActionButton");
+    resetColorsBtn->setMaximumWidth(240);
+    connect(resetColorsBtn, &QPushButton::clicked, this,
+            [this, accentVal, bgVal, panelVal, hoverVal,
+             DEF_ACCENT, DEF_BG, DEF_PANEL, DEF_HOVER]() {
+                *accentVal = DEF_ACCENT;
+                *bgVal     = DEF_BG;
+                *panelVal  = DEF_PANEL;
+                *hoverVal  = DEF_HOVER;
+                applyTheme(DEF_ACCENT, DEF_BG, DEF_PANEL, DEF_HOVER);
+                // Reconstruir la página recargando Settings para reflejar los previews
+                QMessageBox::information(this, tr("Settings"),
+                    tr("Colors reset to default. Reopen Settings to see the updated previews."));
+            });
+    layout->addWidget(resetColorsBtn);
+
+    layout->addSpacing(12);
+
+    // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+    // SECCIÓN: Iconos del sidebar
+    // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+    auto *iconSection = new QLabel(tr("Sidebar Icons"));
+    iconSection->setStyleSheet("font-size: 16px; font-weight: bold; color: #94a3b8;");
+    layout->addWidget(iconSection);
+
+    auto *iconSeparator = new QFrame();
+    iconSeparator->setFrameShape(QFrame::HLine);
+    iconSeparator->setStyleSheet("color: #1e293b;");
+    layout->addWidget(iconSeparator);
+
+    auto *iconNote = new QLabel(tr("You can customize the sidebar icons. The app logo is fixed and cannot be changed."));
+    iconNote->setWordWrap(true);
+    iconNote->setStyleSheet("font-size: 12px; color: #64748b;");
+    layout->addWidget(iconNote);
+
+    // Datos de iconos cambiables
+    struct IconEntry {
+        QString name;        // Nombre legible
+        QString settingKey;  // Clave en QSettings
+        QString defaultRes;  // Recurso por defecto (:/icons/...)
+        QPushButton *btn;    // Botón del sidebar a actualizar
+    };
+
+    QList<IconEntry> icons = {
+        { tr("Trinity (Home)"),   "icon/trinity",  ":/icons/cube-w",  sidebarTrinityBtn },
+        { tr("Content Manager"),  "icon/content",  ":/icons/config",  sidebarContentBtn },
+        { tr("Discord"),          "icon/discord",  ":/icons/discord", sidebarDiscordBtn },
+        { tr("About"),            "icon/about",    ":/icons/heart",   sidebarAboutBtn  },
+    };
+
+    for (const auto &entry : icons) {
+        auto *row = new QHBoxLayout();
+
+        // Preview del icono actual
+        QSettings icfg;
+        QString customPath = icfg.value(entry.settingKey, "").toString();
+        QIcon currentIcon = customPath.isEmpty()
+            ? QIcon(entry.defaultRes)
+            : QIcon(customPath);
+
+        auto *iconPreview = new QLabel();
+        iconPreview->setFixedSize(36, 36);
+        iconPreview->setPixmap(currentIcon.pixmap(32, 32));
+        iconPreview->setStyleSheet("background: #1e293b; border-radius: 6px; padding: 2px;");
+        iconPreview->setAlignment(Qt::AlignCenter);
+
+        auto *nameLbl = new QLabel(entry.name);
+        nameLbl->setStyleSheet("font-size: 14px;");
+        nameLbl->setMinimumWidth(180);
+
+        auto *changeBtn = new QPushButton(tr("Change..."));
+        changeBtn->setMaximumWidth(100);
+        changeBtn->setCursor(Qt::PointingHandCursor);
+
+        // Captura por valor para la lambda
+        QPushButton *sideBtn = entry.btn;
+        QString settingKey   = entry.settingKey;
+        QString defaultRes   = entry.defaultRes;
+
+        connect(changeBtn, &QPushButton::clicked, this,
+                [this, iconPreview, sideBtn, settingKey]() {
+                    QString path = QFileDialog::getOpenFileName(
+                        this, tr("Select Icon"), QDir::homePath(),
+                        tr("Images (*.png *.svg *.ico *.jpg);;All files (*)"));
+                    if (path.isEmpty()) return;
+
+                    // Copiar al directorio de config del usuario
+                    QString configDir = QStandardPaths::writableLocation(
+                                            QStandardPaths::AppConfigLocation)
+                                        + "/icons";
+                    QDir().mkpath(configDir);
+                    QFileInfo fi(path);
+                    QString dest = configDir + "/" + fi.fileName();
+                    if (QFile::exists(dest)) QFile::remove(dest);
+                    QFile::copy(path, dest);
+
+                    QSettings icfg;
+                    icfg.setValue(settingKey, dest);
+
+                    QIcon newIcon(dest);
+                    iconPreview->setPixmap(newIcon.pixmap(32, 32));
+                    sideBtn->setIcon(newIcon);
+                });
+
+        row->addWidget(iconPreview);
+        row->addWidget(nameLbl);
+        row->addStretch();
+        row->addWidget(changeBtn);
+        layout->addLayout(row);
+    }
+
+    layout->addSpacing(8);
+
+    // Botón Reset de iconos
+    auto *resetIconsBtn = new QPushButton(tr("Reset Icons to Default"));
+    resetIconsBtn->setObjectName("ActionButton");
+    resetIconsBtn->setMaximumWidth(240);
+    connect(resetIconsBtn, &QPushButton::clicked, this,
+            [this, icons]() {
+                QSettings icfg;
+                for (const auto &entry : icons) {
+                    icfg.remove(entry.settingKey);
+                    entry.btn->setIcon(QIcon(entry.defaultRes));
+                }
+                QMessageBox::information(this, tr("Settings"),
+                    tr("Icons reset to default. Reopen Settings to see the updated previews."));
+            });
+    layout->addWidget(resetIconsBtn);
+
+    layout->addStretch();
+    scrollArea->setWidget(content);
+    outerLayout->addWidget(scrollArea);
+
+    return page;
+}
+

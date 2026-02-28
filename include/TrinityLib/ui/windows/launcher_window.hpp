@@ -3,6 +3,7 @@
 
 #include "TrinityLib/core/exporter.hpp"
 #include "TrinityLib/core/game_launcher.hpp"
+#include <QColorDialog>
 #include <QComboBox>
 #include <QHBoxLayout>
 #include <QLabel>
@@ -61,6 +62,7 @@ class LauncherWindow : public QWidget {
         QPushButton *sidebarContentBtn;
         QPushButton *sidebarDiscordBtn;
         QPushButton *sidebarAboutBtn;
+        QPushButton *sidebarSettingsBtn;
         Exporter *exporter;
         // Status Bar
         QLabel *statusLabel;
@@ -74,6 +76,9 @@ class LauncherWindow : public QWidget {
         void updateContextPanel(const QString &versionName);
         bool copyDirectory(const QString &srcPath, const QString &dstPath);
         bool extractZip(const QString &zipPath, const QString &destDir);
+        QWidget *createSettingsPage();
+        void applyTheme(const QString &accent, const QString &bg,
+                        const QString &panel, const QString &hover);
 };
 
 #endif // LAUNCHER_WINDOW_H

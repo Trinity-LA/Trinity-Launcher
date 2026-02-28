@@ -3,6 +3,8 @@
 
 #include <QApplication>
 #include <QCheckBox>
+#include <QClipboard>
+#include <QDesktopServices>
 #include <QDir>
 #include <QFile>
 #include <QFileDialog>
@@ -18,8 +20,10 @@
 #include <QVBoxLayout>
 
 #include <QProgressDialog>
+#include <QHBoxLayout>
 #include <QRandomGenerator>
 #include <QTimer>
+#include <QUrl>
 #include <QtConcurrent/QtConcurrent>
 
 TrinitoWindow::TrinitoWindow(QWidget *parent)
@@ -27,30 +31,8 @@ TrinitoWindow::TrinitoWindow(QWidget *parent)
     setWindowTitle(tr(" Gestor de Contenido para Bedrock"));
     resize(820, 500);
 
-    // Global Dark Theme (Violet Accent)
-    setStyleSheet(
-        "QWidget { background-color: #020617; color: #ffffff; font-family: "
-        "'Inter', 'Roboto', sans-serif; }"
-        "QTabWidget::pane { border: 1px solid #1e293b; background-color: "
-        "#090f20; border-radius: 8px; top: -1px; }"
-        "QTabBar::tab { background: #1e293b; color: #94a3b8; padding: 10px "
-        "20px; "
-        "border-top-left-radius: 6px; border-top-right-radius: 6px; "
-        "margin-right: 4px; border: none; }"
-        "QTabBar::tab:selected { background: #8b5cf6; color: #ffffff; }"
-        "QTabBar::tab:hover { background: #334155; }"
-        "QPushButton { background-color: #1e293b; border: none; border-radius: "
-        "6px; padding: 8px 16px; color: #ffffff; font-weight: bold; }"
-        "QPushButton:hover { background-color: #334155; }"
-        "QPushButton:pressed { background-color: #0f172a; }"
-        "QLabel { color: #e2e8f0; font-size: 14px; margin-bottom: 5px; }"
-        "QListWidget { background-color: #090f20; border: 1px solid #1e293b; "
-        "border-radius: 8px; padding: 5px; outline: 0; }"
-        "QListWidget::item { padding: 10px; border-radius: 5px; "
-        "margin-bottom: 5px; border: none; }"
-        "QListWidget::item:selected { background-color: #8b5cf6; "
-        "color: #ffffff; }"
-        "QListWidget::item:hover { background-color: #1e293b; }");
+
+
 
     auto *layout = new QVBoxLayout(this);
     QTabWidget *tabs = new QTabWidget();
@@ -65,7 +47,10 @@ TrinitoWindow::TrinitoWindow(QWidget *parent)
     tabs->addTab(createWorldTab(), tr("Mundos"));
     // Añadir la nueva pestaña de Shaders/Mods
     tabs->addTab(createShadersModsTab(), tr("Shaders/Libs"));
+    // Pestaña de directorio de datos
+    tabs->addTab(createDirectoryTab(), tr("Directory"));
 }
+
 
 QWidget *TrinitoWindow::createManageTab(const QString &packType,
                                         const QString &displayName) {
@@ -1020,3 +1005,104 @@ void TrinitoWindow::onRemoveInstalledModClicked() {
                               tr("No se pudo eliminar ") + selected);
     }
 }
+
+// ──────────────────────────────────────────────
+// Tab: Directory
+// ──────────────────────────────────────────────
+
+QWidget *TrinitoWindow::createDirectoryTab() {
+    auto *widget = new QWidget();
+    auto *layout = new QVBoxLayout(widget);
+    layout->setContentsMargins(40, 40, 40, 40);
+    layout->setSpacing(20);
+
+    // Título
+    auto *titleLabel = new QLabel(tr("Data Directory"));
+    titleLabel->setStyleSheet("font-weight: bold; font-size: 20px; color: #8b5cf6;");
+    layout->addWidget(titleLabel);
+
+    auto *descLabel = new QLabel(
+        tr("This is where Minecraft Bedrock stores your worlds, packs, and other user data."));
+    descLabel->setWordWrap(true);
+    descLabel->setStyleSheet("font-size: 13px; color: #94a3b8;");
+    layout->addWidget(descLabel);
+
+    // Detectar la ruta de datos (mismo patrón que getShadersDir())
+    QString flatpakBase = QDir::homePath()
+        + "/.var/app/com.trench.trinity.launcher/data/mcpelauncher";
+    QString nativeBase  = QDir::homePath() + "/.local/share/mcpelauncher";
+
+    // La ruta que mostraremos
+    QString dataPath;
+    QString typeLabel;
+
+    if (QDir(flatpakBase).exists()) {
+        dataPath  = flatpakBase;
+        typeLabel = tr("Flatpak installation");
+    } else if (QDir(nativeBase).exists()) {
+        dataPath  = nativeBase;
+        typeLabel = tr("Native installation");
+    } else {
+        dataPath  = nativeBase; // Ruta esperada aunque no exista aún
+        typeLabel = tr("Not found — the launcher may not have run yet");
+    }
+
+    // Card de ruta
+    auto *card = new QWidget();
+    card->setStyleSheet(
+        "QWidget { background-color: #090f20; border: 1px solid #1e293b; "
+        "border-radius: 10px; }"
+    );
+    auto *cardLayout = new QVBoxLayout(card);
+    cardLayout->setContentsMargins(20, 16, 20, 16);
+    cardLayout->setSpacing(8);
+
+    auto *typeLbl = new QLabel(typeLabel);
+    typeLbl->setStyleSheet("font-size: 12px; color: #64748b; font-weight: bold; "
+                           "letter-spacing: 1px; text-transform: uppercase; background: transparent;");
+    cardLayout->addWidget(typeLbl);
+
+    auto *pathLbl = new QLabel(dataPath);
+    pathLbl->setWordWrap(true);
+    pathLbl->setTextInteractionFlags(Qt::TextSelectableByMouse);
+    pathLbl->setCursor(Qt::IBeamCursor);
+    pathLbl->setStyleSheet(
+        "font-size: 14px; color: #e2e8f0; font-family: monospace; background: transparent;");
+    cardLayout->addWidget(pathLbl);
+
+    layout->addWidget(card);
+
+    // Botones
+    auto *btnLayout = new QHBoxLayout();
+
+    auto *openBtn = new QPushButton(tr("Open Location"));
+    openBtn->setFixedHeight(38);
+    openBtn->setCursor(Qt::PointingHandCursor);
+    openBtn->setStyleSheet(
+        "QPushButton { background-color: #8b5cf6; color: #ffffff; "
+        "border-radius: 6px; font-weight: bold; padding: 0 20px; }"
+        "QPushButton:hover { background-color: #a78bfa; }");
+    connect(openBtn, &QPushButton::clicked, this, [dataPath]() {
+        QDesktopServices::openUrl(QUrl::fromLocalFile(dataPath));
+    });
+
+    auto *copyBtn = new QPushButton(tr("Copy Path"));
+    copyBtn->setFixedHeight(38);
+    copyBtn->setCursor(Qt::PointingHandCursor);
+    connect(copyBtn, &QPushButton::clicked, this, [dataPath, copyBtn]() {
+        QApplication::clipboard()->setText(dataPath);
+        copyBtn->setText(tr("✓ Copied!"));
+        QTimer::singleShot(1500, copyBtn, [copyBtn]() {
+            copyBtn->setText(tr("Copy Path"));
+        });
+    });
+
+    btnLayout->addWidget(openBtn);
+    btnLayout->addWidget(copyBtn);
+    btnLayout->addStretch();
+    layout->addLayout(btnLayout);
+
+    layout->addStretch();
+    return widget;
+}
+
