@@ -1344,7 +1344,8 @@ QWidget *LauncherWindow::createSettingsPage() {
         { tr("Trinity (Home)"),   "icon/trinity",  ":/icons/cube-w",  sidebarTrinityBtn },
         { tr("Content Manager"),  "icon/content",  ":/icons/config",  sidebarContentBtn },
         { tr("Discord"),          "icon/discord",  ":/icons/discord", sidebarDiscordBtn },
-        { tr("About"),            "icon/about",    ":/icons/heart",   sidebarAboutBtn  },
+        { tr("About"),            "icon/about",    ":/icons/heart",   sidebarAboutBtn   },
+        { tr("Settings"),         "icon/settings", ":/icons/settings",sidebarSettingsBtn},
     };
 
     for (const auto &entry : icons) {
