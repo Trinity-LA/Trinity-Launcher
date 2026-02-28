@@ -65,7 +65,6 @@ void DiscordManager::init(int64_t clientId) {
     m_reconnectTimer->setInterval(5000);
     connect(m_reconnectTimer, &QTimer::timeout, this, [this]() {
         if (!m_connected && m_enabled) {
-            qDebug() << "[Discord] Attempting reconnect...";
             if (connectToDiscord()) {
                 m_reconnectTimer->stop();
                 qDebug() << "[Discord] Reconnected successfully.";
@@ -91,7 +90,6 @@ void DiscordManager::updateActivity(const QString &details,
     }
 
     if (!m_connected) {
-        qDebug() << "[Discord] updateActivity skipped - not connected.";
         scheduleReconnect();
         return;
     }
