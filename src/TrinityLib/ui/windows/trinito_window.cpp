@@ -1,5 +1,7 @@
 #include "TrinityLib/ui/windows/trinito_window.hpp"
+#include "TrinityLib/ui/windows/launcher_window.hpp"
 #include "TrinityLib/core/pack_installer.hpp"
+#include "TrinityLib/core/version_manager.hpp"
 
 #include <QApplication>
 #include <QCheckBox>
@@ -26,17 +28,17 @@
 #include <QUrl>
 #include <QtConcurrent/QtConcurrent>
 
-TrinitoWindow::TrinitoWindow(QWidget *parent)
-    : QWidget(parent) {
+TrinitoWindow::TrinitoWindow(QWidget *parent, LauncherWindow *launcher)
+    : QWidget(parent), m_launcher(launcher) {
     setWindowTitle(tr(" Gestor de Contenido para Bedrock"));
     resize(820, 500);
-
-
-
 
     auto *layout = new QVBoxLayout(this);
     QTabWidget *tabs = new QTabWidget();
     layout->addWidget(tabs);
+
+    // Primera pestaña: Instancias
+    tabs->addTab(createInstancesTab(), tr("Instancias"));
 
     // Pestañas de instalación (como antes)
     tabs->addTab(createPackTab("behavior_packs", tr("Behavior Pack (mods)")),
@@ -50,6 +52,133 @@ TrinitoWindow::TrinitoWindow(QWidget *parent)
     // Pestaña de directorio de datos
     tabs->addTab(createDirectoryTab(), tr("Directory"));
 }
+
+
+QWidget *TrinitoWindow::createInstancesTab() {
+    auto *widget = new QWidget();
+    auto *outerLayout = new QVBoxLayout(widget);
+    outerLayout->setContentsMargins(16, 12, 16, 12);
+    outerLayout->setSpacing(8);
+
+    // ── Shared column header row (same height, same visual level) ─────────
+    auto *headerRow = new QHBoxLayout();
+    headerRow->setContentsMargins(0, 0, 0, 0);
+    headerRow->setSpacing(16);
+
+    QLabel *listLabel = new QLabel(tr("Installed versions:"));
+    listLabel->setStyleSheet("font-size: 13px; color: #94a3b8;");
+    headerRow->addWidget(listLabel, 3);
+
+    QLabel *actionsLabel = new QLabel(tr("Actions"));
+    actionsLabel->setStyleSheet("font-size: 13px; color: #94a3b8;");
+    headerRow->addWidget(actionsLabel, 2);
+
+    outerLayout->addLayout(headerRow);
+
+    // ── Thin separator below headers ──────────────────────────────────────
+    auto *sep = new QFrame();
+    sep->setFrameShape(QFrame::HLine);
+    sep->setStyleSheet("color: #1e293b;");
+    outerLayout->addWidget(sep);
+
+    // ── Split: [version list] | [action panel] ────────────────────────────
+    auto *splitLayout = new QHBoxLayout();
+    splitLayout->setSpacing(16);
+
+    // LEFT: installed versions
+    auto *leftWidget = new QWidget();
+    auto *leftLayout = new QVBoxLayout(leftWidget);
+    leftLayout->setContentsMargins(0, 0, 0, 0);
+    leftLayout->setSpacing(6);
+
+    auto *versionsList = new QListWidget();
+    versionsList->setIconSize(QSize(24, 24));
+    versionsList->setStyleSheet(
+        "QListWidget { border-radius: 8px; padding: 4px; outline: 0; }"
+        "QListWidget::item { padding: 8px; border-radius: 5px; margin-bottom: 3px; }"
+    );
+
+    // Populate from VersionManager
+    if (m_launcher) {
+        VersionManager vm;
+        for (const QString &v : vm.getInstalledVersions()) {
+            auto *item = new QListWidgetItem(QIcon(":/icons/cube"), v);
+            versionsList->addItem(item);
+        }
+        if (versionsList->count() > 0)
+            versionsList->setCurrentRow(0);
+    }
+    leftLayout->addWidget(versionsList);
+
+    splitLayout->addWidget(leftWidget, 3); // takes 3/5 of space
+
+    // RIGHT: action buttons panel
+    auto *rightWidget = new QWidget();
+    rightWidget->setObjectName("ContextPanel");
+    auto *rightLayout = new QVBoxLayout(rightWidget);
+    rightLayout->setContentsMargins(16, 8, 16, 16);
+    rightLayout->setSpacing(10);
+
+    // Helper: makes a full-width button with tooltip
+    auto makeBtn = [&](const QString &label, const QString &tip) -> QPushButton* {
+        auto *btn = new QPushButton(label);
+        btn->setObjectName("ActionButton");
+        btn->setMinimumHeight(40);
+        btn->setCursor(Qt::PointingHandCursor);
+        btn->setToolTip(tip);
+        btn->setEnabled(false); // enabled when a version is selected below
+        rightLayout->addWidget(btn);
+        return btn;
+    };
+
+    auto *shortcutBtn = makeBtn(tr("Create shortcut"),
+        tr("Creates a .desktop shortcut in Downloads for the selected version."));
+    auto *envBtn      = makeBtn(tr("Environment Parameters"),
+        tr("Edit launch arguments and environment variables."));
+    auto *importBtn   = makeBtn(tr("Import"),
+        tr("Import a previously exported version archive."));
+    auto *exportBtn   = makeBtn(tr("Export"),
+        tr("Export the selected version as an archive."));
+
+    rightLayout->addStretch();
+    splitLayout->addWidget(rightWidget, 2); // takes 2/5 of space
+
+    outerLayout->addLayout(splitLayout);
+
+    // ── Wire buttons only when launcher available ──────────────────────────
+    if (m_launcher) {
+        connect(shortcutBtn, &QPushButton::clicked, m_launcher, &LauncherWindow::createDesktopShortcut);
+        connect(envBtn,      &QPushButton::clicked, m_launcher, &LauncherWindow::onEditConfigClicked);
+        connect(importBtn,   &QPushButton::clicked, m_launcher, &LauncherWindow::onImportClicked);
+        connect(exportBtn,   &QPushButton::clicked, m_launcher, &LauncherWindow::onExportClicked);
+
+        // Enable/disable action buttons based on list selection,
+        // and sync selection back to the launcher's versionCombo.
+        connect(versionsList, &QListWidget::currentTextChanged, m_launcher,
+            [this, shortcutBtn, envBtn, exportBtn](const QString &version) {
+                bool valid = !version.isEmpty();
+                shortcutBtn->setEnabled(valid);
+                envBtn->setEnabled(valid);
+                exportBtn->setEnabled(valid);
+                // Sync the launcher's version combo to match
+                if (m_launcher)
+                    m_launcher->versionCombo->setCurrentText(version);
+            });
+
+        // Import doesn't depend on a selected version
+        importBtn->setEnabled(true);
+
+        // Enable buttons for initial selection if any
+        if (versionsList->count() > 0) {
+            shortcutBtn->setEnabled(true);
+            envBtn->setEnabled(true);
+            exportBtn->setEnabled(true);
+        }
+    }
+
+    return widget;
+}
+
 
 
 QWidget *TrinitoWindow::createManageTab(const QString &packType,

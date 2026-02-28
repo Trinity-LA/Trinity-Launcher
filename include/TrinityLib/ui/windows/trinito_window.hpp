@@ -5,11 +5,13 @@
 #include <QListWidget>
 #include <QPushButton>
 
+class LauncherWindow; // forward declaration
+
 class TrinitoWindow : public QWidget {
     Q_OBJECT
 
 public:
-    explicit TrinitoWindow(QWidget *parent = nullptr);
+    explicit TrinitoWindow(QWidget *parent = nullptr, LauncherWindow *launcher = nullptr);
 
 private:
     QWidget *createPackTab(const QString &targetSubdir, const QString &labelText);
@@ -17,6 +19,7 @@ private:
     QWidget *createWorldTab();
     QWidget *createShadersModsTab();
     QWidget *createDirectoryTab();
+    QWidget *createInstancesTab();
     void installItem(const QString &sourcePath, const QString &targetSubdir);
 
     QWidget *createManageTab(const QString &packType, const QString &displayName);
@@ -24,6 +27,8 @@ private:
     void togglePack(const QString &packType, const QString &packName, bool enable);
 
     QString getShadersDir();
+
+    LauncherWindow *m_launcher = nullptr;
 
     QListWidget *modsList = nullptr;
     QListWidget *addonsList = nullptr;

@@ -23,19 +23,24 @@ class LauncherWindow : public QWidget {
          */
         void loadInstalledVersions();
 
-    private slots:
-        void onVersionSelected(QListWidgetItem *item);
-        void showExtractDialog();
-        void launchGame();
+        // Accessible by TrinitoWindow to sync version selection
+        void selectVersion(const QString &version);
+        QComboBox *versionCombo = nullptr; // dock version selector (public for cross-widget sync)
 
-
-        // Nuevos slots para los botones
+    public slots:
+        // Instance-action slots (also called from TrinitoWindow::Instancias tab)
         void onEditConfigClicked();
         void onExportClicked();
         void onDeleteClicked();
         void onImportClicked();
         void createDesktopShortcut();
         void onLanguageChanged(int index);
+
+    private slots:
+        void onVersionSelected(QListWidgetItem *item);
+        void onVersionComboChanged(int index);
+        void showExtractDialog();
+        void launchGame();
 
     private:
         // Layouts
@@ -67,7 +72,7 @@ class LauncherWindow : public QWidget {
         // Status Bar
         QLabel *statusLabel;
         QPushButton *shortcutButton;
-        QComboBox *languageCombo;
+        QComboBox *settingsLanguageCombo; // Language selector shown in Settings
 
         GameLauncher *m_gameLauncher;
 
@@ -78,7 +83,9 @@ class LauncherWindow : public QWidget {
         bool extractZip(const QString &zipPath, const QString &destDir);
         QWidget *createSettingsPage();
         void applyTheme(const QString &accent, const QString &bg,
-                        const QString &panel, const QString &hover);
+                        const QString &panel,  const QString &hover,
+                        const QString &btnHover  = "#334155",
+                        const QString &textMuted = "#94a3b8");
 };
 
 #endif // LAUNCHER_WINDOW_H

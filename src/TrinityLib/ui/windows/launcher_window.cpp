@@ -25,6 +25,8 @@
 #include <QListWidget>
 #include <QLocale>
 #include <QMessageBox>
+#include <QPainter>
+#include <QPixmap>
 #include <QProcess>
 #include <QProgressBar>
 #include <QPushButton>
@@ -105,10 +107,12 @@ void LauncherWindow::setupUi() {
     {
         QSettings cfg;
         applyTheme(
-            cfg.value("theme/accent", "#8b5cf6").toString(),
-            cfg.value("theme/bg",     "#020617").toString(),
-            cfg.value("theme/panel",  "#090f20").toString(),
-            cfg.value("theme/hover",  "#1e293b").toString()
+            cfg.value("theme/accent",    "#8b5cf6").toString(),
+            cfg.value("theme/bg",        "#020617").toString(),
+            cfg.value("theme/panel",     "#090f20").toString(),
+            cfg.value("theme/hover",     "#1e293b").toString(),
+            cfg.value("theme/btnHover",  "#334155").toString(),
+            cfg.value("theme/textMuted", "#94a3b8").toString()
         );
     }
 
@@ -178,168 +182,164 @@ void LauncherWindow::setupUi() {
     contentStack = new QStackedWidget();
     windowLayout->addWidget(contentStack);
 
-    // === Page 0: Trinity (Launcher) ===
+    // === Page 0: Trinity (Launcher) — Background image + floating dock ===
+
+    // Background container — uses a QLabel with scaled pixmap overlay via paintEvent.
+    // We use a plain QWidget with a stylesheet border-image for the background.
     QWidget *launcherTab = new QWidget();
-    QVBoxLayout *rootLayout = new QVBoxLayout(launcherTab);
-    rootLayout->setContentsMargins(20, 20, 20, 10);
-    rootLayout->setSpacing(15);
-
-    // --- Top Bar ---
-    QHBoxLayout *topBarLayout = new QHBoxLayout();
-
-    QLabel *logoLabel = new QLabel();
-    logoLabel->setFixedSize(40, 40);
-    // Use border-image to ensure the image respects the border-radius
-    logoLabel->setStyleSheet(
-        "border-image: url(:/branding/logo); border-radius: 60px;");
-    topBarLayout->addWidget(logoLabel);
-
-    QLabel *titleLabel = new QLabel(tr("Trinity Launcher"));
-    titleLabel->setObjectName("Title");
-    topBarLayout->addWidget(titleLabel);
-
-    topBarLayout->addStretch();
-
-    languageCombo = new QComboBox();
-    languageCombo->setFixedWidth(120);
-    languageCombo->setStyleSheet(
-        "QComboBox { background-color: #1e293b; color: white; border-radius: "
-        "5px; padding: 5px; }"
-        "QComboBox::drop-down { border: 0px; }");
-
-    languageCombo->addItem("Español", "es");
-
-    QDir translationsDir(":/i18n");
-    QStringList fileNames =
-        translationsDir.entryList(QStringList() << "trinity_*.qm", QDir::Files);
-
-    for (const QString &file : fileNames) {
-        if (file.length() <= 11)
-            continue;
-
-        QString code = file.mid(8, file.length() - 11);
-
-        if (code == "es")
-            continue;
-
-        QLocale loc(code);
-        QString nativeName = loc.nativeLanguageName();
-
-        if (!nativeName.isEmpty()) {
-            nativeName[0] = nativeName[0].toUpper();
+    launcherTab->setObjectName("LauncherTab");
+    // Load saved custom wallpaper; fall back to the built-in resource.
+    {
+        QSettings bgCfg;
+        QString savedBg = bgCfg.value("background/path", "").toString();
+        if (!savedBg.isEmpty() && QFile::exists(savedBg)) {
+            launcherTab->setStyleSheet(
+                QString("QWidget#LauncherTab {"
+                        "  border-image: url(\"%1\") 0 0 0 0 stretch stretch;"
+                        "}").arg(savedBg));
         } else {
-            nativeName = code;
+            launcherTab->setStyleSheet(
+                "QWidget#LauncherTab {"
+                "  border-image: url(:/branding/background) 0 0 0 0 stretch stretch;"
+                "}");
         }
-
-        languageCombo->addItem(nativeName, code);
     }
 
-    QSettings settings;
-    // Default to system language if not set, fallback to 'es'
-    QString systemLang = QLocale::system().name().split('_').first();
-    if (!QFile::exists(":/i18n/trinity_" + systemLang + ".qm") &&
-        systemLang != "es") {
-        systemLang = "es";
-    }
+    // Root layout for launcherTab — stacks content vertically:
+    // [stretch] then [dock row] then [status label]
+    QVBoxLayout *rootLayout = new QVBoxLayout(launcherTab);
+    rootLayout->setContentsMargins(0, 0, 0, 0);
+    rootLayout->setSpacing(0);
 
-    QString currentLang = settings.value("language", systemLang).toString();
-    int index = languageCombo->findData(currentLang);
-    if (index != -1) {
-        languageCombo->setCurrentIndex(index);
-    }
-
-    topBarLayout->addWidget(languageCombo);
-
-    extractButton = new QPushButton(tr("+ Extract APK"));
-    extractButton->setObjectName("ActionButton"); // Accent color
-    topBarLayout->addWidget(extractButton);
-
-    importButton = new QPushButton(tr("Import")); // Import button
-    importButton->setObjectName("ActionButton");
-    topBarLayout->addWidget(importButton);
-
-    rootLayout->addLayout(topBarLayout);
-
-    // --- Content Area (Split View) ---
-    QHBoxLayout *contentLayout = new QHBoxLayout();
-    contentLayout->setSpacing(20);
-
-    // Left: Version List
+    // Hidden version list — keeps all installed-version logic intact
     versionList = new QListWidget();
+    versionList->setVisible(false);
     versionList->setIconSize(QSize(48, 48));
-    versionList->setFixedWidth(400);
-    contentLayout->addWidget(versionList);
 
-    // Right: Context Panel
-    contextPanel = new QWidget();
-    contextPanel->setObjectName("ContextPanel");
-    QVBoxLayout *panelLayout = new QVBoxLayout(contextPanel);
-    panelLayout->setContentsMargins(30, 30, 30, 30);
-    panelLayout->setSpacing(15);
+    // Logo overlay — top-left of the background image
+    {
+        QHBoxLayout *topLogoRow = new QHBoxLayout();
+        topLogoRow->setContentsMargins(14, 10, 14, 0);
 
-    // Version Icon (Large)
-    versionIconLabel = new QLabel();
-    versionIconLabel->setFixedSize(80, 80);
-    versionIconLabel->setPixmap(QPixmap(":/icons/creeper"));
-    versionIconLabel->setScaledContents(true);
-    versionIconLabel->setStyleSheet("background: transparent;");
-    versionIconLabel->setAlignment(Qt::AlignCenter);
-    panelLayout->addWidget(versionIconLabel, 0, Qt::AlignCenter);
+        QLabel *logoLabel = new QLabel();
+        logoLabel->setFixedSize(38, 38);
+        logoLabel->setStyleSheet(
+            "border-image: url(:/branding/logo);"
+            "border-radius: 8px;"
+            "background: transparent;");
+        topLogoRow->addWidget(logoLabel);
+        topLogoRow->addStretch();
+        rootLayout->addLayout(topLogoRow);
+    }
 
-    // Version Info
-    versionNameLabel = new QLabel(tr("Select a version"));
-    versionNameLabel->setObjectName("VersionName");
-    versionNameLabel->setAlignment(Qt::AlignCenter);
-    panelLayout->addWidget(versionNameLabel);
+    rootLayout->addStretch();
 
-    versionTypeLabel = new QLabel("");
-    versionTypeLabel->setObjectName("VersionType");
-    versionTypeLabel->setAlignment(Qt::AlignCenter);
-    panelLayout->addWidget(versionTypeLabel);
+    // ── Floating dock ──────────────────────────────────────────────────────
+    // A semi-transparent rounded bar at the bottom of the background area.
+    QWidget *dock = new QWidget();
+    dock->setObjectName("FloatingDock");
+    dock->setStyleSheet(
+        "QWidget#FloatingDock {"
+        "  background-color: rgba(9, 15, 32, 0.82);"
+        "  border-radius: 12px;"
+        "  border: 1px solid rgba(139, 92, 246, 0.25);"
+        "}"
+    );
+    dock->setFixedHeight(72);
 
-    panelLayout->addSpacing(20);
+    QHBoxLayout *dockLayout = new QHBoxLayout(dock);
+    dockLayout->setContentsMargins(20, 10, 20, 10);
+    dockLayout->setSpacing(16);
 
-    // Actions
-    playButton = new QPushButton(tr("PLAY"));
+    // Left: Extract APK button
+    extractButton = new QPushButton(tr("Extract APK"));
+    extractButton->setObjectName("ActionButton");
+    extractButton->setFixedWidth(140);
+    extractButton->setMinimumHeight(44);
+    extractButton->setCursor(Qt::PointingHandCursor);
+    dockLayout->addWidget(extractButton);
+
+    dockLayout->addStretch();
+
+    // Center: PLAY button
+    playButton = new QPushButton(tr("▶  PLAY"));
     playButton->setObjectName("ActionButton");
-    playButton->setMinimumHeight(35);
+    playButton->setFixedWidth(180);
+    playButton->setMinimumHeight(44);
     playButton->setEnabled(false);
-    panelLayout->addWidget(playButton);
+    playButton->setCursor(Qt::PointingHandCursor);
+    playButton->setStyleSheet(
+        "QPushButton#ActionButton {"
+        "  font-size: 15px;"
+        "  font-weight: bold;"
+        "  letter-spacing: 1px;"
+        "}"
+    );
+    dockLayout->addWidget(playButton);
 
-    // Botón "Crear Acceso Directo" (debajo de JUGAR)
-    shortcutButton = new QPushButton(tr("Create Shortcut"));
-    shortcutButton->setObjectName("ActionButton");
-    shortcutButton->setMinimumHeight(35);
-    panelLayout->addWidget(shortcutButton);
+    dockLayout->addStretch();
 
-    editButton = new QPushButton(tr("Edit Config"));
-    editButton->setObjectName("ActionButton");
-    panelLayout->addWidget(editButton);
+    // Right: version combo (roller)
+    versionCombo = new QComboBox();
+    versionCombo->setFixedWidth(200);
+    versionCombo->setMinimumHeight(44);
+    versionCombo->setCursor(Qt::PointingHandCursor);
+    versionCombo->setStyleSheet(
+        "QComboBox {"
+        "  background-color: rgba(30, 41, 59, 0.85);"
+        "  color: white;"
+        "  border-radius: 8px;"
+        "  border: 1px solid rgba(139, 92, 246, 0.4);"
+        "  padding: 6px 12px;"
+        "  font-size: 13px;"
+        "}"
+        "QComboBox::drop-down { border: 0px; }"
+        "QComboBox QAbstractItemView {"
+        "  background-color: #090f20;"
+        "  selection-background-color: #8b5cf6;"
+        "  color: white;"
+        "  border-radius: 6px;"
+        "}"
+    );
+    dockLayout->addWidget(versionCombo);
 
-    QHBoxLayout *secondaryActions = new QHBoxLayout();
-    exportButton = new QPushButton(tr("Export"));
-    exportButton->setObjectName("ActionButton");
-    deleteButton = new QPushButton(tr("Delete"));
-    deleteButton->setObjectName("ActionButton");
-    secondaryActions->addWidget(exportButton);
-    secondaryActions->addWidget(deleteButton);
-    panelLayout->addLayout(secondaryActions);
+    // Wrap dock in a horizontal layout with margins so it floats above the bottom edge
+    QHBoxLayout *dockRow = new QHBoxLayout();
+    dockRow->setContentsMargins(24, 0, 24, 0);
+    dockRow->addWidget(dock);
+    rootLayout->addLayout(dockRow);
 
-    panelLayout->addStretch();
-
-    contentLayout->addWidget(contextPanel);
-    rootLayout->addLayout(contentLayout);
-
-    // --- Status Bar ---
+    // Status bar — small translucent label below the dock
     statusLabel = new QLabel(tr("Ready"));
     statusLabel->setObjectName("Status");
+    statusLabel->setAlignment(Qt::AlignCenter);
+    statusLabel->setStyleSheet(
+        "QLabel#Status {"
+        "  font-size: 11px;"
+        "  color: rgba(148, 163, 184, 0.8);"
+        "  background: transparent;"
+        "  padding: 4px 0px 6px 0px;"
+        "}"
+    );
     rootLayout->addWidget(statusLabel);
+
+    // Placeholder members that were used by old context panel — kept to avoid linker errors
+    versionIconLabel  = new QLabel(); versionIconLabel->setVisible(false);  versionIconLabel->setParent(launcherTab);
+    versionNameLabel  = new QLabel(); versionNameLabel->setVisible(false);  versionNameLabel->setParent(launcherTab);
+    versionTypeLabel  = new QLabel(); versionTypeLabel->setVisible(false);  versionTypeLabel->setParent(launcherTab);
+    contextPanel      = new QWidget(); contextPanel->setVisible(false);     contextPanel->setParent(launcherTab);
+    shortcutButton    = new QPushButton(); shortcutButton->setVisible(false); shortcutButton->setParent(launcherTab);
+    editButton        = new QPushButton(); editButton->setVisible(false);     editButton->setParent(launcherTab);
+    exportButton      = new QPushButton(); exportButton->setVisible(false);   exportButton->setParent(launcherTab);
+    deleteButton      = new QPushButton(); deleteButton->setVisible(false);   deleteButton->setParent(launcherTab);
+    importButton      = new QPushButton(); importButton->setVisible(false);   importButton->setParent(launcherTab);
 
     // Add launcher page to stack
     contentStack->addWidget(launcherTab);
 
+
     // === Page 1: Gestor de Contenido (Trinito) ===
-    TrinitoWindow *contentManager = new TrinitoWindow(this);
+    TrinitoWindow *contentManager = new TrinitoWindow(this, this);
     contentStack->addWidget(contentManager);
 
     // === Page 2: Discord ===
@@ -554,8 +554,8 @@ void LauncherWindow::setupConnections() {
             &LauncherWindow::launchGame);
     connect(versionList, &QListWidget::itemClicked, this,
             &LauncherWindow::onVersionSelected);
-    connect(importButton, &QPushButton::clicked, this,
-            &LauncherWindow::onImportClicked);
+    connect(versionCombo, QOverload<int>::of(&QComboBox::currentIndexChanged),
+            this, &LauncherWindow::onVersionComboChanged);
     connect(shortcutButton, &QPushButton::clicked, this,
             &LauncherWindow::createDesktopShortcut);
     // Conecta los nuevos botones
@@ -565,26 +565,28 @@ void LauncherWindow::setupConnections() {
             &LauncherWindow::onExportClicked);
     connect(deleteButton, &QPushButton::clicked, this,
             &LauncherWindow::onDeleteClicked);
-    connect(languageCombo, QOverload<int>::of(&QComboBox::currentIndexChanged),
-            this, &LauncherWindow::onLanguageChanged);
+    connect(importButton, &QPushButton::clicked, this,
+            &LauncherWindow::onImportClicked);
 }
 
 void LauncherWindow::loadInstalledVersions() {
     versionList->clear();
+    versionCombo->clear();
     VersionManager vm;
     QStringList versions = vm.getInstalledVersions();
 
     for (const QString &v : versions) {
         QListWidgetItem *item = new QListWidgetItem(v);
-        // Try to set an icon if available, otherwise use a default style
         item->setIcon(QIcon(":/icons/cube"));
         item->setTextAlignment(Qt::AlignLeft | Qt::AlignVCenter);
         versionList->addItem(item);
+        versionCombo->addItem(v);
     }
 
     if (versionList->count() > 0) {
         versionList->setCurrentRow(0);
         onVersionSelected(versionList->item(0));
+        versionCombo->setCurrentIndex(0);
     } else {
         updateContextPanel("");
     }
@@ -594,6 +596,23 @@ void LauncherWindow::onVersionSelected(QListWidgetItem *item) {
     if (!item)
         return;
     updateContextPanel(item->text());
+    // Sync versionCombo to match
+    int idx = versionCombo->findText(item->text());
+    if (idx != -1)
+        versionCombo->setCurrentIndex(idx);
+}
+
+void LauncherWindow::onVersionComboChanged(int index) {
+    if (index < 0) return;
+    QString version = versionCombo->itemText(index);
+    // Sync hidden versionList
+    for (int i = 0; i < versionList->count(); ++i) {
+        if (versionList->item(i)->text() == version) {
+            versionList->setCurrentRow(i);
+            break;
+        }
+    }
+    updateContextPanel(version);
 }
 
 void LauncherWindow::updateContextPanel(const QString &versionName) {
@@ -678,9 +697,9 @@ void LauncherWindow::showExtractDialog() {
 }
 
 void LauncherWindow::launchGame() {
-    if (versionList->selectedItems().isEmpty())
+    QString selectedVersion = versionCombo->currentText();
+    if (selectedVersion.isEmpty())
         return;
-    QString selectedVersion = versionList->selectedItems().first()->text();
 
     QString errorMsg;
 
@@ -688,19 +707,18 @@ void LauncherWindow::launchGame() {
         QMessageBox::critical(this, "Error", errorMsg);
         return;
     }
-    // QApplication::quit();
     this->hide();
 }
 
 
 
 void LauncherWindow::onEditConfigClicked() {
-    if (versionList->selectedItems().isEmpty()) {
+    QString selectedVersion = versionCombo->currentText();
+    if (selectedVersion.isEmpty()) {
         QMessageBox::warning(this, tr("Advertencia"),
                              tr("No hay ningún versión seleccionada."));
         return;
     }
-    QString selectedVersion = versionList->selectedItems().first()->text();
 
     // Diálogo simple de edición
     QDialog dialog(this);
@@ -751,23 +769,23 @@ void LauncherWindow::onEditConfigClicked() {
 }
 
 void LauncherWindow::onExportClicked() {
-    if (versionList->selectedItems().isEmpty()) {
+    QString selectedVersion = versionCombo->currentText();
+    if (selectedVersion.isEmpty()) {
         QMessageBox::warning(this, tr("Advertencia"),
                              tr("No hay ningún versión seleccionada."));
         return;
     }
-    QString selectedVersion = versionList->selectedItems().first()->text();
 
     exporter->exportVersion(selectedVersion);
 }
 
 void LauncherWindow::onDeleteClicked() {
-    if (versionList->selectedItems().isEmpty()) {
+    QString selectedVersion = versionCombo->currentText();
+    if (selectedVersion.isEmpty()) {
         QMessageBox::warning(this, tr("Advertencia"),
                              tr("No hay ningún versión seleccionada."));
         return;
     }
-    QString selectedVersion = versionList->selectedItems().first()->text();
 
     int r = QMessageBox::warning(
         this, tr("Advertencia"),
@@ -819,16 +837,20 @@ bool LauncherWindow::copyDirectory(const QString &srcPath,
     return true;
 }
 
+void LauncherWindow::selectVersion(const QString &version) {
+    if (versionCombo)
+        versionCombo->setCurrentText(version);
+}
+
 void LauncherWindow::onImportClicked() { exporter->importVersion(); }
 
 void LauncherWindow::createDesktopShortcut() {
-    if (versionList->selectedItems().isEmpty()) {
+    QString selectedVersion = versionCombo->currentText();
+    if (selectedVersion.isEmpty()) {
         QMessageBox::warning(this, tr("Advertencia"),
                              tr("No hay ningún versión seleccionada."));
         return;
     }
-
-    QString selectedVersion = versionList->selectedItems().first()->text();
 
     // Obtener la ruta de la versión
     VersionManager vm;
@@ -903,7 +925,7 @@ void LauncherWindow::createDesktopShortcut() {
 }
 
 void LauncherWindow::onLanguageChanged(int index) {
-    QString langCode = languageCombo->itemData(index).toString();
+    QString langCode = settingsLanguageCombo->itemData(index).toString();
 
     QSettings settings;
     settings.setValue("language", langCode);
@@ -913,7 +935,7 @@ void LauncherWindow::onLanguageChanged(int index) {
         this, tr("Se necesita reiniciar"),
         tr("El idioma cambiará a '%1'.\n¿Deseas reiniciar la aplicación ahora "
            "para aplicar los cambios?")
-            .arg(languageCombo->currentText()),
+            .arg(settingsLanguageCombo->currentText()),
         QMessageBox::Yes | QMessageBox::No, QMessageBox::Yes);
 
     if (r == QMessageBox::Yes) {
@@ -932,7 +954,9 @@ void LauncherWindow::onLanguageChanged(int index) {
 void LauncherWindow::applyTheme(const QString &accent,
                                 const QString &bg,
                                 const QString &panel,
-                                const QString &hover) {
+                                const QString &hover,
+                                const QString &btnHover,
+                                const QString &textMuted) {
     QString ss =
         QString(
             "QWidget { background-color: %2; color: #ffffff; "
@@ -946,54 +970,62 @@ void LauncherWindow::applyTheme(const QString &accent,
             "QPushButton { background-color: %4; border: none; "
             "border-radius: 6px; padding: 8px 16px; color: #ffffff; "
             "font-weight: bold; }"
-            "QPushButton:hover { background-color: #334155; }"
-            "QPushButton:pressed { background-color: #0f172a; }"
+            "QPushButton:hover { background-color: %5; }"
+            "QPushButton:pressed { background-color: %2; }"
             "QPushButton#ActionButton { background-color: %1; color: #ffffff; }"
             "QPushButton#ActionButton:hover { background-color: %1; opacity: 0.85; }"
             "QLabel#Title { font-size: 18px; font-weight: bold; color: %1; background: transparent; }"
             "QLabel#VersionName { font-size: 24px; font-weight: bold; background: transparent; }"
-            "QLabel#VersionType { font-size: 14px; color: #94a3b8; background: transparent; }"
-            "QLabel#Status { font-size: 12px; color: #64748b; padding: 5px; background: transparent; }"
+            "QLabel#VersionType { font-size: 14px; color: %6; background: transparent; }"
+            "QLabel#Status { font-size: 12px; color: %6; padding: 5px; background: transparent; }"
             "QWidget#ContextPanel { background-color: %3; border-radius: 12px; }"
             "QWidget#Sidebar { background-color: %2; }"
             "QPushButton#SidebarBtn { background: transparent; border: none; "
             "border-left: 3px solid transparent; border-radius: 0px; padding: 14px; }"
-            "QPushButton#SidebarBtn:hover { background: #0a0f1f; }"
+            "QPushButton#SidebarBtn:hover { background: %5; }"
             "QPushButton#SidebarBtnActive { background: transparent; border: none; "
             "border-left: 3px solid %1; border-radius: 0px; padding: 14px; }"
             "QTabWidget::pane { border: 1px solid %4; background-color: %3; border-radius: 8px; top: -1px; }"
-            "QTabBar::tab { background: %4; color: #94a3b8; padding: 10px 20px; "
+            "QTabBar::tab { background: %4; color: %6; padding: 10px 20px; "
             "border-top-left-radius: 6px; border-top-right-radius: 6px; margin-right: 4px; border: none; }"
             "QTabBar::tab:selected { background: %1; color: #ffffff; }"
-            "QTabBar::tab:hover { background: #334155; }"
+            "QTabBar::tab:hover { background: %5; }"
         )
-        .arg(accent)   // %1
-        .arg(bg)       // %2
-        .arg(panel)    // %3
-        .arg(hover);   // %4
+        .arg(accent)    // %1
+        .arg(bg)        // %2
+        .arg(panel)     // %3
+        .arg(hover)     // %4
+        .arg(btnHover)  // %5
+        .arg(textMuted);// %6
 
     qApp->setStyleSheet(ss);
 
     // Persistir
     QSettings settings;
-    settings.setValue("theme/accent", accent);
-    settings.setValue("theme/bg",     bg);
-    settings.setValue("theme/panel",  panel);
-    settings.setValue("theme/hover",  hover);
+    settings.setValue("theme/accent",    accent);
+    settings.setValue("theme/bg",        bg);
+    settings.setValue("theme/panel",     panel);
+    settings.setValue("theme/hover",     hover);
+    settings.setValue("theme/btnHover",  btnHover);
+    settings.setValue("theme/textMuted", textMuted);
 }
 
 QWidget *LauncherWindow::createSettingsPage() {
     // Defaults
-    const QString DEF_ACCENT = "#8b5cf6";
-    const QString DEF_BG     = "#020617";
-    const QString DEF_PANEL  = "#090f20";
-    const QString DEF_HOVER  = "#1e293b";
+    const QString DEF_ACCENT    = "#8b5cf6";
+    const QString DEF_BG        = "#020617";
+    const QString DEF_PANEL     = "#090f20";
+    const QString DEF_HOVER     = "#1e293b";
+    const QString DEF_BTNHOVER  = "#334155";
+    const QString DEF_TEXTMUTED = "#94a3b8";
 
     QSettings cfg;
-    QString accent = cfg.value("theme/accent", DEF_ACCENT).toString();
-    QString bg     = cfg.value("theme/bg",     DEF_BG).toString();
-    QString panel  = cfg.value("theme/panel",  DEF_PANEL).toString();
-    QString hover  = cfg.value("theme/hover",  DEF_HOVER).toString();
+    QString accent    = cfg.value("theme/accent",    DEF_ACCENT).toString();
+    QString bg        = cfg.value("theme/bg",        DEF_BG).toString();
+    QString panel     = cfg.value("theme/panel",     DEF_PANEL).toString();
+    QString hover     = cfg.value("theme/hover",     DEF_HOVER).toString();
+    QString btnHover  = cfg.value("theme/btnHover",  DEF_BTNHOVER).toString();
+    QString textMuted = cfg.value("theme/textMuted", DEF_TEXTMUTED).toString();
 
     auto *page = new QWidget();
     auto *outerLayout = new QVBoxLayout(page);
@@ -1016,6 +1048,72 @@ QWidget *LauncherWindow::createSettingsPage() {
     layout->addWidget(titleLabel);
 
     // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+    // SECCIÓN: Idioma / Language
+    // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+    auto *langSection = new QLabel(tr("Language"));
+    langSection->setStyleSheet("font-size: 16px; font-weight: bold; color: #94a3b8;");
+    layout->addWidget(langSection);
+
+    auto *langSeparator = new QFrame();
+    langSeparator->setFrameShape(QFrame::HLine);
+    langSeparator->setStyleSheet("color: #1e293b;");
+    layout->addWidget(langSeparator);
+
+    {
+        auto *langRow = new QHBoxLayout();
+        auto *langLabel = new QLabel(tr("Interface language:"));
+        langLabel->setStyleSheet("font-size: 14px;");
+        langLabel->setMinimumWidth(180);
+
+        settingsLanguageCombo = new QComboBox();
+        settingsLanguageCombo->setFixedWidth(180);
+        settingsLanguageCombo->setStyleSheet(
+            "QComboBox { background-color: #1e293b; color: white; border-radius: "
+            "6px; padding: 6px 10px; font-size: 13px; }"
+            "QComboBox::drop-down { border: 0px; }"
+            "QComboBox QAbstractItemView { background-color: #090f20; "
+            "selection-background-color: #8b5cf6; color: white; }");
+
+        settingsLanguageCombo->addItem("Espa\u00f1ol", "es");
+
+        QDir translationsDir(":/i18n");
+        QStringList langFiles =
+            translationsDir.entryList(QStringList() << "trinity_*.qm", QDir::Files);
+
+        for (const QString &file : langFiles) {
+            if (file.length() <= 11) continue;
+            QString code = file.mid(8, file.length() - 11);
+            if (code == "es") continue;
+            QLocale loc(code);
+            QString nativeName = loc.nativeLanguageName();
+            if (!nativeName.isEmpty())
+                nativeName[0] = nativeName[0].toUpper();
+            else
+                nativeName = code;
+            settingsLanguageCombo->addItem(nativeName, code);
+        }
+
+        QSettings settings;
+        QString systemLang = QLocale::system().name().split('_').first();
+        if (!QFile::exists(":/i18n/trinity_" + systemLang + ".qm") && systemLang != "es")
+            systemLang = "es";
+        QString currentLang = settings.value("language", systemLang).toString();
+        int langIdx = settingsLanguageCombo->findData(currentLang);
+        if (langIdx != -1)
+            settingsLanguageCombo->setCurrentIndex(langIdx);
+
+        connect(settingsLanguageCombo, QOverload<int>::of(&QComboBox::currentIndexChanged),
+                this, &LauncherWindow::onLanguageChanged);
+
+        langRow->addWidget(langLabel);
+        langRow->addWidget(settingsLanguageCombo);
+        langRow->addStretch();
+        layout->addLayout(langRow);
+    }
+
+    layout->addSpacing(12);
+
+    // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
     // SECCIÓN: Colores del tema
     // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
     auto *colorSection = new QLabel(tr("UI Colors"));
@@ -1034,11 +1132,12 @@ QWidget *LauncherWindow::createSettingsPage() {
         QString settingKey;
     };
 
-    // Almacenar los colores actuales en variables locales (capturadas por lambda)
-    auto *accentVal = new QString(accent);
-    auto *bgVal     = new QString(bg);
-    auto *panelVal  = new QString(panel);
-    auto *hoverVal  = new QString(hover);
+    auto *accentVal    = new QString(accent);
+    auto *bgVal        = new QString(bg);
+    auto *panelVal     = new QString(panel);
+    auto *hoverVal     = new QString(hover);
+    auto *btnHoverVal  = new QString(btnHover);
+    auto *textMutedVal = new QString(textMuted);
 
     auto makeColorRow = [&](const QString &labelText, QString *colorRef,
                             const QString &settingKey) {
@@ -1060,7 +1159,8 @@ QWidget *LauncherWindow::createSettingsPage() {
         hexLabel->setMinimumWidth(80);
 
         connect(preview, &QPushButton::clicked, this,
-                [this, preview, hexLabel, colorRef, accentVal, bgVal, panelVal, hoverVal]() {
+                [this, preview, hexLabel, colorRef,
+                 accentVal, bgVal, panelVal, hoverVal, btnHoverVal, textMutedVal]() {
                     QColor initial(*colorRef);
                     QColor chosen = QColorDialog::getColor(initial, this, tr("Select Color"));
                     if (!chosen.isValid()) return;
@@ -1069,7 +1169,7 @@ QWidget *LauncherWindow::createSettingsPage() {
                         QString("background-color: %1; border-radius: 6px; border: 2px solid #334155;")
                             .arg(*colorRef));
                     hexLabel->setText(*colorRef);
-                    applyTheme(*accentVal, *bgVal, *panelVal, *hoverVal);
+                    applyTheme(*accentVal, *bgVal, *panelVal, *hoverVal, *btnHoverVal, *textMutedVal);
                 });
 
         row->addWidget(lbl);
@@ -1079,28 +1179,139 @@ QWidget *LauncherWindow::createSettingsPage() {
         layout->addLayout(row);
     };
 
-    makeColorRow(tr("Accent color"),     accentVal, "theme/accent");
-    makeColorRow(tr("Background color"), bgVal,     "theme/bg");
-    makeColorRow(tr("Panel color"),      panelVal,  "theme/panel");
-    makeColorRow(tr("Hover color"),      hoverVal,  "theme/hover");
+    makeColorRow(tr("Accent color"),        accentVal,    "theme/accent");
+    makeColorRow(tr("Background color"),    bgVal,        "theme/bg");
+    makeColorRow(tr("Panel color"),         panelVal,     "theme/panel");
+    makeColorRow(tr("Hover / border color"),hoverVal,     "theme/hover");
+    makeColorRow(tr("Button hover color"),  btnHoverVal,  "theme/btnHover");
+    makeColorRow(tr("Muted text color"),    textMutedVal, "theme/textMuted");
+
 
     // Botón Reset de colores
     auto *resetColorsBtn = new QPushButton(tr("Reset Colors to Default"));
     resetColorsBtn->setObjectName("ActionButton");
     resetColorsBtn->setMaximumWidth(240);
     connect(resetColorsBtn, &QPushButton::clicked, this,
-            [this, accentVal, bgVal, panelVal, hoverVal,
-             DEF_ACCENT, DEF_BG, DEF_PANEL, DEF_HOVER]() {
-                *accentVal = DEF_ACCENT;
-                *bgVal     = DEF_BG;
-                *panelVal  = DEF_PANEL;
-                *hoverVal  = DEF_HOVER;
-                applyTheme(DEF_ACCENT, DEF_BG, DEF_PANEL, DEF_HOVER);
-                // Reconstruir la página recargando Settings para reflejar los previews
+            [this, accentVal, bgVal, panelVal, hoverVal, btnHoverVal, textMutedVal,
+             DEF_ACCENT, DEF_BG, DEF_PANEL, DEF_HOVER, DEF_BTNHOVER, DEF_TEXTMUTED]() {
+                *accentVal    = DEF_ACCENT;
+                *bgVal        = DEF_BG;
+                *panelVal     = DEF_PANEL;
+                *hoverVal     = DEF_HOVER;
+                *btnHoverVal  = DEF_BTNHOVER;
+                *textMutedVal = DEF_TEXTMUTED;
+                applyTheme(DEF_ACCENT, DEF_BG, DEF_PANEL, DEF_HOVER, DEF_BTNHOVER, DEF_TEXTMUTED);
                 QMessageBox::information(this, tr("Settings"),
                     tr("Colors reset to default. Reopen Settings to see the updated previews."));
             });
     layout->addWidget(resetColorsBtn);
+
+    layout->addSpacing(12);
+
+    // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+    // SECCIÓN: Wallpaper / Background
+    // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+    auto *wallpaperSection = new QLabel(tr("Wallpaper"));
+    wallpaperSection->setStyleSheet("font-size: 16px; font-weight: bold; color: #94a3b8;");
+    layout->addWidget(wallpaperSection);
+
+    auto *wallpaperSep = new QFrame();
+    wallpaperSep->setFrameShape(QFrame::HLine);
+    wallpaperSep->setStyleSheet("color: #1e293b;");
+    layout->addWidget(wallpaperSep);
+
+    {
+        auto *wpRow = new QHBoxLayout();
+
+        // Current background preview
+        auto *wpPreview = new QLabel();
+        wpPreview->setFixedSize(120, 68);
+        wpPreview->setAlignment(Qt::AlignCenter);
+        wpPreview->setStyleSheet(
+            "border-radius: 8px; border: 2px solid #334155; background: #0f172a;");
+        wpPreview->setScaledContents(true);
+
+        // Load currently set background
+        QSettings bgCfg;
+        QString savedBg = bgCfg.value("background/path", "").toString();
+        if (!savedBg.isEmpty() && QFile::exists(savedBg))
+            wpPreview->setPixmap(QPixmap(savedBg).scaled(120, 68, Qt::KeepAspectRatioByExpanding, Qt::SmoothTransformation));
+        else
+            wpPreview->setPixmap(QPixmap(":/branding/background").scaled(120, 68, Qt::KeepAspectRatioByExpanding, Qt::SmoothTransformation));
+
+        auto *wpInfoLayout = new QVBoxLayout();
+        auto *wpPathLabel = new QLabel(savedBg.isEmpty() ? tr("Default background") : QFileInfo(savedBg).fileName());
+        wpPathLabel->setStyleSheet("font-size: 12px; color: #94a3b8;");
+        wpPathLabel->setWordWrap(true);
+        wpInfoLayout->addWidget(wpPathLabel);
+
+        auto *wpBtnRow = new QHBoxLayout();
+
+        auto *wpChangeBtn = new QPushButton(tr("Change..."));
+        wpChangeBtn->setObjectName("ActionButton");
+        wpChangeBtn->setMaximumWidth(120);
+        wpChangeBtn->setCursor(Qt::PointingHandCursor);
+
+        auto *wpResetBtn = new QPushButton(tr("Reset"));
+        wpResetBtn->setMaximumWidth(80);
+        wpResetBtn->setCursor(Qt::PointingHandCursor);
+
+        wpBtnRow->addWidget(wpChangeBtn);
+        wpBtnRow->addWidget(wpResetBtn);
+        wpBtnRow->addStretch();
+        wpInfoLayout->addLayout(wpBtnRow);
+        wpInfoLayout->addStretch();
+
+        wpRow->addWidget(wpPreview);
+        wpRow->addSpacing(16);
+        wpRow->addLayout(wpInfoLayout);
+        wpRow->addStretch();
+        layout->addLayout(wpRow);
+
+        // Change button: pick image file, save path, update preview & home tab
+        connect(wpChangeBtn, &QPushButton::clicked, this,
+            [this, wpPreview, wpPathLabel]() {
+                QString path = QFileDialog::getOpenFileName(
+                    this, tr("Select background image"), QDir::homePath(),
+                    tr("Images (*.png *.jpg *.jpeg *.bmp *.webp);;All files (*)"));
+                if (path.isEmpty()) return;
+
+                QSettings bgCfg;
+                bgCfg.setValue("background/path", path);
+                bgCfg.sync();
+
+                wpPreview->setPixmap(QPixmap(path).scaled(120, 68, Qt::KeepAspectRatioByExpanding, Qt::SmoothTransformation));
+                wpPathLabel->setText(QFileInfo(path).fileName());
+
+                // Apply immediately: find the LauncherTab widget and update its style
+                QWidget *launcherTab = contentStack->widget(0);
+                if (launcherTab) {
+                    launcherTab->setStyleSheet(
+                        QString("QWidget#LauncherTab {"
+                                "  border-image: url(\"%1\") 0 0 0 0 stretch stretch;"
+                                "}").arg(path));
+                }
+            });
+
+        // Reset button: clear saved path, revert to built-in background
+        connect(wpResetBtn, &QPushButton::clicked, this,
+            [this, wpPreview, wpPathLabel]() {
+                QSettings bgCfg;
+                bgCfg.remove("background/path");
+                bgCfg.sync();
+
+                wpPreview->setPixmap(QPixmap(":/branding/background").scaled(120, 68, Qt::KeepAspectRatioByExpanding, Qt::SmoothTransformation));
+                wpPathLabel->setText(tr("Default background"));
+
+                QWidget *launcherTab = contentStack->widget(0);
+                if (launcherTab) {
+                    launcherTab->setStyleSheet(
+                        "QWidget#LauncherTab {"
+                        "  border-image: url(:/branding/background) 0 0 0 0 stretch stretch;"
+                        "}");
+                }
+            });
+    }
 
     layout->addSpacing(12);
 

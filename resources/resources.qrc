@@ -12,5 +12,6 @@
     </qresource>
     <qresource prefix="/branding">
         <file alias="logo">branding/logo_full.png</file>
+        <file alias="background">branding/background.png</file>
     </qresource>
 </RCC>
