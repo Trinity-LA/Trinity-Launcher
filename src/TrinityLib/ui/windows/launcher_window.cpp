@@ -216,7 +216,7 @@ void LauncherWindow::setupUi() {
     versionList->setVisible(false);
     versionList->setIconSize(QSize(48, 48));
 
-    // Logo overlay — top-left of the background image
+    // Logo overlay — top-right of the background image
     {
         QHBoxLayout *topLogoRow = new QHBoxLayout();
         topLogoRow->setContentsMargins(14, 10, 14, 0);
@@ -227,8 +227,8 @@ void LauncherWindow::setupUi() {
             "border-image: url(:/branding/logo);"
             "border-radius: 8px;"
             "background: transparent;");
-        topLogoRow->addWidget(logoLabel);
         topLogoRow->addStretch();
+        topLogoRow->addWidget(logoLabel);
         rootLayout->addLayout(topLogoRow);
     }
 
