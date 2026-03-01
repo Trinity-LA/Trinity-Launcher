@@ -931,7 +931,7 @@ Do you want to restart the application now to apply the changes?</source>
     <message>
         <location filename="../../src/TrinityLib/ui/windows/trinito_window.cpp" line="53" />
         <source>Directory</source>
-        <translation>Directory</translation>
+        <translation>Directorio</translation>
     </message>
     <message>
         <location filename="../../src/TrinityLib/ui/windows/trinito_window.cpp" line="68" />
