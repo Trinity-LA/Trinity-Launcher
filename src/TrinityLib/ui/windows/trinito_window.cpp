@@ -830,7 +830,7 @@ QWidget *TrinitoWindow::createShadersModsTab() {
     shadersLayout->setSpacing(8);
 
     auto *shadersTitle = new QLabel(tr("Installed Shaders"));
-    shadersTitle->setStyleSheet("font-weight: bold; font-size: 14px; color: #8b5cf6;");
+    shadersTitle->setStyleSheet("font-weight: bold; font-size: 14px; color: #8b5cf6; background: transparent;");
     shadersLayout->addWidget(shadersTitle);
 
     auto *shadersSep = new QFrame();
@@ -839,10 +839,6 @@ QWidget *TrinitoWindow::createShadersModsTab() {
     shadersLayout->addWidget(shadersSep);
 
     shadersList = new QListWidget();
-    shadersList->setStyleSheet(
-        "QListWidget { border-radius: 6px; padding: 4px; outline: 0; }"
-        "QListWidget::item { padding: 6px; border-radius: 4px; margin-bottom: 2px; }"
-    );
     shadersLayout->addWidget(shadersList, 1); // stretch=1 → toma el espacio disponible
 
     // Botones de shaders en columna
@@ -873,7 +869,7 @@ QWidget *TrinitoWindow::createShadersModsTab() {
     libsLayout->setSpacing(8);
 
     auto *libsTitle = new QLabel(tr("Manage Libs"));
-    libsTitle->setStyleSheet("font-weight: bold; font-size: 14px; color: #8b5cf6;");
+    libsTitle->setStyleSheet("font-weight: bold; font-size: 14px; color: #8b5cf6; background: transparent;");
     libsLayout->addWidget(libsTitle);
 
     auto *libsSep = new QFrame();
@@ -883,14 +879,10 @@ QWidget *TrinitoWindow::createShadersModsTab() {
 
     // Available Libs
     auto *availableLibsLabel = new QLabel(tr("Available libs:"));
-    availableLibsLabel->setStyleSheet("font-size: 12px; color: #94a3b8;");
+    availableLibsLabel->setStyleSheet("font-size: 12px; color: #94a3b8; background: transparent;");
     libsLayout->addWidget(availableLibsLabel);
 
     availableModsList = new QListWidget();
-    availableModsList->setStyleSheet(
-        "QListWidget { border-radius: 6px; padding: 4px; outline: 0; }"
-        "QListWidget::item { padding: 6px; border-radius: 4px; margin-bottom: 2px; }"
-    );
     libsLayout->addWidget(availableModsList, 1);
 
     downloadModButton = new QPushButton(tr("Download Selected Lib"));
@@ -903,14 +895,10 @@ QWidget *TrinitoWindow::createShadersModsTab() {
 
     // Installed Libs
     auto *installedLibsLabel = new QLabel(tr("Installed libs (✓ = active):"));
-    installedLibsLabel->setStyleSheet("font-size: 12px; color: #94a3b8;");
+    installedLibsLabel->setStyleSheet("font-size: 12px; color: #94a3b8; background: transparent;");
     libsLayout->addWidget(installedLibsLabel);
 
     installedModsList = new QListWidget();
-    installedModsList->setStyleSheet(
-        "QListWidget { border-radius: 6px; padding: 4px; outline: 0; }"
-        "QListWidget::item { padding: 6px; border-radius: 4px; margin-bottom: 2px; }"
-    );
     libsLayout->addWidget(installedModsList, 1);
 
     removeInstalledModButton = new QPushButton(tr("Delete Selected Lib"));
