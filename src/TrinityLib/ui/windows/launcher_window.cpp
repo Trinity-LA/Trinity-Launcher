@@ -1204,7 +1204,6 @@ QWidget *LauncherWindow::createSettingsPage() {
     // Botón Reset de colores
     auto *resetColorsBtn = new QPushButton(tr("Reset Colors to Default"));
     resetColorsBtn->setObjectName("ActionButton");
-    resetColorsBtn->setMaximumWidth(240);
     connect(resetColorsBtn, &QPushButton::clicked, this,
             [this, accentVal, bgVal, panelVal, hoverVal, btnHoverVal, textMutedVal,
              DEF_ACCENT, DEF_BG, DEF_PANEL, DEF_HOVER, DEF_BTNHOVER, DEF_TEXTMUTED]() {
@@ -1218,7 +1217,10 @@ QWidget *LauncherWindow::createSettingsPage() {
                 QMessageBox::information(this, tr("Settings"),
                     tr("Colors reset to default. Reopen Settings to see the updated previews."));
             });
-    layout->addWidget(resetColorsBtn);
+    auto *resetColRow = new QHBoxLayout();
+    resetColRow->addWidget(resetColorsBtn);
+    resetColRow->addStretch();
+    layout->addLayout(resetColRow);
 
     layout->addSpacing(12);
 
@@ -1263,11 +1265,9 @@ QWidget *LauncherWindow::createSettingsPage() {
 
         auto *wpChangeBtn = new QPushButton(tr("Change..."));
         wpChangeBtn->setObjectName("ActionButton");
-        wpChangeBtn->setMaximumWidth(120);
         wpChangeBtn->setCursor(Qt::PointingHandCursor);
 
         auto *wpResetBtn = new QPushButton(tr("Reset"));
-        wpResetBtn->setMaximumWidth(80);
         wpResetBtn->setCursor(Qt::PointingHandCursor);
 
         wpBtnRow->addWidget(wpChangeBtn);
@@ -1383,7 +1383,6 @@ QWidget *LauncherWindow::createSettingsPage() {
         nameLbl->setMinimumWidth(180);
 
         auto *changeBtn = new QPushButton(tr("Change..."));
-        changeBtn->setMaximumWidth(100);
         changeBtn->setCursor(Qt::PointingHandCursor);
 
         // Captura por valor para la lambda
@@ -1428,7 +1427,6 @@ QWidget *LauncherWindow::createSettingsPage() {
     // Botón Reset de iconos
     auto *resetIconsBtn = new QPushButton(tr("Reset Icons to Default"));
     resetIconsBtn->setObjectName("ActionButton");
-    resetIconsBtn->setMaximumWidth(240);
     connect(resetIconsBtn, &QPushButton::clicked, this,
             [this, icons]() {
                 QSettings icfg;
@@ -1439,7 +1437,10 @@ QWidget *LauncherWindow::createSettingsPage() {
                 QMessageBox::information(this, tr("Settings"),
                     tr("Icons reset to default. Reopen Settings to see the updated previews."));
             });
-    layout->addWidget(resetIconsBtn);
+    auto *resetIconRow = new QHBoxLayout();
+    resetIconRow->addWidget(resetIconsBtn);
+    resetIconRow->addStretch();
+    layout->addLayout(resetIconRow);
 
     layout->addStretch();
     scrollArea->setWidget(content);
