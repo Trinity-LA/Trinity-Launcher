@@ -14,13 +14,13 @@ void VersionSelector::refreshVersions() {
         addItems(versions);
         setEnabled(true);
     } else {
-        addItem(tr("No hay versiones instaladas"));
+        addItem(tr("No versions installed"));
         setEnabled(false);
     }
 }
 
 QString VersionSelector::getSelectedVersion() const {
-    if (!isEnabled() || currentText() == tr("No hay versiones instaladas")) {
+    if (!isEnabled() || currentText() == tr("No versions installed")) {
         return QString();
     }
     return currentText();

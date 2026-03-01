@@ -30,7 +30,7 @@
 
 TrinitoWindow::TrinitoWindow(QWidget *parent, LauncherWindow *launcher)
     : QWidget(parent), m_launcher(launcher) {
-    setWindowTitle(tr(" Gestor de Contenido para Bedrock"));
+    setWindowTitle(tr("Content Manager for Bedrock"));
     resize(820, 500);
 
     auto *layout = new QVBoxLayout(this);
@@ -38,15 +38,15 @@ TrinitoWindow::TrinitoWindow(QWidget *parent, LauncherWindow *launcher)
     layout->addWidget(tabs);
 
     // Primera pestaña: Instancias
-    tabs->addTab(createInstancesTab(), tr("Instancias"));
+    tabs->addTab(createInstancesTab(), tr("Instances"));
 
     // Pestañas de instalación (como antes)
     tabs->addTab(createPackTab("behavior_packs", tr("Behavior Pack (mods)")),
                  tr("Mods"));
     tabs->addTab(createPackTab("resource_packs", tr("Resource Pack")),
-                 tr("Texturas"));
-    tabs->addTab(createDevTab(), tr("Desarrollo"));
-    tabs->addTab(createWorldTab(), tr("Mundos"));
+                 tr("Textures"));
+    tabs->addTab(createDevTab(), tr("Development"));
+    tabs->addTab(createWorldTab(), tr("Worlds"));
     // Añadir la nueva pestaña de Shaders/Mods
     tabs->addTab(createShadersModsTab(), tr("Shaders/Libs"));
     // Pestaña de directorio de datos
@@ -186,7 +186,7 @@ QWidget *TrinitoWindow::createManageTab(const QString &packType,
     auto *widget = new QWidget();
     auto *layout = new QVBoxLayout(widget);
 
-    QLabel *label = new QLabel(tr("Lista de %1 instalados:").arg(displayName));
+    QLabel *label = new QLabel(tr("List of installed %1:").arg(displayName));
     layout->addWidget(label);
 
     QListWidget *listWidget = new QListWidget();
@@ -206,7 +206,7 @@ QWidget *TrinitoWindow::createManageTab(const QString &packType,
     loadPacks(packType, listWidget);
 
     // Botón para recargar la lista
-    QPushButton *refreshButton = new QPushButton(tr("Recargar Lista"));
+    QPushButton *refreshButton = new QPushButton(tr("Refresh List"));
     connect(refreshButton, &QPushButton::clicked, this,
             [=, this]() { loadPacks(packType, listWidget); });
     layout->addWidget(refreshButton);
@@ -392,15 +392,15 @@ QWidget *TrinitoWindow::createPackTab(const QString &targetSubdir,
     layout->addWidget(titleLabel);
 
     // Sección de instalación
-    QLabel *installLabel = new QLabel(tr("Instalar nuevo ") + labelText + ":");
+    QLabel *installLabel = new QLabel(tr("Install new ") + labelText + ":");
     layout->addWidget(installLabel);
 
-    auto *installButton = new QPushButton(tr("Seleccionar archivo..."));
+    auto *installButton = new QPushButton(tr("Select file..."));
     layout->addWidget(installButton);
 
     connect(installButton, &QPushButton::clicked, this, [=, this]() {
         QString path = QFileDialog::getOpenFileName(
-            this, tr("Seleccionar pack"), QDir::homePath(),
+            this, tr("Select pack"), QDir::homePath(),
             tr("Archivos compatibles (*.zip *.mcpack);;Todos los archivos "
                "(*)"));
         if (!path.isEmpty()) {
@@ -412,7 +412,7 @@ QWidget *TrinitoWindow::createPackTab(const QString &targetSubdir,
 
     // Sección de gestión
     QLabel *manageLabel =
-        new QLabel(tr("Gestionar ") + labelText + tr(" instalados:"));
+        new QLabel(tr("Manage ") + labelText + tr(" installed:"));
     layout->addWidget(manageLabel);
 
     QListWidget *listWidget = new QListWidget();
@@ -432,25 +432,25 @@ QWidget *TrinitoWindow::createPackTab(const QString &targetSubdir,
     loadPacks(targetSubdir, listWidget);
 
     // Botón para recargar la lista
-    QPushButton *refreshButton = new QPushButton(tr("Recargar Lista"));
+    QPushButton *refreshButton = new QPushButton(tr("Refresh List"));
     connect(refreshButton, &QPushButton::clicked, this,
             [=, this]() { loadPacks(targetSubdir, listWidget); });
     layout->addWidget(refreshButton);
 
     // Botón para eliminar seleccionado
-    QPushButton *deleteButton = new QPushButton(tr("Eliminar Seleccionado"));
+    QPushButton *deleteButton = new QPushButton(tr("Delete Selected"));
     connect(deleteButton, &QPushButton::clicked, this, [=, this]() {
         if (listWidget->selectedItems().isEmpty()) {
-            QMessageBox::warning(this, tr("Advertencia"),
-                                 tr("No hay ningún elemento seleccionado."));
+            QMessageBox::warning(this, tr("Warning"),
+                                 tr("No element selected."));
             return;
         }
 
         QString selectedEntry = listWidget->selectedItems().first()->text();
         int r = QMessageBox::warning(
-            this, tr("Advertencia"),
-            QString(tr("¿Estás seguro de eliminar '%1'?\nEsta acción no se "
-                       "puede deshacer."))
+            this, tr("Warning"),
+            QString(tr("Are you sure you want to delete '%1'?\n"
+"This action " "cannot be undone."))
                 .arg(selectedEntry),
             QMessageBox::Yes | QMessageBox::No, QMessageBox::No);
         if (r == QMessageBox::No)
@@ -473,7 +473,7 @@ QWidget *TrinitoWindow::createPackTab(const QString &targetSubdir,
 
         if (success) {
             QMessageBox::information(
-                this, tr("Éxito"),
+                this, tr("Success"),
                 QString(tr("'%1' eliminado correctamente."))
                     .arg(selectedEntry));
             // Recargar la lista
@@ -503,10 +503,10 @@ QWidget *TrinitoWindow::createDevTab() {
 
     // Botón para Development Behavior Pack
     auto *behButton =
-        new QPushButton(tr("Añadir Development Behavior Pack (archivo)..."));
+        new QPushButton(tr("Add Development Behavior Pack (file)..."));
     connect(behButton, &QPushButton::clicked, this, [=, this]() {
         QString path = QFileDialog::getOpenFileName(
-            this, tr("Añadir Development Behavior Pack"), QDir::homePath(),
+            this, tr("Add Development Behavior Pack"), QDir::homePath(),
             tr("Archivos compatibles (*.zip *.mcpack);;Todos los archivos "
                "(*)"));
         if (!path.isEmpty()) {
@@ -517,10 +517,10 @@ QWidget *TrinitoWindow::createDevTab() {
 
     // Botón para Development Resource Pack
     auto *resButton =
-        new QPushButton(tr("Añadir Development Resource Pack (archivo)..."));
+        new QPushButton(tr("Add Development Resource Pack (file)..."));
     connect(resButton, &QPushButton::clicked, this, [=, this]() {
         QString path = QFileDialog::getOpenFileName(
-            this, tr("Añadir Development Resource Pack"), QDir::homePath(),
+            this, tr("Add Development Resource Pack"), QDir::homePath(),
             tr("Archivos compatibles (*.zip *.mcpack);;Todos los archivos "
                "(*)"));
         if (!path.isEmpty()) {
@@ -534,7 +534,7 @@ QWidget *TrinitoWindow::createDevTab() {
     layout->addSpacing(15);
 
     // Sección de gestión
-    QLabel *manageLabel = new QLabel(tr("Gestionar Development Packs:"));
+    QLabel *manageLabel = new QLabel(tr("Manage Development Packs:"));
     manageLabel->setStyleSheet("font-weight: bold; font-size: 14px;");
     layout->addWidget(manageLabel);
 
@@ -560,7 +560,7 @@ QWidget *TrinitoWindow::createDevTab() {
     loadPacks("development_resource_packs", resListWidget);
 
     // Botón para recargar la lista
-    QPushButton *refreshButton = new QPushButton(tr("Recargar Listas"));
+    QPushButton *refreshButton = new QPushButton(tr("Refresh Lists"));
     connect(refreshButton, &QPushButton::clicked, this, [=, this]() {
         loadPacks("development_behavior_packs", behListWidget);
         loadPacks("development_resource_packs", resListWidget);
@@ -572,20 +572,20 @@ QWidget *TrinitoWindow::createDevTab() {
 
     // Botón para eliminar un pack seleccionado en la lista de Behavior Packs
     QPushButton *deleteBehButton =
-        new QPushButton(tr("Eliminar Behavior Pack Seleccionado"));
+        new QPushButton(tr("Delete Selected Behavior Pack"));
     connect(deleteBehButton, &QPushButton::clicked, this, [=, this]() {
         if (behListWidget->selectedItems().isEmpty()) {
             QMessageBox::warning(
-                this, tr("Advertencia"),
-                tr("No hay ningún Behavior Pack seleccionado."));
+                this, tr("Warning"),
+                tr("No Behavior Pack selected."));
             return;
         }
 
         QString selectedEntry = behListWidget->selectedItems().first()->text();
         int r = QMessageBox::warning(
-            this, tr("Advertencia"),
-            QString(tr("¿Estás seguro de eliminar el Behavior Pack '%1'?\nEsta "
-                       "acción no se puede deshacer."))
+            this, tr("Warning"),
+            QString(tr("Are you sure you want to delete Behavior Pack '%1'?\n"
+"This " "action cannot be undone."))
                 .arg(selectedEntry),
             QMessageBox::Yes | QMessageBox::No, QMessageBox::No);
         if (r == QMessageBox::No)
@@ -608,34 +608,34 @@ QWidget *TrinitoWindow::createDevTab() {
 
         if (success) {
             QMessageBox::information(
-                this, tr("Éxito"),
-                QString(tr("eliminado correctamente.")).arg(selectedEntry));
+                this, tr("Success"),
+                QString(tr("deleted successfully.")).arg(selectedEntry));
             // Recargar la lista
             loadPacks("development_behavior_packs", behListWidget);
         } else {
             QMessageBox::critical(
                 this, "Error",
-                QString(tr("No se pudo eliminar")).arg(selectedEntry));
+                QString(tr("Could not delete")).arg(selectedEntry));
         }
     });
     deleteLayout->addWidget(deleteBehButton);
 
     // Botón para eliminar un pack seleccionado en la lista de Resource Packs
     QPushButton *deleteResButton =
-        new QPushButton(tr("Eliminar Resource Pack Seleccionado"));
+        new QPushButton(tr("Delete Selected Resource Pack"));
     connect(deleteResButton, &QPushButton::clicked, this, [=, this]() {
         if (resListWidget->selectedItems().isEmpty()) {
             QMessageBox::warning(
-                this, tr("Advertencia"),
-                tr("No hay ningún Resource Pack seleccionado."));
+                this, tr("Warning"),
+                tr("No Resource Pack selected."));
             return;
         }
 
         QString selectedEntry = resListWidget->selectedItems().first()->text();
         int r = QMessageBox::warning(
-            this, tr("Advertencia"),
-            QString(tr("¿Estás seguro de eliminar el Resource Pack '%1'?\nEsta "
-                       "acción no se puede deshacer."))
+            this, tr("Warning"),
+            QString(tr("Are you sure you want to delete Resource Pack '%1'?\n"
+"This " "action cannot be undone."))
                 .arg(selectedEntry),
             QMessageBox::Yes | QMessageBox::No, QMessageBox::No);
         if (r == QMessageBox::No)
@@ -658,8 +658,8 @@ QWidget *TrinitoWindow::createDevTab() {
 
         if (success) {
             QMessageBox::information(
-                this, tr("Éxito"),
-                QString(tr("eliminado correctamente.")).arg(selectedEntry));
+                this, tr("Success"),
+                QString(tr("deleted successfully.")).arg(selectedEntry));
             // Recargar la lista
             loadPacks("development_resource_packs", resListWidget);
         } else {
@@ -681,17 +681,17 @@ QWidget *TrinitoWindow::createWorldTab() {
     auto *layout = new QVBoxLayout(widget);
 
     // Título
-    QLabel *titleLabel = new QLabel(tr("Mundos Guardados"));
+    QLabel *titleLabel = new QLabel(tr("Saved Worlds"));
     titleLabel->setStyleSheet("font-weight: bold; font-size: 16px;");
     layout->addWidget(titleLabel);
 
     // Botón para seleccionar carpeta del mundo
-    auto *button = new QPushButton(tr("Añadir carpeta del mundo..."));
+    auto *button = new QPushButton(tr("Add world folder..."));
     layout->addWidget(button);
 
     connect(button, &QPushButton::clicked, this, [=, this]() {
         QString path = QFileDialog::getExistingDirectory(
-            this, tr("Seleccionar carpeta del mundo"), QDir::homePath());
+            this, tr("Select world folder"), QDir::homePath());
         if (!path.isEmpty()) {
             installItem(path, "minecraftWorlds");
         }
@@ -700,7 +700,7 @@ QWidget *TrinitoWindow::createWorldTab() {
     layout->addSpacing(15);
 
     // Sección de gestión
-    QLabel *manageLabel = new QLabel(tr("Gestionar Mundos:"));
+    QLabel *manageLabel = new QLabel(tr("Manage Worlds:"));
     manageLabel->setStyleSheet("font-weight: bold; font-size: 14px;");
     layout->addWidget(manageLabel);
 
@@ -714,26 +714,26 @@ QWidget *TrinitoWindow::createWorldTab() {
     loadPacks("minecraftWorlds", listWidget);
 
     // Botón para recargar la lista
-    QPushButton *refreshButton = new QPushButton(tr("Recargar Lista"));
+    QPushButton *refreshButton = new QPushButton(tr("Refresh List"));
     connect(refreshButton, &QPushButton::clicked, this,
             [=, this]() { loadPacks("minecraftWorlds", listWidget); });
     layout->addWidget(refreshButton);
 
     // Botón para borrar un mundo seleccionado
     QPushButton *deleteButton =
-        new QPushButton(tr("Borrar Mundo Seleccionado"));
+        new QPushButton(tr("Delete Selected World"));
     connect(deleteButton, &QPushButton::clicked, this, [=, this]() {
         if (listWidget->selectedItems().isEmpty()) {
-            QMessageBox::warning(this, tr("Advertencia"),
-                                 tr("No hay ningún mundo seleccionado."));
+            QMessageBox::warning(this, tr("Warning"),
+                                 tr("No world selected."));
             return;
         }
 
         QString selectedWorld = listWidget->selectedItems().first()->text();
         int r = QMessageBox::warning(
-            this, tr("Advertencia"),
-            QString(tr("¿Estás seguro de eliminar el mundo '%1'?\nEsta acción "
-                       "no se puede deshacer."))
+            this, tr("Warning"),
+            QString(tr("Are you sure you want to delete world '%1'?\n"
+"This action " "cannot be undone."))
                 .arg(selectedWorld),
             QMessageBox::Yes | QMessageBox::No, QMessageBox::No);
         if (r == QMessageBox::No)
@@ -746,8 +746,8 @@ QWidget *TrinitoWindow::createWorldTab() {
         QString worldPath = baseDataDir + "/minecraftWorlds/" + selectedWorld;
 
         if (QDir(worldPath).removeRecursively()) {
-            QMessageBox::information(this, tr("Éxito"),
-                                     tr("Mundo eliminado correctamente."));
+            QMessageBox::information(this, tr("Success"),
+                                     tr("World deleted successfully."));
             // Actualizar la lista
             loadPacks("minecraftWorlds", listWidget);
         } else {
@@ -766,8 +766,8 @@ void TrinitoWindow::installItem(const QString &sourcePath,
 
     if (installer.itemExists(sourcePath, targetSubdir)) {
         int r = QMessageBox::warning(
-            this, tr("Advertencia"),
-            QString(tr("Ya existe un elemento llamado:\n%1\n\n¿Reemplazarlo?"))
+            this, tr("Warning"),
+            QString(tr("An item named:\n%1\nalready exists.\n\nReplace it?"))
                 .arg(installer.getTargetName(sourcePath)),
             QMessageBox::Yes | QMessageBox::No, QMessageBox::No);
         if (r == QMessageBox::No)
@@ -783,13 +783,13 @@ void TrinitoWindow::installItem(const QString &sourcePath,
 
     if (installer.installItem(sourcePath, targetSubdir, true, errorMsg)) {
         QMessageBox::information(
-            this, tr("Éxito"),
-            QString(tr("¡%1 instalado correctamente en:\n%2"))
+            this, tr("Success"),
+            QString(tr("%1 installed successfully in:\n%2"))
                 .arg(installer.getTargetName(sourcePath))
                 .arg(targetSubdir));
     } else {
         QMessageBox::critical(this, "Error",
-                              tr("Falló la instalación:\n") + errorMsg);
+                              tr("Installation failed:\n") + errorMsg);
     }
 }
 
@@ -814,91 +814,130 @@ QString TrinitoWindow::getShadersDir() {
 
 QWidget *TrinitoWindow::createShadersModsTab() {
     auto *widget = new QWidget();
-    auto *layout = new QVBoxLayout(widget);
+    auto *outerLayout = new QVBoxLayout(widget);
+    outerLayout->setContentsMargins(12, 12, 12, 12);
+    outerLayout->setSpacing(0);
 
-    // Horizontal layout to split into left (Shaders) and right (Libs)
+    // Horizontal split: left = Shaders (50%), right = Libs (50%)
     auto *mainSplitLayout = new QHBoxLayout();
+    mainSplitLayout->setSpacing(16);
 
-    // --- Left: Shaders Section ---
+    // ── LEFT: Shaders Section ─────────────────────────────────────────────
     auto *shadersSection = new QWidget();
+    shadersSection->setObjectName("ContextPanel");
     auto *shadersLayout = new QVBoxLayout(shadersSection);
-    shadersLayout->setSpacing(10);
+    shadersLayout->setContentsMargins(12, 12, 12, 12);
+    shadersLayout->setSpacing(8);
 
-    QLabel *shadersTitle = new QLabel(tr("Gestionar Shaders:"));
-    shadersTitle->setStyleSheet("font-weight: bold; font-size: 14px;");
+    auto *shadersTitle = new QLabel(tr("Installed Shaders"));
+    shadersTitle->setStyleSheet("font-weight: bold; font-size: 14px; color: #8b5cf6;");
     shadersLayout->addWidget(shadersTitle);
 
+    auto *shadersSep = new QFrame();
+    shadersSep->setFrameShape(QFrame::HLine);
+    shadersSep->setStyleSheet("color: #1e293b;");
+    shadersLayout->addWidget(shadersSep);
+
     shadersList = new QListWidget();
-    shadersLayout->addWidget(shadersList);
+    shadersList->setStyleSheet(
+        "QListWidget { border-radius: 6px; padding: 4px; outline: 0; }"
+        "QListWidget::item { padding: 6px; border-radius: 4px; margin-bottom: 2px; }"
+    );
+    shadersLayout->addWidget(shadersList, 1); // stretch=1 → toma el espacio disponible
 
-    auto *shadersButtonsLayout = new QHBoxLayout();
-    installShaderpackButton = new QPushButton(tr("Instalar Shaderpack..."));
-    removeShaderpackButton =
-        new QPushButton(tr("Eliminar Shaderpack Seleccionado"));
-    refreshShaderListButton = new QPushButton(tr("Actualizar Lista"));
-    shadersButtonsLayout->addWidget(installShaderpackButton);
-    shadersButtonsLayout->addWidget(removeShaderpackButton);
-    shadersButtonsLayout->addWidget(refreshShaderListButton);
-    shadersLayout->addLayout(shadersButtonsLayout);
+    // Botones de shaders en columna
+    installShaderpackButton  = new QPushButton(tr("Install Shaderpack..."));
+    installShaderpackButton->setObjectName("ActionButton");
+    installShaderpackButton->setCursor(Qt::PointingHandCursor);
+    installShaderpackButton->setMinimumHeight(36);
 
-    mainSplitLayout->addWidget(shadersSection);
+    removeShaderpackButton   = new QPushButton(tr("Delete all Shaders"));
+    removeShaderpackButton->setCursor(Qt::PointingHandCursor);
+    removeShaderpackButton->setMinimumHeight(36);
 
-    // --- Right: Libs Section ---
+    refreshShaderListButton  = new QPushButton(tr("Refresh List"));
+    refreshShaderListButton->setCursor(Qt::PointingHandCursor);
+    refreshShaderListButton->setMinimumHeight(32);
+
+    shadersLayout->addWidget(installShaderpackButton);
+    shadersLayout->addWidget(removeShaderpackButton);
+    shadersLayout->addWidget(refreshShaderListButton);
+
+    mainSplitLayout->addWidget(shadersSection, 1); // 50%
+
+    // ── RIGHT: Libs Section ───────────────────────────────────────────────
     auto *libsSection = new QWidget();
+    libsSection->setObjectName("ContextPanel");
     auto *libsLayout = new QVBoxLayout(libsSection);
-    libsLayout->setSpacing(10);
+    libsLayout->setContentsMargins(12, 12, 12, 12);
+    libsLayout->setSpacing(8);
 
-    QLabel *libsTitle =
-        new QLabel(tr("Gestionar Libs:")); // Cambiado Mods por Libs
-    libsTitle->setStyleSheet("font-weight: bold; font-size: 14px;");
+    auto *libsTitle = new QLabel(tr("Manage Libs"));
+    libsTitle->setStyleSheet("font-weight: bold; font-size: 14px; color: #8b5cf6;");
     libsLayout->addWidget(libsTitle);
 
-    // Available Libs
-    QLabel *availableLibsLabel =
-        new QLabel(tr("Libs Disponibles:")); // Cambiado
-    libsLayout->addWidget(availableLibsLabel);
-    availableModsList = new QListWidget(); // El nombre de la variable puede
-                                           // mantenerse por simplicidad interna
-    libsLayout->addWidget(availableModsList);
+    auto *libsSep = new QFrame();
+    libsSep->setFrameShape(QFrame::HLine);
+    libsSep->setStyleSheet("color: #1e293b;");
+    libsLayout->addWidget(libsSep);
 
-    downloadModButton =
-        new QPushButton(tr("Descargar Lib Seleccionada")); // Cambiado
+    // Available Libs
+    auto *availableLibsLabel = new QLabel(tr("Available libs:"));
+    availableLibsLabel->setStyleSheet("font-size: 12px; color: #94a3b8;");
+    libsLayout->addWidget(availableLibsLabel);
+
+    availableModsList = new QListWidget();
+    availableModsList->setStyleSheet(
+        "QListWidget { border-radius: 6px; padding: 4px; outline: 0; }"
+        "QListWidget::item { padding: 6px; border-radius: 4px; margin-bottom: 2px; }"
+    );
+    libsLayout->addWidget(availableModsList, 1);
+
+    downloadModButton = new QPushButton(tr("Download Selected Lib"));
+    downloadModButton->setObjectName("ActionButton");
+    downloadModButton->setCursor(Qt::PointingHandCursor);
+    downloadModButton->setMinimumHeight(36);
     libsLayout->addWidget(downloadModButton);
 
-    // Installed Libs
-    QLabel *installedLibsLabel = new QLabel(tr("Libs Instaladas:")); // Cambiado
-    libsLayout->addWidget(installedLibsLabel);
-    installedModsList = new QListWidget(); // El nombre de la variable puede
-                                           // mantenerse por simplicidad interna
-    libsLayout->addWidget(installedModsList);
+    libsLayout->addSpacing(8);
 
-    removeInstalledModButton =
-        new QPushButton(tr("Eliminar Lib Seleccionada")); // Cambiado
+    // Installed Libs
+    auto *installedLibsLabel = new QLabel(tr("Installed libs (✓ = active):"));
+    installedLibsLabel->setStyleSheet("font-size: 12px; color: #94a3b8;");
+    libsLayout->addWidget(installedLibsLabel);
+
+    installedModsList = new QListWidget();
+    installedModsList->setStyleSheet(
+        "QListWidget { border-radius: 6px; padding: 4px; outline: 0; }"
+        "QListWidget::item { padding: 6px; border-radius: 4px; margin-bottom: 2px; }"
+    );
+    libsLayout->addWidget(installedModsList, 1);
+
+    removeInstalledModButton = new QPushButton(tr("Delete Selected Lib"));
+    removeInstalledModButton->setCursor(Qt::PointingHandCursor);
+    removeInstalledModButton->setMinimumHeight(36);
     libsLayout->addWidget(removeInstalledModButton);
 
-    mainSplitLayout->addWidget(libsSection);
+    mainSplitLayout->addWidget(libsSection, 1); // 50%
 
-    layout->addLayout(mainSplitLayout);
+    outerLayout->addLayout(mainSplitLayout);
 
-    // Connect signals (las funciones miembro siguen siendo las mismas, solo
-    // cambia la UI)
-    connect(installShaderpackButton, &QPushButton::clicked, this,
+    // Connect signals
+    connect(installShaderpackButton,  &QPushButton::clicked, this,
             &TrinitoWindow::onInstallShaderpackClicked);
-    connect(removeShaderpackButton, &QPushButton::clicked, this,
+    connect(removeShaderpackButton,   &QPushButton::clicked, this,
             &TrinitoWindow::onRemoveShaderpackClicked);
-    connect(refreshShaderListButton, &QPushButton::clicked, this,
+    connect(refreshShaderListButton,  &QPushButton::clicked, this,
             &TrinitoWindow::onRefreshShaderListClicked);
-    connect(downloadModButton, &QPushButton::clicked, this,
+    connect(downloadModButton,        &QPushButton::clicked, this,
             &TrinitoWindow::onDownloadModClicked);
     connect(removeInstalledModButton, &QPushButton::clicked, this,
             &TrinitoWindow::onRemoveInstalledModClicked);
 
     // Initialize data
     populateInstalledShaders();
-    populateAvailableMods(); // Esta función seguirá cargando la lista de "mods"
-                             // disponibles, pero ahora se mostrará como "libs"
-    populateInstalledMods(); // Esta función seguirá cargando la lista de "mods"
-                             // instalados, pero ahora se mostrará como "libs"
+    populateAvailableMods();
+    populateInstalledMods();
 
     return widget;
 }
@@ -923,11 +962,16 @@ void TrinitoWindow::populateInstalledShaders() {
 // this part it use https://github.com/minecraft-linux/mcpelauncher-moddb
 // content under license MIT credits to creators
 void TrinitoWindow::populateAvailableMods() {
+    // Libs sin ninguna que contenga "arm" en el nombre
     QStringList availableMods = {
-        "libmcpelaunchershadersmod.so",   "libmcpelauncherdcblock.so",
-        "libmcpelauncherlegacyx86_64.so", "libmcpelauncherlegacyarm64-v8a.so",
-        "libmcpelaunchernhc.so",          "libmcpelauncherstrafesprintfix.so",
-        "libmcpelauncherzoom.so",         "libfullbright.so"};
+        "libmcpelaunchershadersmod.so",
+        "libmcpelauncherdcblock.so",
+        "libmcpelauncherlegacyx86_64.so",
+        "libmcpelaunchernhc.so",
+        "libmcpelauncherstrafesprintfix.so",
+        "libmcpelauncherzoom.so",
+        "libfullbright.so"
+    };
 
     availableModsList->clear();
 
@@ -942,18 +986,63 @@ void TrinitoWindow::populateInstalledMods() {
         "/.var/app/com.trench.trinity.launcher/data/mcpelauncher/mods";
     QDir dir(modsDir);
 
+    // Desconectar para evitar disparos mientras llenamos la lista
+    installedModsList->blockSignals(true);
     installedModsList->clear();
 
     if (!dir.exists()) {
-        installedModsList->addItem("(0 mods )");
+        auto *placeholder = new QListWidgetItem(tr("(0 libs installed)"));
+        placeholder->setFlags(placeholder->flags() & ~Qt::ItemIsEnabled);
+        installedModsList->addItem(placeholder);
+        installedModsList->blockSignals(false);
         return;
     }
 
     QFileInfoList files = dir.entryInfoList(
         QStringList() << "*.so" << "*.so.disabled", QDir::Files);
+
     for (const QFileInfo &file : files) {
-        installedModsList->addItem(file.fileName());
+        bool enabled = !file.fileName().endsWith(".disabled");
+        auto *item = new QListWidgetItem(file.fileName());
+        item->setFlags(item->flags() | Qt::ItemIsUserCheckable);
+        item->setCheckState(enabled ? Qt::Checked : Qt::Unchecked);
+        installedModsList->addItem(item);
     }
+
+    installedModsList->blockSignals(false);
+
+    // Conectar el toggle de checkbox (rename en disco)
+    // Desconectamos primero si ya estaba conectado para no duplicar conexiones
+    disconnect(installedModsList, &QListWidget::itemChanged, nullptr, nullptr);
+    connect(installedModsList, &QListWidget::itemChanged, this,
+            [this, modsDir](QListWidgetItem *changedItem) {
+        bool enable = (changedItem->checkState() == Qt::Checked);
+        QString name = changedItem->text();
+        QString oldPath = modsDir + "/" + name;
+        QString newPath;
+
+        if (enable && name.endsWith(".disabled")) {
+            newPath = modsDir + "/" + name.chopped(9); // quita ".disabled"
+        } else if (!enable && !name.endsWith(".disabled")) {
+            newPath = modsDir + "/" + name + ".disabled";
+        } else {
+            return; // sin cambio necesario
+        }
+
+        if (QFile::rename(oldPath, newPath)) {
+            // Actualizar el texto del item sin re-disparar señales
+            installedModsList->blockSignals(true);
+            changedItem->setText(QFileInfo(newPath).fileName());
+            installedModsList->blockSignals(false);
+        } else {
+            // Revertir el checkbox si falló el rename
+            installedModsList->blockSignals(true);
+            changedItem->setCheckState(enable ? Qt::Unchecked : Qt::Checked);
+            installedModsList->blockSignals(false);
+            QMessageBox::critical(this, tr("Error"),
+                tr("Could not change lib state: ") + name);
+        }
+    });
 }
 
 void TrinitoWindow::onInstallShaderpackClicked() {
@@ -984,7 +1073,7 @@ void TrinitoWindow::onInstallShaderpackClicked() {
 
         if (process.exitCode() != 0) {
             QMessageBox::critical(this, "Error",
-                                  tr("No se pudo extraer el archivo .mcpack."));
+                                  tr("Could not extract .mcpack file."));
             QDir(tempDirPath).removeRecursively(); // Limpiar
             return;
         }
@@ -1017,8 +1106,8 @@ void TrinitoWindow::onInstallShaderpackClicked() {
                 // Verificar si el archivo se creó de todas formas
                 if (!QFile::exists(dstPath)) {
                     QMessageBox::warning(
-                        this, tr("Advertencia"),
-                        tr("No se pudo copiar ") + fileName + " (output: " +
+                        this, tr("Warning"),
+                        tr("Could not copy ") + fileName + " (output: " +
                             QString::number(process.exitCode()) + ")");
                 }
                 // Si existe, ignoramos el error
@@ -1028,31 +1117,55 @@ void TrinitoWindow::onInstallShaderpackClicked() {
         // Limpiar directorio temporal
         QDir(tempDirPath).removeRecursively();
 
-        QMessageBox::information(this, tr("Éxito"),
-                                 tr("Shaderpack instalado correctamente."));
+        QMessageBox::information(this, tr("Success"),
+                                 tr("Shaderpack installed successfully."));
         populateInstalledShaders(); // Actualizar lista
     }
 }
 
 void TrinitoWindow::onRemoveShaderpackClicked() {
-    if (shadersList->selectedItems().isEmpty()) {
-        QMessageBox::warning(this, tr("Advertencia"),
-                             tr("No hay ningún shader seleccionado."));
+    QString shadersDir = getShadersDir();
+    QDir dir(shadersDir);
+
+    if (!dir.exists()) {
+        QMessageBox::information(this, tr("Info"),
+                                 tr("No shaders installed."));
         return;
     }
 
-    QString selectedShader = shadersList->selectedItems().first()->text();
-    QString shadersDir = getShadersDir();
-    QString shaderPath = shadersDir + "/" + selectedShader;
+    QFileInfoList files = dir.entryInfoList(
+        QStringList() << "*.material.bin", QDir::Files);
 
-    if (QFile::remove(shaderPath)) {
-        QMessageBox::information(this, tr("Éxito"),
-                                 tr("Shader eliminado correctamente."));
-        populateInstalledShaders(); // Actualizar lista
-    } else {
-        QMessageBox::critical(this, "Error",
-                              tr("No se pudo eliminar el shader."));
+    if (files.isEmpty()) {
+        QMessageBox::information(this, tr("Info"),
+                                 tr("No shaders installed."));
+        return;
     }
+
+    int r = QMessageBox::warning(
+        this, tr("Confirm"),
+        tr("Are you sure you want to delete ALL installed shaders (%1 files)?\n"
+           "This action cannot be undone.").arg(files.size()),
+        QMessageBox::Yes | QMessageBox::No, QMessageBox::No);
+    if (r == QMessageBox::No)
+        return;
+
+    int removed = 0, failed = 0;
+    for (const QFileInfo &fi : files) {
+        if (QFile::remove(fi.absoluteFilePath()))
+            ++removed;
+        else
+            ++failed;
+    }
+
+    if (failed == 0) {
+        QMessageBox::information(this, tr("Success"),
+            tr("%1 shader(s) deleted successfully.").arg(removed));
+    } else {
+        QMessageBox::warning(this, tr("Warning"),
+            tr("%1 shader(s) deleted. %2 could not be deleted.").arg(removed).arg(failed));
+    }
+    populateInstalledShaders();
 }
 
 void TrinitoWindow::onRefreshShaderListClicked() { populateInstalledShaders(); }
@@ -1060,8 +1173,8 @@ void TrinitoWindow::onRefreshShaderListClicked() { populateInstalledShaders(); }
 void TrinitoWindow::onDownloadModClicked() {
     if (availableModsList->selectedItems().isEmpty()) {
         QMessageBox::warning(
-            this, tr("Advertencia"),
-            tr("Por favor, selecciona un mod para descargar."));
+            this, tr("Warning"),
+            tr("Please select a lib to download."));
         return;
     }
 
@@ -1079,7 +1192,7 @@ void TrinitoWindow::onDownloadModClicked() {
     QString destination = modsDir + "/" + selected;
 
     // Crear diálogo de progreso indeterminado
-    QProgressDialog progress(tr("Descargando ") + selected, tr("Cancelar"), 0,
+    QProgressDialog progress(tr("Downloading ") + selected, tr("Cancel"), 0,
                              0, this);
     progress.setWindowModality(Qt::WindowModal);
     progress.show();
@@ -1101,20 +1214,20 @@ void TrinitoWindow::onDownloadModClicked() {
     // Verificar si el archivo se descargó
     if (!QFile::exists(destination)) {
         QMessageBox::critical(this, "Error",
-                              tr("No se pudo descargar el mod."));
+                              tr("Could not download the lib."));
         return;
     }
 
     progress.close();
-    QMessageBox::information(this, tr("Éxito"),
-                             tr("Mod instalado correctamente."));
+    QMessageBox::information(this, tr("Success"),
+                             tr("Lib installed successfully."));
     populateInstalledMods();
 }
 
 void TrinitoWindow::onRemoveInstalledModClicked() {
     if (installedModsList->selectedItems().isEmpty()) {
-        QMessageBox::warning(this, tr("Advertencia"),
-                             tr("Por favor, selecciona un mod para eliminar."));
+        QMessageBox::warning(this, tr("Warning"),
+                             tr("Please select a lib to delete."));
         return;
     }
 
@@ -1126,12 +1239,12 @@ void TrinitoWindow::onRemoveInstalledModClicked() {
 
     QFile file(filePath);
     if (file.exists() && file.remove()) {
-        QMessageBox::information(this, tr("Eliminado"),
-                                 selected + tr(" ha sido eliminado."));
+        QMessageBox::information(this, tr("Deleted"),
+                                 selected + tr(" has been deleted."));
         populateInstalledMods();
     } else {
         QMessageBox::critical(this, "Error",
-                              tr("No se pudo eliminar ") + selected);
+                              tr("Could not delete ") + selected);
     }
 }
 

@@ -76,7 +76,7 @@ void GameLauncher::forceKillGame() {
 
 bool GameLauncher::launchGame(const QString &versionName, QString &errorMsg) {
     if (m_process->state() != QProcess::NotRunning) {
-        errorMsg = tr("El juego ya se está ejecutando.");
+        errorMsg = tr("The game is already running.");
         return false;
     }
 
@@ -93,7 +93,7 @@ bool GameLauncher::launchGame(const QString &versionName, QString &errorMsg) {
 
 
     if (clientPath.isEmpty()) {
-        errorMsg = tr("mcpelauncher-client no encontrado.");
+        errorMsg = tr("mcpelauncher-client not found.");
         return false;
     }
 
@@ -119,7 +119,7 @@ bool GameLauncher::launchGame(const QString &versionName, QString &errorMsg) {
     QString state = "Ver: " + versionName + " (" + displayServer + ")";
 
     DiscordManager::instance().updateActivity(
-        tr("Jugando Minecraft Bedrock"), // Details
+        tr("Playing Minecraft Bedrock"), // Details
         state,                           // State
         "mc_icon",                       // Small Image
         "Linux",                         // Tooltip
@@ -131,9 +131,9 @@ bool GameLauncher::launchGame(const QString &versionName, QString &errorMsg) {
     m_process->start();
 
     if (!m_process->waitForStarted(3000)) {
-        errorMsg = tr("No se pudo iniciar el proceso del juego.");
+        errorMsg = tr("Could not start the game process.");
         DiscordManager::instance().updateActivity(
-            tr("Menú de Trinity Launcher"), tr("Esperando..."));
+            tr("Trinity Launcher Menu"), tr("Waiting..."));
         return false;
     }
 

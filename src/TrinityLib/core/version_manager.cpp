@@ -61,7 +61,7 @@ bool VersionManager::extractApk(const QString &apkPath, const QString &versionNa
     process.waitForStarted(-1);
 
     // Reportar estado inicial
-    emit extractionProgress(tr("Iniciando extracción..."));
+    emit extractionProgress(tr("Starting extraction..."));
 
     // Esperar a que termine (sin bloquear la UI)
     while (process.state() == QProcess::Running) {
@@ -72,13 +72,13 @@ bool VersionManager::extractApk(const QString &apkPath, const QString &versionNa
     process.waitForFinished(-1);
 
     if (process.exitCode() == 0) {
-        emit extractionProgress(tr("Extracción completada."));
+        emit extractionProgress(tr("Extraction completed."));
         return true;
     } else {
         QString err = process.readAllStandardError();
-        if (err.isEmpty()) err = tr("Error desconocido durante la extracción.");
+        if (err.isEmpty()) err = tr("Unknown error during extraction.");
         errorMsg = err;
-        emit extractionProgress(tr("Error durante la extracción."));
+        emit extractionProgress(tr("Error during extraction."));
         return false;
     }
 }
@@ -87,7 +87,7 @@ bool VersionManager::deleteVersion(const QString &versionName, QString &errorMsg
     QString versionPath = getVersionPath(versionName);
 
     if (!QDir(versionPath).removeRecursively()) {
-        errorMsg = tr("No se pudo eliminar la versión.");
+        errorMsg = tr("Could not delete version.");
         return false;
     }
 
@@ -100,7 +100,7 @@ bool VersionManager::editVersion(const QString &versionName, const QString &newA
     config.setLaunchArgs(newArgs);
 
     if (!config.save()) {
-        errorMsg = tr("No se pudo guardar la configuración.");
+        errorMsg = tr("Could not save configuration.");
         return false;
     }
 

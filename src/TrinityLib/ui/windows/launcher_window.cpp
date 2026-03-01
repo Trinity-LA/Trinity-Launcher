@@ -87,6 +87,7 @@ LauncherWindow::LauncherWindow(QWidget *parent)
             { "icon/content", sidebarContentBtn },
             { "icon/discord", sidebarDiscordBtn },
             { "icon/about",   sidebarAboutBtn   },
+            { "icon/settings",sidebarSettingsBtn },
         };
         for (auto &e : iconMap) {
             QString path = icfg.value(e.key, "").toString();
@@ -376,13 +377,13 @@ void LauncherWindow::setupUi() {
     discordUrlBox->setMinimumHeight(40);
     discordUrlBox->setMaximumWidth(300);
     discordUrlBox->setCursor(Qt::PointingHandCursor);
-    discordUrlBox->setToolTip(tr("Haz clic para copiar el enlace"));
+    discordUrlBox->setToolTip(tr("Click to copy the link"));
     discordLayout->addWidget(discordUrlBox, 0, Qt::AlignCenter);
     
     connect(discordUrlBox, &QPushButton::clicked, this, [discordUrlBox]() {
         QApplication::clipboard()->setText("https://discord.gg/yBaDq2Bnuw");
         
-        discordUrlBox->setText(tr("✓ Copiado!"));
+        discordUrlBox->setText(tr("✓ Copied!"));
         discordUrlBox->setStyleSheet("background-color: #1e293b; color: #4ade80; border: 1px dashed #4ade80; border-radius: 6px; padding: 8px; font-size: 14px; font-weight: bold; text-align: center;");
         
         QTimer::singleShot(1500, discordUrlBox, [discordUrlBox]() {
@@ -414,7 +415,7 @@ void LauncherWindow::setupUi() {
         DiscordManager::instance().setEnabled(checked);
         if (!checked) {
             QMessageBox::information(this, tr("Discord Rich Presence"),
-                tr("Cierra y vuelve a abrir el launcher para que se aplique la configuración."));
+                tr("Close and reopen the launcher to apply the configuration."));
         }
     });
 
@@ -617,10 +618,10 @@ void LauncherWindow::onVersionComboChanged(int index) {
 
 void LauncherWindow::updateContextPanel(const QString &versionName) {
     if (versionName.isEmpty()) {
-        versionNameLabel->setText(tr("Sin versiones"));
+        versionNameLabel->setText(tr("No versions"));
         versionTypeLabel->setText("");
         playButton->setEnabled(false);
-        statusLabel->setText(tr("No hay versiones instaladas."));
+        statusLabel->setText(tr("No versions installed."));
         return;
     }
 
@@ -631,7 +632,7 @@ void LauncherWindow::updateContextPanel(const QString &versionName) {
     // Update status bar with size info (mockup)
     VersionManager vm;
     QString path = vm.getVersionPath(versionName);
-    statusLabel->setText(QString(tr("Versión seleccionada: %1 | Ruta: %2"))
+    statusLabel->setText(QString(tr("Selected: %1 | Path: %2"))
                              .arg(versionName)
                              .arg(path));
 }
@@ -648,8 +649,8 @@ void LauncherWindow::showExtractDialog() {
     VersionManager vm;
     if (vm.getInstalledVersions().contains(versionName)) {
         int r = QMessageBox::warning(
-            this, tr("Advertencia"),
-            QString(tr("Ya existe una versión llamada '%1'.\n¿Reemplazarla?"))
+            this, tr("Warning"),
+            QString(tr("A version named '%1' already exists.\nReplace it?"))
                 .arg(versionName),
             QMessageBox::Yes | QMessageBox::No, QMessageBox::No);
         if (r == QMessageBox::No)
@@ -658,11 +659,11 @@ void LauncherWindow::showExtractDialog() {
 
     // Crear diálogo de progreso
     QDialog progressDlg(this);
-    progressDlg.setWindowTitle(tr("Extrayendo APK..."));
+    progressDlg.setWindowTitle(tr("Extracting APK..."));
     progressDlg.setFixedSize(300, 100);
 
     auto *layout = new QVBoxLayout(&progressDlg);
-    QLabel *label = new QLabel(tr("Extrayendo versión..."));
+    QLabel *label = new QLabel(tr("Extracting version..."));
     QProgressBar *progressBar = new QProgressBar();
     progressBar->setRange(0, 0); // Indefinido
     layout->addWidget(label);
@@ -687,12 +688,12 @@ void LauncherWindow::showExtractDialog() {
 
     if (!success) {
         QMessageBox::critical(this, tr("Error"),
-                              tr("Falló la extracción:\n") + errorMsg);
+                              tr("Extraction failed:\n") + errorMsg);
         return;
     }
 
-    QMessageBox::information(this, tr("Éxito"),
-                             tr("¡Versión extraída correctamente!"));
+    QMessageBox::information(this, tr("Success"),
+                             tr("Version extracted successfully!"));
     loadInstalledVersions(); // Recargar lista.
 }
 
@@ -715,19 +716,19 @@ void LauncherWindow::launchGame() {
 void LauncherWindow::onEditConfigClicked() {
     QString selectedVersion = versionCombo->currentText();
     if (selectedVersion.isEmpty()) {
-        QMessageBox::warning(this, tr("Advertencia"),
-                             tr("No hay ningún versión seleccionada."));
+        QMessageBox::warning(this, tr("Warning"),
+                             tr("No version selected."));
         return;
     }
 
     // Diálogo simple de edición
     QDialog dialog(this);
-    dialog.setWindowTitle(tr("Editar configuración de ") + selectedVersion);
+    dialog.setWindowTitle(tr("Edit configuration of ") + selectedVersion);
     dialog.resize(500, 300);
 
     auto *layout = new QVBoxLayout(&dialog);
     QLabel *label = new QLabel(
-        tr("Parámetros de ejecución (antes de mcpelauncher-client):"));
+        tr("Launch parameters (before mcpelauncher-client):"));
     layout->addWidget(label);
 
     // Obtener argumentos actuales
@@ -752,18 +753,18 @@ void LauncherWindow::onEditConfigClicked() {
         QString errorMsg;
         if (!vm.editVersion(selectedVersion, newArgs, errorMsg)) {
             QMessageBox::critical(&dialog, "Error",
-                                  tr("No se pudo guardar la configuración:\n") +
+                                  tr("Could not save configuration:\n") +
                                       errorMsg);
         } else {
-            QMessageBox::information(&dialog, tr("Éxito"),
-                                     tr("Configuración guardada."));
+            QMessageBox::information(&dialog, tr("Success"),
+                                     tr("Configuration saved."));
             dialog.accept();
         }
     });
     connect(buttonBox, &QDialogButtonBox::rejected, &dialog, &QDialog::reject);
 
     if (dialog.exec() == QDialog::Accepted) {
-        statusLabel->setText(QString(tr("Configuración de %1 actualizada."))
+        statusLabel->setText(QString(tr("Configuration of %1 updated."))
                                  .arg(selectedVersion));
     }
 }
@@ -771,8 +772,8 @@ void LauncherWindow::onEditConfigClicked() {
 void LauncherWindow::onExportClicked() {
     QString selectedVersion = versionCombo->currentText();
     if (selectedVersion.isEmpty()) {
-        QMessageBox::warning(this, tr("Advertencia"),
-                             tr("No hay ningún versión seleccionada."));
+        QMessageBox::warning(this, tr("Warning"),
+                             tr("No version selected."));
         return;
     }
 
@@ -782,15 +783,15 @@ void LauncherWindow::onExportClicked() {
 void LauncherWindow::onDeleteClicked() {
     QString selectedVersion = versionCombo->currentText();
     if (selectedVersion.isEmpty()) {
-        QMessageBox::warning(this, tr("Advertencia"),
-                             tr("No hay ningún versión seleccionada."));
+        QMessageBox::warning(this, tr("Warning"),
+                             tr("No version selected."));
         return;
     }
 
     int r = QMessageBox::warning(
-        this, tr("Advertencia"),
-        QString(tr("¿Estás seguro de eliminar la versión '%1'?\nEsta acción no "
-                   "se puede deshacer.")
+        this, tr("Warning"),
+        QString(tr("Are you sure you want to delete version '%1'?\nThis action "
+                   "cannot be undone.")
                     .arg(selectedVersion)),
         QMessageBox::Yes | QMessageBox::No, QMessageBox::No);
     if (r == QMessageBox::No)
@@ -801,16 +802,16 @@ void LauncherWindow::onDeleteClicked() {
     QString errorMsg;
     if (!vm.deleteVersion(selectedVersion, errorMsg)) {
         QMessageBox::critical(this, tr("Error"),
-                              tr("No se pudo eliminar la versión:\n") +
+                              tr("Could not delete version:\n") +
                                   errorMsg);
         return;
     }
 
-    QMessageBox::information(this, tr("Éxito"),
-                             tr("Versión eliminada correctamente."));
+    QMessageBox::information(this, tr("Success"),
+                             tr("Version deleted successfully."));
     loadInstalledVersions(); // Recargar lista
     statusLabel->setText(
-        QString(tr("Versión %1 eliminada.")).arg(selectedVersion));
+        QString(tr("Version %1 deleted.")).arg(selectedVersion));
 }
 
 bool LauncherWindow::copyDirectory(const QString &srcPath,
@@ -847,8 +848,8 @@ void LauncherWindow::onImportClicked() { exporter->importVersion(); }
 void LauncherWindow::createDesktopShortcut() {
     QString selectedVersion = versionCombo->currentText();
     if (selectedVersion.isEmpty()) {
-        QMessageBox::warning(this, tr("Advertencia"),
-                             tr("No hay ningún versión seleccionada."));
+        QMessageBox::warning(this, tr("Warning"),
+                             tr("No version selected."));
         return;
     }
 
@@ -859,7 +860,7 @@ void LauncherWindow::createDesktopShortcut() {
     if (!vm.isVersionValid(selectedVersion)) {
         QMessageBox::critical(
             this, "Error",
-            QString(tr("La versión '%1' no es válida o no está completa."))
+            QString(tr("Version '%1' is not valid or complete."))
                 .arg(selectedVersion));
         return;
     }
@@ -873,9 +874,9 @@ void LauncherWindow::createDesktopShortcut() {
     // Verificar si ya existe
     if (QFile::exists(shortcutPath)) {
         int r = QMessageBox::question(
-            this, tr("Confirmar"),
+            this, tr("Confirm"),
             QString(
-                tr("Ya existe un acceso directo para '%1'.\n¿Reemplazarlo?"))
+                tr("A shortcut for '%1' already exists.\nReplace it?"))
                 .arg(selectedVersion),
             QMessageBox::Yes | QMessageBox::No, QMessageBox::No);
         if (r == QMessageBox::No)
@@ -919,31 +920,44 @@ void LauncherWindow::createDesktopShortcut() {
 
     // Mensaje de éxito
     QMessageBox::information(
-        this, tr("Éxito"),
-        QString(tr("Acceso directo creado en la carpeta Descargas")
+        this, tr("Success"),
+        QString(tr("Shortcut created in Downloads folder")
                     .arg(shortcutPath)));
 }
 
 void LauncherWindow::onLanguageChanged(int index) {
-    QString langCode = settingsLanguageCombo->itemData(index).toString();
-
+    // Guardamos el índice anterior (el último válido en QSettings)
     QSettings settings;
-    settings.setValue("language", langCode);
-    settings.sync();
+    QString currentSavedLang = settings.value("language",
+        QLocale::system().name().split('_').first()).toString();
+    int prevIndex = settingsLanguageCombo->findData(currentSavedLang);
+    if (prevIndex == -1) prevIndex = 0;
+
+    // Si el usuario seleccionó el mismo idioma que ya estaba guardado, ignorar
+    QString newLangCode = settingsLanguageCombo->itemData(index).toString();
+    if (newLangCode == currentSavedLang)
+        return;
 
     int r = QMessageBox::question(
-        this, tr("Se necesita reiniciar"),
-        tr("El idioma cambiará a '%1'.\n¿Deseas reiniciar la aplicación ahora "
-           "para aplicar los cambios?")
+        this, tr("Restart required"),
+        tr("The language will change to '%1'.\nDo you want to restart the application now "
+           "to apply the changes?")
             .arg(settingsLanguageCombo->currentText()),
         QMessageBox::Yes | QMessageBox::No, QMessageBox::Yes);
 
     if (r == QMessageBox::Yes) {
+        settings.setValue("language", newLangCode);
+        settings.sync();
         QString program = QCoreApplication::applicationFilePath();
         QStringList arguments = QCoreApplication::arguments();
         QStringList args = arguments.mid(1);
         QProcess::startDetached(program, args);
         QApplication::quit();
+    } else {
+        // Revertir el combo al idioma guardado sin disparar de nuevo esta señal
+        settingsLanguageCombo->blockSignals(true);
+        settingsLanguageCombo->setCurrentIndex(prevIndex);
+        settingsLanguageCombo->blockSignals(false);
     }
 }
 
