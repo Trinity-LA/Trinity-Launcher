@@ -388,7 +388,7 @@ No: Només exporta mods, mapes, etc.</translation>
     <message>
         <location filename="../../src/TrinityLib/ui/windows/launcher_window.cpp" line="489"/>
         <source>We would like to express our sincere gratitude to the team behind the &lt;b&gt;Unofficial NIX Launcher for Minecraft&lt;/b&gt;. Their work provides the essential runtime to run Minecraft, which has been fundamental to the development of this project.</source>
-        <translation>Volem expressar el nostre més sincer agraïment a l'equip darrere de l'&lt;b&gt;Unofficial NIX Launcher for Minecraft&lt;/b&gt;. El seu treball proporciona l'entorn d'execució essencial per a executar Minecraft, que ha sigut fonamental pel projecte.</translation>
+        <translation>Volem expressar el nostre més sincer agraïment a l'equip darrere de l'&lt;b&gt;Unofficial NIX Launcher for Minecraft&lt;/b&gt;. El seu treball proporciona l'entorn d'execució essencial per a executar Minecraft, que ha estat fonamental pel projecte.</translation>
     </message>
     <message>
         <location filename="../../src/TrinityLib/ui/windows/launcher_window.cpp" line="621"/>
@@ -712,7 +712,7 @@ Vols reiniciar l'aplicació ara per aplicar els canvis?</translation>
     <message>
         <location filename="../../src/TrinityLib/ui/windows/trinito_window.cpp" line="44"/>
         <source>Behavior Pack (mods)</source>
-        <translation>Paquet de comportament (mods)</translation>
+        <translation>Behavior Pack (mods)</translation>
     </message>
     <message>
         <location filename="../../src/TrinityLib/ui/windows/trinito_window.cpp" line="45"/>
@@ -815,7 +815,7 @@ Vols reiniciar l'aplicació ara per aplicar els canvis?</translation>
     <message>
         <location filename="../../src/TrinityLib/ui/windows/trinito_window.cpp" line="395"/>
         <source>Install new </source>
-        <translation>Instal·lar nou</translation>
+        <translation>Instal·lar nou </translation>
     </message>
     <message>
         <location filename="../../src/TrinityLib/ui/windows/trinito_window.cpp" line="398"/>
@@ -837,7 +837,7 @@ Vols reiniciar l'aplicació ara per aplicar els canvis?</translation>
     <message>
         <location filename="../../src/TrinityLib/ui/windows/trinito_window.cpp" line="415"/>
         <source>Manage </source>
-        <translation>Gestionar</translation>
+        <translation>Gestionar </translation>
     </message>
     <message>
         <location filename="../../src/TrinityLib/ui/windows/trinito_window.cpp" line="415"/>
@@ -903,7 +903,7 @@ Aquesta acció no es pot desfer.</translation>
     <message>
         <location filename="../../src/TrinityLib/ui/windows/trinito_window.cpp" line="506"/>
         <source>Add Development Behavior Pack (file)...</source>
-        <translation>Afegeix Paquet de comportament de desenvolupament (arxiu)...</translation>
+        <translation>Afegeix Development Behavior Pack (arxiu)...</translation>
     </message>
     <message>
         <location filename="../../src/TrinityLib/ui/windows/trinito_window.cpp" line="509"/>
@@ -913,7 +913,7 @@ Aquesta acció no es pot desfer.</translation>
     <message>
         <location filename="../../src/TrinityLib/ui/windows/trinito_window.cpp" line="520"/>
         <source>Add Development Resource Pack (file)...</source>
-        <translation>Afegeix Paquet de recursos de desenvolupament (arxiu)...</translation>
+        <translation>Afegeix Development Resource Pack (arxiu)...</translation>
     </message>
     <message>
         <location filename="../../src/TrinityLib/ui/windows/trinito_window.cpp" line="523"/>
