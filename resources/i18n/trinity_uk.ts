@@ -49,7 +49,7 @@
 
 Yes: Includes the full version (game data).
 No: Only exports mods, maps, etc.</source>
-        <translation>Експортувати '%1' з даними APK?
+        <translation>Експортувати &apos;%1&apos; з даними APK?
 
 Так: Включає повну версію (ігрові дані).
 Ні: Лише моди, карти тощо.</translation>
@@ -261,14 +261,14 @@ No: Only exports mods, maps, etc.</source>
     </message>
     <message>
         <location filename="../../src/TrinityLib/ui/windows/launcher_window.cpp" line="145"/>
-        <location filename="../../src/TrinityLib/ui/windows/launcher_window.cpp" line="1359"/>
+        <location filename="../../src/TrinityLib/ui/windows/launcher_window.cpp" line="1360"/>
         <source>Content Manager</source>
         <translation>Менеджер контенту</translation>
     </message>
     <message>
         <location filename="../../src/TrinityLib/ui/windows/launcher_window.cpp" line="152"/>
         <location filename="../../src/TrinityLib/ui/windows/launcher_window.cpp" line="361"/>
-        <location filename="../../src/TrinityLib/ui/windows/launcher_window.cpp" line="1360"/>
+        <location filename="../../src/TrinityLib/ui/windows/launcher_window.cpp" line="1361"/>
         <source>Discord</source>
         <translation>Discord</translation>
     </message>
@@ -291,9 +291,9 @@ No: Only exports mods, maps, etc.</source>
     <message>
         <location filename="../../src/TrinityLib/ui/windows/launcher_window.cpp" line="166"/>
         <location filename="../../src/TrinityLib/ui/windows/launcher_window.cpp" line="1059"/>
-        <location filename="../../src/TrinityLib/ui/windows/launcher_window.cpp" line="1218"/>
-        <location filename="../../src/TrinityLib/ui/windows/launcher_window.cpp" line="1362"/>
-        <location filename="../../src/TrinityLib/ui/windows/launcher_window.cpp" line="1439"/>
+        <location filename="../../src/TrinityLib/ui/windows/launcher_window.cpp" line="1219"/>
+        <location filename="../../src/TrinityLib/ui/windows/launcher_window.cpp" line="1363"/>
+        <location filename="../../src/TrinityLib/ui/windows/launcher_window.cpp" line="1440"/>
         <source>Settings</source>
         <translation>Налаштування</translation>
     </message>
@@ -403,7 +403,7 @@ No: Only exports mods, maps, etc.</source>
     <message>
         <location filename="../../src/TrinityLib/ui/windows/launcher_window.cpp" line="386"/>
         <source>✓ Copied!</source>
-        <translation >✓ Скопійовано!</translation>
+        <translation>✓ Скопійовано!</translation>
     </message>
     <message>
         <location filename="../../src/TrinityLib/ui/windows/launcher_window.cpp" line="418"/>
@@ -439,7 +439,7 @@ No: Only exports mods, maps, etc.</source>
         <location filename="../../src/TrinityLib/ui/windows/launcher_window.cpp" line="653"/>
         <source>A version named &apos;%1&apos; already exists.
 Replace it?</source>
-        <translation>Версія з назвою '%1' вже існує.
+        <translation>Версія з назвою &apos;%1&apos; вже існує.
 Замінити її?</translation>
     </message>
     <message>
@@ -511,7 +511,7 @@ Replace it?</source>
         <location filename="../../src/TrinityLib/ui/windows/launcher_window.cpp" line="793"/>
         <source>Are you sure you want to delete version &apos;%1&apos;?
 This action cannot be undone.</source>
-        <translation>Ви впевнені, що хочете видалити версію '%1'?
+        <translation>Ви впевнені, що хочете видалити версію &apos;%1&apos;?
 Цю дію неможливо скасувати.</translation>
     </message>
     <message>
@@ -534,7 +534,7 @@ This action cannot be undone.</source>
     <message>
         <location filename="../../src/TrinityLib/ui/windows/launcher_window.cpp" line="863"/>
         <source>Version &apos;%1&apos; is not valid or complete.</source>
-        <translation>Версія '%1' не є коректною або повною.</translation>
+        <translation>Версія &apos;%1&apos; не є коректною або повною.</translation>
     </message>
     <message>
         <location filename="../../src/TrinityLib/ui/windows/launcher_window.cpp" line="877"/>
@@ -545,7 +545,7 @@ This action cannot be undone.</source>
         <location filename="../../src/TrinityLib/ui/windows/launcher_window.cpp" line="879"/>
         <source>A shortcut for &apos;%1&apos; already exists.
 Replace it?</source>
-        <translation>Ярлик для '%1' вже існує.
+        <translation>Ярлик для &apos;%1&apos; вже існує.
 Замінити його?</translation>
     </message>
     <message>
@@ -562,7 +562,7 @@ Replace it?</source>
         <location filename="../../src/TrinityLib/ui/windows/launcher_window.cpp" line="943"/>
         <source>The language will change to &apos;%1&apos;.
 Do you want to restart the application now to apply the changes?</source>
-        <translation>Мова зміниться на '%1'.
+        <translation>Мова зміниться на &apos;%1&apos;.
 Бажаєте перезапустити застосунок зараз для застосування змін?</translation>
     </message>
     <message>
@@ -576,129 +576,129 @@ Do you want to restart the application now to apply the changes?</source>
         <translation>Мова інтерфейсу:</translation>
     </message>
     <message>
-        <location filename="../../src/TrinityLib/ui/windows/launcher_window.cpp" line="1133"/>
+        <location filename="../../src/TrinityLib/ui/windows/launcher_window.cpp" line="1134"/>
         <source>UI Colors</source>
         <translation>Кольори інтерфейсу</translation>
     </message>
     <message>
-        <location filename="../../src/TrinityLib/ui/windows/launcher_window.cpp" line="1169"/>
+        <location filename="../../src/TrinityLib/ui/windows/launcher_window.cpp" line="1170"/>
         <source>Click to change color</source>
         <translation>Клацніть для зміни кольору</translation>
     </message>
     <message>
-        <location filename="../../src/TrinityLib/ui/windows/launcher_window.cpp" line="1179"/>
+        <location filename="../../src/TrinityLib/ui/windows/launcher_window.cpp" line="1180"/>
         <source>Select Color</source>
         <translation>Вибрати колір</translation>
     </message>
     <message>
-        <location filename="../../src/TrinityLib/ui/windows/launcher_window.cpp" line="1196"/>
+        <location filename="../../src/TrinityLib/ui/windows/launcher_window.cpp" line="1197"/>
         <source>Accent color</source>
         <translation>Колір акценту</translation>
     </message>
     <message>
-        <location filename="../../src/TrinityLib/ui/windows/launcher_window.cpp" line="1197"/>
+        <location filename="../../src/TrinityLib/ui/windows/launcher_window.cpp" line="1198"/>
         <source>Background color</source>
         <translation>Колір фону</translation>
     </message>
     <message>
-        <location filename="../../src/TrinityLib/ui/windows/launcher_window.cpp" line="1198"/>
+        <location filename="../../src/TrinityLib/ui/windows/launcher_window.cpp" line="1199"/>
         <source>Panel color</source>
         <translation>Колір панелі</translation>
     </message>
     <message>
-        <location filename="../../src/TrinityLib/ui/windows/launcher_window.cpp" line="1199"/>
+        <location filename="../../src/TrinityLib/ui/windows/launcher_window.cpp" line="1200"/>
         <source>Hover / border color</source>
         <translation>Колір наведення / межі</translation>
     </message>
     <message>
-        <location filename="../../src/TrinityLib/ui/windows/launcher_window.cpp" line="1200"/>
+        <location filename="../../src/TrinityLib/ui/windows/launcher_window.cpp" line="1201"/>
         <source>Button hover color</source>
         <translation>Колір наведення кнопок</translation>
     </message>
     <message>
-        <location filename="../../src/TrinityLib/ui/windows/launcher_window.cpp" line="1201"/>
+        <location filename="../../src/TrinityLib/ui/windows/launcher_window.cpp" line="1202"/>
         <source>Muted text color</source>
         <translation>Колір приглушеного тексту</translation>
     </message>
     <message>
-        <location filename="../../src/TrinityLib/ui/windows/launcher_window.cpp" line="1205"/>
+        <location filename="../../src/TrinityLib/ui/windows/launcher_window.cpp" line="1206"/>
         <source>Reset Colors to Default</source>
         <translation>Скинути кольори до стандартних</translation>
     </message>
     <message>
-        <location filename="../../src/TrinityLib/ui/windows/launcher_window.cpp" line="1219"/>
+        <location filename="../../src/TrinityLib/ui/windows/launcher_window.cpp" line="1220"/>
         <source>Colors reset to default. Reopen Settings to see the updated previews.</source>
         <translation>Кольори скинуто до стандартних. Відкрийте Налаштування знову для перегляду.</translation>
     </message>
     <message>
-        <location filename="../../src/TrinityLib/ui/windows/launcher_window.cpp" line="1228"/>
+        <location filename="../../src/TrinityLib/ui/windows/launcher_window.cpp" line="1229"/>
         <source>Wallpaper</source>
         <translation>Шпалери</translation>
     </message>
     <message>
-        <location filename="../../src/TrinityLib/ui/windows/launcher_window.cpp" line="1257"/>
-        <location filename="../../src/TrinityLib/ui/windows/launcher_window.cpp" line="1318"/>
+        <location filename="../../src/TrinityLib/ui/windows/launcher_window.cpp" line="1258"/>
+        <location filename="../../src/TrinityLib/ui/windows/launcher_window.cpp" line="1319"/>
         <source>Default background</source>
         <translation>Стандартний фон</translation>
     </message>
     <message>
-        <location filename="../../src/TrinityLib/ui/windows/launcher_window.cpp" line="1264"/>
-        <location filename="../../src/TrinityLib/ui/windows/launcher_window.cpp" line="1385"/>
+        <location filename="../../src/TrinityLib/ui/windows/launcher_window.cpp" line="1265"/>
+        <location filename="../../src/TrinityLib/ui/windows/launcher_window.cpp" line="1386"/>
         <source>Change...</source>
         <translation>Змінити...</translation>
     </message>
     <message>
-        <location filename="../../src/TrinityLib/ui/windows/launcher_window.cpp" line="1269"/>
+        <location filename="../../src/TrinityLib/ui/windows/launcher_window.cpp" line="1270"/>
         <source>Reset</source>
         <translation>Скинути</translation>
     </message>
     <message>
-        <location filename="../../src/TrinityLib/ui/windows/launcher_window.cpp" line="1289"/>
+        <location filename="../../src/TrinityLib/ui/windows/launcher_window.cpp" line="1290"/>
         <source>Select background image</source>
         <translation>Вибрати фонове зображення</translation>
     </message>
     <message>
-        <location filename="../../src/TrinityLib/ui/windows/launcher_window.cpp" line="1290"/>
+        <location filename="../../src/TrinityLib/ui/windows/launcher_window.cpp" line="1291"/>
         <source>Images (*.png *.jpg *.jpeg *.bmp *.webp);;All files (*)</source>
         <translation>Зображення (*.png *.jpg *.jpeg *.bmp *.webp);;Всі файли (*)</translation>
     </message>
     <message>
-        <location filename="../../src/TrinityLib/ui/windows/launcher_window.cpp" line="1335"/>
+        <location filename="../../src/TrinityLib/ui/windows/launcher_window.cpp" line="1336"/>
         <source>Sidebar Icons</source>
         <translation>Іконки бічної панелі</translation>
     </message>
     <message>
-        <location filename="../../src/TrinityLib/ui/windows/launcher_window.cpp" line="1344"/>
+        <location filename="../../src/TrinityLib/ui/windows/launcher_window.cpp" line="1345"/>
         <source>You can customize the sidebar icons. The app logo is fixed and cannot be changed.</source>
         <translation>Ви можете налаштувати іконки бічної панелі. Логотип застосунку фіксований.</translation>
     </message>
     <message>
-        <location filename="../../src/TrinityLib/ui/windows/launcher_window.cpp" line="1358"/>
+        <location filename="../../src/TrinityLib/ui/windows/launcher_window.cpp" line="1359"/>
         <source>Trinity (Home)</source>
         <translation>Trinity (Головна)</translation>
     </message>
     <message>
-        <location filename="../../src/TrinityLib/ui/windows/launcher_window.cpp" line="1361"/>
+        <location filename="../../src/TrinityLib/ui/windows/launcher_window.cpp" line="1362"/>
         <source>About</source>
         <translation>Про програму</translation>
     </message>
     <message>
-        <location filename="../../src/TrinityLib/ui/windows/launcher_window.cpp" line="1397"/>
+        <location filename="../../src/TrinityLib/ui/windows/launcher_window.cpp" line="1398"/>
         <source>Select Icon</source>
         <translation>Вибрати іконку</translation>
     </message>
     <message>
-        <location filename="../../src/TrinityLib/ui/windows/launcher_window.cpp" line="1398"/>
+        <location filename="../../src/TrinityLib/ui/windows/launcher_window.cpp" line="1399"/>
         <source>Images (*.png *.svg *.ico *.jpg);;All files (*)</source>
         <translation>Зображення (*.png *.svg *.ico *.jpg);;Всі файли (*)</translation>
     </message>
     <message>
-        <location filename="../../src/TrinityLib/ui/windows/launcher_window.cpp" line="1429"/>
+        <location filename="../../src/TrinityLib/ui/windows/launcher_window.cpp" line="1430"/>
         <source>Reset Icons to Default</source>
         <translation>Скинути іконки до стандартних</translation>
     </message>
     <message>
-        <location filename="../../src/TrinityLib/ui/windows/launcher_window.cpp" line="1440"/>
+        <location filename="../../src/TrinityLib/ui/windows/launcher_window.cpp" line="1441"/>
         <source>Icons reset to default. Reopen Settings to see the updated previews.</source>
         <translation>Іконки скинуто до стандартних. Відкрийте Налаштування знову для перегляду.</translation>
     </message>
@@ -874,7 +874,7 @@ Do you want to restart the application now to apply the changes?</source>
         <location filename="../../src/TrinityLib/ui/windows/trinito_window.cpp" line="452"/>
         <source>Are you sure you want to delete &apos;%1&apos;?
 This action cannot be undone.</source>
-        <translation>Ви впевнені, що хочете видалити '%1'?
+        <translation>Ви впевнені, що хочете видалити &apos;%1&apos;?
 Цю дію неможливо скасувати.</translation>
     </message>
     <message>
@@ -921,7 +921,7 @@ This action cannot be undone.</source>
         <location filename="../../src/TrinityLib/ui/windows/trinito_window.cpp" line="587"/>
         <source>Are you sure you want to delete Behavior Pack &apos;%1&apos;?
 This action cannot be undone.</source>
-        <translation>Ви впевнені, що хочете видалити пакет поведінки '%1'?
+        <translation>Ви впевнені, що хочете видалити пакет поведінки &apos;%1&apos;?
 Цю дію неможливо скасувати.</translation>
     </message>
     <message>
@@ -949,7 +949,7 @@ This action cannot be undone.</source>
         <location filename="../../src/TrinityLib/ui/windows/trinito_window.cpp" line="637"/>
         <source>Are you sure you want to delete Resource Pack &apos;%1&apos;?
 This action cannot be undone.</source>
-        <translation>Ви впевнені, що хочете видалити пакет ресурсів '%1'?
+        <translation>Ви впевнені, що хочете видалити пакет ресурсів &apos;%1&apos;?
 Цю дію неможливо скасувати.</translation>
     </message>
     <message>
@@ -986,7 +986,7 @@ This action cannot be undone.</source>
         <location filename="../../src/TrinityLib/ui/windows/trinito_window.cpp" line="735"/>
         <source>Are you sure you want to delete world &apos;%1&apos;?
 This action cannot be undone.</source>
-        <translation>Ви впевнені, що хочете видалити світ '%1'?
+        <translation>Ви впевнені, що хочете видалити світ &apos;%1&apos;?
 Цю дію неможливо скасувати.</translation>
     </message>
     <message>
