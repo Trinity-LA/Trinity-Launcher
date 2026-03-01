@@ -1,17 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!DOCTYPE TS>
-<TS version="2.1" language="uk" sourcelanguage="es">
+<TS version="2.1" language="pt_BR">
 <context>
     <name>DiscordManager</name>
     <message>
         <location filename="../../src/TrinityLib/core/discord_manager.cpp" line="145"/>
         <source>Waiting to start</source>
-        <translation>Очікування запуску</translation>
+        <translation>Esperando para iniciar</translation>
     </message>
     <message>
         <location filename="../../src/TrinityLib/core/discord_manager.cpp" line="146"/>
         <source>In the main menu</source>
-        <translation>У головному меню</translation>
+        <translation>No menu principal</translation>
     </message>
     <message>
         <location filename="../../src/TrinityLib/core/discord_manager.cpp" line="147"/>
@@ -21,7 +21,7 @@
     <message>
         <location filename="../../src/TrinityLib/core/discord_manager.cpp" line="148"/>
         <source>Configuring</source>
-        <translation>Налаштування</translation>
+        <translation>Configurando</translation>
     </message>
 </context>
 <context>
@@ -31,17 +31,17 @@
         <location filename="../../src/TrinityLib/core/exporter.cpp" line="80"/>
         <location filename="../../src/TrinityLib/core/exporter.cpp" line="95"/>
         <source>Error</source>
-        <translation>Помилка</translation>
+        <translation>Erro</translation>
     </message>
     <message>
         <location filename="../../src/TrinityLib/core/exporter.cpp" line="30"/>
         <source>La versión no existe.</source>
-        <translation>Версія не існує.</translation>
+        <translation>A versão não existe.</translation>
     </message>
     <message>
         <location filename="../../src/TrinityLib/core/exporter.cpp" line="36"/>
         <source>Exportar versión</source>
-        <translation>Експортувати версію</translation>
+        <translation>Exportar versão</translation>
     </message>
     <message>
         <location filename="../../src/TrinityLib/core/exporter.cpp" line="37"/>
@@ -49,116 +49,116 @@
 
 Sí: Incluye la versión completa (datos del juego).
 No: Solo exporta mods, mapas, etc.</source>
-        <translation>Експортувати &apos;%1&apos; з даними APK?
+        <translation>Exportar &apos;%1&apos; como dados do APK?
 
-Так: Включає повну версію (дані гри).
-Ні: Експортує лише моди, карти тощо.</translation>
+Sim: Inclui versão completar (dados do jogo).
+Não: Apenas extrai mods, mapas, etc.</translation>
     </message>
     <message>
         <location filename="../../src/TrinityLib/core/exporter.cpp" line="45"/>
         <source>Guardar como archivo</source>
-        <translation>Зберегти як файл</translation>
+        <translation>Salvar como arquivo</translation>
     </message>
     <message>
         <location filename="../../src/TrinityLib/core/exporter.cpp" line="46"/>
         <source>Archivos TAR (*.tar.gz);;Todos los archivos (*)</source>
-        <translation>Файли TAR (*.tar.gz);;Усі файли (*)</translation>
+        <translation>Arquivos TAR (*.tar.gz);;Todos os arquivos (*)</translation>
     </message>
     <message>
         <location filename="../../src/TrinityLib/core/exporter.cpp" line="52"/>
         <source>Exportando...</source>
-        <translation>Експорт...</translation>
+        <translation>Exportando...</translation>
     </message>
     <message>
         <location filename="../../src/TrinityLib/core/exporter.cpp" line="56"/>
         <source>Exportando versión...</source>
-        <translation>Експорт версії...</translation>
+        <translation>Exportando versão...</translation>
     </message>
     <message>
         <location filename="../../src/TrinityLib/core/exporter.cpp" line="81"/>
         <source>No se pudo copiar la versión.</source>
-        <translation>Не вдалося скопіювати версію.</translation>
+        <translation>Não foi possível copiar a versão.</translation>
     </message>
     <message>
         <location filename="../../src/TrinityLib/core/exporter.cpp" line="96"/>
         <source>No se pudo copiar los recursos.</source>
-        <translation>Не вдалося скопіювати ресурси.</translation>
+        <translation>Não foi possível copiar os recursos.</translation>
     </message>
     <message>
         <location filename="../../src/TrinityLib/core/exporter.cpp" line="113"/>
         <source>Versión %1 exportada como %2</source>
-        <translation>Версію %1 експортовано як %2</translation>
+        <translation>Versão %1 exportada como %2</translation>
     </message>
     <message>
         <location filename="../../src/TrinityLib/core/exporter.cpp" line="117"/>
         <source>Falló la exportación:
 </source>
-        <translation>Помилка експорту:
+        <translation>Falha na exportação:
 </translation>
     </message>
     <message>
         <location filename="../../src/TrinityLib/core/exporter.cpp" line="135"/>
         <source>Seleccionar archivo TAR</source>
-        <translation>Вибрати файл TAR</translation>
+        <translation>Selecione arquivo TAR</translation>
     </message>
     <message>
         <location filename="../../src/TrinityLib/core/exporter.cpp" line="136"/>
         <source>Archivos TAR (*.tar.gz *.tar);;Todos los archivos (*)</source>
-        <translation>Файли TAR (*.tar.gz *.tar);;Усі файли (*)</translation>
+        <translation>Arquivos TAR (*.tar.gz *.tar);;Todos os arquivos (*)</translation>
     </message>
     <message>
         <location filename="../../src/TrinityLib/core/exporter.cpp" line="155"/>
         <source>Advertencia</source>
-        <translation>Попередження</translation>
+        <translation>Aviso</translation>
     </message>
     <message>
         <location filename="../../src/TrinityLib/core/exporter.cpp" line="156"/>
         <source>¡Este proceso puede tardar!.
 ¿Quiere continuar?</source>
-        <translation>Цей процес може зайняти певний час!
-Ви хочете продовжити?</translation>
+        <translation>Este processo pode acabar demorando muito.
+Deseja continuar?</translation>
     </message>
     <message>
         <location filename="../../src/TrinityLib/core/exporter.cpp" line="168"/>
         <source>Importando...</source>
-        <translation>Імпорт...</translation>
+        <translation>Importando...</translation>
     </message>
     <message>
         <location filename="../../src/TrinityLib/core/exporter.cpp" line="172"/>
         <source>Importando versión...</source>
-        <translation>Імпорт версії...</translation>
+        <translation>Importando versão...</translation>
     </message>
     <message>
         <location filename="../../src/TrinityLib/core/exporter.cpp" line="198"/>
         <source>Falló la extracción:
 </source>
-        <translation>Помилка розпакування:
+        <translation>Falha na extração:
 </translation>
     </message>
     <message>
         <location filename="../../src/TrinityLib/core/exporter.cpp" line="260"/>
         <source>No se pudo mover/copiar directorio: </source>
-        <translation>Не вдалося перемістити/скопіювати каталог: </translation>
+        <translation>Não foi possível mover/copiar o(s) diretório(s): </translation>
     </message>
     <message>
         <location filename="../../src/TrinityLib/core/exporter.cpp" line="269"/>
         <source>No se pudo mover/copiar archivo: </source>
-        <translation>Не вдалося перемістити/скопіювати файл: </translation>
+        <translation>Não foi possível mover/copiar o(s) arquivo(s): </translation>
     </message>
     <message>
         <location filename="../../src/TrinityLib/core/exporter.cpp" line="311"/>
         <source>No se pudo mover/copiar directorio de recursos: </source>
-        <translation>Не вдалося перемістити/скопіювати каталог ресурсів: </translation>
+        <translation>Não foi possível mover/copiar o(s) repositório(s) de recursos: </translation>
     </message>
     <message>
         <location filename="../../src/TrinityLib/core/exporter.cpp" line="320"/>
         <source>No se pudo mover/copiar archivo de recursos: </source>
-        <translation>Не вдалося перемістити/скопіювати файл ресурсів: </translation>
+        <translation>Não foi possível mover/copiar o(s) arquivo(s) de recurso: </translation>
     </message>
     <message>
         <location filename="../../src/TrinityLib/core/exporter.cpp" line="342"/>
         <source>Versión %1 importada correctamente.</source>
-        <translation>Версію %1 успішно імпортовано.</translation>
+        <translation>Versão %1 importada com sucesso.</translation>
     </message>
 </context>
 <context>
@@ -166,48 +166,48 @@ No: Solo exporta mods, mapas, etc.</source>
     <message>
         <location filename="../../src/TrinityLib/ui/dialogs/extract_dialog.cpp" line="12"/>
         <source>Nueva versión desde APK</source>
-        <translation>Нова версія з APK</translation>
+        <translation>Nova versão originada de APK</translation>
     </message>
     <message>
         <location filename="../../src/TrinityLib/ui/dialogs/extract_dialog.cpp" line="17"/>
         <source>Seleccionar APK...</source>
-        <translation>Вибрати APK...</translation>
+        <translation>Selecionar APK...</translation>
     </message>
     <message>
         <location filename="../../src/TrinityLib/ui/dialogs/extract_dialog.cpp" line="18"/>
         <source>Ningún archivo seleccionado</source>
-        <translation>Файл не вибрано</translation>
+        <translation>Nenhum arquivo selecionado</translation>
     </message>
     <message>
         <location filename="../../src/TrinityLib/ui/dialogs/extract_dialog.cpp" line="29"/>
         <source>Nombre de la versión:</source>
-        <translation>Назва версії:</translation>
+        <translation>Nome da versão:</translation>
     </message>
     <message>
         <location filename="../../src/TrinityLib/ui/dialogs/extract_dialog.cpp" line="36"/>
         <location filename="../../src/TrinityLib/ui/dialogs/extract_dialog.cpp" line="40"/>
         <source>Error</source>
-        <translation>Помилка</translation>
+        <translation>Erro</translation>
     </message>
     <message>
         <location filename="../../src/TrinityLib/ui/dialogs/extract_dialog.cpp" line="36"/>
         <source>Debes seleccionar un archivo APK.</source>
-        <translation>Ви повинні вибрати файл APK.</translation>
+        <translation>Você precisa selecionar um arquivo APK.</translation>
     </message>
     <message>
         <location filename="../../src/TrinityLib/ui/dialogs/extract_dialog.cpp" line="40"/>
         <source>Debes ingresar un nombre para la versión.</source>
-        <translation>Ви повинні ввести назву версії.</translation>
+        <translation>Você precisa nomear a versão.</translation>
     </message>
     <message>
         <location filename="../../src/TrinityLib/ui/dialogs/extract_dialog.cpp" line="49"/>
         <source>Seleccionar APK de Minecraft</source>
-        <translation>Вибрати APK Minecraft</translation>
+        <translation>Selecione o APK de Minecraft</translation>
     </message>
     <message>
         <location filename="../../src/TrinityLib/ui/dialogs/extract_dialog.cpp" line="49"/>
         <source>Archivos APK (*.apk)</source>
-        <translation>Файли APK (*.apk)</translation>
+        <translation>Arquivos APK (*.apk)</translation>
     </message>
 </context>
 <context>
@@ -215,156 +215,36 @@ No: Solo exporta mods, mapas, etc.</source>
     <message>
         <location filename="../../src/TrinityLib/core/game_launcher.cpp" line="79"/>
         <source>El juego ya se está ejecutando.</source>
-        <translation>Гра вже запущена.</translation>
+        <translation>O jogo já está em execução.</translation>
     </message>
     <message>
         <location filename="../../src/TrinityLib/core/game_launcher.cpp" line="96"/>
         <source>mcpelauncher-client no encontrado.</source>
-        <translation>mcpelauncher-client не знайдено.</translation>
+        <translation>mcpelauncher-client não foi encontrado.</translation>
     </message>
     <message>
         <location filename="../../src/TrinityLib/core/game_launcher.cpp" line="122"/>
         <source>Jugando Minecraft Bedrock</source>
-        <translation>Грає в Minecraft Bedrock</translation>
+        <translation>Jogando Minecraft Bedrock</translation>
     </message>
     <message>
         <location filename="../../src/TrinityLib/core/game_launcher.cpp" line="134"/>
         <source>No se pudo iniciar el proceso del juego.</source>
-        <translation>Не вдалося запустити ігровий процес.</translation>
+        <translation>Não foi possível iniciar o processo do jogo.</translation>
     </message>
     <message>
         <location filename="../../src/TrinityLib/core/game_launcher.cpp" line="136"/>
         <source>Menú de Trinity Launcher</source>
-        <translation>Меню Trinity Launcher</translation>
+        <translation>Menu do Trinity Launcher</translation>
     </message>
     <message>
         <location filename="../../src/TrinityLib/core/game_launcher.cpp" line="136"/>
         <source>Esperando...</source>
-        <translation>Очікування...</translation>
+        <translation>Aguardando...</translation>
     </message>
 </context>
 <context>
     <name>LauncherWindow</name>
-    <message>
-        <source>+ Extraer APK</source>
-        <translation type="vanished">+ Видобути APK</translation>
-    </message>
-    <message>
-        <source>Importar</source>
-        <translation type="vanished">Імпортувати</translation>
-    </message>
-    <message>
-        <source>Herramientas</source>
-        <translation type="vanished">Інструменти</translation>
-    </message>
-    <message>
-        <source>Selecciona una versión</source>
-        <translation type="vanished">Виберіть версію</translation>
-    </message>
-    <message>
-        <source>JUGAR</source>
-        <translation type="vanished">ГРАТИ</translation>
-    </message>
-    <message>
-        <source>Crear Acceso Directo</source>
-        <translation type="vanished">Створити ярлик</translation>
-    </message>
-    <message>
-        <source>Editar Configuración</source>
-        <translation type="vanished">Редагувати налаштування</translation>
-    </message>
-    <message>
-        <source>Exportar</source>
-        <translation type="vanished">Експортувати</translation>
-    </message>
-    <message>
-        <source>Eliminar</source>
-        <translation type="vanished">Видалити</translation>
-    </message>
-    <message>
-        <source>Listo</source>
-        <translation type="vanished">Готово</translation>
-    </message>
-    <message>
-        <location filename="../../src/TrinityLib/ui/windows/launcher_window.cpp" line="620"/>
-        <source>Sin versiones</source>
-        <translation>Без версій</translation>
-    </message>
-    <message>
-        <location filename="../../src/TrinityLib/ui/windows/launcher_window.cpp" line="623"/>
-        <source>No hay versiones instaladas.</source>
-        <translation>Немає встановлених версій.</translation>
-    </message>
-    <message>
-        <location filename="../../src/TrinityLib/ui/windows/launcher_window.cpp" line="634"/>
-        <source>Versión seleccionada: %1 | Ruta: %2</source>
-        <translation>Вибрана версія: %1 | Шлях: %2</translation>
-    </message>
-    <message>
-        <location filename="../../src/TrinityLib/ui/windows/launcher_window.cpp" line="651"/>
-        <location filename="../../src/TrinityLib/ui/windows/launcher_window.cpp" line="718"/>
-        <location filename="../../src/TrinityLib/ui/windows/launcher_window.cpp" line="774"/>
-        <location filename="../../src/TrinityLib/ui/windows/launcher_window.cpp" line="785"/>
-        <location filename="../../src/TrinityLib/ui/windows/launcher_window.cpp" line="791"/>
-        <location filename="../../src/TrinityLib/ui/windows/launcher_window.cpp" line="850"/>
-        <source>Advertencia</source>
-        <translation>Попередження</translation>
-    </message>
-    <message>
-        <location filename="../../src/TrinityLib/ui/windows/launcher_window.cpp" line="652"/>
-        <source>Ya existe una versión llamada &apos;%1&apos;.
-¿Reemplazarla?</source>
-        <translation>Вже існує версія з назвою &apos;%1&apos;.
-Замінити її?</translation>
-    </message>
-    <message>
-        <location filename="../../src/TrinityLib/ui/windows/launcher_window.cpp" line="661"/>
-        <source>Extrayendo APK...</source>
-        <translation>Видобування APK...</translation>
-    </message>
-    <message>
-        <location filename="../../src/TrinityLib/ui/windows/launcher_window.cpp" line="665"/>
-        <source>Extrayendo versión...</source>
-        <translation>Видобування версії...</translation>
-    </message>
-    <message>
-        <location filename="../../src/TrinityLib/ui/windows/launcher_window.cpp" line="689"/>
-        <location filename="../../src/TrinityLib/ui/windows/launcher_window.cpp" line="803"/>
-        <source>Error</source>
-        <translation>Помилка</translation>
-    </message>
-    <message>
-        <location filename="../../src/TrinityLib/ui/windows/launcher_window.cpp" line="690"/>
-        <source>Falló la extracción:
-</source>
-        <translation>Помилка видобування:
-</translation>
-    </message>
-    <message>
-        <location filename="../../src/TrinityLib/ui/windows/launcher_window.cpp" line="694"/>
-        <location filename="../../src/TrinityLib/ui/windows/launcher_window.cpp" line="758"/>
-        <location filename="../../src/TrinityLib/ui/windows/launcher_window.cpp" line="809"/>
-        <location filename="../../src/TrinityLib/ui/windows/launcher_window.cpp" line="922"/>
-        <source>Éxito</source>
-        <translation>Успіх</translation>
-    </message>
-    <message>
-        <location filename="../../src/TrinityLib/ui/windows/launcher_window.cpp" line="695"/>
-        <source>¡Versión extraída correctamente!</source>
-        <translation>Версію успішно видобуто!</translation>
-    </message>
-    <message>
-        <location filename="../../src/TrinityLib/ui/windows/launcher_window.cpp" line="719"/>
-        <location filename="../../src/TrinityLib/ui/windows/launcher_window.cpp" line="775"/>
-        <location filename="../../src/TrinityLib/ui/windows/launcher_window.cpp" line="786"/>
-        <location filename="../../src/TrinityLib/ui/windows/launcher_window.cpp" line="851"/>
-        <source>No hay ningún versión seleccionada.</source>
-        <translation>Жодної версії не вибрано.</translation>
-    </message>
-    <message>
-        <source>No hay ninguna versión seleccionada.</source>
-        <translation type="vanished">Жодна версія не вибрана.</translation>
-    </message>
     <message>
         <location filename="../../src/TrinityLib/ui/windows/launcher_window.cpp" line="102"/>
         <source>Trinity Launcher - Minecraft Bedrock</source>
@@ -379,7 +259,7 @@ No: Solo exporta mods, mapas, etc.</source>
         <location filename="../../src/TrinityLib/ui/windows/launcher_window.cpp" line="144"/>
         <location filename="../../src/TrinityLib/ui/windows/launcher_window.cpp" line="1353"/>
         <source>Content Manager</source>
-        <translation>Менеджер контенту</translation>
+        <translation>Gerenciador de Conteúdo</translation>
     </message>
     <message>
         <location filename="../../src/TrinityLib/ui/windows/launcher_window.cpp" line="151"/>
@@ -392,7 +272,7 @@ No: Solo exporta mods, mapas, etc.</source>
         <location filename="../../src/TrinityLib/ui/windows/launcher_window.cpp" line="158"/>
         <location filename="../../src/TrinityLib/ui/windows/launcher_window.cpp" line="439"/>
         <source>About Trinity Launcher</source>
-        <translation>Про Trinity Launcher</translation>
+        <translation>Sobre o Trinity Launcher</translation>
     </message>
     <message>
         <source>Trinity Launcher</source>
@@ -400,49 +280,49 @@ No: Solo exporta mods, mapas, etc.</source>
     </message>
     <message>
         <source>+ Extract APK</source>
-        <translation type="vanished">+ Видобути APK</translation>
+        <translation type="vanished">+ Extrair APK</translation>
     </message>
     <message>
         <source>Import</source>
-        <translation type="vanished">Імпортувати</translation>
+        <translation type="vanished">Importar</translation>
     </message>
     <message>
         <source>Select a version</source>
-        <translation type="vanished">Виберіть версію</translation>
+        <translation type="vanished">Selecione uma versão</translation>
     </message>
     <message>
         <source>PLAY</source>
-        <translation type="vanished">ГРАТИ</translation>
+        <translation type="vanished">JOGAR</translation>
     </message>
     <message>
         <source>Create Shortcut</source>
-        <translation type="vanished">Створити ярлик</translation>
+        <translation type="vanished">Criar Atalho</translation>
     </message>
     <message>
         <source>Edit Config</source>
-        <translation type="vanished">Редагувати конфігурацію</translation>
+        <translation type="vanished">Editar Configurações</translation>
     </message>
     <message>
         <source>Export</source>
-        <translation type="vanished">Експортувати</translation>
+        <translation type="vanished">Exportar</translation>
     </message>
     <message>
         <source>Delete</source>
-        <translation type="vanished">Видалити</translation>
+        <translation type="vanished">Excluir</translation>
     </message>
     <message>
         <location filename="../../src/TrinityLib/ui/windows/launcher_window.cpp" line="313"/>
         <source>Ready</source>
-        <translation>Готово</translation>
+        <translation>Pronto</translation>
     </message>
     <message>
         <location filename="../../src/TrinityLib/ui/windows/launcher_window.cpp" line="365"/>
         <source>Join our community on Discord</source>
-        <translation>Приєднуйтесь до нашої спільноти у Discord</translation>
+        <translation>Junte-se à nossa comunidade no Discord</translation>
     </message>
     <message>
         <source>Join Discord</source>
-        <translation type="vanished">Приєднатися до Discord</translation>
+        <translation type="vanished">Entrar no Discord</translation>
     </message>
     <message>
         <location filename="../../src/TrinityLib/ui/windows/launcher_window.cpp" line="165"/>
@@ -466,190 +346,266 @@ No: Solo exporta mods, mapas, etc.</source>
     <message>
         <location filename="../../src/TrinityLib/ui/windows/launcher_window.cpp" line="379"/>
         <source>Haz clic para copiar el enlace</source>
-        <translation>Натисніть, щоб скопіювати посилання</translation>
+        <translation>Clique para copiar o link</translation>
     </message>
     <message>
         <location filename="../../src/TrinityLib/ui/windows/launcher_window.cpp" line="385"/>
         <source>✓ Copiado!</source>
-        <translation>✓ Скопійовано!</translation>
+        <translation>✓ Copiado!</translation>
     </message>
     <message>
         <location filename="../../src/TrinityLib/ui/windows/launcher_window.cpp" line="399"/>
         <location filename="../../src/TrinityLib/ui/windows/launcher_window.cpp" line="416"/>
         <source>Discord Rich Presence</source>
-        <translation>Розширена присутність Discord</translation>
+        <translation>Status do Discord</translation>
     </message>
     <message>
         <location filename="../../src/TrinityLib/ui/windows/launcher_window.cpp" line="417"/>
         <source>Cierra y vuelve a abrir el launcher para que se aplique la configuración.</source>
-        <translation>Закрийте та знову відкрийте лаунчер, щоб застосувати налаштування.</translation>
+        <translation>Feche e reabra o inicializador para aplicar as configurações.</translation>
     </message>
     <message>
         <location filename="../../src/TrinityLib/ui/windows/launcher_window.cpp" line="444"/>
         <source>Trinity Launcher is an open-source, community-driven launcher for Minecraft Bedrock. Focused on user freedom and free redistribution, it provides a powerful interface to manage multiple instances, worlds, textures, and mods seamlessly.</source>
-        <translation>Trinity Launcher — це лаунчер з відкритим вихідним кодом для Minecraft Bedrock, створений спільнотою. Орієнтований на свободу користувача та вільне поширення, він забезпечує потужний інтерфейс для зручного керування кількома екземплярами, світами, текстурами та модами.</translation>
+        <translation>O Trinity Launcher é um inicializador de código aberto e movido pela comunidade para Minecraft Bedrock. Focado na liberdade do usuário e na redistribuição gratuita, ele fornece uma interface poderosa para gerenciar múltiplas instâncias, mundos, texturas e mods de forma integrada.</translation>
     </message>
     <message>
         <location filename="../../src/TrinityLib/ui/windows/launcher_window.cpp" line="452"/>
         <source>Our Team</source>
-        <translation>Наша команда</translation>
+        <translation>Nossa Equipe</translation>
     </message>
     <message>
         <location filename="../../src/TrinityLib/ui/windows/launcher_window.cpp" line="457"/>
         <source>Trinity is built by a dedicated group of developers, designers, and contributors:</source>
-        <translation>Trinity створено відданою групою розробників, дизайнерів та учасників:</translation>
+        <translation>O Trinity é construído por um grupo dedicado de desenvolvedores, designers e colaboradores:</translation>
     </message>
     <message>
         <location filename="../../src/TrinityLib/ui/windows/launcher_window.cpp" line="464"/>
         <source>&lt;b&gt;Crow&lt;/b&gt;: Project Creator &amp; Visionary.</source>
-        <translation>&lt;b&gt;Crow&lt;/b&gt;: Творець проєкту та візіонер.</translation>
+        <translation>&lt;b&gt;Crow&lt;/b&gt;: Criador do Projeto e Visionário.</translation>
     </message>
     <message>
         <location filename="../../src/TrinityLib/ui/windows/launcher_window.cpp" line="465"/>
         <source>&lt;b&gt;JavierC&lt;/b&gt;: Co-Creator &amp; Development Supervisor.</source>
-        <translation>&lt;b&gt;JavierC&lt;/b&gt;: Співтворець та керівник розробки.</translation>
+        <translation>&lt;b&gt;JavierC&lt;/b&gt;: Cocriador e Supervisor de Desenvolvimento.</translation>
     </message>
     <message>
         <location filename="../../src/TrinityLib/ui/windows/launcher_window.cpp" line="466"/>
         <source>&lt;b&gt;Orta&lt;/b&gt;: Project Supervisor &amp; Software Architect.</source>
-        <translation>&lt;b&gt;Orta&lt;/b&gt;: Керівник проєкту та архітектор програмного забезпечення.</translation>
+        <translation>&lt;b&gt;Orta&lt;/b&gt;: Supervisor do Projeto e Arquiteto de Software.</translation>
     </message>
     <message>
         <location filename="../../src/TrinityLib/ui/windows/launcher_window.cpp" line="467"/>
         <source>&lt;b&gt;MrTanuk&lt;/b&gt;: Core Developer.</source>
-        <translation>&lt;b&gt;MrTanuk&lt;/b&gt;: Головний розробник.</translation>
+        <translation>&lt;b&gt;MrTanuk&lt;/b&gt;: Desenvolvedor Principal.</translation>
     </message>
     <message>
         <location filename="../../src/TrinityLib/ui/windows/launcher_window.cpp" line="468"/>
         <source>&lt;b&gt;Ezequiel&lt;/b&gt;: Web Design &amp; Frontend Developer.</source>
-        <translation>&lt;b&gt;Ezequiel&lt;/b&gt;: Веб-дизайн та Frontend-розробник.</translation>
+        <translation>&lt;b&gt;Ezequiel&lt;/b&gt;: Web Design e Desenvolvedor Frontend.</translation>
     </message>
     <message>
         <location filename="../../src/TrinityLib/ui/windows/launcher_window.cpp" line="469"/>
         <source>&lt;b&gt;KevinRunforrestt&lt;/b&gt;: Documentation, Translation &amp; Support.</source>
-        <translation>&lt;b&gt;KevinRunforrestt&lt;/b&gt;: Документація, переклад та підтримка.</translation>
+        <translation>&lt;b&gt;KevinRunforrestt&lt;/b&gt;: Documentação, Tradução e Suporte.</translation>
     </message>
     <message>
         <location filename="../../src/TrinityLib/ui/windows/launcher_window.cpp" line="470"/>
         <source>&lt;b&gt;IoselDev&lt;/b&gt;: AUR Package Maintainer.</source>
-        <translation>&lt;b&gt;IoselDev&lt;/b&gt;: Супроводжувач пакета AUR.</translation>
+        <translation>&lt;b&gt;IoselDev&lt;/b&gt;: Mantenedor do pacote AUR.</translation>
     </message>
     <message>
         <location filename="../../src/TrinityLib/ui/windows/launcher_window.cpp" line="471"/>
         <source>&lt;b&gt;HylianSoul&lt;/b&gt;: Catalan Translation &amp; Community Support.</source>
-        <translation>&lt;b&gt;HylianSoul&lt;/b&gt;: Переклад на каталонську та підтримка спільноти.</translation>
+        <translation>&lt;b&gt;HylianSoul&lt;/b&gt;: Tradução para o Catalão e Suporte da Comunidade.</translation>
     </message>
     <message>
         <location filename="../../src/TrinityLib/ui/windows/launcher_window.cpp" line="472"/>
         <source>&lt;b&gt;Future Contributor&lt;/b&gt;: This spot is reserved for you. Join us!</source>
-        <translation>&lt;b&gt;Майбутній учасник&lt;/b&gt;: Це місце зарезервовано для вас. Приєднуйтесь!</translation>
+        <translation>&lt;b&gt;Futuro Colaborador&lt;/b&gt;: Este espaço é reservado para você. Junte-se a nós!</translation>
     </message>
     <message>
         <location filename="../../src/TrinityLib/ui/windows/launcher_window.cpp" line="483"/>
         <source>Special Thanks</source>
-        <translation>Особлива подяка</translation>
+        <translation>Agradecimentos Especiais</translation>
     </message>
     <message>
         <location filename="../../src/TrinityLib/ui/windows/launcher_window.cpp" line="488"/>
         <source>We would like to express our sincere gratitude to the team behind the &lt;b&gt;Unofficial NIX Launcher for Minecraft&lt;/b&gt;. Their work provides the essential runtime to run Minecraft, which has been fundamental to the development of this project.</source>
-        <translation>Ми хотіли б висловити нашу щиру подяку команді &lt;b&gt;Unofficial NIX Launcher for Minecraft&lt;/b&gt;. Їхня робота забезпечує необхідне середовище для запуску Minecraft, що стало фундаментальним для розвитку цього проєкту.</translation>
+        <translation>Gostaríamos de expressar nossa sincera gratidão à equipe responsável pelo &lt;b&gt;Unofficial NIX Launcher for Minecraft&lt;/b&gt;. O trabalho deles fornece o ambiente essencial para executar o Minecraft, o que tem sido fundamental para o desenvolvimento deste projeto.</translation>
+    </message>
+    <message>
+        <location filename="../../src/TrinityLib/ui/windows/launcher_window.cpp" line="620"/>
+        <source>Sin versiones</source>
+        <translation>Sem versões</translation>
+    </message>
+    <message>
+        <location filename="../../src/TrinityLib/ui/windows/launcher_window.cpp" line="623"/>
+        <source>No hay versiones instaladas.</source>
+        <translation>Nenhuma versão instalada.</translation>
     </message>
     <message>
         <location filename="../../src/TrinityLib/ui/windows/launcher_window.cpp" line="628"/>
         <source>Bedrock Edition</source>
-        <translation>Bedrock Edition</translation>
+        <translation>Edição Bedrock</translation>
+    </message>
+    <message>
+        <location filename="../../src/TrinityLib/ui/windows/launcher_window.cpp" line="634"/>
+        <source>Versión seleccionada: %1 | Ruta: %2</source>
+        <translation>Versão selecionada: %1 | Rota: %2</translation>
+    </message>
+    <message>
+        <location filename="../../src/TrinityLib/ui/windows/launcher_window.cpp" line="651"/>
+        <location filename="../../src/TrinityLib/ui/windows/launcher_window.cpp" line="718"/>
+        <location filename="../../src/TrinityLib/ui/windows/launcher_window.cpp" line="774"/>
+        <location filename="../../src/TrinityLib/ui/windows/launcher_window.cpp" line="785"/>
+        <location filename="../../src/TrinityLib/ui/windows/launcher_window.cpp" line="791"/>
+        <location filename="../../src/TrinityLib/ui/windows/launcher_window.cpp" line="850"/>
+        <source>Advertencia</source>
+        <translation>Aviso</translation>
+    </message>
+    <message>
+        <location filename="../../src/TrinityLib/ui/windows/launcher_window.cpp" line="652"/>
+        <source>Ya existe una versión llamada &apos;%1&apos;.
+¿Reemplazarla?</source>
+        <translation>Já existe uma versão nomeada de &apos;%1&apos;.
+Substituir?</translation>
+    </message>
+    <message>
+        <location filename="../../src/TrinityLib/ui/windows/launcher_window.cpp" line="661"/>
+        <source>Extrayendo APK...</source>
+        <translation>Extraindo APK...</translation>
+    </message>
+    <message>
+        <location filename="../../src/TrinityLib/ui/windows/launcher_window.cpp" line="665"/>
+        <source>Extrayendo versión...</source>
+        <translation>Extraindo versão...</translation>
+    </message>
+    <message>
+        <location filename="../../src/TrinityLib/ui/windows/launcher_window.cpp" line="689"/>
+        <location filename="../../src/TrinityLib/ui/windows/launcher_window.cpp" line="803"/>
+        <source>Error</source>
+        <translation>Erro</translation>
+    </message>
+    <message>
+        <location filename="../../src/TrinityLib/ui/windows/launcher_window.cpp" line="690"/>
+        <source>Falló la extracción:
+</source>
+        <translation>Falha na extração:
+</translation>
+    </message>
+    <message>
+        <location filename="../../src/TrinityLib/ui/windows/launcher_window.cpp" line="694"/>
+        <location filename="../../src/TrinityLib/ui/windows/launcher_window.cpp" line="758"/>
+        <location filename="../../src/TrinityLib/ui/windows/launcher_window.cpp" line="809"/>
+        <location filename="../../src/TrinityLib/ui/windows/launcher_window.cpp" line="922"/>
+        <source>Éxito</source>
+        <translation>Sucesso</translation>
+    </message>
+    <message>
+        <location filename="../../src/TrinityLib/ui/windows/launcher_window.cpp" line="695"/>
+        <source>¡Versión extraída correctamente!</source>
+        <translation>Versão extraida com êxito!</translation>
+    </message>
+    <message>
+        <location filename="../../src/TrinityLib/ui/windows/launcher_window.cpp" line="719"/>
+        <location filename="../../src/TrinityLib/ui/windows/launcher_window.cpp" line="775"/>
+        <location filename="../../src/TrinityLib/ui/windows/launcher_window.cpp" line="786"/>
+        <location filename="../../src/TrinityLib/ui/windows/launcher_window.cpp" line="851"/>
+        <source>No hay ningún versión seleccionada.</source>
+        <translation>Nenhuma versão selecionada.</translation>
     </message>
     <message>
         <location filename="../../src/TrinityLib/ui/windows/launcher_window.cpp" line="725"/>
         <source>Editar configuración de </source>
-        <translation>Редагувати налаштування </translation>
+        <translation>Editar configuração de </translation>
     </message>
     <message>
         <location filename="../../src/TrinityLib/ui/windows/launcher_window.cpp" line="730"/>
         <source>Parámetros de ejecución (antes de mcpelauncher-client):</source>
-        <translation>Параметри запуску (перед mcpelauncher-client):</translation>
+        <translation>Parâmetros de execução (antes de mcpelauncher-client):</translation>
     </message>
     <message>
         <location filename="../../src/TrinityLib/ui/windows/launcher_window.cpp" line="755"/>
         <source>No se pudo guardar la configuración:
 </source>
-        <translation>Не вдалося зберегти налаштування:
+        <translation>Não foi possível salvar a configuração:
 </translation>
     </message>
     <message>
         <location filename="../../src/TrinityLib/ui/windows/launcher_window.cpp" line="759"/>
         <source>Configuración guardada.</source>
-        <translation>Налаштування збережено.</translation>
+        <translation>Configuração salva.</translation>
     </message>
     <message>
         <location filename="../../src/TrinityLib/ui/windows/launcher_window.cpp" line="766"/>
         <source>Configuración de %1 actualizada.</source>
-        <translation>Налаштування %1 оновлено.</translation>
+        <translation>Configuração de%1 atualizada.</translation>
     </message>
     <message>
         <location filename="../../src/TrinityLib/ui/windows/launcher_window.cpp" line="792"/>
         <source>¿Estás seguro de eliminar la versión &apos;%1&apos;?
 Esta acción no se puede deshacer.</source>
-        <translation>Ви впевнені, що хочете видалити версію &apos;%1&apos;?
-Цю дію неможливо скасувати.</translation>
+        <translation>Você tem certeza que quer excluir a versão &apos;%1&apos;?
+Essa ação não poderá ser desfeita.</translation>
     </message>
     <message>
         <location filename="../../src/TrinityLib/ui/windows/launcher_window.cpp" line="804"/>
         <source>No se pudo eliminar la versión:
 </source>
-        <translation>Не вдалося видалити версію:
+        <translation>Não foi possivel deletar a versão:
 </translation>
     </message>
     <message>
         <location filename="../../src/TrinityLib/ui/windows/launcher_window.cpp" line="810"/>
         <source>Versión eliminada correctamente.</source>
-        <translation>Версію успішно видалено.</translation>
+        <translation>Versão deletada com sucesso.</translation>
     </message>
     <message>
         <location filename="../../src/TrinityLib/ui/windows/launcher_window.cpp" line="813"/>
         <source>Versión %1 eliminada.</source>
-        <translation>Версію %1 видалено.</translation>
+        <translation>Versão %1 deletada.</translation>
     </message>
     <message>
         <location filename="../../src/TrinityLib/ui/windows/launcher_window.cpp" line="862"/>
         <source>La versión &apos;%1&apos; no es válida o no está completa.</source>
-        <translation>Версія &apos;%1&apos; недійсна або неповна.</translation>
+        <translation>A versão &apos;%1&apos; é inválida ou está incompleta.</translation>
     </message>
     <message>
         <location filename="../../src/TrinityLib/ui/windows/launcher_window.cpp" line="876"/>
         <source>Confirmar</source>
-        <translation>Підтвердити</translation>
+        <translation>Confirmar</translation>
     </message>
     <message>
         <location filename="../../src/TrinityLib/ui/windows/launcher_window.cpp" line="878"/>
         <source>Ya existe un acceso directo para &apos;%1&apos;.
 ¿Reemplazarlo?</source>
-        <translation>Вже існує ярлик для &apos;%1&apos;.
-Замінити його?</translation>
+        <translation>Um atalho para &apos;%1&apos; já existe.
+Deseja o substituir?</translation>
     </message>
     <message>
         <location filename="../../src/TrinityLib/ui/windows/launcher_window.cpp" line="911"/>
         <source>No se pudo crear el archivo de acceso directo en:
 </source>
-        <translation>Не вдалося створити файл ярлика в:
+        <translation>Não foi possivel criar o atalho em:
 </translation>
     </message>
     <message>
         <location filename="../../src/TrinityLib/ui/windows/launcher_window.cpp" line="923"/>
         <source>Acceso directo creado en la carpeta Descargas</source>
-        <translation>Ярлик створено в папці Завантаження</translation>
+        <translation>Atalho criado na pasta Downloads</translation>
     </message>
     <message>
         <location filename="../../src/TrinityLib/ui/windows/launcher_window.cpp" line="935"/>
         <source>Se necesita reiniciar</source>
-        <translation>Потрібне перезавантаження</translation>
+        <translation>Requerido reiniciar</translation>
     </message>
     <message>
         <location filename="../../src/TrinityLib/ui/windows/launcher_window.cpp" line="936"/>
         <source>El idioma cambiará a &apos;%1&apos;.
 ¿Deseas reiniciar la aplicación ahora para aplicar los cambios?</source>
-        <translation>Мову буде змінено на &apos;%1&apos;.
-Ви хочете перезапустити програму зараз, щоб застосувати зміни?</translation>
+        <translation>O idioma será alterado para ‘%1’.
+Deseja reiniciar o aplicativo agora para aplicar as alterações?</translation>
     </message>
     <message>
         <location filename="../../src/TrinityLib/ui/windows/launcher_window.cpp" line="1053"/>
@@ -794,7 +750,7 @@ Esta acción no se puede deshacer.</source>
     <message>
         <location filename="../../src/TrinityLib/ui/windows/trinito_window.cpp" line="33"/>
         <source> Gestor de Contenido para Bedrock</source>
-        <translation> Менеджер контенту для Bedrock</translation>
+        <translation> Gerenciador de Contéudo para Bedrock</translation>
     </message>
     <message>
         <location filename="../../src/TrinityLib/ui/windows/trinito_window.cpp" line="41"/>
@@ -804,37 +760,37 @@ Esta acción no se puede deshacer.</source>
     <message>
         <location filename="../../src/TrinityLib/ui/windows/trinito_window.cpp" line="44"/>
         <source>Behavior Pack (mods)</source>
-        <translation>Пакет поведінки (моди)</translation>
+        <translation>Pacotes de Comportamento (mods)</translation>
     </message>
     <message>
         <location filename="../../src/TrinityLib/ui/windows/trinito_window.cpp" line="45"/>
         <source>Mods</source>
-        <translation>Моди</translation>
+        <translation>Mods</translation>
     </message>
     <message>
         <location filename="../../src/TrinityLib/ui/windows/trinito_window.cpp" line="46"/>
         <source>Resource Pack</source>
-        <translation>Пакет ресурсів</translation>
+        <translation>Pacotes de Recursos</translation>
     </message>
     <message>
         <location filename="../../src/TrinityLib/ui/windows/trinito_window.cpp" line="47"/>
         <source>Texturas</source>
-        <translation>Текстури</translation>
+        <translation>Texturas</translation>
     </message>
     <message>
         <location filename="../../src/TrinityLib/ui/windows/trinito_window.cpp" line="48"/>
         <source>Desarrollo</source>
-        <translation>Розробка</translation>
+        <translation>Desenvolvedor</translation>
     </message>
     <message>
         <location filename="../../src/TrinityLib/ui/windows/trinito_window.cpp" line="49"/>
         <source>Mundos</source>
-        <translation>Світи</translation>
+        <translation>Mundos</translation>
     </message>
     <message>
         <location filename="../../src/TrinityLib/ui/windows/trinito_window.cpp" line="51"/>
         <source>Shaders/Libs</source>
-        <translation>Шейдери/Бібліотеки</translation>
+        <translation>Shaders/Libs</translation>
     </message>
     <message>
         <location filename="../../src/TrinityLib/ui/windows/trinito_window.cpp" line="53"/>
@@ -874,7 +830,7 @@ Esta acción no se puede deshacer.</source>
     <message>
         <location filename="../../src/TrinityLib/ui/windows/trinito_window.cpp" line="138"/>
         <source>Import</source>
-        <translation type="unfinished">Імпортувати</translation>
+        <translation type="unfinished">Importar</translation>
     </message>
     <message>
         <location filename="../../src/TrinityLib/ui/windows/trinito_window.cpp" line="139"/>
@@ -884,7 +840,7 @@ Esta acción no se puede deshacer.</source>
     <message>
         <location filename="../../src/TrinityLib/ui/windows/trinito_window.cpp" line="140"/>
         <source>Export</source>
-        <translation type="unfinished">Експортувати</translation>
+        <translation type="unfinished">Exportar</translation>
     </message>
     <message>
         <location filename="../../src/TrinityLib/ui/windows/trinito_window.cpp" line="141"/>
@@ -894,51 +850,51 @@ Esta acción no se puede deshacer.</source>
     <message>
         <location filename="../../src/TrinityLib/ui/windows/trinito_window.cpp" line="189"/>
         <source>Lista de %1 instalados:</source>
-        <translation>Список встановлених %1:</translation>
+        <translation>Lista de %1 instalados:</translation>
     </message>
     <message>
         <location filename="../../src/TrinityLib/ui/windows/trinito_window.cpp" line="209"/>
         <location filename="../../src/TrinityLib/ui/windows/trinito_window.cpp" line="435"/>
         <location filename="../../src/TrinityLib/ui/windows/trinito_window.cpp" line="717"/>
         <source>Recargar Lista</source>
-        <translation>Оновити список</translation>
+        <translation>Recarregar Lista</translation>
     </message>
     <message>
         <location filename="../../src/TrinityLib/ui/windows/trinito_window.cpp" line="395"/>
         <source>Instalar nuevo </source>
-        <translation>Встановити новий </translation>
+        <translation>Instalar novo </translation>
     </message>
     <message>
         <location filename="../../src/TrinityLib/ui/windows/trinito_window.cpp" line="398"/>
         <source>Seleccionar archivo...</source>
-        <translation>Вибрати файл...</translation>
+        <translation>Selecionar arquivo...</translation>
     </message>
     <message>
         <location filename="../../src/TrinityLib/ui/windows/trinito_window.cpp" line="403"/>
         <source>Seleccionar pack</source>
-        <translation>Вибрати пакет</translation>
+        <translation>Selecionar pacote</translation>
     </message>
     <message>
         <location filename="../../src/TrinityLib/ui/windows/trinito_window.cpp" line="404"/>
         <location filename="../../src/TrinityLib/ui/windows/trinito_window.cpp" line="510"/>
         <location filename="../../src/TrinityLib/ui/windows/trinito_window.cpp" line="524"/>
         <source>Archivos compatibles (*.zip *.mcpack);;Todos los archivos (*)</source>
-        <translation>Сумісні файли (*.zip *.mcpack);;Усі файли (*)</translation>
+        <translation>Arquivos compartíveis (*.zip *.mcpack);;Todos os arquivos (*)</translation>
     </message>
     <message>
         <location filename="../../src/TrinityLib/ui/windows/trinito_window.cpp" line="415"/>
         <source>Gestionar </source>
-        <translation>Керувати встановленими </translation>
+        <translation>Gerenciar </translation>
     </message>
     <message>
         <location filename="../../src/TrinityLib/ui/windows/trinito_window.cpp" line="415"/>
         <source> instalados:</source>
-        <translation></translation>
+        <translation> instalados:</translation>
     </message>
     <message>
         <location filename="../../src/TrinityLib/ui/windows/trinito_window.cpp" line="441"/>
         <source>Eliminar Seleccionado</source>
-        <translation>Видалити вибране</translation>
+        <translation>Deletar Seleção</translation>
     </message>
     <message>
         <location filename="../../src/TrinityLib/ui/windows/trinito_window.cpp" line="444"/>
@@ -955,19 +911,19 @@ Esta acción no se puede deshacer.</source>
         <location filename="../../src/TrinityLib/ui/windows/trinito_window.cpp" line="1063"/>
         <location filename="../../src/TrinityLib/ui/windows/trinito_window.cpp" line="1116"/>
         <source>Advertencia</source>
-        <translation>Попередження</translation>
+        <translation>Aviso</translation>
     </message>
     <message>
         <location filename="../../src/TrinityLib/ui/windows/trinito_window.cpp" line="445"/>
         <source>No hay ningún elemento seleccionado.</source>
-        <translation>Жоден елемент не вибрано.</translation>
+        <translation>Nenhum item selecionado.</translation>
     </message>
     <message>
         <location filename="../../src/TrinityLib/ui/windows/trinito_window.cpp" line="452"/>
         <source>¿Estás seguro de eliminar &apos;%1&apos;?
 Esta acción no se puede deshacer.</source>
-        <translation>Ви впевнені, що хочете видалити &apos;%1&apos;?
-Цю дію неможливо скасувати.</translation>
+        <translation>Tem certeza de que quer deletar &apos;%1&apos;?
+Essa ação não poderá ser desfeita.</translation>
     </message>
     <message>
         <location filename="../../src/TrinityLib/ui/windows/trinito_window.cpp" line="476"/>
@@ -979,134 +935,134 @@ Esta acción no se puede deshacer.</source>
         <location filename="../../src/TrinityLib/ui/windows/trinito_window.cpp" line="1049"/>
         <location filename="../../src/TrinityLib/ui/windows/trinito_window.cpp" line="1109"/>
         <source>Éxito</source>
-        <translation>Успіх</translation>
+        <translation>Sucesso</translation>
     </message>
     <message>
         <location filename="../../src/TrinityLib/ui/windows/trinito_window.cpp" line="477"/>
         <source>&apos;%1&apos; eliminado correctamente.</source>
-        <translation>&apos;%1&apos; успішно видалено.</translation>
+        <translation>&apos;%1&apos; deletado com sucesso.</translation>
     </message>
     <message>
         <location filename="../../src/TrinityLib/ui/windows/trinito_window.cpp" line="497"/>
         <source>Development Packs</source>
-        <translation>Пакети розробника</translation>
+        <translation>Pacotes de Desenvolvedor</translation>
     </message>
     <message>
         <location filename="../../src/TrinityLib/ui/windows/trinito_window.cpp" line="506"/>
         <source>Añadir Development Behavior Pack (archivo)...</source>
-        <translation>Додати набір поведінки для розробки (файл)...</translation>
+        <translation>Adicionar Pacotes de Comportamento para Desenvolvedores (arquivo)...</translation>
     </message>
     <message>
         <location filename="../../src/TrinityLib/ui/windows/trinito_window.cpp" line="509"/>
         <source>Añadir Development Behavior Pack</source>
-        <translation>Додати набір поведінки для розробки</translation>
+        <translation>Adicionar Pacotes de Comportamento para Desenvolvedores</translation>
     </message>
     <message>
         <location filename="../../src/TrinityLib/ui/windows/trinito_window.cpp" line="520"/>
         <source>Añadir Development Resource Pack (archivo)...</source>
-        <translation>Додати набір ресурсів для розробки (файл)...</translation>
+        <translation>Adicionar Pacotes de Recursos para Desenvolvedores (arquivo)...</translation>
     </message>
     <message>
         <location filename="../../src/TrinityLib/ui/windows/trinito_window.cpp" line="523"/>
         <source>Añadir Development Resource Pack</source>
-        <translation>Додати набір ресурсів для розробки</translation>
+        <translation>Adicionar Pacotes de Recursos para Desenvolvedores</translation>
     </message>
     <message>
         <location filename="../../src/TrinityLib/ui/windows/trinito_window.cpp" line="537"/>
         <source>Gestionar Development Packs:</source>
-        <translation>Керувати пакетами для розробки:</translation>
+        <translation>Gerenciar Pacotes de Desenvolvedor:</translation>
     </message>
     <message>
         <location filename="../../src/TrinityLib/ui/windows/trinito_window.cpp" line="563"/>
         <source>Recargar Listas</source>
-        <translation>Оновити списки</translation>
+        <translation>Recarregar Listas</translation>
     </message>
     <message>
         <location filename="../../src/TrinityLib/ui/windows/trinito_window.cpp" line="575"/>
         <source>Eliminar Behavior Pack Seleccionado</source>
-        <translation>Видалити вибраний набір поведінки</translation>
+        <translation>Deletar Pacote de Comportamento Selecionado</translation>
     </message>
     <message>
         <location filename="../../src/TrinityLib/ui/windows/trinito_window.cpp" line="580"/>
         <source>No hay ningún Behavior Pack seleccionado.</source>
-        <translation>Жоден набір поведінки не вибрано.</translation>
+        <translation>Nenhum Pacote de Comportamento selecionado.</translation>
     </message>
     <message>
         <location filename="../../src/TrinityLib/ui/windows/trinito_window.cpp" line="587"/>
         <source>¿Estás seguro de eliminar el Behavior Pack &apos;%1&apos;?
 Esta acción no se puede deshacer.</source>
-        <translation>Ви впевнені, що хочете видалити набір поведінки &apos;%1&apos;?
-Цю дію неможливо скасувати.</translation>
+        <translation>Tem certeza de que quer deletar o Pacote de Comportamento &apos;%1&apos;?
+Essa ação não poderá ser desfeita.</translation>
     </message>
     <message>
         <location filename="../../src/TrinityLib/ui/windows/trinito_window.cpp" line="612"/>
         <location filename="../../src/TrinityLib/ui/windows/trinito_window.cpp" line="662"/>
         <source>eliminado correctamente.</source>
-        <translation>успішно видалено.</translation>
+        <translation>deletado com sucesso.</translation>
     </message>
     <message>
         <location filename="../../src/TrinityLib/ui/windows/trinito_window.cpp" line="618"/>
         <source>No se pudo eliminar</source>
-        <translation>Не вдалося видалити</translation>
+        <translation>Não foi possível deletar</translation>
     </message>
     <message>
         <location filename="../../src/TrinityLib/ui/windows/trinito_window.cpp" line="625"/>
         <source>Eliminar Resource Pack Seleccionado</source>
-        <translation>Видалити вибраний набір ресурсів</translation>
+        <translation>Deletar Pacote de Recursos Selecionado</translation>
     </message>
     <message>
         <location filename="../../src/TrinityLib/ui/windows/trinito_window.cpp" line="630"/>
         <source>No hay ningún Resource Pack seleccionado.</source>
-        <translation>Жоден набір ресурсів не вибрано.</translation>
+        <translation>Nenhum Pacote de Recursos selecionado.</translation>
     </message>
     <message>
         <location filename="../../src/TrinityLib/ui/windows/trinito_window.cpp" line="637"/>
         <source>¿Estás seguro de eliminar el Resource Pack &apos;%1&apos;?
 Esta acción no se puede deshacer.</source>
-        <translation>Ви впевнені, що хочете видалити набір ресурсів &apos;%1&apos;?
-Цю дію неможливо скасувати.</translation>
+        <translation>Tem certeza de que quer deletar o Pacote de Recursos &apos;%1&apos;?
+Essa ação não poderá ser desfeita.</translation>
     </message>
     <message>
         <location filename="../../src/TrinityLib/ui/windows/trinito_window.cpp" line="684"/>
         <source>Mundos Guardados</source>
-        <translation>Збережені світи</translation>
+        <translation>Mundos Salvos</translation>
     </message>
     <message>
         <location filename="../../src/TrinityLib/ui/windows/trinito_window.cpp" line="689"/>
         <source>Añadir carpeta del mundo...</source>
-        <translation>Додати папку світу...</translation>
+        <translation>Adiconar pasta do mundo...</translation>
     </message>
     <message>
         <location filename="../../src/TrinityLib/ui/windows/trinito_window.cpp" line="694"/>
         <source>Seleccionar carpeta del mundo</source>
-        <translation>Вибрати папку світу</translation>
+        <translation>Selecione a pasta do mundo</translation>
     </message>
     <message>
         <location filename="../../src/TrinityLib/ui/windows/trinito_window.cpp" line="703"/>
         <source>Gestionar Mundos:</source>
-        <translation>Керувати світами:</translation>
+        <translation>Gerenciar Mundos:</translation>
     </message>
     <message>
         <location filename="../../src/TrinityLib/ui/windows/trinito_window.cpp" line="724"/>
         <source>Borrar Mundo Seleccionado</source>
-        <translation>Видалити вибраний світ</translation>
+        <translation>Deletar Mundo Selecionado</translation>
     </message>
     <message>
         <location filename="../../src/TrinityLib/ui/windows/trinito_window.cpp" line="728"/>
         <source>No hay ningún mundo seleccionado.</source>
-        <translation>Жоден світ не вибрано.</translation>
+        <translation>Nenhum mundo selecionado.</translation>
     </message>
     <message>
         <location filename="../../src/TrinityLib/ui/windows/trinito_window.cpp" line="735"/>
         <source>¿Estás seguro de eliminar el mundo &apos;%1&apos;?
 Esta acción no se puede deshacer.</source>
-        <translation>Ви впевнені, що хочете видалити світ &apos;%1&apos;?
-Цю дію неможливо скасувати.</translation>
+        <translation>Tem certeza de que quer deletar o Mundo &apos;%1&apos;?
+Essa ação não poderá ser desfeita.</translation>
     </message>
     <message>
         <location filename="../../src/TrinityLib/ui/windows/trinito_window.cpp" line="750"/>
         <source>Mundo eliminado correctamente.</source>
-        <translation>Світ успішно видалено.</translation>
+        <translation>Mundo deletado com sucesso.</translation>
     </message>
     <message>
         <location filename="../../src/TrinityLib/ui/windows/trinito_window.cpp" line="770"/>
@@ -1114,144 +1070,144 @@ Esta acción no se puede deshacer.</source>
 %1
 
 ¿Reemplazarlo?</source>
-        <translation>Вже існує елемент з назвою:
+        <translation>Um item com o seguinte nome já existe:
 %1
 
-Замінити його?</translation>
+Substituir?</translation>
     </message>
     <message>
         <location filename="../../src/TrinityLib/ui/windows/trinito_window.cpp" line="787"/>
         <source>¡%1 instalado correctamente en:
 %2</source>
-        <translation>%1 успішно встановлено в:
+        <translation>%1 instalado com sucesso em:
 %2</translation>
     </message>
     <message>
         <location filename="../../src/TrinityLib/ui/windows/trinito_window.cpp" line="792"/>
         <source>Falló la instalación:
 </source>
-        <translation>Помилка встановлення:
+        <translation>Falha na instalação:
 </translation>
     </message>
     <message>
         <location filename="../../src/TrinityLib/ui/windows/trinito_window.cpp" line="827"/>
         <source>Gestionar Shaders:</source>
-        <translation>Керувати шейдерами:</translation>
+        <translation>Gerenciar Shaders:</translation>
     </message>
     <message>
         <location filename="../../src/TrinityLib/ui/windows/trinito_window.cpp" line="835"/>
         <source>Instalar Shaderpack...</source>
-        <translation>Встановити шейдерпак...</translation>
+        <translation>Instalar Pacote de Shader...</translation>
     </message>
     <message>
         <location filename="../../src/TrinityLib/ui/windows/trinito_window.cpp" line="837"/>
         <source>Eliminar Shaderpack Seleccionado</source>
-        <translation>Видалити вибраний шейдерпак</translation>
+        <translation>Deletar Pacote de Shader Selecionado</translation>
     </message>
     <message>
         <location filename="../../src/TrinityLib/ui/windows/trinito_window.cpp" line="838"/>
         <source>Actualizar Lista</source>
-        <translation>Оновити список</translation>
+        <translation>Atualizar Lista</translation>
     </message>
     <message>
         <location filename="../../src/TrinityLib/ui/windows/trinito_window.cpp" line="852"/>
         <source>Gestionar Libs:</source>
-        <translation>Керувати бібліотеками:</translation>
+        <translation>Gerenciar Libs:</translation>
     </message>
     <message>
         <location filename="../../src/TrinityLib/ui/windows/trinito_window.cpp" line="858"/>
         <source>Libs Disponibles:</source>
-        <translation>Доступні бібліотеки:</translation>
+        <translation>Libs Disponíveis:</translation>
     </message>
     <message>
         <location filename="../../src/TrinityLib/ui/windows/trinito_window.cpp" line="865"/>
         <source>Descargar Lib Seleccionada</source>
-        <translation>Завантажити вибрану бібліотеку</translation>
+        <translation>Baixar Lib Selecionada</translation>
     </message>
     <message>
         <location filename="../../src/TrinityLib/ui/windows/trinito_window.cpp" line="869"/>
         <source>Libs Instaladas:</source>
-        <translation>Встановлені бібліотеки:</translation>
+        <translation>Libs Instaladas:</translation>
     </message>
     <message>
         <location filename="../../src/TrinityLib/ui/windows/trinito_window.cpp" line="876"/>
         <source>Eliminar Lib Seleccionada</source>
-        <translation>Видалити вибрану бібліотеку</translation>
+        <translation>Deletar Lib Selecionada</translation>
     </message>
     <message>
         <location filename="../../src/TrinityLib/ui/windows/trinito_window.cpp" line="987"/>
         <source>No se pudo extraer el archivo .mcpack.</source>
-        <translation>Не вдалося видобути файл .mcpack.</translation>
+        <translation>Não foi possível extrair o arquivo .mcpack.</translation>
     </message>
     <message>
         <location filename="../../src/TrinityLib/ui/windows/trinito_window.cpp" line="1021"/>
         <source>No se pudo copiar </source>
-        <translation>Не вдалося скопіювати </translation>
+        <translation>Não foi possível copiar </translation>
     </message>
     <message>
         <location filename="../../src/TrinityLib/ui/windows/trinito_window.cpp" line="1032"/>
         <source>Shaderpack instalado correctamente.</source>
-        <translation>Шейдерпак успішно встановлено.</translation>
+        <translation>Pacote de Shader instalado com sucesso.</translation>
     </message>
     <message>
         <location filename="../../src/TrinityLib/ui/windows/trinito_window.cpp" line="1040"/>
         <source>No hay ningún shader seleccionado.</source>
-        <translation>Жоден шейдер не вибрано.</translation>
+        <translation>Nenhum shader selecionado.</translation>
     </message>
     <message>
         <location filename="../../src/TrinityLib/ui/windows/trinito_window.cpp" line="1050"/>
         <source>Shader eliminado correctamente.</source>
-        <translation>Шейдер успішно видалено.</translation>
+        <translation>Shader deletado com sucesso.</translation>
     </message>
     <message>
         <location filename="../../src/TrinityLib/ui/windows/trinito_window.cpp" line="1054"/>
         <source>No se pudo eliminar el shader.</source>
-        <translation>Не вдалося видалити шейдер.</translation>
+        <translation>Não foi possível deletar o shader.</translation>
     </message>
     <message>
         <location filename="../../src/TrinityLib/ui/windows/trinito_window.cpp" line="1064"/>
         <source>Por favor, selecciona un mod para descargar.</source>
-        <translation>Будь ласка, виберіть мод для завантаження.</translation>
+        <translation>Por favor, selecione um mod para instalar.</translation>
     </message>
     <message>
         <location filename="../../src/TrinityLib/ui/windows/trinito_window.cpp" line="1082"/>
         <source>Descargando </source>
-        <translation>Завантаження </translation>
+        <translation>Baixando </translation>
     </message>
     <message>
         <location filename="../../src/TrinityLib/ui/windows/trinito_window.cpp" line="1082"/>
         <source>Cancelar</source>
-        <translation>Скасувати</translation>
+        <translation>Cancelar</translation>
     </message>
     <message>
         <location filename="../../src/TrinityLib/ui/windows/trinito_window.cpp" line="1104"/>
         <source>No se pudo descargar el mod.</source>
-        <translation>Не вдалося завантажити мод.</translation>
+        <translation>Não foi possível baixar o mod.</translation>
     </message>
     <message>
         <location filename="../../src/TrinityLib/ui/windows/trinito_window.cpp" line="1110"/>
         <source>Mod instalado correctamente.</source>
-        <translation>Мод успішно встановлено.</translation>
+        <translation>Mod instalado com sucesso.</translation>
     </message>
     <message>
         <location filename="../../src/TrinityLib/ui/windows/trinito_window.cpp" line="1117"/>
         <source>Por favor, selecciona un mod para eliminar.</source>
-        <translation>Будь ласка, виберіть мод для видалення.</translation>
+        <translation>Por favor, selecione um mod para deletar.</translation>
     </message>
     <message>
         <location filename="../../src/TrinityLib/ui/windows/trinito_window.cpp" line="1129"/>
         <source>Eliminado</source>
-        <translation>Видалено</translation>
+        <translation>Deletado</translation>
     </message>
     <message>
         <location filename="../../src/TrinityLib/ui/windows/trinito_window.cpp" line="1130"/>
         <source> ha sido eliminado.</source>
-        <translation> було видалено.</translation>
+        <translation> foi deletado.</translation>
     </message>
     <message>
         <location filename="../../src/TrinityLib/ui/windows/trinito_window.cpp" line="1134"/>
         <source>No se pudo eliminar </source>
-        <translation>Не вдалося видалити </translation>
+        <translation>Não foi possível deletar </translation>
     </message>
     <message>
         <location filename="../../src/TrinityLib/ui/windows/trinito_window.cpp" line="1149"/>
@@ -1300,32 +1256,32 @@ Esta acción no se puede deshacer.</source>
     <message>
         <location filename="../../src/TrinityLib/core/version_manager.cpp" line="64"/>
         <source>Iniciando extracción...</source>
-        <translation>Початок видобування...</translation>
+        <translation>Iniciando extração...</translation>
     </message>
     <message>
         <location filename="../../src/TrinityLib/core/version_manager.cpp" line="75"/>
         <source>Extracción completada.</source>
-        <translation>Видобування завершено.</translation>
+        <translation>Extração completada.</translation>
     </message>
     <message>
         <location filename="../../src/TrinityLib/core/version_manager.cpp" line="79"/>
         <source>Error desconocido durante la extracción.</source>
-        <translation>Невідома помилка під час видобування.</translation>
+        <translation>Erro desconhecido durante a extração.</translation>
     </message>
     <message>
         <location filename="../../src/TrinityLib/core/version_manager.cpp" line="81"/>
         <source>Error durante la extracción.</source>
-        <translation>Помилка під час видобування.</translation>
+        <translation>Erro durante a extração.</translation>
     </message>
     <message>
         <location filename="../../src/TrinityLib/core/version_manager.cpp" line="90"/>
         <source>No se pudo eliminar la versión.</source>
-        <translation>Не вдалося видалити версію.</translation>
+        <translation>Não foi possível excluir a versão.</translation>
     </message>
     <message>
         <location filename="../../src/TrinityLib/core/version_manager.cpp" line="103"/>
         <source>No se pudo guardar la configuración.</source>
-        <translation>Не вдалося зберегти налаштування.</translation>
+        <translation>Não foi possível salvar a configuração.</translation>
     </message>
 </context>
 <context>
@@ -1334,7 +1290,7 @@ Esta acción no se puede deshacer.</source>
         <location filename="../../src/TrinityLib/ui/widgets/version_selector.cpp" line="17"/>
         <location filename="../../src/TrinityLib/ui/widgets/version_selector.cpp" line="23"/>
         <source>No hay versiones instaladas</source>
-        <translation>Немає встановлених версій</translation>
+        <translation>Nenhuma versão instalada</translation>
     </message>
 </context>
 </TS>

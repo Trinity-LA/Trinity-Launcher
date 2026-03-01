@@ -1084,13 +1084,23 @@ QWidget *LauncherWindow::createSettingsPage() {
             if (file.length() <= 11) continue;
             QString code = file.mid(8, file.length() - 11);
             if (code == "es") continue;
-            QLocale loc(code);
-            QString nativeName = loc.nativeLanguageName();
-            if (!nativeName.isEmpty())
-                nativeName[0] = nativeName[0].toUpper();
-            else
-                nativeName = code;
-            settingsLanguageCombo->addItem(nativeName, code);
+            
+            QString displayName;
+            
+            if (code == "pt_BR") {
+              displayName = "Português (Brasil)";
+            } else {
+              QLocale loc(code);
+              displayName = loc.nativeLanguageName();
+            }
+            
+            if (!displayName.isEmpty()) {
+              displayName[0] = displayName[0].toUpper();
+            } else {
+              displayName = code;
+            }
+            
+            settingsLanguageCombo->addItem(displayName, code);
         }
 
         QSettings settings;
