@@ -389,7 +389,7 @@ No: Només exporta mods, mapes, etc.</translation>
         <location filename="../../src/TrinityLib/ui/windows/launcher_window.cpp" line="489"/>
         <source>We would like to express our sincere gratitude to the team behind the &lt;b&gt;Unofficial NIX Launcher for Minecraft&lt;/b&gt;. Their work provides the essential runtime to run Minecraft, which has been fundamental to the development of this project.</source> 
         <translation>Volem expressar el nostre més sincer agraïment a l'equip darrere de l'&lt;b&gt;Unofficial NIX Launcher for Minecraft&lt;/b&gt;. El seu treball proporciona l'entorn d'execució essencial per a executar Minecraft, que ha estat fonamental pel projecte.</translation>
-        <translation>Volem expressar el nostre més sincer agraïment a l&apos;equip darrere de l&apos;&lt;b&gt;Unofficial NIX Launcher for Minecraft&lt;/b&gt;. El seu treball proporciona l&apos;entorn d&apos;execució essencial per a executar Minecraft, que ha sigut fonamental pel projecte.</translation>
+        <translation>Volem expressar el nostre més sincer agraïment a l&apos;equip darrere de l&apos;&lt;b&gt;Unofficial NIX Launcher for Minecraft&lt;/b&gt;. El seu treball proporciona l&apos;entorn d&apos;execució essencial per a executar Minecraft, que ha estat fonamental pel projecte.</translation>
     </message>
     <message>
         <location filename="../../src/TrinityLib/ui/windows/launcher_window.cpp" line="621"/>
@@ -843,7 +843,7 @@ Vols reiniciar l&apos;aplicació ara per aplicar els canvis?</translation>
     <message>
         <location filename="../../src/TrinityLib/ui/windows/trinito_window.cpp" line="415"/>
         <source> installed:</source>
-        <translation>instal·lats:</translation>
+        <translation> instal·lats:</translation>
     </message>
     <message>
         <location filename="../../src/TrinityLib/ui/windows/trinito_window.cpp" line="441"/>
