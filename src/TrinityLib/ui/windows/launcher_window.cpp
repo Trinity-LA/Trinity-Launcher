@@ -1089,6 +1089,7 @@ QWidget *LauncherWindow::createSettingsPage() {
             "selection-background-color: #8b5cf6; color: white; }");
 
         settingsLanguageCombo->addItem("Espa\u00f1ol", "es");
+        settingsLanguageCombo->addItem("Português (Brasil)", "pt_BR");
 
         QDir translationsDir(":/i18n");
         QStringList langFiles =
@@ -1098,6 +1099,7 @@ QWidget *LauncherWindow::createSettingsPage() {
             if (file.length() <= 11) continue;
             QString code = file.mid(8, file.length() - 11);
             if (code == "es") continue;
+            if (code == "pt_BR") continue;
             QLocale loc(code);
             QString nativeName = loc.nativeLanguageName();
             if (!nativeName.isEmpty())

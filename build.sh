@@ -388,12 +388,18 @@ fi
 
 if [ "$RUN_APP" = true ]; then
     
-    APP_PATH=""
+        APP_PATH=""
     # Selección del binario
     if [ -f "$BUILD_DIR/app/trinchete" ]; then
         APP_PATH="$BUILD_DIR/app/trinchete"
+    elif [ -f "$BUILD_DIR/app/trinito" ]; then
+        APP_PATH="$BUILD_DIR/app/trinito"
+    elif [ -f "$BUILD_DIR/app/trinity" ]; then
+        APP_PATH="$BUILD_DIR/app/trinity"
     elif command -v trinchete &> /dev/null; then
         APP_PATH=$(command -v trinchete)
+    elif command -v trinity &> /dev/null; then
+        APP_PATH=$(command -v trinity)
     else
         echo -e "${RED}❌ No se pudo encontrar el ejecutable.${NC}"
         exit 1
