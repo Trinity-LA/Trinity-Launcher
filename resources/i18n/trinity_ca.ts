@@ -49,7 +49,7 @@
 
 Yes: Includes the full version (game data).
 No: Only exports mods, maps, etc.</source>
-        <translation>Exportar '%1' amb dades de l'APK?
+        <translation>Exportar &apos;%1&apos; amb dades de l&apos;APK?
 
 Sí: Inclou la versió completa (dades del joc).
 No: Només exporta mods, mapes, etc.</translation>
@@ -77,12 +77,12 @@ No: Només exporta mods, mapes, etc.</translation>
     <message>
         <location filename="../../src/TrinityLib/core/exporter.cpp" line="81"/>
         <source>Could not copy version.</source>
-        <translation>No s'ha pogut copiar la versió.</translation>
+        <translation>No s&apos;ha pogut copiar la versió.</translation>
     </message>
     <message>
         <location filename="../../src/TrinityLib/core/exporter.cpp" line="96"/>
         <source>Could not copy resources.</source>
-        <translation>No s'han pogut copiar els recursos.</translation>
+        <translation>No s&apos;han pogut copiar els recursos.</translation>
     </message>
     <message>
         <location filename="../../src/TrinityLib/core/exporter.cpp" line="113"/>
@@ -134,22 +134,22 @@ No: Només exporta mods, mapes, etc.</translation>
     <message>
         <location filename="../../src/TrinityLib/core/exporter.cpp" line="260"/>
         <source>Could not move/copy directory: </source>
-        <translation>No s'ha pogut moure/copiar el directori: </translation>
+        <translation>No s&apos;ha pogut moure/copiar el directori: </translation>
     </message>
     <message>
         <location filename="../../src/TrinityLib/core/exporter.cpp" line="269"/>
         <source>Could not move/copy file: </source>
-        <translation>No s'ha pogut moure/copiar l'arxiu: </translation>
+        <translation>No s&apos;ha pogut moure/copiar l&apos;arxiu: </translation>
     </message>
     <message>
         <location filename="../../src/TrinityLib/core/exporter.cpp" line="311"/>
         <source>No se pudo mover/copiar directorio de recursos: </source>
-        <translation>No s'ha pogut moure/copiar directori de recursos: </translation>
+        <translation>No s&apos;ha pogut moure/copiar directori de recursos: </translation>
     </message>
     <message>
         <location filename="../../src/TrinityLib/core/exporter.cpp" line="320"/>
         <source>No se pudo mover/copiar archivo de recursos: </source>
-        <translation>No s'ha pogut moure/copiar arxiu de recursos: </translation>
+        <translation>No s&apos;ha pogut moure/copiar arxiu de recursos: </translation>
     </message>
     <message>
         <location filename="../../src/TrinityLib/core/exporter.cpp" line="342"/>
@@ -193,7 +193,7 @@ No: Només exporta mods, mapes, etc.</translation>
     <message>
         <location filename="../../src/TrinityLib/ui/dialogs/extract_dialog.cpp" line="40"/>
         <source>Please enter a version name.</source>
-        <translation>Has d'introduir un nom per a la versió</translation>
+        <translation>Has d&apos;introduir un nom per a la versió</translation>
     </message>
     <message>
         <location filename="../../src/TrinityLib/ui/dialogs/extract_dialog.cpp" line="49"/>
@@ -211,7 +211,7 @@ No: Només exporta mods, mapes, etc.</translation>
     <message>
         <location filename="../../src/TrinityLib/core/game_launcher.cpp" line="79"/>
         <source>The game is already running.</source>
-        <translation>El joc ja s'està executant.</translation>
+        <translation>El joc ja s&apos;està executant.</translation>
     </message>
     <message>
         <location filename="../../src/TrinityLib/core/game_launcher.cpp" line="96"/>
@@ -226,7 +226,7 @@ No: Només exporta mods, mapes, etc.</translation>
     <message>
         <location filename="../../src/TrinityLib/core/game_launcher.cpp" line="134"/>
         <source>Could not start the game process.</source>
-        <translation>No s'ha pogut iniciar el procés del joc.</translation>
+        <translation>No s&apos;ha pogut iniciar el procés del joc.</translation>
     </message>
     <message>
         <location filename="../../src/TrinityLib/core/game_launcher.cpp" line="136"/>
@@ -253,14 +253,14 @@ No: Només exporta mods, mapes, etc.</translation>
     </message>
     <message>
         <location filename="../../src/TrinityLib/ui/windows/launcher_window.cpp" line="145"/>
-        <location filename="../../src/TrinityLib/ui/windows/launcher_window.cpp" line="1359"/>
+        <location filename="../../src/TrinityLib/ui/windows/launcher_window.cpp" line="1360"/>
         <source>Content Manager</source>
         <translation>Gestor de contingut</translation>
     </message>
     <message>
         <location filename="../../src/TrinityLib/ui/windows/launcher_window.cpp" line="152"/>
         <location filename="../../src/TrinityLib/ui/windows/launcher_window.cpp" line="361"/>
-        <location filename="../../src/TrinityLib/ui/windows/launcher_window.cpp" line="1360"/>
+        <location filename="../../src/TrinityLib/ui/windows/launcher_window.cpp" line="1361"/>
         <source>Discord</source>
         <translation>Discord</translation>
     </message>
@@ -273,9 +273,9 @@ No: Només exporta mods, mapes, etc.</translation>
     <message>
         <location filename="../../src/TrinityLib/ui/windows/launcher_window.cpp" line="166"/>
         <location filename="../../src/TrinityLib/ui/windows/launcher_window.cpp" line="1059"/>
-        <location filename="../../src/TrinityLib/ui/windows/launcher_window.cpp" line="1218"/>
-        <location filename="../../src/TrinityLib/ui/windows/launcher_window.cpp" line="1362"/>
-        <location filename="../../src/TrinityLib/ui/windows/launcher_window.cpp" line="1439"/>
+        <location filename="../../src/TrinityLib/ui/windows/launcher_window.cpp" line="1219"/>
+        <location filename="../../src/TrinityLib/ui/windows/launcher_window.cpp" line="1363"/>
+        <location filename="../../src/TrinityLib/ui/windows/launcher_window.cpp" line="1440"/>
         <source>Settings</source>
         <translation>Configuració</translation>
     </message>
@@ -302,7 +302,7 @@ No: Només exporta mods, mapes, etc.</translation>
     <message>
         <location filename="../../src/TrinityLib/ui/windows/launcher_window.cpp" line="380"/>
         <source>Click to copy the link</source>
-        <translation>Fes clic per copiar l'enllaç</translation>
+        <translation>Fes clic per copiar l&apos;enllaç</translation>
     </message>
     <message>
         <location filename="../../src/TrinityLib/ui/windows/launcher_window.cpp" line="386"/>
@@ -323,7 +323,7 @@ No: Només exporta mods, mapes, etc.</translation>
     <message>
         <location filename="../../src/TrinityLib/ui/windows/launcher_window.cpp" line="445"/>
         <source>Trinity Launcher is an open-source, community-driven launcher for Minecraft Bedrock. Focused on user freedom and free redistribution, it provides a powerful interface to manage multiple instances, worlds, textures, and mods seamlessly.</source>
-        <translation>Trinity Launcher és un llançador de codi obert impulsat per la comunitat per a Minecraft Bedrock. Centrat en la llibertat de l'usuari i la lliure redistribució, proporciona una potent interfície per a gestionar múltiples instàncies, mons, textures i mods sense problemes.</translation>
+        <translation>Trinity Launcher és un llançador de codi obert impulsat per la comunitat per a Minecraft Bedrock. Centrat en la llibertat de l&apos;usuari i la lliure redistribució, proporciona una potent interfície per a gestionar múltiples instàncies, mons, textures i mods sense problemes.</translation>
     </message>
     <message>
         <location filename="../../src/TrinityLib/ui/windows/launcher_window.cpp" line="453"/>
@@ -388,7 +388,7 @@ No: Només exporta mods, mapes, etc.</translation>
     <message>
         <location filename="../../src/TrinityLib/ui/windows/launcher_window.cpp" line="489"/>
         <source>We would like to express our sincere gratitude to the team behind the &lt;b&gt;Unofficial NIX Launcher for Minecraft&lt;/b&gt;. Their work provides the essential runtime to run Minecraft, which has been fundamental to the development of this project.</source>
-        <translation>Volem expressar el nostre més sincer agraïment a l'equip darrere de l'&lt;b&gt;Unofficial NIX Launcher for Minecraft&lt;/b&gt;. El seu treball proporciona l'entorn d'execució essencial per a executar Minecraft, que ha sigut fonamental pel projecte.</translation>
+        <translation>Volem expressar el nostre més sincer agraïment a l&apos;equip darrere de l&apos;&lt;b&gt;Unofficial NIX Launcher for Minecraft&lt;/b&gt;. El seu treball proporciona l&apos;entorn d&apos;execució essencial per a executar Minecraft, que ha sigut fonamental pel projecte.</translation>
     </message>
     <message>
         <location filename="../../src/TrinityLib/ui/windows/launcher_window.cpp" line="621"/>
@@ -424,7 +424,7 @@ No: Només exporta mods, mapes, etc.</translation>
         <location filename="../../src/TrinityLib/ui/windows/launcher_window.cpp" line="653"/>
         <source>A version named &apos;%1&apos; already exists.
 Replace it?</source>
-        <translation>Ja existeix una versió anomenada '%1'.
+        <translation>Ja existeix una versió anomenada &apos;%1&apos;.
 Vols substituir-la?</translation>
     </message>
     <message>
@@ -484,7 +484,7 @@ Vols substituir-la?</translation>
         <location filename="../../src/TrinityLib/ui/windows/launcher_window.cpp" line="756"/>
         <source>Could not save configuration:
 </source>
-        <translation>No s'ha pogut guardar la configuració:</translation>
+        <translation>No s&apos;ha pogut guardar la configuració:</translation>
     </message>
     <message>
         <location filename="../../src/TrinityLib/ui/windows/launcher_window.cpp" line="760"/>
@@ -500,14 +500,14 @@ Vols substituir-la?</translation>
         <location filename="../../src/TrinityLib/ui/windows/launcher_window.cpp" line="793"/>
         <source>Are you sure you want to delete version &apos;%1&apos;?
 This action cannot be undone.</source>
-        <translation>N'estàs segur de voler eliminar la versió '%1'?
+        <translation>N&apos;estàs segur de voler eliminar la versió &apos;%1&apos;?
 Aquesta acció no es pot desfer.</translation>
     </message>
     <message>
         <location filename="../../src/TrinityLib/ui/windows/launcher_window.cpp" line="805"/>
         <source>Could not delete version:
 </source>
-        <translation>No s'ha pogut eliminar la versió:</translation>
+        <translation>No s&apos;ha pogut eliminar la versió:</translation>
     </message>
     <message>
         <location filename="../../src/TrinityLib/ui/windows/launcher_window.cpp" line="811"/>
@@ -522,7 +522,7 @@ Aquesta acció no es pot desfer.</translation>
     <message>
         <location filename="../../src/TrinityLib/ui/windows/launcher_window.cpp" line="863"/>
         <source>Version &apos;%1&apos; is not valid or complete.</source>
-        <translation>La versió '%1' no és vàlida o completa.</translation>
+        <translation>La versió &apos;%1&apos; no és vàlida o completa.</translation>
     </message>
     <message>
         <location filename="../../src/TrinityLib/ui/windows/launcher_window.cpp" line="877"/>
@@ -533,14 +533,14 @@ Aquesta acció no es pot desfer.</translation>
         <location filename="../../src/TrinityLib/ui/windows/launcher_window.cpp" line="879"/>
         <source>A shortcut for &apos;%1&apos; already exists.
 Replace it?</source>
-        <translation>Ja existeix un accés directe per a '%1'.
+        <translation>Ja existeix un accés directe per a &apos;%1&apos;.
 Vols substituir-lo?</translation>
     </message>
     <message>
         <location filename="../../src/TrinityLib/ui/windows/launcher_window.cpp" line="912"/>
         <source>No se pudo crear el archivo de acceso directo en:
 </source>
-        <translation>No s'ha pogut crear l'arxiu de l'accés directe a:</translation>
+        <translation>No s&apos;ha pogut crear l&apos;arxiu de l&apos;accés directe a:</translation>
     </message>
     <message>
         <location filename="../../src/TrinityLib/ui/windows/launcher_window.cpp" line="924"/>
@@ -556,8 +556,8 @@ Vols substituir-lo?</translation>
         <location filename="../../src/TrinityLib/ui/windows/launcher_window.cpp" line="943"/>
         <source>The language will change to &apos;%1&apos;.
 Do you want to restart the application now to apply the changes?</source>
-        <translation>L'idioma canviarà a '%1'.
-Vols reiniciar l'aplicació ara per aplicar els canvis?</translation>
+        <translation>L&apos;idioma canviarà a &apos;%1&apos;.
+Vols reiniciar l&apos;aplicació ara per aplicar els canvis?</translation>
     </message>
     <message>
         <location filename="../../src/TrinityLib/ui/windows/launcher_window.cpp" line="1067"/>
@@ -570,131 +570,131 @@ Vols reiniciar l'aplicació ara per aplicar els canvis?</translation>
         <translation>Idioma de la interfície:</translation>
     </message>
     <message>
-        <location filename="../../src/TrinityLib/ui/windows/launcher_window.cpp" line="1133"/>
+        <location filename="../../src/TrinityLib/ui/windows/launcher_window.cpp" line="1134"/>
         <source>UI Colors</source>
         <translation>Colors de la interfície</translation>
     </message>
     <message>
-        <location filename="../../src/TrinityLib/ui/windows/launcher_window.cpp" line="1169"/>
+        <location filename="../../src/TrinityLib/ui/windows/launcher_window.cpp" line="1170"/>
         <source>Click to change color</source>
         <translation>Fes clic per canviar de color</translation>
     </message>
     <message>
-        <location filename="../../src/TrinityLib/ui/windows/launcher_window.cpp" line="1179"/>
+        <location filename="../../src/TrinityLib/ui/windows/launcher_window.cpp" line="1180"/>
         <source>Select Color</source>
         <translation>Selecciona un color</translation>
     </message>
     <message>
-        <location filename="../../src/TrinityLib/ui/windows/launcher_window.cpp" line="1196"/>
+        <location filename="../../src/TrinityLib/ui/windows/launcher_window.cpp" line="1197"/>
         <source>Accent color</source>
-        <translation>Color d'accent</translation>
+        <translation>Color d&apos;accent</translation>
     </message>
     <message>
-        <location filename="../../src/TrinityLib/ui/windows/launcher_window.cpp" line="1197"/>
+        <location filename="../../src/TrinityLib/ui/windows/launcher_window.cpp" line="1198"/>
         <source>Background color</source>
         <translation>Color de fons</translation>
     </message>
     <message>
-        <location filename="../../src/TrinityLib/ui/windows/launcher_window.cpp" line="1198"/>
+        <location filename="../../src/TrinityLib/ui/windows/launcher_window.cpp" line="1199"/>
         <source>Panel color</source>
         <translation>Color del panell</translation>
     </message>
     <message>
-        <location filename="../../src/TrinityLib/ui/windows/launcher_window.cpp" line="1199"/>
+        <location filename="../../src/TrinityLib/ui/windows/launcher_window.cpp" line="1200"/>
         <source>Hover / border color</source>
         <translation>Color al passar / vora</translation>
     </message>
     <message>
-        <location filename="../../src/TrinityLib/ui/windows/launcher_window.cpp" line="1200"/>
+        <location filename="../../src/TrinityLib/ui/windows/launcher_window.cpp" line="1201"/>
         <source>Button hover color</source>
         <translation>Color del botó al passar</translation>
     </message>
     <message>
-        <location filename="../../src/TrinityLib/ui/windows/launcher_window.cpp" line="1201"/>
+        <location filename="../../src/TrinityLib/ui/windows/launcher_window.cpp" line="1202"/>
         <source>Muted text color</source>
         <translation>Color del text atenuat</translation>
     </message>
     <message>
-        <location filename="../../src/TrinityLib/ui/windows/launcher_window.cpp" line="1205"/>
+        <location filename="../../src/TrinityLib/ui/windows/launcher_window.cpp" line="1206"/>
         <source>Reset Colors to Default</source>
         <translation>Restablir colors per defecte</translation>
     </message>
     <message>
-        <location filename="../../src/TrinityLib/ui/windows/launcher_window.cpp" line="1219"/>
+        <location filename="../../src/TrinityLib/ui/windows/launcher_window.cpp" line="1220"/>
         <source>Colors reset to default. Reopen Settings to see the updated previews.</source>
-        <translation>S'han restablert els colors per defecte. Torna a obrir la configuració per veure els canvis.</translation>
+        <translation>S&apos;han restablert els colors per defecte. Torna a obrir la configuració per veure els canvis.</translation>
     </message>
     <message>
-        <location filename="../../src/TrinityLib/ui/windows/launcher_window.cpp" line="1228"/>
+        <location filename="../../src/TrinityLib/ui/windows/launcher_window.cpp" line="1229"/>
         <source>Wallpaper</source>
         <translation>Fons de pantalla</translation>
     </message>
     <message>
-        <location filename="../../src/TrinityLib/ui/windows/launcher_window.cpp" line="1257"/>
-        <location filename="../../src/TrinityLib/ui/windows/launcher_window.cpp" line="1318"/>
+        <location filename="../../src/TrinityLib/ui/windows/launcher_window.cpp" line="1258"/>
+        <location filename="../../src/TrinityLib/ui/windows/launcher_window.cpp" line="1319"/>
         <source>Default background</source>
         <translation>Fons per defecte</translation>
     </message>
     <message>
-        <location filename="../../src/TrinityLib/ui/windows/launcher_window.cpp" line="1264"/>
-        <location filename="../../src/TrinityLib/ui/windows/launcher_window.cpp" line="1385"/>
+        <location filename="../../src/TrinityLib/ui/windows/launcher_window.cpp" line="1265"/>
+        <location filename="../../src/TrinityLib/ui/windows/launcher_window.cpp" line="1386"/>
         <source>Change...</source>
         <translation>Canviar...</translation>
     </message>
     <message>
-        <location filename="../../src/TrinityLib/ui/windows/launcher_window.cpp" line="1269"/>
+        <location filename="../../src/TrinityLib/ui/windows/launcher_window.cpp" line="1270"/>
         <source>Reset</source>
         <translation>Restablir</translation>
     </message>
     <message>
-        <location filename="../../src/TrinityLib/ui/windows/launcher_window.cpp" line="1289"/>
+        <location filename="../../src/TrinityLib/ui/windows/launcher_window.cpp" line="1290"/>
         <source>Select background image</source>
         <translation>Selecciona una imatge de fons</translation>
     </message>
     <message>
-        <location filename="../../src/TrinityLib/ui/windows/launcher_window.cpp" line="1290"/>
+        <location filename="../../src/TrinityLib/ui/windows/launcher_window.cpp" line="1291"/>
         <source>Images (*.png *.jpg *.jpeg *.bmp *.webp);;All files (*)</source>
         <translation>Imatges (*.png *.jpg *.jpeg *.bmp *.webp);;Tots els arxius (*)</translation>
     </message>
     <message>
-        <location filename="../../src/TrinityLib/ui/windows/launcher_window.cpp" line="1335"/>
+        <location filename="../../src/TrinityLib/ui/windows/launcher_window.cpp" line="1336"/>
         <source>Sidebar Icons</source>
         <translation>Icones de la barra lateral</translation>
     </message>
     <message>
-        <location filename="../../src/TrinityLib/ui/windows/launcher_window.cpp" line="1344"/>
+        <location filename="../../src/TrinityLib/ui/windows/launcher_window.cpp" line="1345"/>
         <source>You can customize the sidebar icons. The app logo is fixed and cannot be changed.</source>
-        <translation>Pots personalitzar les icones de la barra lateral. El logotip de l'aplicació és fix i no es pot canviar.</translation>
+        <translation>Pots personalitzar les icones de la barra lateral. El logotip de l&apos;aplicació és fix i no es pot canviar.</translation>
     </message>
     <message>
-        <location filename="../../src/TrinityLib/ui/windows/launcher_window.cpp" line="1358"/>
+        <location filename="../../src/TrinityLib/ui/windows/launcher_window.cpp" line="1359"/>
         <source>Trinity (Home)</source>
         <translation>Trinity (Inici)</translation>
     </message>
     <message>
-        <location filename="../../src/TrinityLib/ui/windows/launcher_window.cpp" line="1361"/>
+        <location filename="../../src/TrinityLib/ui/windows/launcher_window.cpp" line="1362"/>
         <source>About</source>
         <translation>Sobre Nosaltres</translation>
     </message>
     <message>
-        <location filename="../../src/TrinityLib/ui/windows/launcher_window.cpp" line="1397"/>
+        <location filename="../../src/TrinityLib/ui/windows/launcher_window.cpp" line="1398"/>
         <source>Select Icon</source>
         <translation>Selecciona icona</translation>
     </message>
     <message>
-        <location filename="../../src/TrinityLib/ui/windows/launcher_window.cpp" line="1398"/>
+        <location filename="../../src/TrinityLib/ui/windows/launcher_window.cpp" line="1399"/>
         <source>Images (*.png *.svg *.ico *.jpg);;All files (*)</source>
         <translation>Imatges (*.png *.svg *.ico *.jpg);;Tots els arxius (*)</translation>
     </message>
     <message>
-        <location filename="../../src/TrinityLib/ui/windows/launcher_window.cpp" line="1429"/>
+        <location filename="../../src/TrinityLib/ui/windows/launcher_window.cpp" line="1430"/>
         <source>Reset Icons to Default</source>
         <translation>Restablir icones per defecte</translation>
     </message>
     <message>
-        <location filename="../../src/TrinityLib/ui/windows/launcher_window.cpp" line="1440"/>
+        <location filename="../../src/TrinityLib/ui/windows/launcher_window.cpp" line="1441"/>
         <source>Icons reset to default. Reopen Settings to see the updated previews.</source>
-        <translation>S'han restablert les icones per defecte. Torna a obrir la configuració per veure els canvis.</translation>
+        <translation>S&apos;han restablert les icones per defecte. Torna a obrir la configuració per veure els canvis.</translation>
     </message>
 </context>
 <context>
@@ -772,12 +772,12 @@ Vols reiniciar l'aplicació ara per aplicar els canvis?</translation>
     <message>
         <location filename="../../src/TrinityLib/ui/windows/trinito_window.cpp" line="136"/>
         <source>Environment Parameters</source>
-        <translation>Paràmetres d'entorn</translation>
+        <translation>Paràmetres d&apos;entorn</translation>
     </message>
     <message>
         <location filename="../../src/TrinityLib/ui/windows/trinito_window.cpp" line="137"/>
         <source>Edit launch arguments and environment variables.</source>
-        <translation>Edita arguments d'inici i variables d'entorn.</translation>
+        <translation>Edita arguments d&apos;inici i variables d&apos;entorn.</translation>
     </message>
     <message>
         <location filename="../../src/TrinityLib/ui/windows/trinito_window.cpp" line="138"/>
@@ -875,7 +875,7 @@ Vols reiniciar l'aplicació ara per aplicar els canvis?</translation>
         <location filename="../../src/TrinityLib/ui/windows/trinito_window.cpp" line="452"/>
         <source>Are you sure you want to delete &apos;%1&apos;?
 This action cannot be undone.</source>
-        <translation>N'estàs segur de voler eliminar '%1'?
+        <translation>N&apos;estàs segur de voler eliminar &apos;%1&apos;?
 Aquesta acció no es pot desfer.</translation>
     </message>
     <message>
@@ -893,7 +893,7 @@ Aquesta acció no es pot desfer.</translation>
     <message>
         <location filename="../../src/TrinityLib/ui/windows/trinito_window.cpp" line="477"/>
         <source>&apos;%1&apos; eliminado correctamente.</source>
-        <translation>'%1' s'ha eliminat correctament.</translation>
+        <translation>&apos;%1&apos; s&apos;ha eliminat correctament.</translation>
     </message>
     <message>
         <location filename="../../src/TrinityLib/ui/windows/trinito_window.cpp" line="497"/>
@@ -944,7 +944,7 @@ Aquesta acció no es pot desfer.</translation>
         <location filename="../../src/TrinityLib/ui/windows/trinito_window.cpp" line="587"/>
         <source>Are you sure you want to delete Behavior Pack &apos;%1&apos;?
 This action cannot be undone.</source>
-        <translation>N'estàs segur de voler eliminar el Paquet de comportament '%1'?
+        <translation>N&apos;estàs segur de voler eliminar el Paquet de comportament &apos;%1&apos;?
 Aquesta acció no es pot desfer.</translation>
     </message>
     <message>
@@ -956,7 +956,7 @@ Aquesta acció no es pot desfer.</translation>
     <message>
         <location filename="../../src/TrinityLib/ui/windows/trinito_window.cpp" line="618"/>
         <source>Could not delete</source>
-        <translation>No s'ha pogut eliminar</translation>
+        <translation>No s&apos;ha pogut eliminar</translation>
     </message>
     <message>
         <location filename="../../src/TrinityLib/ui/windows/trinito_window.cpp" line="625"/>
@@ -972,7 +972,7 @@ Aquesta acció no es pot desfer.</translation>
         <location filename="../../src/TrinityLib/ui/windows/trinito_window.cpp" line="637"/>
         <source>Are you sure you want to delete Resource Pack &apos;%1&apos;?
 This action cannot be undone.</source>
-        <translation>N'estàs segur de voler eliminar el Paquet de recursos '%1'?
+        <translation>N&apos;estàs segur de voler eliminar el Paquet de recursos &apos;%1&apos;?
 Aquesta acció no es pot desfer.</translation>
     </message>
     <message>
@@ -1009,7 +1009,7 @@ Aquesta acció no es pot desfer.</translation>
         <location filename="../../src/TrinityLib/ui/windows/trinito_window.cpp" line="735"/>
         <source>Are you sure you want to delete world &apos;%1&apos;?
 This action cannot be undone.</source>
-        <translation>N'estàs segur de voler eliminar el món '%1'?
+        <translation>N&apos;estàs segur de voler eliminar el món &apos;%1&apos;?
 Aquesta acció no es pot desfer.</translation>
     </message>
     <message>
@@ -1095,17 +1095,17 @@ Vols substituir-lo?</translation>
     <message>
         <location filename="../../src/TrinityLib/ui/windows/trinito_window.cpp" line="1043"/>
         <source>Could not change lib state: </source>
-        <translation>No s'ha pogut canviar l'estat de la llibreria: </translation>
+        <translation>No s&apos;ha pogut canviar l&apos;estat de la llibreria: </translation>
     </message>
     <message>
         <location filename="../../src/TrinityLib/ui/windows/trinito_window.cpp" line="1076"/>
         <source>Could not extract .mcpack file.</source>
-        <translation>No s'ha pogut extreure l'arxiu .mcpack.</translation>
+        <translation>No s&apos;ha pogut extreure l&apos;arxiu .mcpack.</translation>
     </message>
     <message>
         <location filename="../../src/TrinityLib/ui/windows/trinito_window.cpp" line="1110"/>
         <source>Could not copy </source>
-        <translation>No s'ha pogut copiar</translation>
+        <translation>No s&apos;ha pogut copiar</translation>
     </message>
     <message>
         <location filename="../../src/TrinityLib/ui/windows/trinito_window.cpp" line="1121"/>
@@ -1133,7 +1133,7 @@ Vols substituir-lo?</translation>
         <location filename="../../src/TrinityLib/ui/windows/trinito_window.cpp" line="1147"/>
         <source>Are you sure you want to delete ALL installed shaders (%1 files)?
 This action cannot be undone.</source>
-        <translation>N'estàs segur de voler eliminar TOTS els shaders instal·lats (%1 arxius)?
+        <translation>N&apos;estàs segur de voler eliminar TOTS els shaders instal·lats (%1 arxius)?
 Aquesta acció no es pot desfer.</translation>
     </message>
     <message>
@@ -1144,7 +1144,7 @@ Aquesta acció no es pot desfer.</translation>
     <message>
         <location filename="../../src/TrinityLib/ui/windows/trinito_window.cpp" line="1166"/>
         <source>%1 shader(s) deleted. %2 could not be deleted.</source>
-        <translation>%1 shader(s) eliminat(s). %2 no s'ha(n) pogut eliminar.</translation>
+        <translation>%1 shader(s) eliminat(s). %2 no s&apos;ha(n) pogut eliminar.</translation>
     </message>
     <message>
         <location filename="../../src/TrinityLib/ui/windows/trinito_window.cpp" line="1177"/>
@@ -1164,7 +1164,7 @@ Aquesta acció no es pot desfer.</translation>
     <message>
         <location filename="../../src/TrinityLib/ui/windows/trinito_window.cpp" line="1217"/>
         <source>Could not download the lib.</source>
-        <translation>No s'ha pogut descarregar la modificació.</translation>
+        <translation>No s&apos;ha pogut descarregar la modificació.</translation>
     </message>
     <message>
         <location filename="../../src/TrinityLib/ui/windows/trinito_window.cpp" line="1223"/>
@@ -1189,7 +1189,7 @@ Aquesta acció no es pot desfer.</translation>
     <message>
         <location filename="../../src/TrinityLib/ui/windows/trinito_window.cpp" line="1247"/>
         <source>Could not delete </source>
-        <translation>No s'ha pogut eliminar</translation>
+        <translation>No s&apos;ha pogut eliminar</translation>
     </message>
     <message>
         <location filename="../../src/TrinityLib/ui/windows/trinito_window.cpp" line="1262"/>
@@ -1199,7 +1199,7 @@ Aquesta acció no es pot desfer.</translation>
     <message>
         <location filename="../../src/TrinityLib/ui/windows/trinito_window.cpp" line="1267"/>
         <source>This is where Minecraft Bedrock stores your worlds, packs, and other user data.</source>
-        <translation>Així és on Minecraft Bedrock emmagatzema els teus mons, paquets i altres dades d'usuari.</translation>
+        <translation>Així és on Minecraft Bedrock emmagatzema els teus mons, paquets i altres dades d&apos;usuari.</translation>
     </message>
     <message>
         <location filename="../../src/TrinityLib/ui/windows/trinito_window.cpp" line="1283"/>
@@ -1214,7 +1214,7 @@ Aquesta acció no es pot desfer.</translation>
     <message>
         <location filename="../../src/TrinityLib/ui/windows/trinito_window.cpp" line="1289"/>
         <source>Not found — the launcher may not have run yet</source>
-        <translation>No trobat — potser el llançador encara no s'ha executat algun cop</translation>
+        <translation>No trobat — potser el llançador encara no s&apos;ha executat algun cop</translation>
     </message>
     <message>
         <location filename="../../src/TrinityLib/ui/windows/trinito_window.cpp" line="1320"/>
@@ -1248,22 +1248,22 @@ Aquesta acció no es pot desfer.</translation>
     <message>
         <location filename="../../src/TrinityLib/core/version_manager.cpp" line="79"/>
         <source>Unknown error during extraction.</source>
-        <translation>Error desconegut durant l'extracció.</translation>
+        <translation>Error desconegut durant l&apos;extracció.</translation>
     </message>
     <message>
         <location filename="../../src/TrinityLib/core/version_manager.cpp" line="81"/>
         <source>Error during extraction.</source>
-        <translation>Error durant l'extracció.</translation>
+        <translation>Error durant l&apos;extracció.</translation>
     </message>
     <message>
         <location filename="../../src/TrinityLib/core/version_manager.cpp" line="90"/>
         <source>Could not delete version.</source>
-        <translation>No s'ha pogut eliminar la versió.</translation>
+        <translation>No s&apos;ha pogut eliminar la versió.</translation>
     </message>
     <message>
         <location filename="../../src/TrinityLib/core/version_manager.cpp" line="103"/>
         <source>Could not save configuration.</source>
-        <translation>No s'ha pogut guardar la configuració.</translation>
+        <translation>No s&apos;ha pogut guardar la configuració.</translation>
     </message>
 </context>
 <context>
