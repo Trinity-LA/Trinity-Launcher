@@ -11,6 +11,7 @@ Para instalar y conocer los pasos detallados, visita nuestra [página web oficia
 [![Qt](https://img.shields.io/badge/Qt-6-41CD52?logo=qt)](https://www.qt.io/)
 [![GitHub](https://img.shields.io/badge/GitHub-Source-181717?logo=github)](https)
 [![Flatpak](https://img.shields.io/badge/Flatpak-ready-6666FF?logo=flatpak)](https://flatpak.org/)
+<img width="964" height="594" alt="image" src="https://github.com/user-attachments/assets/781b0235-3782-44e2-a92d-0f35a48e2128" />
 
 **Trinity Launcher** es un entorno gráfico moderno, modular y funcional para ejecutar y gestionar **Minecraft: Bedrock Edition** en Linux. Diseñado para funcionar tanto en sistema como dentro de **Flatpak**, utiliza **Qt6** y sigue una arquitectura limpia basada en librerías separadas (`core` y `ui`).
 
