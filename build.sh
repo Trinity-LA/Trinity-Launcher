@@ -4,17 +4,18 @@
 # 🛠️ Trinity Launcher Build Script
 # ==========================================
 
-# Configuración de seguridad: detener si hay errores
+# Security setting: stop on errors
 set -e
 
-# Colores para la terminal
+# Terminal colors
 RED='\033[0;31m'
 GREEN='\033[0;32m'
 BLUE='\033[0;34m'
 YELLOW='\033[1;33m'
+CYAN='\033[0;36m'
 NC='\033[0m' # No Color
 
-# Variables por defecto
+# Default variables
 BUILD_TYPE="Release"
 CLEAN_BUILD=false
 ONLY_CLEAN=false
@@ -46,9 +47,9 @@ ensure_sudo() {
  if [ -n "$CI" ]; then
         return 0
     fi
-    echo -e "${YELLOW}🔐 Se requieren permisos de administrador para esta acción...${NC}"
+    echo -e "${YELLOW}🔐 Administrator permissions are required for this action...${NC}"
     if ! sudo -v; then
-        echo -e "${RED}❌ Error: Permiso denegado.${NC}"
+        echo -e "${RED}❌ Error: Permission denied.${NC}"
         exit 1
     fi
 }
@@ -92,8 +93,8 @@ detect_distro() {
 
 install_dependencies() {
     detect_distro
-    echo -e "${CYAN}🔍 Sistema detectado: $OS_ID ($DISTRO_FAMILY)${NC}"
-    echo -e "${YELLOW}📦 Instalando dependencias... (se requerirá sudo)${NC}"
+    echo -e "${CYAN}🔍 Detected system: $OS_ID ($DISTRO_FAMILY)${NC}"
+    echo -e "${YELLOW}📦 Installing dependencies... (sudo will be required)${NC}"
 
     ensure_sudo
 
@@ -133,54 +134,62 @@ install_dependencies() {
                 libzip-devel libpng16-devel libopenssl-devel libevdev-devel libdecor-0-devel
             ;;
         *)
-            echo -e "${RED}Distro no soportada automáticamente. Revisa el README.${NC}"
+            echo -e "${RED}Distro not automatically supported. Check the README.${NC}"
             exit 1
             ;;
     esac
-    echo -e "${GREEN}Dependencias instaladas.${NC}"
+    echo -e "${GREEN}Dependencies installed.${NC}"
 }
 
 uninstall_app() {
-    echo -e "${YELLOW}🗑️  Iniciando proceso de desinstalación...${NC}"
-    echo -e "${YELLOW}🔐 Se requieren permisos para eliminar archivos del sistema (/usr/local/bin, etc)${NC}"
+    echo -e "${YELLOW}🗑️  Starting uninstallation process...${NC}"
+    echo -e "${YELLOW}🔐 Permissions are required to remove system files (/usr/local/bin, etc)${NC}"
     
     ensure_sudo
 
-    echo -e "   Eliminando binarios..."
-    sudo rm -f /usr/local/bin/trinchete
-    sudo rm -f /usr/local/bin/trinito
+    # Kill the process if running to avoid errors when deleting
+    if pgrep -x "trinity" > /dev/null; then
+        echo -e "   Stopping Trinity Launcher execution..."
+        killall trinity || true
+    fi
 
-    echo -e "   Eliminando recursos (iconos y accesos directos)..."
+    echo -e "   Removing binaries..."
+    sudo rm -f /usr/local/bin/trinity
+
+    echo -e "   Removing resources (icons and shortcuts)..."
     sudo rm -f /usr/share/icons/com.trench.trinity.launcher.svg
     sudo rm -f /usr/share/applications/com.trench.trinity.launcher.desktop
 
-    echo -e "${GREEN}✅ Trinity Launcher ha sido eliminado del sistema.${NC}"
+    echo -e "${GREEN}✅ Trinity Launcher has been removed from the system.${NC}"
     
-    # No borramos la carpeta de datos (~/.local/share/mcpelauncher) automáticamente
-    # porque ahí están los mundos y partidas guardadas del usuario.
-    echo -e "${BLUE}ℹ️  Nota: Los datos del juego (mundos, skins) se mantienen en:${NC}"
+    # We don't automatically delete the data folder (~/.local/share/mcpelauncher)
+    # because user's worlds and saved games are there.
+    echo -e "${BLUE}ℹ️  Note: Game data (worlds, skins) is kept in:${NC}"
     echo -e "   ~/.local/share/mcpelauncher/"
-    echo -e "   Si deseas borrarlos también, ejecuta: rm -rf ~/.local/share/mcpelauncher/"
+    echo -e "   If you wish to delete them too, run: rm -rf ~/.local/share/mcpelauncher/"
 }
 
-# Función de ayuda
+# Help function
 show_help() {
-    echo -e "${BLUE}Uso: ./build.sh [OPCIONES]${NC}"
+    echo -e "${BLUE}Usage: ./build.sh [OPTIONS]${NC}"
     echo ""
-    echo "Opciones:"
-    echo "  --debug      Compila en modo Debug (con símbolos para depurar)"
-    echo "  --release    Compila en modo Release (optimizado, por defecto)"
-    echo "  --clean      Borra build/ y RECOMPILA"
-    echo "  --clean-only Borra build/ y SALE (Sin compilar)"
-    echo "  --update-ts  Escanea el código y actualiza los archivos .ts de traducción"
-    echo "  --deps       Instala las dependencias del sistema (detecta distro automáticamente)"
-    echo "  --install    Instala en el sistema (/usr/local/bin)"
-    echo "  --run        Ejecuta Trinchete al terminar"
-    echo "  --help       Muestra esta ayuda"
+    echo "Options:"
+    echo "  --debug      Compile in Debug mode (with symbols for debugging)"
+    echo "  --release    Compile in Release mode (optimized, default)"
+    echo "  --clean      Delete build/ and RECOMPILE"
+    echo "  --clean-only Delete build/ and EXIT (Without compiling)"
+    echo "  --update-ts  Scan code and update translation .ts files"
+    echo "  --deps       Install system dependencies (detects distro automatically) and COMPILE"
+    echo "  --deps-only  Install system dependencies (detects distro automatically) and EXIT"
+    echo "  --install    Install to system (/usr/local/bin)"
+    echo "  --uninstall  Uninstall from system (/usr/local/bin)"
+    echo "  --run        Run Trinity upon completion"
+    echo "  --detached   Used next to --run flag to hide information during launcher execution"
+    echo "  --help       Show this help"
     echo ""
 }
 
-# 1. Procesar argumentos
+# 1. Process arguments
 while [[ "$#" -gt 0 ]]; do
     case $1 in
         --debug)
@@ -214,7 +223,7 @@ while [[ "$#" -gt 0 ]]; do
             show_help
             exit 0 ;;
         *)
-            echo -e "${RED}Error: Opción desconocida $1${NC}"
+            echo -e "${RED}Error: Unknown option $1${NC}"
             show_help
             exit 1 ;;
     esac
@@ -223,163 +232,148 @@ done
 show_banner;
 
 if [ "$(id -u)" -eq 0 ]; then
-   echo -e "${RED}❌ ERROR CRÍTICO:${NC} No ejecutes este script con 'sudo'."
-   echo -e "   El script pedirá permisos de administrador automáticamente"
-   echo -e "   solo cuando necesite instalar dependencias y configurar."
-   echo -e "   ${YELLOW}Ejecuta: make start o make run (./build.sh)${NC}"
+   echo -e "${RED}❌ CRITICAL ERROR:${NC} Do not run this script with 'sudo'."
+   echo -e "   The script will ask for administrator permissions automatically"
+   echo -e "   only when needed to install dependencies and configure."
+   echo -e "   ${YELLOW}Run: make start or make run (./build.sh)${NC}"
    exit 1
 fi
 
-# Esto es vital: Si vas a limpiar o compilar, primero aseguramos que la carpeta sea tuya.
-# pedimos sudo SOLO para arreglar los permisos y devolvértelos.
-# Verificamos si la carpeta existe y si hay archivos de root dentro.
+# This is vital: If you are going to clean or compile, we first ensure the folder is yours.
+# we ask for sudo ONLY to fix permissions and give them back to you.
+# We check if the folder exists and if there are root files inside.
 if [ -d "$BUILD_DIR" ]; then
-    # Buscamos si hay algún archivo propiedad de root (user ID 0)
-    # -print -quit hace que se detenga al encontrar el primero (más rápido)
+    # Look for any file owned by root (user ID 0)
+    # -print -quit makes it stop at the first one found (faster)
     ROOT_FILES=$(find "$BUILD_DIR" -user 0 -print -quit 2>/dev/null)
 
     if [ ! -w "$BUILD_DIR" ] || [ -n "$ROOT_FILES" ]; then
-        echo -e "${YELLOW}⚠️  Se detectaron archivos creados por root en '$BUILD_DIR'.${NC}"
-        echo -e "${YELLOW}🔓 Solicitando permisos para recuperar la propiedad...${NC}"
+        echo -e "${YELLOW}⚠️  Files created by root detected in '$BUILD_DIR'.${NC}"
+        echo -e "${YELLOW}🔓 Requesting permissions to regain ownership...${NC}"
         
         ensure_sudo
         
         if sudo chown -R $USER:$USER "$BUILD_DIR"; then
-            echo -e "${GREEN}✅ Permisos corregidos.${NC}"
+            echo -e "${GREEN}✅ Permissions corrected.${NC}"
         else
-            echo -e "${RED}❌ Falló la corrección de permisos.${NC}"; exit 1
+            echo -e "${RED}❌ Permission correction failed.${NC}"; exit 1
         fi
     fi
 fi
 
-# Ejecución de tareas prioritarias
+# Run priority tasks
 if [ "$INSTALL_DEPS" = true ]; then 
     install_dependencies
     if [ "$ONLY_DEPS" = true ]; then
-        echo -e "${GREEN}✅ Dependencias listas.${NC}"
+        echo -e "${GREEN}✅ Dependencies ready.${NC}"
         exit 0
     fi
 fi
 if [ "$UNINSTALL" = true ]; then uninstall_app; exit 0; fi
 
-# 2. Actualizar Traducciones (Si se solicita)
+# 2. Update Translations (If requested)
 if [ "$UPDATE_TRANSLATIONS" = true ]; then
-    echo -e "${YELLOW}🌍 Actualizando archivos de traducción (.ts)...${NC}"
+    echo -e "${YELLOW}🌍 Updating translation files (.ts)...${NC}"
     
-    # 1. Intentar encontrar lupdate en el PATH normal
+    # 1. Try to find lupdate in normal PATH
     if command -v lupdate &> /dev/null; then
         LUPDATE_CMD="lupdate"
-    # 2. Si falla, intentar encontrarlo en la ruta específica de Arch Linux / Qt6
+    # 2. If it fails, try to find it in specific Arch Linux / Qt6 path
     elif [ -f "/usr/lib/qt6/bin/lupdate" ]; then
         LUPDATE_CMD="/usr/lib/qt6/bin/lupdate"
     else
-        echo -e "${RED}Error: 'lupdate' no encontrado. Instala 'qt6-tools' (Arch) o 'qt6-tools-dev' (Debian).${NC}"
+        echo -e "${RED}Error: 'lupdate' not found. Install 'qt6-tools' (Arch) or 'qt6-tools-dev' (Debian).${NC}"
         exit 1
     fi
 
-    echo -e "${BLUE}   Usando: $LUPDATE_CMD${NC}"
+    echo -e "${BLUE}   Using: $LUPDATE_CMD${NC}"
 
-    # Ejecutar lupdate usando la variable que encontramos
+    # Run lupdate using the variable we found
     $LUPDATE_CMD src/ include/ -recursive -ts resources/i18n/*.ts
     
-    echo -e "${GREEN}✅ Archivos .ts actualizados.${NC}"
-  # Se termina acá porque solo actualizará los archivos .ts
+    echo -e "${GREEN}✅ .ts files updated.${NC}"
+  # It ends here because it will only update .ts files
   exit 0
 fi
 
-# 3. Verificar entorno
+# 3. Verify environment
 if [ ! -f "CMakeLists.txt" ]; then
-    echo -e "${RED}Error: No se encuentra CMakeLists.txt. Ejecuta este script desde la raíz del proyecto.${NC}"
+    echo -e "${RED}Error: CMakeLists.txt not found. Run this script from the project root.${NC}"
     exit 1
 fi
 
-echo -e "${BLUE}=== Iniciando proceso de construcción ($BUILD_TYPE) ===${NC}"
+echo -e "${BLUE}=== Starting build process ($BUILD_TYPE) ===${NC}"
 
-# 4. Limpieza (si se solicita)
+# 4. Cleaning (if requested)
 if [ "$CLEAN_BUILD" = true ]; then
-    echo -e "${YELLOW}🧹 Limpiando compilaciones anteriores (--clean)...${NC}"
+    echo -e "${YELLOW}🧹 Cleaning previous builds (--clean)...${NC}"
     rm -rf "$BUILD_DIR"
-    rm -f trinchete trinito
     if [ "$ONLY_CLEAN" = true ]; then
-        echo -e "${GREEN}✅ Limpieza completada. Saliendo.${NC}"
+        echo -e "${GREEN}✅ Cleaning completed. Exiting.${NC}"
         exit 0
     fi
 fi
 
-# 5. Crear directorio build si no existe
+# 5. Create build directory if it doesn't exist
 if [ ! -d "$BUILD_DIR" ]; then
     mkdir -p "$BUILD_DIR"
 fi
 
-# 5.5 Compilación de traducciones
-# echo -e "${BLUE}🌍 Genero archivos de traducción...${NC}"
-# if command -v lrelease &> /dev/null; then
-#     LRELEASE_CMD="lrelease"
-# elif [ -f "/usr/lib/qt6/bin/lrelease" ]; then
-#     LRELEASE_CMD="/usr/lib/qt6/bin/lrelease"
-# else
-#     echo -e "${YELLOW}⚠️ lrelease no encontrado, omito la generación de .qm${NC}"
-#     LRELEASE_CMD="true"
-# fi
-#
-# $LRELEASE_CMD resources/i18n/*.ts
+# 6. Configure CMake
+echo -e "${BLUE}🔧 Configuring project...${NC}"
+# Force Clang++ and use Ninja if available
+CMAKE_EXTRA_ARGS="-DCMAKE_CXX_COMPILER=clang++"
+if command -v ninja &> /dev/null; then
+    CMAKE_EXTRA_ARGS="$CMAKE_EXTRA_ARGS -G Ninja"
+fi
+cmake -S . -B "$BUILD_DIR" -DCMAKE_BUILD_TYPE=$BUILD_TYPE $CMAKE_EXTRA_ARGS -Wno-dev
 
-# 6. Configurar CMake
-echo -e "${BLUE}🔧 Configurando proyecto...${NC}"
-cmake -S . -B "$BUILD_DIR" -DCMAKE_BUILD_TYPE=$BUILD_TYPE -Wno-dev
-
-# 7. Compilar
-echo -e "${BLUE}🔨 Compilando...${NC}"
-if cmake --build "$BUILD_DIR" --parallel; then
-    echo -e "${GREEN}✅ Compilación exitosa.${NC}"
+# 7. Compile
+echo -e "${BLUE}🔨 Compiling...${NC}"
+if cmake --build "$BUILD_DIR" --parallel $(nproc); then
+    echo -e "${GREEN}✅ Build successful.${NC}"
 else
-    echo -e "${RED}❌ Error durante la compilación.${NC}"
+    echo -e "${RED}❌ Error during compilation.${NC}"
     exit 1
 fi
 
 if [ "$INSTALL_SYSTEM" = true ]; then
-    echo -e "${BLUE}📦 Iniciando instalación en el sistema...${NC}"
+    echo -e "${BLUE}📦 Starting system installation...${NC}"
 
     ensure_sudo
 
-    # Instalar Trinchete (Obligatorio)
-    if [ -f "$BUILD_DIR/app/trinchete" ]; then
-        sudo cp -rf "$BUILD_DIR/app/trinchete" /usr/local/bin
-        echo -e "   -> trinchete instalado en /usr/local/bin"
+    # Install Trinity
+    if [ -f "$BUILD_DIR/app/trinity" ]; then
+        sudo cp -rf "$BUILD_DIR/app/trinity" /usr/local/bin
+        echo -e "   -> trinity installed in /usr/local/bin"
     else
-        echo -e "${RED}❌ Error: No se encontró el binario 'trinchete'. Compila primero.${NC}"
+        echo -e "${RED}❌ Error: Binary 'trinity' not found. Compile first.${NC}"
         exit 1
     fi
 
-    # Instalar Trinito (Opcional/Complementario)
-    if [ -f "$BUILD_DIR/app/trinito" ]; then
-        sudo cp "$BUILD_DIR/app/trinito" /usr/local/bin
-        echo -e "   -> trinito instalado en /usr/local/bin"
-    fi
-
-    # Instalar Iconos (Verificando existencia)
+    # Install Icons
     if [ -f "resources/branding/com.trench.trinity.launcher.svg" ]; then
         sudo cp -rf resources/branding/com.trench.trinity.launcher.svg /usr/share/icons/
     else
-        echo -e "${YELLOW}⚠️  No se encontró el icono (.svg), se omitió su copia.${NC}"
+        echo -e "${YELLOW}⚠️  Icon (.svg) not found, copy skipped.${NC}"
     fi
 
-    # Instalar Acceso Directo (Verificando existencia)
+    # Install Shortcut
     if [ -f "resources/shortcuts/com.trench.trinity.launcher.desktop" ]; then
         sudo cp -rf resources/shortcuts/com.trench.trinity.launcher.desktop /usr/share/applications/
     else
-        echo -e "${YELLOW}⚠️  No se encontró el acceso directo (.desktop), se omitió su copia.${NC}"
+        echo -e "${YELLOW}⚠️  Shortcut (.desktop) not found, copy skipped.${NC}"
     fi
 
-    echo -e "${GREEN}✅ Instalación completada.${NC}"
+    echo -e "${GREEN}✅ Installation completed.${NC}"
 
     if [ "$RUN_APP" = false ]; then
         echo ""
-        echo -e "${CYAN}❓ ¿Deseas iniciar Trinity Launcher ahora? (s/n)${NC}"
+        echo -e "${CYAN}❓ Do you want to start Trinity Launcher now? (y/n)${NC}"
         read -p "" -n 1 -r REPLY
         echo ""
         if [[ $REPLY =~ ^[SsYy]$ ]]; then
-            echo -e "${GREEN}🚀 Lanzando en segundo plano...${NC}"
+            echo -e "${GREEN}🚀 Launching in background...${NC}"
             RUN_APP=true
             DETACHED=true
         fi
@@ -388,39 +382,33 @@ fi
 
 if [ "$RUN_APP" = true ]; then
     
-        APP_PATH=""
-    # Selección del binario
-    if [ -f "$BUILD_DIR/app/trinchete" ]; then
-        APP_PATH="$BUILD_DIR/app/trinchete"
-    elif [ -f "$BUILD_DIR/app/trinito" ]; then
-        APP_PATH="$BUILD_DIR/app/trinito"
-    elif [ -f "$BUILD_DIR/app/trinity" ]; then
+    APP_PATH=""
+    # Binary selection
+    if [ -f "$BUILD_DIR/app/trinity" ]; then
         APP_PATH="$BUILD_DIR/app/trinity"
-    elif command -v trinchete &> /dev/null; then
-        APP_PATH=$(command -v trinchete)
     elif command -v trinity &> /dev/null; then
         APP_PATH=$(command -v trinity)
     else
-        echo -e "${RED}❌ No se pudo encontrar el ejecutable.${NC}"
+        echo -e "${RED}❌ Could not find the executable.${NC}"
         exit 1
     fi
 
-    # --- CASO A: MODO USUARIO (Sin logs, libera terminal) ---
+    # --- CASE A: USER MODE (No logs, releases terminal) ---
     if [ "$DETACHED" = true ]; then
-        echo -e "${CYAN}🎮 Lanzando Trinchete...${NC}"
+        echo -e "${CYAN}🎮 Launching Trinity...${NC}"
         "$APP_PATH" & > /dev/null 2>&1
-        echo -e "${GREEN}✅ Aplicación iniciada en segundo plano.${NC}"
+        echo -e "${GREEN}✅ Application started in background.${NC}"
     
-    # --- CASO B: MODO DEV (Logs, Ctrl+C, Espera) ---
+    # --- CASE B: DEV MODE (Logs, Ctrl+C, Waits) ---
     else
-        echo -e "${CYAN}🎮 Lanzando Trinchete (Modo Desarrollo)...${NC}"
-        echo -e "${YELLOW}⚡ Ejecutando: $APP_PATH${NC}"
-        echo -e "${YELLOW}ℹ️  Logs en vivo. Presiona Ctrl+C para detener.${NC}"
+        echo -e "${CYAN}🎮 Launching Trinity (Development Mode)...${NC}"
+        echo -e "${YELLOW}⚡ Executing: $APP_PATH${NC}"
+        echo -e "${YELLOW}ℹ️  Live logs. Press Ctrl+C to stop.${NC}"
         echo ""
 
         cleanup() {
             echo ""
-            echo -e "${RED}🛑 Deteniendo aplicación...${NC}"
+            echo -e "${RED}🛑 Stopping application...${NC}"
             if [ -n "$APP_PID" ]; then kill "$APP_PID" 2>/dev/null; fi
             exit 0
         }
@@ -433,21 +421,19 @@ if [ "$RUN_APP" = true ]; then
         EXIT_CODE=$?
         echo ""
         if [ $EXIT_CODE -eq 0 ]; then
-            echo -e "${GREEN}✅ Aplicación cerrada correctamente.${NC}"
+            echo -e "${GREEN}✅ Application closed correctly.${NC}"
         else
-            echo -e "${RED}⚠️  Cierre con código: $EXIT_CODE${NC}"
+            echo -e "${RED}⚠️  Exit with code: $EXIT_CODE${NC}"
         fi
     fi
 fi
 
 echo ""
 if [ "$DETACHED" = true ]; then
-    # Si fue detached, ya terminamos
-    echo -e "${GREEN}🎉 ¡Todo listo!${NC}"
+    echo -e "${GREEN}🎉 All set!${NC}"
 else
-    # Si fue modo dev, acabamos de cerrar la app
-    echo -e "${GREEN}🎉 Sesión finalizada.${NC}"
+    echo -e "${GREEN}🎉 Session finished.${NC}"
 fi
 
 echo ""
-echo -e "${GREEN}🎉 ¡Todo listo!${NC}"
+echo -e "${GREEN}🎉 All set!${NC}"
