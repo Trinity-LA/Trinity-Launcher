@@ -1,139 +1,139 @@
-# 🤝 Contribuir a Trinity Launcher
+# 🤝 Contributing to Trinity Launcher
 
-Primero que nada, **¡gracias por tu interés en contribuir!** Este es un proyecto en desarrollo activo y todas las contribuciones son bienvenidas.
+First of all, **thank you for your interest in contributing!** This is an actively developing project and all contributions are welcome.
 
-> **Nota importante:** Trinity Launcher es un proyecto en fase de organización. La prioridad ahora es **documentar, estructurar y reportar**, no optimizar código.
+> **Important note:** Trinity Launcher is in an organizational phase. The priority right now is to **document, structure, and report**, not to optimize code.
 
 ---
 
-## 📋 Antes de empezar
+## 📋 Before starting
 
-Por favor, lee esto completamente. Tenemos algunas consideraciones importantes para mantener el proyecto en orden:
+Please read this completely. We have some important considerations to keep the project organized:
 
-### 1️⃣ **Commits explícitos y bien documentados**
+### 1️⃣ **Explicit and well-documented commits**
 
-Aunque no trabajemos de manera profesional, la documentación es clave para encontrar bugs.
+Even if we don't work professionally, documentation is key to finding bugs.
 
-**Regla:** Los commits deben ser **claros y específicos**.
+**Rule:** Commits must be **clear and specific**.
 
 ```bash
-✅ BIEN:
-git commit -m "feat: agregar validación de lib en trinchete"
-git commit -m "fix: corrección en ruta de datos en Flatpak"
-git commit -m "docs: actualizar instrucciones de compilación"
+✅ GOOD:
+git commit -m "feat: add lib validation in trinity"
+git commit -m "fix: correction in data path in Flatpak"
+git commit -m "docs: update build instructions"
 
-❌ MAL:
-git commit -m "cambios"
+❌ BAD:
+git commit -m "changes"
 git commit -m "updates"
-git commit -m "arreglado"
+git commit -m "fixed"
 ```
 
-**Formato recomendado (Conventional Commits):**
+**Recommended format (Conventional Commits):**
 ```
-<tipo>: <descripción corta>
+<type>: <short description>
 
-<descripción larga opcional>
+<optional long description>
 ```
 
-**Tipos válidos:**
-- `feat:` — Nueva funcionalidad
-- `fix:` — Corrección de bug
-- `docs:` — Documentación
-- `refactor:` — Cambio de código sin funcionalidad nueva
+**Valid types:**
+- `feat:` — New functionality
+- `fix:` — Bug fix
+- `docs:` — Documentation
+- `refactor:` — Code change without new functionality
 - `test:` — Tests
-- `chore:` — Tareas de mantenimiento
+- `chore:` — Maintenance tasks
 
 ---
 
-### 2️⃣ **Encontraste un bug?**
+### 2️⃣ **Found a bug?**
 
-**Primero:** Verifica que el software funcione (aunque tenga el bug).
+**First:** Verify that the software runs (even with the bug).
 
-**Regla:** Si el software funciona, **NO ARREGLES EL BUG**, solo reporta.
+**Rule:** If the software runs, **DO NOT FIX THE BUG**, just report it.
 
-**Pasos:**
+**Steps:**
 
-1. Abre un [Issue](../../issues) con:
-   - **Título descriptivo:** Ej. "Bug: trinchete no detecta versiones en Flatpak"
-   - **Qué esperabas:** Descripción clara de lo que debería pasar
-   - **Qué sucede:** Lo que realmente sucede
-   - **Pasos para reproducir:** Paso a paso cómo llegar al bug
-   - **Sistema:** Distro, versión de Qt, entorno (local/Flatpak)
+1. Open an [Issue](../../issues) with:
+   - **Descriptive title:** E.g. "Bug: trinchete does not detect versions in Flatpak"
+   - **What you expected:** Clear description of what should happen
+   - **What happens:** What actually happens
+   - **Steps to reproduce:** Step-by-step how to reach the bug
+   - **System:** Distro, Qt version, environment (local/Flatpak)
 
-2. **Etiqueta:** Marca como `bug` (si existe)
+2. **Label:** Mark as `bug` (if it exists)
 
-3. **Espera a que se organice:** Los maintainers decidirán cuándo y cómo arreglarlo
+3. **Wait for organization:** Maintainers will decide when and how to fix it
 
-**Ejemplo de issue bien hecho:**
+**Example of a well-made issue:**
 ```
-**Título:** Bug: trinito no copia carpetas de mods en Flatpak
+**Title:** Bug: trinito does not copy mod folders in Flatpak
 
-**Qué esperaba:** Que al seleccionar una carpeta de mods, se copie a `behavior_packs/`
+**What I expected:** That when selecting a mod folder, it copies to `behavior_packs/`
 
-**Qué sucede:** La carpeta no se copia, sin mensajes de error
+**What happens:** The folder is not copied, with no error messages
 
-**Pasos:**
-1. Ejecutar: `flatpak run com.trench.trinity.launcher`
-2. Click en "Tools"
-3. Ir a pestaña "Mods"
-4. Seleccionar una carpeta
-5. Ver que nada sucede
+**Steps:**
+1. Run: `flatpak run com.trench.trinity.launcher`
+2. Click on "Tools"
+3. Go to "Mods" tab
+4. Select a folder
+5. See that nothing happens
 
-**Sistema:** Ubuntu 22.04, Qt 5.15.11, Flatpak
+**System:** Ubuntu 22.04, Qt 5.15.11, Flatpak
 ```
 
 ---
 
-### 3️⃣ **Tienes una idea de mejora?**
+### 3️⃣ **Have an improvement idea?**
 
-**Regla:** Documenta la idea, **NO toques el código** hasta que se organice el proyecto.
+**Rule:** Document the idea, **DO NOT touch the code** until the project is organized.
 
-**Pasos:**
+**Steps:**
 
-1. Abre un [Discussion](../../discussions) o [Issue](../../issues) con etiqueta `enhancement`
+1. Open a [Discussion](../../discussions) or [Issue](../../issues) with the `enhancement` label
 2. Describe:
-   - Qué mejora propones
-   - Por qué sería útil
-   - Impacto esperado
-3. **Espera feedback** de los maintainers antes de hacer cambios
+   - What improvement you propose
+   - Why it would be useful
+   - Expected impact
+3. **Wait for feedback** from maintainers before making changes
 
-**Prioridad actual:** Organizar proyecto > Optimizar código
-
----
-
-### 4️⃣ **Vas a usar IA para apoyarte?**
-
-**Regla importante:** Evita que la IA modifique código innecesariamente.
-
-**Permite:**
-✅ Usar IA para entender el código  
-✅ Usar IA para escribir documentación  
-✅ Usar IA para diseñar tests  
-✅ Usar IA para proponer soluciones en issues  
-
-**NO permitas:**
-❌ Que IA optimice código por su cuenta  
-❌ Que IA refactorice sin documentación previa  
-❌ Que IA haga cambios "mejorando" el código  
-
-**Razón:** Los cambios sin documentación pueden romper cosas que no hemos documentado todavía. La estabilidad es más importante que la optimización ahora.
+**Current priority:** Organize project > Optimize code
 
 ---
 
-## 🏗️ Estándares de código
+### 4️⃣ **Are you going to use AI for support?**
 
-### Nombrado de identificadores
+**Important rule:** Avoid letting AI modify code unnecessarily.
 
-| Elemento | Estilo | Ejemplo |
+**Allow:**
+✅ Using AI to understand code  
+✅ Using AI to write documentation  
+✅ Using AI to design tests  
+✅ Using AI to propose solutions in issues  
+
+**Do NOT allow:**
+❌ AI optimizing code on its own  
+❌ AI refactoring without prior documentation  
+❌ AI making changes "improving" the code  
+
+**Reason:** Undocumented changes can break things we haven't documented yet. Stability is more important than optimization right now.
+
+---
+
+## 🏗️ Code Standards
+
+### Identifier Naming
+
+| Element | Style | Example |
 |:---------|:-------|:--------|
-| **Funciones/Métodos** | `camelCase` | `loadInstalledVersions()`, `launchGame()` |
+| **Functions/Methods** | `camelCase` | `loadInstalledVersions()`, `launchGame()` |
 | **Variables** | `camelCase` | `selectedVersion`, `libPath` |
-| **Constantes** | `UPPER_SNAKE_CASE` | `MAX_RETRIES`, `DEFAULT_TIMEOUT` |
-| **Clases** | `PascalCase` | `LauncherWindow`, `VersionManager` |
-| **Carpetas** | `lowercase` | `src/`, `ui/`, `core/` |
-| **Archivos** | `snake_case` | `launcher_window.cpp`, `version_manager.h` |
+| **Constants** | `UPPER_SNAKE_CASE` | `MAX_RETRIES`, `DEFAULT_TIMEOUT` |
+| **Classes** | `PascalCase` | `LauncherWindow`, `VersionManager` |
+| **Folders** | `lowercase` | `src/`, `ui/`, `core/` |
+| **Files** | `snake_case` | `launcher_window.cpp`, `version_manager.h` |
 
-### Ejemplo de estructura
+### Structure Example
 
 ```
 src/
@@ -152,110 +152,103 @@ src/
 │   │   └── extract_dialog.cpp
 ```
 
-### Documentación de código
+### Code Documentation
 
-- Documenta **funciones públicas** siempre
-- Usa comentarios claros en lógica compleja
-- Sigue el estilo existente en los archivos
+- Always document **public functions**
+- Use clear comments in complex logic
+- Follow the existing style in files
 
-**Ejemplo:**
+**Example:**
 ```cpp
 /**
- * Carga las versiones instaladas desde el directorio mcpelauncher
+ * Loads installed versions from the mcpelauncher directory
  * 
- * @return QStringList con los nombres de las versiones encontradas
+ * @return QStringList with the names of found versions
  */
 QStringList loadInstalledVersions();
 ```
 
 ---
 
-## 🔄 Flujo de contribución
+## 🔄 Contribution Flow
 
-### 1. Preparar tu entorno
+### 1. Prepare your environment
 
 ```bash
-# Clonar el repo
+# Clone the repo
 git clone https://github.com/Trinity-LA/Trinity-Launcher.git
 cd Trinity_Launcher
 
-# Crear una rama
-git checkout -b feature/tu-cambio
-# o
-git checkout -b fix/tu-bug
+# Create a branch
+git switch -c feature/your-change
+# or
+git switch -c fix/your-bug
 ```
 
-### 2. Hacer cambios
+### 2. Make changes
 
-- Sigue los estándares de código
-- Escribe commits claros y explícitos
-- Si usas IA, evita cambios innecesarios en el código
+- Follow code standards
+- Write clear and explicit commits
+- If using AI, avoid unnecessary code changes
 
-### 3. Compilar y probar localmente
+### 3. Compile and test locally
 
 ```bash
-# Compilar trinchete
-qmake -project -o trinchete.pro
-echo "QT += widgets" >> trinchete.pro
-qmake trinchete.pro
+# Compile trinity
+qmake -project -o trinity.pro
+echo "QT += widgets" >> trinity.pro
+qmake trinity.pro
 make
 
-# Compilar trinito
-qmake -project -o trinito.pro
-echo "QT += widgets" >> trinito.pro
-qmake trinito.pro
-make
-
-# Ejecutar
-./trinchete
-./trinito
+# Execute
+./trinity
 ```
 
-### 4. Abrir un Pull Request
+### 4. Open a Pull Request
 
-**Antes de PR:**
-- ✅ Compila sin errores
-- ✅ Probaste localmente
-- ✅ Commits son claros
-- ✅ Actualizaste documentación si es necesario
+**Before PR:**
+- ✅ Compiles without errors
+- ✅ Tested locally
+- ✅ Commits are clear
+- ✅ Updated documentation if necessary
 
-**En la PR:**
-- **Título:** Describe brevemente el cambio
-- **Descripción:** Explica qué cambió y por qué
-- **Referencias:** Vincula issues relacionados con `Fixes #123`
+**In the PR:**
+- **Title:** Briefly describe the change
+- **Description:** Explain what changed and why
+- **References:** Link related issues with `Fixes #123`
 
-**Ejemplo:**
+**Example:**
 ```markdown
-# Agregado: Validación de integridad en trinchete
+# Added: Integrity validation in trinchete
 
-## Descripción
-Se agregó validación de que `libminecraftpe.so` existe antes de lanzar el juego.
-Esto previene crashes cuando la versión está incompleta.
+## Description
+Added validation that `libminecraftpe.so` exists before launching the game.
+This prevents crashes when the version is incomplete.
 
-## Cambios
-- Agregado método `validateGameVersion()` en `launcher_window.cpp`
-- Actualizado flujo de lanzamiento
-- Agregado mensaje de error clara al usuario
+## Changes
+- Added `validateGameVersion()` method in `launcher_window.cpp`
+- Updated launch flow
+- Added clear error message to user
 
 ## Testing
-- Probado localmente en Ubuntu 22.04
-- Validado con versiones completas e incompletas
+- Tested locally on Ubuntu 22.04
+- Validated with complete and incomplete versions
 
 Fixes #42
 ```
 
 ---
 
-## 📞 Preguntas o dudas?
+## 📞 Questions or doubts?
 
-- **Sobre código:** Abre una [Discussion](../../discussions)
-- **Encontraste un bug:** Reporta en [Issues](../../issues)
-- **Idea de mejora:** Discussion o Issue con etiqueta `enhancement`
+- **About code:** Open a [Discussion](../../discussions)
+- **Found a bug:** Report in [Issues](../../issues)
+- **Improvement idea:** Discussion or Issue with `enhancement` label
 
 ---
 
-## ✨ Gracias por contribuir
+## ✨ Thank you for contributing
 
-Trinity Launcher crece gracias a gente como tú. Tu documentación, reportes y propuestas son invaluables para llevar el proyecto al siguiente nivel.
+Trinity Launcher grows thanks to people like you. Your documentation, reports, and proposals are invaluable to take the project to the next level.
 
-**¡Bienvenido al equipo!** 🚀
+**Welcome to the team!** 🚀
