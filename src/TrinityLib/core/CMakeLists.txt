@@ -14,4 +14,4 @@ add_library(TrinityCore STATIC ${CORE_SOURCES} ${CORE_HEADERS})
 target_include_directories(TrinityCore
                            PUBLIC "$<BUILD_INTERFACE:${TRINITY_INCLUDE_DIR}>")
 
-target_link_libraries(TrinityCore PUBLIC Qt6::Core Qt6::Widgets DiscordPresence)
+target_link_libraries(TrinityCore PUBLIC Qt6::Core Qt6::Widgets Qt6::Network)
