@@ -56,11 +56,12 @@ jobs:
           #!/bin/sh
           HERE="$(dirname "$(readlink -f "$0")")"
           export LD_LIBRARY_PATH="$HERE/usr/lib:$LD_LIBRARY_PATH"
+          alias mcpelauncher-webview="$HERE/usr/bin/mcpelauncher-webview" &
           export QT_QPA_PLATFORM="xcb"
           export GDK_BACKEND="x11"
           export DISABLE_WAYLAND=1
           export MCPELAUNCHER_DATA_DIR="$HERE/usr/share/mcpelauncher"
-          export PATH="$PATH:$HERE/usr/bin"
+          export PATH="$PATH:$HERE/usr/bin
           exec "$HERE/usr/bin/trinity" "$@"
           EOF
           chmod +x APPIMAGE-TRINITY/AppRun
