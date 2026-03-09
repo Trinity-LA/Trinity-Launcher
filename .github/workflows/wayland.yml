@@ -1,0 +1,51 @@
+name: Compilar mcpelauncher WAYLAND(Qt6 - Manifest Repo)
+
+on:
+  push:
+    branches: [ main, master ]
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Clonar Manifiesto (Rama qt6)
+        uses: actions/checkout@v4
+        with:
+          repository: 'minecraft-linux/mcpelauncher-manifest'
+          ref: 'qt6'
+          submodules: 'recursive'
+
+      - name: Descargar Dockerfile de construcción
+        run: |
+          curl -L https://github.com/franckey02/my-dockers-setup/raw/refs/heads/main/Dockerfile.build -o Dockerfile.build
+
+      - name: Construir imagen de entorno
+        run: docker build -t mcpelauncher-builder -f Dockerfile.build .
+
+      - name: Compilación con Clang y Optimizaciones
+        run: |
+          docker run --rm -v ${{ github.workspace }}:/project mcpelauncher-builder /bin/bash -c "
+            mkdir -p build && cd build
+            CC=clang CXX=clang++ cmake .. \
+              -DCMAKE_BUILD_TYPE=Release \
+              -DCMAKE_POLICY_DEFAULT_CMP0074=NEW \
+              -DJNI_USE_JNIVM=ON -DGAMEWINDOW_SYSTEM=SDL3 \
+              -DCMAKE_C_FLAGS='-march=x86-64 -mtune=generic -msse4.1 -msse4.2 -mpopcnt' \
+              -DCMAKE_CXX_FLAGS='-march=x86-64 -mtune=generic -msse4.1 -msse4.2 -mpopcnt' \
+              -Wno-dev
+            make -j$(nproc)
+          "
+
+      - name: Subir Binarios
+        uses: actions/upload-artifact@v4
+        with:
+          name: mcpelauncher-qt6-debian13
+          path: |
+            build/mcpelauncher-client
+            build/mcpelauncher-ui-qt/mcpelauncher-ui-qt
+            build/mcpelauncher-webview
+            build/mcpelauncher-error
+            build/mcpelauncher-extract
+          if-no-files-found: warn
