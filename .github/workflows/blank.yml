@@ -61,7 +61,7 @@ jobs:
           export GDK_BACKEND="x11"
           export DISABLE_WAYLAND=1
           export MCPELAUNCHER_DATA_DIR="$HERE/usr/share/mcpelauncher"
-          export PATH="$PATH:$HERE/usr/bin
+          export PATH="$HERE/usr/bin:$PATH"
           exec "$HERE/usr/bin/trinity" "$@"
           EOF
           chmod +x APPIMAGE-TRINITY/AppRun
