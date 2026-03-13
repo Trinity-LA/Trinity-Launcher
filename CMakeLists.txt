@@ -26,7 +26,6 @@ qt_standard_project_setup(
   ca
   uk
   es
-  pt
   pt_BR)
 
 set(TRINITY_SRC_DIR "${CMAKE_CURRENT_SOURCE_DIR}/src")
@@ -48,12 +47,12 @@ set(TS_DIR "${CMAKE_SOURCE_DIR}/resources/i18n")
 set(TS_FILES
     "${TS_DIR}/trinity_en.ts" "${TS_DIR}/trinity_ca.ts"
     "${TS_DIR}/trinity_uk.ts" "${TS_DIR}/trinity_es.ts"
-    "${TS_DIR}/trinity_pt.ts" "${TS_DIR}/trinity_pt_BR.ts")
+    "${TS_DIR}/trinity_pt_BR.ts")
 
 set(QM_FILES
     "${TS_DIR}/trinity_en.qm" "${TS_DIR}/trinity_ca.qm"
     "${TS_DIR}/trinity_uk.qm" "${TS_DIR}/trinity_es.qm"
-    "${TS_DIR}/trinity_pt.qm" "${TS_DIR}/trinity_pt_BR.qm")
+    "${TS_DIR}/trinity_pt_BR.qm")
 
 # Embed .qm resources into trinity
 qt_add_resources(

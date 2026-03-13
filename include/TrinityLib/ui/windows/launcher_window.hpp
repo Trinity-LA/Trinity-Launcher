@@ -27,6 +27,9 @@ class LauncherWindow : public QWidget {
         void selectVersion(const QString &version);
         QComboBox *versionCombo = nullptr; // dock version selector (public for cross-widget sync)
 
+    signals:
+        void versionsChanged();
+
     public slots:
         // Instance-action slots (also called from TrinitoWindow::Instancias tab)
         void onEditConfigClicked();

@@ -252,8 +252,8 @@ void LauncherWindow::setupUi() {
     dockLayout->setContentsMargins(20, 10, 20, 10);
     dockLayout->setSpacing(16);
 
-    // Left: Extract APK button
-    extractButton = new QPushButton(tr("Extract APK"));
+    // Left: Extract Version button
+    extractButton = new QPushButton(tr("Extract"));
     extractButton->setObjectName("ActionButton");
     extractButton->setFixedWidth(140);
     extractButton->setMinimumHeight(44);
@@ -371,7 +371,7 @@ void LauncherWindow::setupUi() {
     discordLayout->addSpacing(10);
 
     // Discord URL Box (Clickable via QPushButton)
-    QPushButton *discordUrlBox = new QPushButton("https://discord.gg/yBaDq2Bnuw");
+    QPushButton *discordUrlBox = new QPushButton("https://discord.gg/xTdmDHfgZT");
     discordUrlBox->setFlat(true);
     discordUrlBox->setStyleSheet("background-color: #1e293b; color: #a78bfa; border: 1px dashed #475569; border-radius: 6px; padding: 8px; font-size: 14px; font-weight: bold; text-align: center;");
     discordUrlBox->setMinimumHeight(40);
@@ -381,13 +381,13 @@ void LauncherWindow::setupUi() {
     discordLayout->addWidget(discordUrlBox, 0, Qt::AlignCenter);
     
     connect(discordUrlBox, &QPushButton::clicked, this, [discordUrlBox]() {
-        QApplication::clipboard()->setText("https://discord.gg/yBaDq2Bnuw");
+        QApplication::clipboard()->setText("https://discord.gg/xTdmDHfgZT");
         
         discordUrlBox->setText(tr("✓ Copied!"));
         discordUrlBox->setStyleSheet("background-color: #1e293b; color: #4ade80; border: 1px dashed #4ade80; border-radius: 6px; padding: 8px; font-size: 14px; font-weight: bold; text-align: center;");
         
         QTimer::singleShot(1500, discordUrlBox, [discordUrlBox]() {
-            discordUrlBox->setText("https://discord.gg/yBaDq2Bnuw");
+            discordUrlBox->setText("https://discord.gg/xTdmDHfgZT");
             discordUrlBox->setStyleSheet("background-color: #1e293b; color: #a78bfa; border: 1px dashed #475569; border-radius: 6px; padding: 8px; font-size: 14px; font-weight: bold; text-align: center;");
         });
     });
@@ -591,6 +591,8 @@ void LauncherWindow::loadInstalledVersions() {
     } else {
         updateContextPanel("");
     }
+
+    emit versionsChanged();
 }
 
 void LauncherWindow::onVersionSelected(QListWidgetItem *item) {
@@ -659,7 +661,7 @@ void LauncherWindow::showExtractDialog() {
 
     // Crear diálogo de progreso
     QDialog progressDlg(this);
-    progressDlg.setWindowTitle(tr("Extracting APK..."));
+    progressDlg.setWindowTitle(tr("Extracting Version..."));
     progressDlg.setFixedSize(300, 100);
 
     auto *layout = new QVBoxLayout(&progressDlg);

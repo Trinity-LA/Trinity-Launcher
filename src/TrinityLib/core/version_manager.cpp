@@ -41,21 +41,26 @@ bool VersionManager::extractApk(const QString &apkPath, const QString &versionNa
         return false;
     }
 
-    QString appDir = QCoreApplication::applicationDirPath();
-    QString extractorPath = appDir + "/mcpelauncher-extract";
-    if (!QFileInfo::exists(extractorPath)) {
-        extractorPath = QStandardPaths::findExecutable("mcpelauncher-extract");
-    }
-    if (extractorPath.isEmpty()) {
-        errorMsg = "mcpelauncher-extract no encontrado.";
-        return false;
-    }
-
     // Crear proceso de extracción
     QProcess process;
 
-    // Iniciar proceso
-    process.start(extractorPath, {apkPath, destDir});
+    // Si es un .tmc, usar tar para extraer
+    if (apkPath.endsWith(".tmc", Qt::CaseInsensitive)) {
+        process.start("tar", {"-xvf", apkPath, "-C", destDir, "--strip-components=1"});
+    } else {
+        QString appDir = QCoreApplication::applicationDirPath();
+        QString extractorPath = appDir + "/mcpelauncher-extract";
+        if (!QFileInfo::exists(extractorPath)) {
+            extractorPath = QStandardPaths::findExecutable("mcpelauncher-extract");
+        }
+        if (extractorPath.isEmpty()) {
+            errorMsg = "mcpelauncher-extract no encontrado.";
+            return false;
+        }
+
+        // Iniciar proceso
+        process.start(extractorPath, {apkPath, destDir});
+    }
 
     // Esperar a que termine (sin bloquear la UI)
     process.waitForStarted(-1);

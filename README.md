@@ -45,6 +45,11 @@ If you wish to compile the latest version from the repository:
 
 *(For a detailed guide, refer to [docs/BUILD.md](docs/BUILD.md))*
 
+if you wanna use nix run:
+``` 
+nix --extra-experimental-features "nix-command flakes" develop
+```
+
 ---
 
 ## ⚙️ Technical Architecture

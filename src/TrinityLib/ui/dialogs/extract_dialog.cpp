@@ -9,12 +9,12 @@
 #include <QDir>
 
 ExtractDialog::ExtractDialog(QWidget *parent) : QDialog(parent) {
-    setWindowTitle(tr("New version from APK"));
+    setWindowTitle(tr("APK/TMC"));
     resize(400, 150);
 
     auto *layout = new QFormLayout(this);
 
-    auto *apkButton = new QPushButton(tr("Select APK..."));
+    auto *apkButton = new QPushButton(tr("Select File..."));
     apkLabel = new QLabel(tr("No file selected"));
     apkLabel->setWordWrap(true);
 
@@ -24,7 +24,7 @@ ExtractDialog::ExtractDialog(QWidget *parent) : QDialog(parent) {
     nameEdit->setPlaceholderText("Ej: 1.21.0");
     connect(nameEdit, &QLineEdit::textChanged, [this](const QString &text) { versionName = text.trimmed(); });
 
-    layout->addRow("APK:", apkButton);
+    layout->addRow("File:", apkButton);
     layout->addRow(apkLabel);
     layout->addRow(tr("Version name:"), nameEdit);
 
@@ -33,7 +33,7 @@ ExtractDialog::ExtractDialog(QWidget *parent) : QDialog(parent) {
 
     connect(buttonBox, &QDialogButtonBox::accepted, this, [this]() {
         if (apkPath.isEmpty()) {
-            QMessageBox::warning(this, tr("Error"), tr("Please select an APK file."));
+            QMessageBox::warning(this, tr("Error"), tr("Please select an APK/TMC file."));
             return;
         }
         if (versionName.isEmpty()) {
@@ -46,7 +46,7 @@ ExtractDialog::ExtractDialog(QWidget *parent) : QDialog(parent) {
 }
 
 void ExtractDialog::onSelectApk() {
-    QString file = QFileDialog::getOpenFileName(this, tr("Select Minecraft APK"), QDir::homePath(), tr("APK files (*.apk)"));
+    QString file = QFileDialog::getOpenFileName(this, tr("Select Minecraft Package"), QDir::homePath(), tr("Minecraft Packages (*.apk *.tmc)"));
     if (!file.isEmpty()) {
         apkPath = file;
         apkLabel->setText(QFileInfo(file).fileName());
