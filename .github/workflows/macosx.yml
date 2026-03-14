@@ -85,17 +85,23 @@ jobs:
           
           cd dist
           
-          # 1. Desplegar librerías Qt indicando la ruta global y los binarios adicionales
+          # Inyectar las rutas de los módulos fragmentados de Homebrew en todos los binarios
+          for bin in Trinity.app/Contents/MacOS/*; do
+            install_name_tool -add_rpath /opt/homebrew/opt/qtsvg/lib "$bin" 2>/dev/null || true
+            install_name_tool -add_rpath /opt/homebrew/opt/qtvirtualkeyboard/lib "$bin" 2>/dev/null || true
+            install_name_tool -add_rpath /opt/homebrew/opt/qt/lib "$bin" 2>/dev/null || true
+          done
+          
+          # Desplegar librerías y dependencias
           $(brew --prefix qt@6)/bin/macdeployqt Trinity.app \
-            -libpath="$(brew --prefix qt@6)/lib" \
             -executable=Trinity.app/Contents/MacOS/mcpelauncher-client \
             -executable=Trinity.app/Contents/MacOS/mcpelauncher-webview \
             -executable=Trinity.app/Contents/MacOS/mcpelauncher-extract
           
-          # 2. Firmar todos los binarios y librerías con firma ad-hoc
+          # Firmar todos los binarios y librerías con firma ad-hoc
           codesign --force --deep --sign - Trinity.app
           
-          # 3. Crear el archivo DMG
+          # Crear el archivo DMG
           hdiutil create -volname "Trinity" -srcfolder Trinity.app -ov -format UDZO Trinity.dmg
           
       - name: Subir instalador DMG
