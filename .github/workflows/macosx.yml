@@ -1,4 +1,4 @@
-name: Compilar binarios para macOS
+name: Compilar y Empaquetar para macOS
 
 on:
   push:
@@ -8,64 +8,45 @@ on:
     branches: [ appimage-rebase, master, main ]
 
 jobs:
-  build-trinity:
+  build-and-package:
     runs-on: macos-latest
 
     steps:
       - name: Clonar repositorio Trinity
         uses: actions/checkout@v4
-
-      - name: Instalar dependencias del sistema (Homebrew)
-        run: |
-          brew update
-          brew install cmake ninja qt@6 libzip libpng pkg-config openssl
-          brew link --force qt@6
-
-      - name: Configurar proyecto con CMake
-        run: |
-          mkdir -p build
-          cd build
-          cmake .. \
-            -DCMAKE_BUILD_TYPE=Release \
-            -G Ninja \
-            -DCMAKE_PREFIX_PATH="$(brew --prefix qt@6)" \
-            -Wno-dev
-
-      - name: Compilar en modo Release
-        run: |
-          cd build
-          cmake --build . --parallel $(sysctl -n hw.ncpu)
-
-      - name: Subir binarios compilados
-        uses: actions/upload-artifact@v4
         with:
-          name: trinity-launcher-macos
-          path: build/app/trinity
-          if-no-files-found: warn
+          path: 'trinity'
 
-  build-mcpelauncher:
-    runs-on: macos-latest
-    
-    steps:
-      - name: Clonar Manifiesto (Rama qt6)
+      - name: Clonar Manifiesto de mcpelauncher
         uses: actions/checkout@v4
         with:
           repository: 'minecraft-linux/mcpelauncher-manifest'
           ref: 'qt6'
           submodules: 'recursive'
+          path: 'mcpelauncher'
 
-      - name: Instalar dependencias de entorno
+      - name: Clonar mcpe-extract (Codeberg)
+        run: git clone https://codeberg.org/javiercplus/mcpe-extract.git
+
+      - name: Instalar dependencias del sistema (Homebrew)
         run: |
           brew update
           brew install cmake ninja qt@6 libzip libpng pkg-config openssl rustup-init
           brew link --force qt@6
           rustup-init -y
 
-      - name: Configuración con CMake
+      - name: Compilar Trinity
+        run: |
+          cd trinity
+          mkdir -p build && cd build
+          cmake .. -DCMAKE_BUILD_TYPE=Release -G Ninja -DCMAKE_PREFIX_PATH="$(brew --prefix qt@6)" -Wno-dev
+          cmake --build . --parallel $(sysctl -n hw.ncpu)
+
+      - name: Compilar mcpelauncher
         run: |
           source $HOME/.cargo/env
-          mkdir -p build
-          cd build
+          cd mcpelauncher
+          mkdir -p build && cd build
           cmake .. \
             -DCMAKE_BUILD_TYPE=Release \
             -G Ninja \
@@ -75,21 +56,41 @@ jobs:
             -DJNI_USE_JNIVM=ON \
             -DGAMEWINDOW_SYSTEM=SDL3 \
             -Wno-dev
-
-      - name: Compilación de binarios
-        run: |
-          source $HOME/.cargo/env
-          cd build
           cmake --build . --parallel $(sysctl -n hw.ncpu)
 
-      - name: Subir Binarios de mcpelauncher
+      - name: Compilar mcpe-extract
+        run: |
+          cd mcpe-extract
+          mkdir -p build && cd build
+          cmake .. \
+            -DCMAKE_BUILD_TYPE=Release \
+            -G Ninja \
+            -DCMAKE_POLICY_VERSION_MINIMUM=3.5 \
+            -Wno-dev
+          cmake --build . --parallel $(sysctl -n hw.ncpu)
+
+      - name: Crear Application Bundle y Empaquetar
+        run: |
+          mkdir -p dist/Trinity.app/Contents/MacOS
+          
+          # Copiar ejecutable principal de Trinity
+          cp trinity/build/app/trinity dist/Trinity.app/Contents/MacOS/
+          
+          # Copiar binarios de mcpelauncher (excluyendo mcpelauncher-ui-qt)
+          cp mcpelauncher/build/mcpelauncher-client dist/Trinity.app/Contents/MacOS/
+          cp mcpelauncher/build/mcpelauncher-webview dist/Trinity.app/Contents/MacOS/
+          cp mcpelauncher/build/mcpelauncher-error dist/Trinity.app/Contents/MacOS/
+          
+          # Copiar binario de mcpe-extract recién compilado
+          cp mcpe-extract/build/mcpe-extract dist/Trinity.app/Contents/MacOS/
+          
+          # Desplegar librerías Qt y generar el archivo DMG
+          cd dist
+          $(brew --prefix qt@6)/bin/macdeployqt Trinity.app -dmg
+          
+      - name: Subir instalador DMG
         uses: actions/upload-artifact@v4
         with:
-          name: mcpelauncher-qt6-macos
-          path: |
-            build/mcpelauncher-client
-            build/mcpelauncher-ui-qt/mcpelauncher-ui-qt
-            build/mcpelauncher-webview
-            build/mcpelauncher-error
-            build/mcpelauncher-extract
-          if-no-files-found: warn
+          name: trinity-mcpelauncher-macos-dmg
+          path: dist/Trinity.dmg
+          if-no-files-found: error
