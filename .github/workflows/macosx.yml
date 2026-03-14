@@ -28,6 +28,12 @@ jobs:
       - name: Clonar mcpe-extract (Codeberg)
         run: git clone https://codeberg.org/javiercplus/mcpe-extract.git
 
+      - name: Clonar mcpelauncher-mac-bin (Librerías puente)
+        uses: actions/checkout@v4
+        with:
+          repository: 'minecraft-linux/mcpelauncher-mac-bin'
+          path: 'mac-bin'
+
       - name: Instalar dependencias del sistema (Homebrew)
         run: |
           brew update
@@ -83,6 +89,9 @@ jobs:
           
           # Copiar binario de mcpe-extract
           cp mcpe-extract/build/mcpelauncher-extract dist/Trinity.app/Contents/MacOS/
+          
+          # Copiar librerías puente (shims) para ARM64 y x86_64
+          cp -R mac-bin/lib dist/Trinity.app/Contents/MacOS/
           
           # Enlazar los frameworks faltantes en la carpeta que macdeployqt sí revisa
           ln -s /opt/homebrew/opt/qtsvg/lib/QtSvg.framework dist/lib/
