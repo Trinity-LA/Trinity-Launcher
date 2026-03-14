@@ -79,7 +79,6 @@ jobs:
           # Copiar binarios de mcpelauncher
           cp mcpelauncher/build/mcpelauncher-client/mcpelauncher-client dist/Trinity.app/Contents/MacOS/
           cp mcpelauncher/build/mcpelauncher-webview/mcpelauncher-webview dist/Trinity.app/Contents/MacOS/
-          cp mcpelauncher/build/mcpelauncher-error/mcpelauncher-error dist/Trinity.app/Contents/MacOS/
           
           # Copiar binario de mcpe-extract
           cp mcpe-extract/build/mcpelauncher-extract dist/Trinity.app/Contents/MacOS/
