@@ -85,13 +85,17 @@ jobs:
           
           cd dist
           
-          # 1. Desplegar librerías Qt sin generar el DMG todavía
-          $(brew --prefix qt@6)/bin/macdeployqt Trinity.app
+          # 1. Desplegar librerías Qt indicando la ruta global y los binarios adicionales
+          $(brew --prefix qt@6)/bin/macdeployqt Trinity.app \
+            -libpath="$(brew --prefix qt@6)/lib" \
+            -executable=Trinity.app/Contents/MacOS/mcpelauncher-client \
+            -executable=Trinity.app/Contents/MacOS/mcpelauncher-webview \
+            -executable=Trinity.app/Contents/MacOS/mcpelauncher-extract
           
-          # 2. Firmar todos los binarios y librerías con firma ad-hoc (obligatorio en Apple Silicon)
+          # 2. Firmar todos los binarios y librerías con firma ad-hoc
           codesign --force --deep --sign - Trinity.app
           
-          # 3. Crear el archivo DMG con la aplicación ya firmada
+          # 3. Crear el archivo DMG
           hdiutil create -volname "Trinity" -srcfolder Trinity.app -ov -format UDZO Trinity.dmg
           
       - name: Subir instalador DMG
