@@ -1,4 +1,4 @@
-# Trinity Launcher 🎮
+# Trinity Launcher 
 
 [Official Website](https://trinitylauncher.vercel.app)
 
@@ -11,7 +11,7 @@
 
 ---
 
-### 🚀 Key Features
+### Key Features
 * **Multi-version Management:** Extracts and organizes different versions of the game (APKs).
 * **Content Manager (Trinito):** Centralized interface for Mods, Textures, Shaders, and Worlds.
 * **Native Integration:** Support for Flatpak and native execution.
@@ -26,7 +26,7 @@
 
 ---
 
-## 📥 Installation
+## Installation
 
 Download the latest version from our [Releases](https://github.com/Trinity-LA/Trinity-Launcher/releases) and run the installer.
 
@@ -52,7 +52,7 @@ nix --extra-experimental-features "nix-command flakes" develop
 
 ---
 
-## ⚙️ Technical Architecture
+## Technical Architecture
 
 The project is divided into two main libraries:
 - **`TrinityCore`**: File management logic, configuration, and communication with the Bedrock runtime.
@@ -60,7 +60,7 @@ The project is divided into two main libraries:
 
 ---
 
-## 🤝 Contributions
+## Contributions
 Contributions are welcome! Please read our [Contribution Guide](CONTRIBUTING.md) before opening a *Pull Request*.
 
 ---
