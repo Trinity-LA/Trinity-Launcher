@@ -72,6 +72,7 @@ jobs:
       - name: Crear Application Bundle y Empaquetar
         run: |
           mkdir -p dist/Trinity.app/Contents/MacOS
+          mkdir -p dist/lib
           
           # Copiar ejecutable principal de Trinity
           cp trinity/build/app/trinity dist/Trinity.app/Contents/MacOS/
@@ -83,16 +84,18 @@ jobs:
           # Copiar binario de mcpe-extract
           cp mcpe-extract/build/mcpelauncher-extract dist/Trinity.app/Contents/MacOS/
           
+          # Enlazar los frameworks faltantes en la carpeta que macdeployqt sí revisa
+          ln -s /opt/homebrew/opt/qtsvg/lib/QtSvg.framework dist/lib/
+          ln -s /opt/homebrew/opt/qtvirtualkeyboard/lib/QtVirtualKeyboard.framework dist/lib/
+          ln -s /opt/homebrew/opt/qtvirtualkeyboard/lib/QtVirtualKeyboardQml.framework dist/lib/
+          
           cd dist
           
-          # Desplegar librerías forzando las rutas de Homebrew faltantes
+          # Desplegar librerías nativamente
           $(brew --prefix qt@6)/bin/macdeployqt Trinity.app \
             -executable=Trinity.app/Contents/MacOS/mcpelauncher-client \
             -executable=Trinity.app/Contents/MacOS/mcpelauncher-webview \
-            -executable=Trinity.app/Contents/MacOS/mcpelauncher-extract \
-            -libpath=/opt/homebrew/opt/qtsvg/lib \
-            -libpath=/opt/homebrew/opt/qtvirtualkeyboard/lib \
-            -libpath=/opt/homebrew/opt/qt/lib
+            -executable=Trinity.app/Contents/MacOS/mcpelauncher-extract
           
           # Firmar todos los binarios y librerías con firma ad-hoc
           codesign --force --deep --sign - Trinity.app
