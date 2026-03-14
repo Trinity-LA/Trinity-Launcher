@@ -85,18 +85,14 @@ jobs:
           
           cd dist
           
-          # Inyectar las rutas de los módulos fragmentados de Homebrew en todos los binarios
-          for bin in Trinity.app/Contents/MacOS/*; do
-            install_name_tool -add_rpath /opt/homebrew/opt/qtsvg/lib "$bin" 2>/dev/null || true
-            install_name_tool -add_rpath /opt/homebrew/opt/qtvirtualkeyboard/lib "$bin" 2>/dev/null || true
-            install_name_tool -add_rpath /opt/homebrew/opt/qt/lib "$bin" 2>/dev/null || true
-          done
-          
-          # Desplegar librerías y dependencias
+          # Desplegar librerías forzando las rutas de Homebrew faltantes
           $(brew --prefix qt@6)/bin/macdeployqt Trinity.app \
             -executable=Trinity.app/Contents/MacOS/mcpelauncher-client \
             -executable=Trinity.app/Contents/MacOS/mcpelauncher-webview \
-            -executable=Trinity.app/Contents/MacOS/mcpelauncher-extract
+            -executable=Trinity.app/Contents/MacOS/mcpelauncher-extract \
+            -libpath=/opt/homebrew/opt/qtsvg/lib \
+            -libpath=/opt/homebrew/opt/qtvirtualkeyboard/lib \
+            -libpath=/opt/homebrew/opt/qt/lib
           
           # Firmar todos los binarios y librerías con firma ad-hoc
           codesign --force --deep --sign - Trinity.app
