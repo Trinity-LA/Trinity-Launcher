@@ -78,6 +78,7 @@ jobs:
       - name: Crear Application Bundle y Empaquetar
         run: |
           mkdir -p dist/Trinity.app/Contents/MacOS
+          mkdir -p dist/Trinity.app/Contents/Resources
           mkdir -p dist/lib
           
           # Copiar ejecutable principal de Trinity
@@ -90,10 +91,13 @@ jobs:
           # Copiar binario de mcpe-extract
           cp mcpe-extract/build/mcpelauncher-extract dist/Trinity.app/Contents/MacOS/
           
-          # Copiar librerías puente (shims) para ARM64 y x86_64
-          cp -R mac-bin/lib dist/Trinity.app/Contents/MacOS/
+          # Copiar librerías puente (shims) a Recursos
+          cp -R mac-bin/lib dist/Trinity.app/Contents/Resources/
           
-          # Enlazar los frameworks faltantes en la carpeta que macdeployqt sí revisa
+          # NUEVO: Rescatar librerías de gráficos ANGLE (.dylib) y copiarlas al ejecutable
+          find mcpelauncher/build -name "*.dylib" -exec cp {} dist/Trinity.app/Contents/MacOS/ \;
+          
+          # Enlazar los frameworks faltantes de Homebrew
           ln -s /opt/homebrew/opt/qtsvg/lib/QtSvg.framework dist/lib/
           ln -s /opt/homebrew/opt/qtvirtualkeyboard/lib/QtVirtualKeyboard.framework dist/lib/
           ln -s /opt/homebrew/opt/qtvirtualkeyboard/lib/QtVirtualKeyboardQml.framework dist/lib/
