@@ -40,7 +40,7 @@ If you wish to compile the latest version from the repository:
    ```
 2. **Install dependencies and compile:**
    ```bash
-   chmod +x build.sh && ./build.sh --deps && ./build.sh
+   chmod +x build.sh && ./build.sh --deps 
    ```
 
 *(For a detailed guide, refer to [docs/BUILD.md](docs/BUILD.md))*
