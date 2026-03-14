@@ -1,0 +1,94 @@
+name: Compilar binarios para macOS
+
+on:
+  push:
+    branches: [ appimage-rebase, master, main ]
+  workflow_dispatch:
+  pull_request:
+    branches: [ appimage-rebase, master, main ]
+
+jobs:
+  build-trinity:
+    runs-on: macos-latest
+
+    steps:
+      - name: Clonar repositorio Trinity
+        uses: actions/checkout@v4
+
+      - name: Instalar dependencias del sistema (Homebrew)
+        run: |
+          brew update
+          brew install cmake ninja qt@6 libzip libpng pkg-config openssl
+          brew link --force qt@6
+
+      - name: Configurar proyecto con CMake
+        run: |
+          mkdir -p build
+          cd build
+          cmake .. \
+            -DCMAKE_BUILD_TYPE=Release \
+            -G Ninja \
+            -DCMAKE_PREFIX_PATH="$(brew --prefix qt@6)" \
+            -Wno-dev
+
+      - name: Compilar en modo Release
+        run: |
+          cd build
+          cmake --build . --parallel $(sysctl -n hw.ncpu)
+
+      - name: Subir binarios compilados
+        uses: actions/upload-artifact@v4
+        with:
+          name: trinity-launcher-macos
+          path: build/app/trinity
+          if-no-files-found: warn
+
+  build-mcpelauncher:
+    runs-on: macos-latest
+    
+    steps:
+      - name: Clonar Manifiesto (Rama qt6)
+        uses: actions/checkout@v4
+        with:
+          repository: 'minecraft-linux/mcpelauncher-manifest'
+          ref: 'qt6'
+          submodules: 'recursive'
+
+      - name: Instalar dependencias de entorno
+        run: |
+          brew update
+          brew install cmake ninja qt@6 libzip libpng pkg-config openssl rustup-init
+          brew link --force qt@6
+          rustup-init -y
+
+      - name: Configuración con CMake
+        run: |
+          source $HOME/.cargo/env
+          mkdir -p build
+          cd build
+          cmake .. \
+            -DCMAKE_BUILD_TYPE=Release \
+            -G Ninja \
+            -DCMAKE_PREFIX_PATH="$(brew --prefix qt@6)" \
+            -DCMAKE_POLICY_DEFAULT_CMP0074=NEW \
+            -DJNI_USE_JNIVM=ON \
+            -DGAMEWINDOW_SYSTEM=SDL3 \
+            -Wno-dev
+
+      - name: Compilación de binarios
+        run: |
+          source $HOME/.cargo/env
+          cd build
+          cmake --build . --parallel $(sysctl -n hw.ncpu)
+
+      - name: Subir Binarios de mcpelauncher
+        uses: actions/upload-artifact@v4
+        with:
+          name: mcpelauncher-qt6-macos
+          path: |
+            build/mcpelauncher-client
+            build/mcpelauncher-ui-qt/mcpelauncher-ui-qt
+            build/mcpelauncher-webview
+            build/mcpelauncher-error
+            build/mcpelauncher-extract
+          if-no-files-found: warn
