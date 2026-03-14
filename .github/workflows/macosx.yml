@@ -83,9 +83,16 @@ jobs:
           # Copiar binario de mcpe-extract
           cp mcpe-extract/build/mcpelauncher-extract dist/Trinity.app/Contents/MacOS/
           
-          # Desplegar librerías Qt y generar el archivo DMG
           cd dist
-          $(brew --prefix qt@6)/bin/macdeployqt Trinity.app -dmg
+          
+          # 1. Desplegar librerías Qt sin generar el DMG todavía
+          $(brew --prefix qt@6)/bin/macdeployqt Trinity.app
+          
+          # 2. Firmar todos los binarios y librerías con firma ad-hoc (obligatorio en Apple Silicon)
+          codesign --force --deep --sign - Trinity.app
+          
+          # 3. Crear el archivo DMG con la aplicación ya firmada
+          hdiutil create -volname "Trinity" -srcfolder Trinity.app -ov -format UDZO Trinity.dmg
           
       - name: Subir instalador DMG
         uses: actions/upload-artifact@v4
