@@ -19,7 +19,7 @@
 
 ---
 
-### 🛠️ How does it work?
+### How does it work?
 **Trinity Launcher** is a *frontend* designed to improve the management and usability of **Minecraft: Bedrock Edition** on Linux systems.
 
 > **Special Acknowledgments:** Trinity is built upon the technical foundation of the [mcpelauncher-manifest](https://github.com/minecraft-linux) project.
