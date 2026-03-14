@@ -70,7 +70,7 @@ jobs:
             -DCMAKE_BUILD_TYPE=Release \
             -G Ninja \
             -DCMAKE_PREFIX_PATH="$(brew --prefix qt@6)" \
-            -DCMAKE_POLICY_DEFAULT_CMP0074=NEW \
+            -DCMAKE_POLICY_DEFAULT_CMP0074=NEW -DCMAKE_POLICY_VERSION_MINIMUM=3.5 \
             -DJNI_USE_JNIVM=ON \
             -DGAMEWINDOW_SYSTEM=SDL3 \
             -Wno-dev
