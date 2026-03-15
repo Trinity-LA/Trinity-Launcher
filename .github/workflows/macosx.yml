@@ -75,7 +75,7 @@ jobs:
             -Wno-dev
           cmake --build . --parallel $(sysctl -n hw.ncpu)
 
-       - name: Crear Application Bundle y Empaquetar
+      - name: Crear Application Bundle y Empaquetar
         run: |
           mkdir -p dist/Trinity.app/Contents/MacOS
           mkdir -p dist/Trinity.app/Contents/Resources
