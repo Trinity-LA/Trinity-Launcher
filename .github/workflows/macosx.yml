@@ -78,6 +78,7 @@ jobs:
       - name: Crear Application Bundle y Empaquetar
         run: |
           mkdir -p dist/Trinity.app/Contents/MacOS
+          mkdir -p dist/Trinity.app/Contents/Resources
           mkdir -p dist/lib
           
           # 1. Copiar SOLO los binarios ejecutables
@@ -93,7 +94,7 @@ jobs:
           
           cd dist
           
-          # 2. Ejecutar macdeployqt PRIMERO (no colapsará porque aún no hay archivos .so)
+          # 2. Ejecutar macdeployqt PRIMERO
           $(brew --prefix qt@6)/bin/macdeployqt Trinity.app \
             -executable=Trinity.app/Contents/MacOS/mcpelauncher-client \
             -executable=Trinity.app/Contents/MacOS/mcpelauncher-webview \
@@ -101,19 +102,50 @@ jobs:
           
           cd ..
           
-          # 3. LUEGO inyectar las librerías puente (shims) donde el juego las necesita
+          # 3. LUEGO inyectar las librerías puente (shims)
           cp -R mac-bin/lib dist/Trinity.app/Contents/MacOS/
           
-          # 4. Inyectar también las librerías gráficas ANGLE (.dylib) para solucionar el error de OpenGL
-          find mcpelauncher/build -name "*.dylib" -exec cp {} dist/Trinity.app/Contents/MacOS/ \;
+          # 4. Inyectar librerías gráficas ANGLE y forzar las rutas de búsqueda
+          find mcpelauncher/build -name "libEGL.dylib" -exec cp {} dist/Trinity.app/Contents/MacOS/ \;
+          find mcpelauncher/build -name "libGLESv2.dylib" -exec cp {} dist/Trinity.app/Contents/MacOS/ \;
+          
+          install_name_tool -add_rpath @executable_path dist/Trinity.app/Contents/MacOS/mcpelauncher-client || true
+          install_name_tool -add_rpath @executable_path dist/Trinity.app/Contents/MacOS/trinity || true
+          
+          # 5. Crear Info.plist para macOS
+          cat <<EOF > dist/Trinity.app/Contents/Info.plist
+          <?xml version="1.0" encoding="UTF-8"?>
+          <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+          <plist version="1.0">
+          <dict>
+              <key>CFBundleExecutable</key>
+              <string>trinity</string>
+              <key>CFBundleIdentifier</key>
+              <string>com.trench.trinity.launcher</string>
+              <key>CFBundleName</key>
+              <string>Trinity</string>
+              <key>CFBundleIconFile</key>
+              <string>AppIcon</string>
+              <key>CFBundleShortVersionString</key>
+              <string>1.0</string>
+              <key>LSMinimumSystemVersion</key>
+              <string>10.15</string>
+              <key>NSHighResolutionCapable</key>
+              <true/>
+          </dict>
+          </plist>
+          EOF
+          
+          # 6. Copiar tu ícono .icns a la carpeta de recursos (Ajusta la ruta si es diferente)
+          # cp resources/branding/tu_icono.icns dist/Trinity.app/Contents/Resources/AppIcon.icns || true
           
           cd dist
           
-          # 5. Firmar la aplicación completa (codesign procesará todo sin importar el formato)
+          # 7. Firmar la aplicación completa
           codesign --force --deep --sign - Trinity.app
           
-          # 6. Crear el archivo DMG final
-          hdiutil create -volname "Trinity" -srcfolder Trinity.app -ov -format UDZO Trinity.dmg
+          # 8. Crear el archivo DMG final
+          hdiutil create -volname "Trinity Launcher" -srcfolder Trinity.app -ov -format UDZO Trinity.dmg
           
       - name: Subir instalador DMG
         uses: actions/upload-artifact@v4
