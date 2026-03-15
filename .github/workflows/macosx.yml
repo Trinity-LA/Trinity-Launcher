@@ -1,4 +1,4 @@
-name: Compilar y Empaquetar para macOS
+name: Compilar y Empaquetar para macOS (Intel x86_64)
 
 on:
   push:
@@ -9,7 +9,10 @@ on:
 
 jobs:
   build-and-package:
-    runs-on: macos-latest
+    runs-on: macos-13
+
+    env:
+      MACOSX_DEPLOYMENT_TARGET: "10.15"
 
     steps:
       - name: Clonar repositorio Trinity
@@ -34,7 +37,7 @@ jobs:
           repository: 'minecraft-linux/mcpelauncher-mac-bin'
           path: 'mac-bin'
 
-      - name: Instalar dependencias del sistema (Homebrew)
+      - name: Instalar dependencias del sistema (Homebrew Intel)
         run: |
           brew update
           brew install cmake ninja qt@6 libzip libpng pkg-config openssl rustup-init
@@ -45,7 +48,7 @@ jobs:
         run: |
           cd trinity
           mkdir -p build && cd build
-          cmake .. -DCMAKE_BUILD_TYPE=Release -G Ninja -DCMAKE_PREFIX_PATH="$(brew --prefix qt@6)" -Wno-dev
+          cmake .. -DCMAKE_BUILD_TYPE=Release -G Ninja -DCMAKE_PREFIX_PATH="$(brew --prefix qt@6)" -DCMAKE_OSX_DEPLOYMENT_TARGET=10.15 -DCMAKE_OSX_ARCHITECTURES=x86_64 -Wno-dev
           cmake --build . --parallel $(sysctl -n hw.ncpu)
 
       - name: Compilar mcpelauncher
@@ -61,6 +64,8 @@ jobs:
             -DCMAKE_POLICY_VERSION_MINIMUM=3.5 \
             -DJNI_USE_JNIVM=ON \
             -DGAMEWINDOW_SYSTEM=SDL3 \
+            -DCMAKE_OSX_DEPLOYMENT_TARGET=10.15 \
+            -DCMAKE_OSX_ARCHITECTURES=x86_64 \
             -Wno-dev
           cmake --build . --parallel $(sysctl -n hw.ncpu)
 
@@ -72,6 +77,8 @@ jobs:
             -DCMAKE_BUILD_TYPE=Release \
             -G Ninja \
             -DCMAKE_POLICY_VERSION_MINIMUM=3.5 \
+            -DCMAKE_OSX_DEPLOYMENT_TARGET=10.15 \
+            -DCMAKE_OSX_ARCHITECTURES=x86_64 \
             -Wno-dev
           cmake --build . --parallel $(sysctl -n hw.ncpu)
 
@@ -81,39 +88,28 @@ jobs:
           mkdir -p dist/Trinity.app/Contents/Resources
           mkdir -p dist/lib
           
-          # 1. Copiar los binarios de mcpelauncher
           cp mcpelauncher/build/mcpelauncher-client/mcpelauncher-client dist/Trinity.app/Contents/MacOS/
           cp mcpelauncher/build/mcpelauncher-webview/mcpelauncher-webview dist/Trinity.app/Contents/MacOS/
           cp mcpe-extract/build/mcpelauncher-extract dist/Trinity.app/Contents/MacOS/
           
-          # 2. Copiar el ejecutable principal de Trinity con un nombre diferente (trinity-bin)
           cp trinity/build/app/trinity dist/Trinity.app/Contents/MacOS/trinity-bin
           
-          # 3. Crear el script wrapper que forzará el uso de Metal en todo el árbol de procesos
           cat << 'EOF' > dist/Trinity.app/Contents/MacOS/trinity
           #!/bin/bash
-          # Obtener el directorio actual del script
           DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
-          
-          # Forzar a ANGLE y Qt a utilizar Metal en lugar de OpenGL
           export ANGLE_DEFAULT_PLATFORM=metal
           export QT_MAC_WANTS_LAYER=1
-          
-          # Ejecutar el binario real de Trinity pasando todos los argumentos
           exec "$DIR/trinity-bin" "$@"
           EOF
           
-          # Dar permisos de ejecución al nuevo script
           chmod +x dist/Trinity.app/Contents/MacOS/trinity
           
-          # Enlazar los frameworks faltantes de Homebrew
-          ln -s /opt/homebrew/opt/qtsvg/lib/QtSvg.framework dist/lib/
-          ln -s /opt/homebrew/opt/qtvirtualkeyboard/lib/QtVirtualKeyboard.framework dist/lib/
-          ln -s /opt/homebrew/opt/qtvirtualkeyboard/lib/QtVirtualKeyboardQml.framework dist/lib/
+          ln -s /usr/local/opt/qtsvg/lib/QtSvg.framework dist/lib/
+          ln -s /usr/local/opt/qtvirtualkeyboard/lib/QtVirtualKeyboard.framework dist/lib/
+          ln -s /usr/local/opt/qtvirtualkeyboard/lib/QtVirtualKeyboardQml.framework dist/lib/
           
           cd dist
           
-          # 4. Ejecutar macdeployqt (Procesará el trinity-bin y los clientes)
           $(brew --prefix qt@6)/bin/macdeployqt Trinity.app \
             -executable=Trinity.app/Contents/MacOS/trinity-bin \
             -executable=Trinity.app/Contents/MacOS/mcpelauncher-client \
@@ -122,12 +118,10 @@ jobs:
           
           cd ..
           
-          # 5. Inyectar las librerías puente (shims) y las librerías de ANGLE
           cp -R mac-bin/lib dist/Trinity.app/Contents/MacOS/
           find mcpelauncher/build -name "libEGL.dylib" -exec cp {} dist/Trinity.app/Contents/MacOS/ \;
           find mcpelauncher/build -name "libGLESv2.dylib" -exec cp {} dist/Trinity.app/Contents/MacOS/ \;
           
-          # 6. Crear Info.plist para macOS
           cat <<EOF > dist/Trinity.app/Contents/Info.plist
           <?xml version="1.0" encoding="UTF-8"?>
           <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
@@ -151,16 +145,17 @@ jobs:
           </plist>
           EOF
           
+          # Copiar el ícono oficial a la carpeta de recursos
+          cp trinity/resources/branding/com.trench.trinity.launcher.icns dist/Trinity.app/Contents/Resources/AppIcon.icns
+          
           cd dist
           
-          # 7. Firmar y empaquetar
           codesign --force --deep --sign - Trinity.app
           hdiutil create -volname "Trinity Launcher" -srcfolder Trinity.app -ov -format UDZO Trinity.dmg
-
           
       - name: Subir instalador DMG
         uses: actions/upload-artifact@v4
         with:
-          name: trinity-mcpelauncher-macos-dmg
+          name: trinity-mcpelauncher-macos-intel-dmg
           path: dist/Trinity.dmg
           if-no-files-found: error
