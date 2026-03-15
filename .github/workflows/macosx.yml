@@ -78,24 +78,13 @@ jobs:
       - name: Crear Application Bundle y Empaquetar
         run: |
           mkdir -p dist/Trinity.app/Contents/MacOS
-          mkdir -p dist/Trinity.app/Contents/Resources
           mkdir -p dist/lib
           
-          # Copiar ejecutable principal de Trinity
+          # 1. Copiar SOLO los binarios ejecutables
           cp trinity/build/app/trinity dist/Trinity.app/Contents/MacOS/
-          
-          # Copiar binarios de mcpelauncher
           cp mcpelauncher/build/mcpelauncher-client/mcpelauncher-client dist/Trinity.app/Contents/MacOS/
           cp mcpelauncher/build/mcpelauncher-webview/mcpelauncher-webview dist/Trinity.app/Contents/MacOS/
-          
-          # Copiar binario de mcpe-extract
           cp mcpe-extract/build/mcpelauncher-extract dist/Trinity.app/Contents/MacOS/
-          
-          # Copiar librerías puente (shims) a Recursos
-          cp -R mac-bin/lib dist/Trinity.app/Contents/Resources/
-          
-          # NUEVO: Rescatar librerías de gráficos ANGLE (.dylib) y copiarlas al ejecutable
-          find mcpelauncher/build -name "*.dylib" -exec cp {} dist/Trinity.app/Contents/MacOS/ \;
           
           # Enlazar los frameworks faltantes de Homebrew
           ln -s /opt/homebrew/opt/qtsvg/lib/QtSvg.framework dist/lib/
@@ -104,16 +93,26 @@ jobs:
           
           cd dist
           
-          # Desplegar librerías nativamente
+          # 2. Ejecutar macdeployqt PRIMERO (no colapsará porque aún no hay archivos .so)
           $(brew --prefix qt@6)/bin/macdeployqt Trinity.app \
             -executable=Trinity.app/Contents/MacOS/mcpelauncher-client \
             -executable=Trinity.app/Contents/MacOS/mcpelauncher-webview \
             -executable=Trinity.app/Contents/MacOS/mcpelauncher-extract
           
-          # Firmar todos los binarios y librerías con firma ad-hoc
+          cd ..
+          
+          # 3. LUEGO inyectar las librerías puente (shims) donde el juego las necesita
+          cp -R mac-bin/lib dist/Trinity.app/Contents/MacOS/
+          
+          # 4. Inyectar también las librerías gráficas ANGLE (.dylib) para solucionar el error de OpenGL
+          find mcpelauncher/build -name "*.dylib" -exec cp {} dist/Trinity.app/Contents/MacOS/ \;
+          
+          cd dist
+          
+          # 5. Firmar la aplicación completa (codesign procesará todo sin importar el formato)
           codesign --force --deep --sign - Trinity.app
           
-          # Crear el archivo DMG
+          # 6. Crear el archivo DMG final
           hdiutil create -volname "Trinity" -srcfolder Trinity.app -ov -format UDZO Trinity.dmg
           
       - name: Subir instalador DMG
