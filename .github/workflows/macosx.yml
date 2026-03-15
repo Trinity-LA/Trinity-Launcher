@@ -75,17 +75,36 @@ jobs:
             -Wno-dev
           cmake --build . --parallel $(sysctl -n hw.ncpu)
 
-      - name: Crear Application Bundle y Empaquetar
+       - name: Crear Application Bundle y Empaquetar
         run: |
           mkdir -p dist/Trinity.app/Contents/MacOS
           mkdir -p dist/Trinity.app/Contents/Resources
           mkdir -p dist/lib
           
-          # 1. Copiar SOLO los binarios ejecutables
-          cp trinity/build/app/trinity dist/Trinity.app/Contents/MacOS/
+          # 1. Copiar los binarios de mcpelauncher
           cp mcpelauncher/build/mcpelauncher-client/mcpelauncher-client dist/Trinity.app/Contents/MacOS/
           cp mcpelauncher/build/mcpelauncher-webview/mcpelauncher-webview dist/Trinity.app/Contents/MacOS/
           cp mcpe-extract/build/mcpelauncher-extract dist/Trinity.app/Contents/MacOS/
+          
+          # 2. Copiar el ejecutable principal de Trinity con un nombre diferente (trinity-bin)
+          cp trinity/build/app/trinity dist/Trinity.app/Contents/MacOS/trinity-bin
+          
+          # 3. Crear el script wrapper que forzará el uso de Metal en todo el árbol de procesos
+          cat << 'EOF' > dist/Trinity.app/Contents/MacOS/trinity
+          #!/bin/bash
+          # Obtener el directorio actual del script
+          DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
+          
+          # Forzar a ANGLE y Qt a utilizar Metal en lugar de OpenGL
+          export ANGLE_DEFAULT_PLATFORM=metal
+          export QT_MAC_WANTS_LAYER=1
+          
+          # Ejecutar el binario real de Trinity pasando todos los argumentos
+          exec "$DIR/trinity-bin" "$@"
+          EOF
+          
+          # Dar permisos de ejecución al nuevo script
+          chmod +x dist/Trinity.app/Contents/MacOS/trinity
           
           # Enlazar los frameworks faltantes de Homebrew
           ln -s /opt/homebrew/opt/qtsvg/lib/QtSvg.framework dist/lib/
@@ -94,25 +113,21 @@ jobs:
           
           cd dist
           
-          # 2. Ejecutar macdeployqt PRIMERO
+          # 4. Ejecutar macdeployqt (Procesará el trinity-bin y los clientes)
           $(brew --prefix qt@6)/bin/macdeployqt Trinity.app \
+            -executable=Trinity.app/Contents/MacOS/trinity-bin \
             -executable=Trinity.app/Contents/MacOS/mcpelauncher-client \
             -executable=Trinity.app/Contents/MacOS/mcpelauncher-webview \
             -executable=Trinity.app/Contents/MacOS/mcpelauncher-extract
           
           cd ..
           
-          # 3. LUEGO inyectar las librerías puente (shims)
+          # 5. Inyectar las librerías puente (shims) y las librerías de ANGLE
           cp -R mac-bin/lib dist/Trinity.app/Contents/MacOS/
-          
-          # 4. Inyectar librerías gráficas ANGLE y forzar las rutas de búsqueda
           find mcpelauncher/build -name "libEGL.dylib" -exec cp {} dist/Trinity.app/Contents/MacOS/ \;
           find mcpelauncher/build -name "libGLESv2.dylib" -exec cp {} dist/Trinity.app/Contents/MacOS/ \;
           
-          install_name_tool -add_rpath @executable_path dist/Trinity.app/Contents/MacOS/mcpelauncher-client || true
-          install_name_tool -add_rpath @executable_path dist/Trinity.app/Contents/MacOS/trinity || true
-          
-          # 5. Crear Info.plist para macOS
+          # 6. Crear Info.plist para macOS
           cat <<EOF > dist/Trinity.app/Contents/Info.plist
           <?xml version="1.0" encoding="UTF-8"?>
           <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
@@ -136,16 +151,12 @@ jobs:
           </plist>
           EOF
           
-          # 6. Copiar tu ícono .icns a la carpeta de recursos (Ajusta la ruta si es diferente)
-          # cp resources/branding/tu_icono.icns dist/Trinity.app/Contents/Resources/AppIcon.icns || true
-          
           cd dist
           
-          # 7. Firmar la aplicación completa
+          # 7. Firmar y empaquetar
           codesign --force --deep --sign - Trinity.app
-          
-          # 8. Crear el archivo DMG final
           hdiutil create -volname "Trinity Launcher" -srcfolder Trinity.app -ov -format UDZO Trinity.dmg
+
           
       - name: Subir instalador DMG
         uses: actions/upload-artifact@v4
