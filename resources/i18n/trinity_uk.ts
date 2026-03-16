@@ -336,7 +336,7 @@ No: Only exports mods, maps, etc.</source>
     <message>
         <location filename="../../src/TrinityLib/ui/windows/launcher_window.cpp" line="445"/>
         <source>Trinity Launcher is an open-source, community-driven launcher for Minecraft Bedrock. Focused on user freedom and free redistribution, it provides a powerful interface to manage multiple instances, worlds, textures, and mods seamlessly.</source>
-        <translation>Trinity Launcher — лаунчер з відкритим кодом для Minecraft Bedrock. Зосереджений на свободі користувача, він забезпечує потужний інтерфейс для керування кількома інстанціями, світами, текстурами та модами.</translation>
+        <translation>Trinity Launcher - лаунчер з відкритим кодом для Minecraft Bedrock. Зосереджений на свободі користувача, він забезпечує потужний інтерфейс для керування кількома інстанціями, світами, текстурами та модами.</translation>
     </message>
     <message>
         <location filename="../../src/TrinityLib/ui/windows/launcher_window.cpp" line="453"/>
@@ -1065,7 +1065,7 @@ Replace it?</source>
     <message>
         <location filename="../../src/TrinityLib/ui/windows/trinito_window.cpp" line="886"/>
         <source>Install Shaderpack...</source>
-        <translation>Встановити Shaderpack...</translation>
+        <translation>Встановити шейдерпак...</translation>
     </message>
     <message>
         <location filename="../../src/TrinityLib/ui/windows/trinito_window.cpp" line="891"/>
