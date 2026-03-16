@@ -1,4 +1,4 @@
-name: Compilar y Empaquetar para macOS (Intel x86_64)
+name: Compilar y Empaquetar para macOS (Intel x86_64 via Rosetta)
 
 on:
   push:
@@ -9,10 +9,7 @@ on:
 
 jobs:
   build-and-package:
-    runs-on: macos-12
-
-    env:
-      MACOSX_DEPLOYMENT_TARGET: "10.15"
+    runs-on: macos-latest
 
     steps:
       - name: Clonar repositorio Trinity
@@ -37,26 +34,32 @@ jobs:
           repository: 'minecraft-linux/mcpelauncher-mac-bin'
           path: 'mac-bin'
 
-      - name: Instalar dependencias del sistema (Homebrew Intel)
+      - name: Instalar Homebrew (Intel) y dependencias
         run: |
+          # Instalar Homebrew en modo x86_64 (se alojará en /usr/local)
+          arch -x86_64 /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
+          eval "$(/usr/local/bin/brew shellenv)"
+          
           brew update
           brew install cmake ninja qt@6 libzip libpng pkg-config openssl rustup-init
           brew link --force qt@6
-          rustup-init -y
+          arch -x86_64 rustup-init -y
 
       - name: Compilar Trinity
         run: |
+          eval "$(/usr/local/bin/brew shellenv)"
           cd trinity
           mkdir -p build && cd build
-          cmake .. -DCMAKE_BUILD_TYPE=Release -G Ninja -DCMAKE_PREFIX_PATH="$(brew --prefix qt@6)" -DCMAKE_OSX_DEPLOYMENT_TARGET=10.15 -DCMAKE_OSX_ARCHITECTURES=x86_64 -Wno-dev
-          cmake --build . --parallel $(sysctl -n hw.ncpu)
+          arch -x86_64 cmake .. -DCMAKE_BUILD_TYPE=Release -G Ninja -DCMAKE_PREFIX_PATH="$(brew --prefix qt@6)" -DCMAKE_OSX_DEPLOYMENT_TARGET=10.15 -DCMAKE_OSX_ARCHITECTURES=x86_64 -Wno-dev
+          arch -x86_64 cmake --build . --parallel $(sysctl -n hw.ncpu)
 
       - name: Compilar mcpelauncher
         run: |
+          eval "$(/usr/local/bin/brew shellenv)"
           source $HOME/.cargo/env
           cd mcpelauncher
           mkdir -p build && cd build
-          cmake .. \
+          arch -x86_64 cmake .. \
             -DCMAKE_BUILD_TYPE=Release \
             -G Ninja \
             -DCMAKE_PREFIX_PATH="$(brew --prefix qt@6)" \
@@ -67,23 +70,25 @@ jobs:
             -DCMAKE_OSX_DEPLOYMENT_TARGET=10.15 \
             -DCMAKE_OSX_ARCHITECTURES=x86_64 \
             -Wno-dev
-          cmake --build . --parallel $(sysctl -n hw.ncpu)
+          arch -x86_64 cmake --build . --parallel $(sysctl -n hw.ncpu)
 
       - name: Compilar mcpe-extract
         run: |
+          eval "$(/usr/local/bin/brew shellenv)"
           cd mcpe-extract
           mkdir -p build && cd build
-          cmake .. \
+          arch -x86_64 cmake .. \
             -DCMAKE_BUILD_TYPE=Release \
             -G Ninja \
             -DCMAKE_POLICY_VERSION_MINIMUM=3.5 \
             -DCMAKE_OSX_DEPLOYMENT_TARGET=10.15 \
             -DCMAKE_OSX_ARCHITECTURES=x86_64 \
             -Wno-dev
-          cmake --build . --parallel $(sysctl -n hw.ncpu)
+          arch -x86_64 cmake --build . --parallel $(sysctl -n hw.ncpu)
 
       - name: Crear Application Bundle y Empaquetar
         run: |
+          eval "$(/usr/local/bin/brew shellenv)"
           mkdir -p dist/Trinity.app/Contents/MacOS
           mkdir -p dist/Trinity.app/Contents/Resources
           mkdir -p dist/lib
@@ -104,13 +109,14 @@ jobs:
           
           chmod +x dist/Trinity.app/Contents/MacOS/trinity
           
+          # Usar las rutas del Homebrew de Intel
           ln -s /usr/local/opt/qtsvg/lib/QtSvg.framework dist/lib/
           ln -s /usr/local/opt/qtvirtualkeyboard/lib/QtVirtualKeyboard.framework dist/lib/
           ln -s /usr/local/opt/qtvirtualkeyboard/lib/QtVirtualKeyboardQml.framework dist/lib/
           
           cd dist
           
-          $(brew --prefix qt@6)/bin/macdeployqt Trinity.app \
+          arch -x86_64 $(brew --prefix qt@6)/bin/macdeployqt Trinity.app \
             -executable=Trinity.app/Contents/MacOS/trinity-bin \
             -executable=Trinity.app/Contents/MacOS/mcpelauncher-client \
             -executable=Trinity.app/Contents/MacOS/mcpelauncher-webview \
@@ -145,17 +151,16 @@ jobs:
           </plist>
           EOF
           
-          # Copiar el ícono oficial a la carpeta de recursos
           cp trinity/resources/branding/com.trench.trinity.launcher.icns dist/Trinity.app/Contents/Resources/AppIcon.icns
           
           cd dist
           
-          codesign --force --deep --sign - Trinity.app
-          hdiutil create -volname "Trinity Launcher" -srcfolder Trinity.app -ov -format UDZO Trinity.dmg
+          arch -x86_64 codesign --force --deep --sign - Trinity.app
+          arch -x86_64 hdiutil create -volname "Trinity Launcher" -srcfolder Trinity.app -ov -format UDZO Trinity.dmg
           
       - name: Subir instalador DMG
         uses: actions/upload-artifact@v4
         with:
-          name: trinity-mcpelauncher-macos-intel-dmg
+          name: trinity-mcpelauncher-macos-dmg
           path: dist/Trinity.dmg
           if-no-files-found: error
