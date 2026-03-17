@@ -96,6 +96,8 @@ jobs:
           EOF
           sed -i '' "s/cc.has_function('secure_getenv')/false/g" meson.build
           sed -i '' "s/cc.has_function('posix_fallocate')/false/g" meson.build
+          sed -i '' 's/posix_fallocate(fd, 0, size)/ftruncate(fd, size)/g' src/util/disk_cache_os.c
+          sed -i '' 's/secure_getenv/getenv/g' src/util/os_misc.c      
           # Configuración
           meson setup build --native-file native.ini \
           -Dprefix="${{ env.MESA_PREFIX }}" \
