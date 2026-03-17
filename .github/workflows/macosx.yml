@@ -36,7 +36,6 @@ jobs:
 
       - name: Instalar Homebrew (Intel) y dependencias
         run: |
-          # Instalar Homebrew en modo x86_64 (se alojará en /usr/local)
           arch -x86_64 /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
           eval "$(/usr/local/bin/brew shellenv)"
           
@@ -89,16 +88,21 @@ jobs:
       - name: Crear Application Bundle y Empaquetar
         run: |
           eval "$(/usr/local/bin/brew shellenv)"
+          
+          # Crear estructura exacta imitando al proyecto original
           mkdir -p dist/Trinity.app/Contents/MacOS
-          mkdir -p dist/Trinity.app/Contents/Resources
+          mkdir -p dist/Trinity.app/Contents/Frameworks
+          mkdir -p dist/Trinity.app/Contents/Resources/mcpelauncher/lib/native/x86_64
+          mkdir -p dist/Trinity.app/Contents/Resources/mcpelauncher/lib/x86_64
           mkdir -p dist/lib
           
+          # Copiar ejecutables a MacOS
           cp mcpelauncher/build/mcpelauncher-client/mcpelauncher-client dist/Trinity.app/Contents/MacOS/
           cp mcpelauncher/build/mcpelauncher-webview/mcpelauncher-webview dist/Trinity.app/Contents/MacOS/
           cp mcpe-extract/build/mcpelauncher-extract dist/Trinity.app/Contents/MacOS/
-          
           cp trinity/build/app/trinity dist/Trinity.app/Contents/MacOS/trinity-bin
           
+          # Wrapper script
           cat << 'EOF' > dist/Trinity.app/Contents/MacOS/trinity
           #!/bin/bash
           DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
@@ -106,33 +110,30 @@ jobs:
           export QT_MAC_WANTS_LAYER=1
           exec "$DIR/trinity-bin" "$@"
           EOF
-          
           chmod +x dist/Trinity.app/Contents/MacOS/trinity
           
-          # Usar las rutas del Homebrew de Intel
+          # Links Homebrew
           ln -s /usr/local/opt/qtsvg/lib/QtSvg.framework dist/lib/
           ln -s /usr/local/opt/qtvirtualkeyboard/lib/QtVirtualKeyboard.framework dist/lib/
           ln -s /usr/local/opt/qtvirtualkeyboard/lib/QtVirtualKeyboardQml.framework dist/lib/
           
+          # Despliegue de Qt (Macdeployqt llena la carpeta Frameworks automáticamente)
           cd dist
-          
           arch -x86_64 $(brew --prefix qt@6)/bin/macdeployqt Trinity.app \
             -executable=Trinity.app/Contents/MacOS/trinity-bin \
             -executable=Trinity.app/Contents/MacOS/mcpelauncher-client \
             -executable=Trinity.app/Contents/MacOS/mcpelauncher-webview \
             -executable=Trinity.app/Contents/MacOS/mcpelauncher-extract
-          
           cd ..
           
-          # 5. Inyectar SOLO el audio de mac-bin y el ANGLE moderno en la ruta exacta
-          mkdir -p dist/Trinity.app/Contents/MacOS/lib/native/x86_64/
+          # INYECCIÓN CLONADA DEL PROYECTO ORIGINAL
+          # 1. ANGLE va a Frameworks
+          find mcpelauncher/build -name "libEGL.dylib" -exec cp {} dist/Trinity.app/Contents/Frameworks/ \;
+          find mcpelauncher/build -name "libGLESv2.dylib" -exec cp {} dist/Trinity.app/Contents/Frameworks/ \;
           
-          # Copiamos solo las librerías de sonido (fmod), ignorando el GLES viejo
-          cp mac-bin/lib/native/x86_64/libfmod*.dylib dist/Trinity.app/Contents/MacOS/lib/native/x86_64/
-          
-          # Movemos el ANGLE fresco y moderno a la ruta donde el linker lo exige
-          find mcpelauncher/build -name "libEGL.dylib" -exec cp {} dist/Trinity.app/Contents/MacOS/lib/native/x86_64/ \;
-          find mcpelauncher/build -name "libGLESv2.dylib" -exec cp {} dist/Trinity.app/Contents/MacOS/lib/native/x86_64/ \;
+          # 2. Audio (fmod) y .so van a Resources profundo
+          cp mac-bin/lib/native/x86_64/libfmod*.dylib dist/Trinity.app/Contents/Resources/mcpelauncher/lib/native/x86_64/
+          cp mac-bin/lib/x86_64/*.so dist/Trinity.app/Contents/Resources/mcpelauncher/lib/x86_64/ 2>/dev/null || true
           
           cat <<EOF > dist/Trinity.app/Contents/Info.plist
           <?xml version="1.0" encoding="UTF-8"?>
@@ -160,7 +161,6 @@ jobs:
           cp trinity/resources/branding/com.trench.trinity.launcher.icns dist/Trinity.app/Contents/Resources/AppIcon.icns
           
           cd dist
-          
           arch -x86_64 codesign --force --deep --sign - Trinity.app
           arch -x86_64 hdiutil create -volname "Trinity Launcher" -srcfolder Trinity.app -ov -format UDZO Trinity.dmg
           
