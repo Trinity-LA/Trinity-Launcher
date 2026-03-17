@@ -62,14 +62,16 @@ jobs:
           source ${{ runner.temp }}/mesa-venv/bin/activate
           pip install mako packaging pyyaml meson
 
-      - name: Clonar y compilar Mesa (Zink + KosmicKrisp)
+            - name: Clonar y compilar Mesa (Zink + KosmicKrisp)
         run: |
           source ${{ runner.temp }}/mesa-venv/bin/activate
           
-          git clone --branch ${{ env.MESA_BRANCH }} --depth 1 ${{ env.MESA_REPO }} mesa-src
+          echo "=== Clonando Mesa desde ${{ env.MESA_REPO }} (branch: ${{ env.MESA_BRANCH }}) ==="
+          rm -rf mesa-src
+          git clone --branch "${{ env.MESA_BRANCH }}" --depth 1 "${{ env.MESA_REPO }}" mesa-src
           cd mesa-src
           
-          # Crear archivo native con formato actualizado para Meson 1.10+
+          # Crear archivo native.ini
           cat > native.ini << 'EOF'
           [binaries]
           c = 'cc'
@@ -91,9 +93,9 @@ jobs:
           b_lundef = false
           EOF
           
-          # Configuración minimalista - solo lo necesario para Zink + KosmicKrisp
+          # Configuración
           meson setup build --native-file native.ini \
-            -Dprefix=${{ env.MESA_PREFIX }} \
+            -Dprefix="${{ env.MESA_PREFIX }}" \
             -Dbuildtype=release \
             -Dplatforms=macos \
             -Degl-native-platform=surfaceless \
@@ -104,10 +106,9 @@ jobs:
             -Dgles2=enabled \
             -Dglx=disabled \
             -Dgbm=disabled \
-            -Dlibclc=disabled \              
+            -Dlibclc=disabled \
             -Dmoltenvk-dir=/opt/homebrew/opt/molten-vk \
-            -Dzstd=disabled \
-            --prefer-static
+            -Dzstd=disabled
           
           ninja -C build -j$(sysctl -n hw.activecpu)
           ninja -C build install
