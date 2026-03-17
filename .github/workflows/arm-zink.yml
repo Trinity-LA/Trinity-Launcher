@@ -110,6 +110,10 @@ jobs:
             -Db_lundef=false \
             -Dc_link_args="${MACOS_LINK_ARGS}" \
             -Dcpp_link_args="${MACOS_LINK_ARGS}" \
+            -Dopencl=disabled \
+            -Dgallium-opencl=disabled \
+            -Dclang-libclc=disabled \
+            -Dlibclc=disabled \
             --prefer-static
           
           ninja -C build -j$(sysctl -n hw.activecpu)
