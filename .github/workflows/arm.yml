@@ -34,23 +34,20 @@ jobs:
           repository: 'minecraft-linux/mcpelauncher-mac-bin'
           path: 'mac-bin'
 
-      - name: Preparar ANGLE y OpenSSL (ARM64)
+      - name: Preparar ANGLE (ARM64)
         run: |
           mkdir -p external_libs/angle_extracted
-          mkdir -p external_libs/openssl_extracted
-          
-          # Descargar desde Hugging Face
           curl -L "https://huggingface.co/datasets/ccoffee20/macos/resolve/main/angle-macos-latest-11.0-arm64-tar.zip" -o angle.zip
-          curl -L "https://huggingface.co/datasets/ccoffee20/macos/resolve/main/openssl-macos-latest-11.0-arm64.zip" -o openssl.zip
-          
-          # Extraer OpenSSL
-          unzip openssl.zip -d external_libs/openssl_extracted
-          
-          # Extraer ANGLE (el zip contiene un angle.tar.xz por el formato de artefactos de GitHub)
           unzip angle.zip -d external_libs/angle_extracted
           cd external_libs/angle_extracted
           find . -name "*.tar.xz" -exec tar -xf {} \;
-          cd ../..
+
+      - name: Instalar Homebrew y dependencias (Nativo ARM64)
+        run: |
+          brew update
+          brew install cmake ninja qt@6 libzip libpng pkg-config rustup-init
+          brew link --force qt@6
+          rustup-init -y
 
       - name: Instalar Homebrew y dependencias (Nativo ARM64)
         run: |
@@ -91,13 +88,11 @@ jobs:
             -DGAMEWINDOW_SYSTEM=SDL3 \
             -DCMAKE_OSX_DEPLOYMENT_TARGET=11.0 \
             -DCMAKE_OSX_ARCHITECTURES=arm64 \
-            -DOPENSSL_ROOT_DIR="$GITHUB_WORKSPACE/external_libs/openssl_extracted" \
             -DCMAKE_POLICY_VERSION_MINIMUM=3.5 \
             -DCMAKE_POLICY_DEFAULT_CMP0169=OLD \
             -DCMAKE_POLICY_DEFAULT_CMP0074=NEW \
             -Wno-dev
           cmake --build . --parallel $(sysctl -n hw.ncpu)
-
       - name: Compilar mcpe-extract (ARM64)
         run: |
           eval "$(/opt/homebrew/bin/brew shellenv)"
@@ -152,16 +147,10 @@ jobs:
           cp mac-bin/lib/native/arm64-v8a/libfmod*.dylib dist/Trinity.app/Contents/Resources/mcpelauncher/lib/native/arm64-v8a/
           cp mac-bin/lib/arm64-v8a/*.so dist/Trinity.app/Contents/Resources/mcpelauncher/lib/arm64-v8a/
           
-          # Inyectar ANGLE y OpenSSL precompilados a Frameworks
+          # Inyectar ANGLE precompilado a Frameworks
           find external_libs/angle_extracted -name "libEGL.dylib" -exec cp {} dist/Trinity.app/Contents/Frameworks/ \;
           find external_libs/angle_extracted -name "libGLESv2.dylib" -exec cp {} dist/Trinity.app/Contents/Frameworks/ \;
-          find external_libs/openssl_extracted -name "libssl.dylib" -exec cp {} dist/Trinity.app/Contents/Frameworks/ \;
-          find external_libs/openssl_extracted -name "libcrypto.dylib" -exec cp {} dist/Trinity.app/Contents/Frameworks/ \;
-          
-          # Enlazar las rutas internas (rpath) de OpenSSL para que el sistema las encuentre en Frameworks
-          install_name_tool -id @rpath/libssl.dylib -add_rpath @loader_path/../Frameworks dist/Trinity.app/Contents/Frameworks/libssl.dylib || true
-          install_name_tool -id @rpath/libcrypto.dylib -add_rpath @loader_path/../Frameworks dist/Trinity.app/Contents/Frameworks/libcrypto.dylib || true
-          
+ 
           cat <<EOF > dist/Trinity.app/Contents/Info.plist
           <?xml version="1.0" encoding="UTF-8"?>
           <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
