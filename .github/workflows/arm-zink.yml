@@ -110,7 +110,7 @@ jobs:
           -Dgbm=disabled \
           -Dmoltenvk-dir=/opt/homebrew/opt/molten-vk \
           -Dzstd=disabled \
-          -Dmesa-clc=disabled
+          -Dmesa-clc=auto
           
           ninja -C build -j$(sysctl -n hw.activecpu)
           ninja -C build install
