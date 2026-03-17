@@ -3,31 +3,32 @@ name: Build Mesa (macOS)
 on:
   push:
     branches: [ "main" ]
-  workflow_dispatch:   # allow manual trigger
+  workflow_dispatch:
 
 jobs:
   build:
-    runs-on: macos-14   # Apple Silicon runner (Homebrew path = /opt/homebrew)
+    runs-on: macos-14
 
     steps:
-      - name: Checkout repository (this repo, not needed for Mesa)
+      - name: Checkout repository
         uses: actions/checkout@v4
 
       - name: Install Homebrew dependencies
         run: |
           brew update
-          brew install meson ninja python3 bison flex llvm glslang spirv-tools molten-vk
+          brew install meson ninja python3 bison flex llvm glslang spirv-tools molten-vk \
+                       libclc libglvnd
 
       - name: Clone Mesa fork
         run: |
           git clone https://github.com/lucamignatti/mesa.git
           cd mesa
 
-      - name: Set up build environment
+      - name: Set up environment (PATH and PKG_CONFIG_PATH)
         run: |
-          # Set PATH for this shell session (affects all subsequent steps)
           echo "/opt/homebrew/opt/llvm/bin" >> $GITHUB_PATH
           echo "/opt/homebrew/opt/bison/bin" >> $GITHUB_PATH
+          echo "PKG_CONFIG_PATH=/opt/homebrew/lib/pkgconfig" >> $GITHUB_ENV
 
       - name: Create native.ini with Homebrew bison
         working-directory: mesa
@@ -64,8 +65,10 @@ jobs:
         run: |
           mkdir -p $HOME/mesa-native/lib/dri
           cd $HOME/mesa-native/lib/dri
-          ln -sf ../libgallium-26.0.0-devel.dylib zink_dri.so
-          ln -sf ../libgallium-26.0.0-devel.dylib swrast_dri.so
+          # Find the actual libgallium filename (avoids hardcoding the version)
+          GALLIUM_LIB=$(ls $HOME/mesa-native/lib/libgallium-*.dylib | head -1)
+          ln -sf "$GALLIUM_LIB" zink_dri.so
+          ln -sf "$GALLIUM_LIB" swrast_dri.so
           cp /opt/homebrew/lib/libvulkan.1.dylib $HOME/mesa-native/lib/
 
       - name: Upload built Mesa as artifact
