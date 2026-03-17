@@ -112,7 +112,7 @@ jobs:
           mkdir -p dist/Trinity.app/Contents/Resources/mcpelauncher/lib/arm64-v8a
           mkdir -p dist/lib
           
-          cp mcpelauncher/build/mcpelauncher-client/mcpelauncher-client dist/Trinity.app/Contents/MacOS/mcpelauncher-client-arm64-v8a
+          cp mcpelauncher/build/mcpelauncher-client/mcpelauncher-client dist/Trinity.app/Contents/MacOS/mcpelauncher-client
           cp mcpelauncher/build/mcpelauncher-webview/mcpelauncher-webview dist/Trinity.app/Contents/MacOS/
           cp mcpe-extract/build/mcpelauncher-extract dist/Trinity.app/Contents/MacOS/
           cp trinity/build/app/trinity dist/Trinity.app/Contents/MacOS/trinity-bin
@@ -133,7 +133,7 @@ jobs:
           cd dist
           $(brew --prefix qt@6)/bin/macdeployqt Trinity.app \
             -executable=Trinity.app/Contents/MacOS/trinity-bin \
-            -executable=Trinity.app/Contents/MacOS/mcpelauncher-client-arm64-v8a \
+            -executable=Trinity.app/Contents/MacOS/mcpelauncher-client \
             -executable=Trinity.app/Contents/MacOS/mcpelauncher-webview \
             -executable=Trinity.app/Contents/MacOS/mcpelauncher-extract
           cd ..
