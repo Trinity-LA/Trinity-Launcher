@@ -98,19 +98,20 @@ jobs:
           
           # Configuración
           meson setup build --native-file native.ini \
-            -Dprefix="${{ env.MESA_PREFIX }}" \
-            -Dbuildtype=release \
-            -Dplatforms=macos \
-            -Degl-native-platform=surfaceless \
-            -Degl=enabled \
-            -Dgallium-drivers=zink \
-            -Dvulkan-drivers=kosmickrisp \
-            -Dgles1=enabled \
-            -Dgles2=enabled \
-            -Dglx=disabled \
-            -Dgbm=disabled \
-            -Dmoltenvk-dir=/opt/homebrew/opt/molten-vk \
-            -Dzstd=disabled
+          -Dprefix="${{ env.MESA_PREFIX }}" \
+          -Dbuildtype=release \
+          -Dplatforms=macos \
+          -Degl-native-platform=surfaceless \
+          -Degl=enabled \
+          -Dgallium-drivers=zink \
+          -Dvulkan-drivers=kosmickrisp \
+          -Dgles1=enabled \
+          -Dgles2=enabled \
+          -Dglx=disabled \
+          -Dgbm=disabled \
+          -Dmoltenvk-dir=/opt/homebrew/opt/molten-vk \
+          -Dzstd=disabled \
+          -Dmesa-clc=disabled
           
           ninja -C build -j$(sysctl -n hw.activecpu)
           ninja -C build install
