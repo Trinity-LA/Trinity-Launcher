@@ -17,7 +17,13 @@ jobs:
         run: |
           brew update
           brew install meson ninja python3 bison flex llvm glslang spirv-tools molten-vk \
-                       libclc python-packaging python-mako
+                       libclc python-packaging
+
+      - name: Install Python packages (packaging, mako) via pip
+        run: |
+          python3 -m pip install --user --break-system-packages packaging mako
+          # Ensure user site-packages are in PYTHONPATH (just in case)
+          echo "PYTHONPATH=$(python3 -c 'import site; print(site.getusersitepackages())')" >> $GITHUB_ENV
 
       - name: Clone Mesa fork
         run: |
