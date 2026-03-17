@@ -1,0 +1,75 @@
+name: Build Mesa (macOS)
+
+on:
+  push:
+    branches: [ "main" ]
+  workflow_dispatch:   # allow manual trigger
+
+jobs:
+  build:
+    runs-on: macos-14   # Apple Silicon runner (Homebrew path = /opt/homebrew)
+
+    steps:
+      - name: Checkout repository (this repo, not needed for Mesa)
+        uses: actions/checkout@v4
+
+      - name: Install Homebrew dependencies
+        run: |
+          brew update
+          brew install meson ninja python3 bison flex llvm glslang spirv-tools molten-vk
+
+      - name: Clone Mesa fork
+        run: |
+          git clone https://github.com/lucamignatti/mesa.git
+          cd mesa
+
+      - name: Set up build environment
+        run: |
+          # Set PATH for this shell session (affects all subsequent steps)
+          echo "/opt/homebrew/opt/llvm/bin" >> $GITHUB_PATH
+          echo "/opt/homebrew/opt/bison/bin" >> $GITHUB_PATH
+
+      - name: Create native.ini with Homebrew bison
+        working-directory: mesa
+        run: |
+          cat > native.ini << 'EOF'
+          [binaries]
+          bison = '/opt/homebrew/opt/bison/bin/bison'
+          EOF
+
+      - name: Configure with Meson
+        working-directory: mesa
+        run: |
+          meson setup build --native-file native.ini \
+            -Dprefix=$HOME/mesa-native \
+            -Dbuildtype=release \
+            -Dplatforms=macos \
+            -Degl-native-platform=surfaceless \
+            -Degl=enabled \
+            -Dgallium-drivers=zink \
+            -Dvulkan-drivers=kosmickrisp \
+            -Dgles1=enabled \
+            -Dgles2=enabled \
+            -Dglx=disabled \
+            -Dgbm=disabled \
+            -Dmoltenvk-dir=/opt/homebrew/opt/molten-vk
+
+      - name: Build and install
+        working-directory: mesa
+        run: |
+          ninja -C build
+          ninja -C build install
+
+      - name: Create DRI symlinks and copy Vulkan loader
+        run: |
+          mkdir -p $HOME/mesa-native/lib/dri
+          cd $HOME/mesa-native/lib/dri
+          ln -sf ../libgallium-26.0.0-devel.dylib zink_dri.so
+          ln -sf ../libgallium-26.0.0-devel.dylib swrast_dri.so
+          cp /opt/homebrew/lib/libvulkan.1.dylib $HOME/mesa-native/lib/
+
+      - name: Upload built Mesa as artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: mesa-native-macos
+          path: ~/mesa-native
