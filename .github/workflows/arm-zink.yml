@@ -69,11 +69,29 @@ jobs:
           git clone --branch ${{ env.MESA_BRANCH }} --depth 1 ${{ env.MESA_REPO }} mesa-src
           cd mesa-src
           
+          # Crear archivo native con configuración específica para macOS/Apple toolchain
           cat > native.ini << 'EOF'
           [binaries]
+          c = 'cc'
+          cpp = 'c++'
+          ar = 'ar'
+          strip = 'strip'
+          pkgconfig = 'pkg-config'
           bison = '/opt/homebrew/opt/bison/bin/bison'
+          
+          [host_machine]
+          system = 'darwin'
+          cpu_family = 'aarch64'
+          cpu = 'arm64'
+          endian = 'little'
+          
           [properties]
+          c_link_args = ['-Wl,-undefined,dynamic_lookup', '-Wl,-headerpad_max_install_names']
+          cpp_link_args = ['-Wl,-undefined,dynamic_lookup', '-Wl,-headerpad_max_install_names']
           EOF
+          
+          # Flags adicionales para macOS
+          MACOS_LINK_ARGS="-Wl,-undefined,dynamic_lookup -Wl,-headerpad_max_install_names"
           
           meson setup build --native-file native.ini \
             -Dprefix=${{ env.MESA_PREFIX }} \
@@ -89,6 +107,9 @@ jobs:
             -Dgbm=disabled \
             -Dmoltenvk-dir=/opt/homebrew/opt/molten-vk \
             -Dzstd=disabled \
+            -Db_lundef=false \
+            -Dc_link_args="${MACOS_LINK_ARGS}" \
+            -Dcpp_link_args="${MACOS_LINK_ARGS}" \
             --prefer-static
           
           ninja -C build -j$(sysctl -n hw.activecpu)
