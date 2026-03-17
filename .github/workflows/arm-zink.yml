@@ -250,46 +250,48 @@ jobs:
           
           cmake --build . --parallel $(sysctl -n hw.activecpu)
 
-      - name: Compilar mcpelauncher (ARM64 + OpenSSL Homebrew)
-        run: |
-          source $HOME/.cargo/env
-          source ${{ runner.temp }}/mesa-venv/bin/activate
-          
-          cd mcpelauncher
-          mkdir -p build && cd build
-          
-          OPENSSL_DIR="/opt/homebrew/opt/openssl"
-          
-          ARM64_FLAGS="--target=arm64-apple-darwin23"
-          CMAKE_OSX_FLAGS="-DCMAKE_OSX_ARCHITECTURES=arm64 -DCMAKE_OSX_DEPLOYMENT_TARGET=14.0"
-          
-          cmake ../mcpelauncher \
-            -DCMAKE_POLICY_VERSION_MINIMUM=4.0 \
-            -DCMAKE_BUILD_TYPE=Release \
-            -DBUILD_UI=OFF \
-            -DCMAKE_INSTALL_PREFIX=${{ github.workspace }}/dist/mcpelauncher \
-            -DCMAKE_ASM_FLAGS="${ARM64_FLAGS}" \
-            -DCMAKE_C_FLAGS="${ARM64_FLAGS} -I${OPENSSL_DIR}/include" \
-            -DCMAKE_CXX_FLAGS="${ARM64_FLAGS} -I${OPENSSL_DIR}/include" \
-            -DCMAKE_CXX_COMPILER_TARGET=arm64-apple-darwin23 \
-            -DOPENSSL_ROOT_DIR="${OPENSSL_DIR}" \
-            -DOPENSSL_INCLUDE_DIR="${OPENSSL_DIR}/include" \
-            -DOPENSSL_CRYPTO_LIBRARY="${OPENSSL_DIR}/lib/libcrypto.dylib" \
-            -DOPENSSL_SSL_LIBRARY="${OPENSSL_DIR}/lib/libssl.dylib" \
-            -DMSA_DAEMON_PATH='.' \
-            -DENABLE_DEV_PATHS=OFF \
-            -DXAL_WEBVIEW_QT_PATH='.' \
-            -DGAMEWINDOW_SYSTEM=SDL3 \
-            -DJNI_USE_JNIVM=ON \
-            -DCMAKE_PREFIX_PATH="${{ env.MESA_PREFIX }};/opt/homebrew/opt/qt@6" \
-            ${CMAKE_OSX_FLAGS} \
-            -Wno-dev
-          
-          make install -j$(sysctl -n hw.activecpu)
-          
-          echo "=== Binarios generados ==="
-          find ${{ github.workspace }}/dist/mcpelauncher -name "mcpelauncher-*" -type f -exec file {} \;
-
+            - name: Compilar mcpelauncher (ARM64 + OpenSSL Homebrew)
+              run: |
+                source $HOME/.cargo/env
+                source ${{ runner.temp }}/mesa-venv/bin/activate
+                
+                cd mcpelauncher
+                mkdir -p build && cd build
+                
+                OPENSSL_DIR="/opt/homebrew/opt/openssl"
+                
+                # Depuración: verificar que OpenSSL esté accesible
+                echo "=== Verificando OpenSSL en ${OPENSSL_DIR} ==="
+                ls -la ${OPENSSL_DIR}/include/openssl/ssl.h || { echo "ERROR: ssl.h no encontrado"; exit 1; }
+                ls -la ${OPENSSL_DIR}/lib/libcrypto.dylib || { echo "ERROR: libcrypto.dylib no encontrado"; exit 1; }
+                ls -la ${OPENSSL_DIR}/lib/libssl.dylib || { echo "ERROR: libssl.dylib no encontrado"; exit 1; }
+                
+                ARM64_FLAGS="--target=arm64-apple-darwin23"
+                CMAKE_OSX_FLAGS="-DCMAKE_OSX_ARCHITECTURES=arm64 -DCMAKE_OSX_DEPLOYMENT_TARGET=14.0"
+                
+                cmake ../mcpelauncher \
+                  -DCMAKE_POLICY_VERSION_MINIMUM=4.0 \
+                  -DCMAKE_BUILD_TYPE=Release \
+                  -DBUILD_UI=OFF \
+                  -DCMAKE_INSTALL_PREFIX=${{ github.workspace }}/dist/mcpelauncher \
+                  -DCMAKE_ASM_FLAGS="${ARM64_FLAGS}" \
+                  -DCMAKE_C_FLAGS="${ARM64_FLAGS} -I${OPENSSL_DIR}/include" \
+                  -DCMAKE_CXX_FLAGS="${ARM64_FLAGS} -I${OPENSSL_DIR}/include" \
+                  -DCMAKE_CXX_COMPILER_TARGET=arm64-apple-darwin23 \
+                  -DOPENSSL_ROOT_DIR="${OPENSSL_DIR}" \
+                  -DMSA_DAEMON_PATH='.' \
+                  -DENABLE_DEV_PATHS=OFF \
+                  -DXAL_WEBVIEW_QT_PATH='.' \
+                  -DGAMEWINDOW_SYSTEM=SDL3 \
+                  -DJNI_USE_JNIVM=ON \
+                  -DCMAKE_PREFIX_PATH="${{ env.MESA_PREFIX }};/opt/homebrew/opt/qt@6" \
+                  ${CMAKE_OSX_FLAGS} \
+                  -Wno-dev
+                
+                make install -j$(sysctl -n hw.activecpu)
+                
+                echo "=== Binarios generados ==="
+                find ${{ github.workspace }}/dist/mcpelauncher -name "mcpelauncher-*" -type f -exec file {} \;
       - name: Compilar mcpe-extract
         run: |
           cd mcpe-extract
