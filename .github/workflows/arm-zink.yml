@@ -44,19 +44,21 @@ jobs:
           brew update
           brew install \
             meson ninja python3 cmake pkg-config \
-            bison flex llvm glslang spirv-tools molten-vk \
+            bison flex llvm llvm-spirv \
+            glslang spirv-tools molten-vk \
             qt@6 libzip libpng openssl rust \
             libclc
           
           echo "/opt/homebrew/opt/llvm/bin" >> $GITHUB_PATH
           echo "/opt/homebrew/opt/bison/bin" >> $GITHUB_PATH
           
-          echo "PKG_CONFIG_PATH=/opt/homebrew/opt/llvm/lib/pkgconfig:/opt/homebrew/opt/libclc/lib/pkgconfig:\$PKG_CONFIG_PATH" >> $GITHUB_ENV
+          echo "PKG_CONFIG_PATH=/opt/homebrew/opt/llvm/lib/pkgconfig:/opt/homebrew/opt/libclc/lib/pkgconfig:/opt/homebrew/opt/llvm-spirv/lib/pkgconfig:\$PKG_CONFIG_PATH" >> $GITHUB_ENV
           
           echo "OPENSSL_ROOT_DIR=/opt/homebrew/opt/openssl" >> $GITHUB_ENV
           echo "OPENSSL_INCLUDE_DIR=/opt/homebrew/opt/openssl/include" >> $GITHUB_ENV
           echo "OPENSSL_CRYPTO_LIBRARY=/opt/homebrew/opt/openssl/lib/libcrypto.dylib" >> $GITHUB_ENV
           echo "OPENSSL_SSL_LIBRARY=/opt/homebrew/opt/openssl/lib/libssl.dylib" >> $GITHUB_ENV
+          pkg-config --modversion LLVMSPIRVLib || echo "SPIRV LIB NO DETECTADO"
       - name: Configurar entorno Python para Mesa
         run: |
           python3 -m venv ${{ runner.temp }}/mesa-venv
