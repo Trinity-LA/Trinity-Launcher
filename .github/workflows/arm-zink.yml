@@ -9,12 +9,12 @@ on:
 
 env:
   MESA_PREFIX: ${{ github.workspace }}/mesa-native
-  MESA_REPO: https://github.com/lucamignatti/mesa.git  # Fork con patches para surfaceless+Metal
-  MESA_BRANCH: main  # O la rama específica con los fixes
+  MESA_REPO: https://github.com/lucamignatti/mesa.git
+  MESA_BRANCH: main
 
 jobs:
   build-and-package:
-    runs-on: macos-14-arm64  # Runner nativo ARM64 para Apple Silicon [[1]][[4]]
+    runs-on: macos-latest
     
     steps:
       - name: Clonar repositorio Trinity
@@ -39,22 +39,22 @@ jobs:
           repository: 'minecraft-linux/mcpelauncher-mac-bin'
           path: 'mac-bin'
 
-      # ============================================================
-      # INSTALACIÓN DE DEPENDENCIAS (ARM64 Nativo)
-      # ============================================================
       - name: Instalar dependencias de Homebrew (ARM64)
         run: |
-          # Homebrew en ARM usa /opt/homebrew por defecto [[1]][[2]]
           brew update
           brew install \
             meson ninja python3 cmake pkg-config \
-            bison flex llvm@20 glslang spirv-tools molten-vk \
+            bison flex llvm glslang spirv-tools molten-vk \
             qt@6 libzip libpng openssl rust
           
-          # Configurar PATH para herramientas actualizadas
-          echo "/opt/homebrew/opt/llvm@20/bin" >> $GITHUB_PATH
+          echo "/opt/homebrew/opt/llvm/bin" >> $GITHUB_PATH
           echo "/opt/homebrew/opt/bison/bin" >> $GITHUB_PATH
-          echo "PKG_CONFIG_PATH=/opt/homebrew/opt/llvm@20/lib/pkgconfig" >> $GITHUB_ENV
+          echo "PKG_CONFIG_PATH=/opt/homebrew/opt/llvm/lib/pkgconfig" >> $GITHUB_ENV
+          
+          echo "OPENSSL_ROOT_DIR=/opt/homebrew/opt/openssl" >> $GITHUB_ENV
+          echo "OPENSSL_INCLUDE_DIR=/opt/homebrew/opt/openssl/include" >> $GITHUB_ENV
+          echo "OPENSSL_CRYPTO_LIBRARY=/opt/homebrew/opt/openssl/lib/libcrypto.dylib" >> $GITHUB_ENV
+          echo "OPENSSL_SSL_LIBRARY=/opt/homebrew/opt/openssl/lib/libssl.dylib" >> $GITHUB_ENV
 
       - name: Configurar entorno Python para Mesa
         run: |
@@ -62,9 +62,6 @@ jobs:
           source ${{ runner.temp }}/mesa-venv/bin/activate
           pip install mako packaging pyyaml meson
 
-      # ============================================================
-      # COMPILACIÓN DE MESA CON ZINK + KOSMICKRISP
-      # ============================================================
       - name: Clonar y compilar Mesa (Zink + KosmicKrisp)
         run: |
           source ${{ runner.temp }}/mesa-venv/bin/activate
@@ -72,15 +69,12 @@ jobs:
           git clone --branch ${{ env.MESA_BRANCH }} --depth 1 ${{ env.MESA_REPO }} mesa-src
           cd mesa-src
           
-          # Crear archivo native para bison de Homebrew
           cat > native.ini << 'EOF'
           [binaries]
           bison = '/opt/homebrew/opt/bison/bin/bison'
           [properties]
           EOF
           
-          # Configurar Mesa con Zink y KosmicKrisp
-          # KosmicKrisp requiere macOS 26+ y Metal 4 [[21]]
           meson setup build --native-file native.ini \
             -Dprefix=${{ env.MESA_PREFIX }} \
             -Dbuildtype=release \
@@ -97,33 +91,22 @@ jobs:
             -Dzstd=disabled \
             --prefer-static
           
-          # Compilar e instalar
           ninja -C build -j$(sysctl -n hw.activecpu)
           ninja -C build install
 
       - name: Configurar bibliotecas de Mesa para runtime
         run: |
-          # Crear enlaces DRI para Zink
           mkdir -p ${{ env.MESA_PREFIX }}/lib/dri
           cd ${{ env.MESA_PREFIX }}/lib/dri
-          ln -sf ../libgallium-*.dylib zink_dri.so 2>/dev/null || \
-          ln -sf ../libgallium-*.dylib zink_dri.so
-          
-          # Copiar loader de Vulkan (necesario para KosmicKrisp)
+          ln -sf ../libgallium-*.dylib zink_dri.so 2>/dev/null || true
           cp /opt/homebrew/lib/libvulkan.1.dylib ${{ env.MESA_PREFIX }}/lib/ 2>/dev/null || true
           
-          # Verificar archivos instalados
           ls -la ${{ env.MESA_PREFIX }}/lib/
           ls -la ${{ env.MESA_PREFIX }}/lib/dri/
           ls -la ${{ env.MESA_PREFIX }}/share/vulkan/icd.d/ 2>/dev/null || true
 
-      # ============================================================
-      # COMPILACIÓN DE libgl_interpose.dylib (Interposición DYLD)
-      # ============================================================
       - name: Compilar libgl_interpose.dylib
         run: |
-          # Crear biblioteca de interposición para redirigir dlsym -> eglGetProcAddress
-          # Esto es CRÍTICO para que LWJGL encuentre las funciones OpenGL de Mesa [[28]]
           cat > libgl_interpose.c << 'EOF'
           #define _DARWIN_C_SOURCE
           #include <dlfcn.h>
@@ -158,19 +141,14 @@ jobs:
           };
           EOF
           
-          # Compilar como biblioteca dinámica ARM64
           clang -shared -fPIC -O2 \
             -o ${{ env.MESA_PREFIX }}/lib/libgl_interpose.dylib \
             libgl_interpose.c \
             -framework CoreFoundation \
             -Wl,-install_name,@rpath/libgl_interpose.dylib
 
-      # ============================================================
-      # COMPILACIÓN DE GLFW (Parcheado para EGL)
-      # ============================================================
       - name: Clonar y compilar GLFW con soporte EGL
         run: |
-          # Usar fork con parches para forzar EGL en lugar de NSGL en macOS
           git clone https://github.com/lucamignatti/glfw.git glfw-src
           cd glfw-src
           mkdir build && cd build
@@ -187,9 +165,56 @@ jobs:
           make -j$(sysctl -n hw.activecpu)
           make install
 
-      # ============================================================
-      # COMPILACIÓN DE TRINITY (ARM64 Nativo)
-      # ============================================================
+      - name: Clonar y compilar SDL3 con soporte EGL
+        run: |
+          git clone --depth 1 https://github.com/libsdl-org/SDL.git sdl3-src
+          cd sdl3-src
+          
+          cat > sdl3-egl-macos.patch << 'EOF'
+          diff --git a/src/video/cocoa/SDL_cocoaopengl.m b/src/video/cocoa/SDL_cocoaopengl.m
+          --- a/src/video/cocoa/SDL_cocoaopengl.m
+          +++ b/src/video/cocoa/SDL_cocoaopengl.m
+          @@ -200,6 +200,14 @@ int Cocoa_GL_MakeCurrent(_THIS, SDL_Window *window, SDL_GLContext context)
+           
+           SDL_GLContext Cocoa_GL_CreateContext(_THIS, SDL_Window *window)
+           {
+          +    if (getenv("EGL_PLATFORM") != NULL && getenv("MESA_LOADER_DRIVER_OVERRIDE") != NULL) {
+          +        SDL_EGL_Display egl_display = SDL_EGL_GetCurrentDisplay();
+          +        if (egl_display != NULL) {
+          +            return SDL_EGL_CreateContext(_this, window);
+          +        }
+          +    }
+          +
+               SDL_VideoData *videodata = (SDL_VideoData *)_this->driverdata;
+               SDL_WindowData *data = (SDL_WindowData *)window->driverdata;
+               CGLContextObj context, share_context = NULL;
+          EOF
+          
+          patch -p1 < sdl3-egl-macos.patch 2>/dev/null || true
+          
+          mkdir build && cd build
+          
+          cmake .. \
+            -DCMAKE_BUILD_TYPE=Release \
+            -DCMAKE_INSTALL_PREFIX=${{ env.MESA_PREFIX }} \
+            -DCMAKE_OSX_ARCHITECTURES=arm64 \
+            -DCMAKE_OSX_DEPLOYMENT_TARGET=14.0 \
+            -DSDL_VIDEO_OPENGL_EGL=ON \
+            -DSDL_VIDEO_OPENGL=OFF \
+            -DSDL_VIDEO_VULKAN=ON \
+            -DSDL_VIDEO_DRIVER_COCOA=ON \
+            -DSDL_VIDEO_OFFSCREEN=ON \
+            -DSDL_SHARED=ON \
+            -DSDL_STATIC=OFF \
+            -DSDL_TEST=OFF \
+            -DSDL_INSTALL_TESTS=OFF
+          
+          make -j$(sysctl -n hw.activecpu)
+          make install
+          
+          echo "=== Verificando simbolos EGL en SDL3 ==="
+          nm -gU ${{ env.MESA_PREFIX }}/lib/libSDL3.dylib 2>/dev/null | grep -i egl || echo "Nota: EGL puede cargarse dinamicamente"
+
       - name: Compilar Trinity
         run: |
           cd trinity
@@ -198,7 +223,7 @@ jobs:
           cmake .. \
             -DCMAKE_BUILD_TYPE=Release \
             -G Ninja \
-            -DCMAKE_PREFIX_PATH="/opt/homebrew/opt/qt@6" \
+            -DCMAKE_PREFIX_PATH="${{ env.MESA_PREFIX }};/opt/homebrew/opt/qt@6" \
             -DCMAKE_OSX_DEPLOYMENT_TARGET=14.0 \
             -DCMAKE_OSX_ARCHITECTURES=arm64 \
             -DCMAKE_INSTALL_PREFIX=${{ github.workspace }}/dist/trinity \
@@ -206,26 +231,45 @@ jobs:
           
           cmake --build . --parallel $(sysctl -n hw.activecpu)
 
-      - name: Compilar mcpelauncher
+      - name: Compilar mcpelauncher (ARM64 + OpenSSL Homebrew)
         run: |
           source $HOME/.cargo/env
+          source ${{ runner.temp }}/mesa-venv/bin/activate
+          
           cd mcpelauncher
           mkdir -p build && cd build
           
-          cmake .. \
+          OPENSSL_DIR="/opt/homebrew/opt/openssl"
+          
+          ARM64_FLAGS="--target=arm64-apple-darwin23"
+          CMAKE_OSX_FLAGS="-DCMAKE_OSX_ARCHITECTURES=arm64 -DCMAKE_OSX_DEPLOYMENT_TARGET=14.0"
+          
+          cmake ../mcpelauncher \
+            -DCMAKE_POLICY_VERSION_MINIMUM=4.0 \
             -DCMAKE_BUILD_TYPE=Release \
-            -G Ninja \
-            -DCMAKE_PREFIX_PATH="/opt/homebrew/opt/qt@6" \
-            -DCMAKE_POLICY_DEFAULT_CMP0074=NEW \
-            -DCMAKE_POLICY_VERSION_MINIMUM=3.5 \
-            -DJNI_USE_JNIVM=ON \
-            -DGAMEWINDOW_SYSTEM=SDL3 \
-            -DCMAKE_OSX_DEPLOYMENT_TARGET=14.0 \
-            -DCMAKE_OSX_ARCHITECTURES=arm64 \
+            -DBUILD_UI=OFF \
             -DCMAKE_INSTALL_PREFIX=${{ github.workspace }}/dist/mcpelauncher \
+            -DCMAKE_ASM_FLAGS="${ARM64_FLAGS}" \
+            -DCMAKE_C_FLAGS="${ARM64_FLAGS} -I${OPENSSL_DIR}/include" \
+            -DCMAKE_CXX_FLAGS="${ARM64_FLAGS} -I${OPENSSL_DIR}/include" \
+            -DCMAKE_CXX_COMPILER_TARGET=arm64-apple-darwin23 \
+            -DOPENSSL_ROOT_DIR="${OPENSSL_DIR}" \
+            -DOPENSSL_INCLUDE_DIR="${OPENSSL_DIR}/include" \
+            -DOPENSSL_CRYPTO_LIBRARY="${OPENSSL_DIR}/lib/libcrypto.dylib" \
+            -DOPENSSL_SSL_LIBRARY="${OPENSSL_DIR}/lib/libssl.dylib" \
+            -DMSA_DAEMON_PATH='.' \
+            -DENABLE_DEV_PATHS=OFF \
+            -DXAL_WEBVIEW_QT_PATH='.' \
+            -DGAMEWINDOW_SYSTEM=SDL3 \
+            -DJNI_USE_JNIVM=ON \
+            -DCMAKE_PREFIX_PATH="${{ env.MESA_PREFIX }};/opt/homebrew/opt/qt@6" \
+            ${CMAKE_OSX_FLAGS} \
             -Wno-dev
           
-          cmake --build . --parallel $(sysctl -n hw.activecpu)
+          make install -j$(sysctl -n hw.activecpu)
+          
+          echo "=== Binarios generados ==="
+          find ${{ github.workspace }}/dist/mcpelauncher -name "mcpelauncher-*" -type f -exec file {} \;
 
       - name: Compilar mcpe-extract
         run: |
@@ -243,65 +287,47 @@ jobs:
           
           cmake --build . --parallel $(sysctl -n hw.activecpu)
 
-      # ============================================================
-      # EMPAQUETADO CON VARIABLES DE ENTORNO PARA ZINK
-      # ============================================================
       - name: Crear Application Bundle con Zink
         run: |
           mkdir -p dist/Trinity.app/Contents/{MacOS,Frameworks,Resources/mcpelauncher}
           
-          # Copiar binarios compilados
           cp mcpelauncher/build/mcpelauncher-client/mcpelauncher-client dist/Trinity.app/Contents/MacOS/
           cp mcpelauncher/build/mcpelauncher-webview/mcpelauncher-webview dist/Trinity.app/Contents/MacOS/
           cp mcpe-extract/build/mcpelauncher-extract dist/Trinity.app/Contents/MacOS/
           cp trinity/build/app/trinity dist/Trinity.app/Contents/MacOS/trinity-bin
           
-          # Script launcher con variables CRÍTICAS para Zink
           cat << 'EOF' > dist/Trinity.app/Contents/MacOS/trinity
           #!/bin/bash
           set -e
           DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
           MESA_DIR="${DIR}/../../Frameworks"
           
-          # === VARIABLES OBLIGATORIAS PARA ZINK + KOSMICKRISP ===
           export DYLD_INSERT_LIBRARIES="${MESA_DIR}/libgl_interpose.dylib"
           export DYLD_LIBRARY_PATH="${MESA_DIR}:${DYLD_LIBRARY_PATH}"
           export LIBGL_DRIVERS_PATH="${MESA_DIR}/dri"
           export VK_DRIVER_FILES="${MESA_DIR}/share/vulkan/icd.d/kosmickrisp_mesa_icd.aarch64.json"
           
-          # Forzar Zink y OpenGL 4.6
           export EGL_PLATFORM=surfaceless
           export MESA_LOADER_DRIVER_OVERRIDE=zink
           export MESA_GL_VERSION_OVERRIDE=4.6
           export MESA_GLSL_VERSION_OVERRIDE=460
           
-          # Desactivar caché de shaders de KosmicKrisp (evita crashes en relanzamiento)
           export MESA_KK_DISABLE_WORKAROUNDS=shader_cache
           
-          # Qt y Metal
           export QT_MAC_WANTS_LAYER=1
-          export ANGLE_DEFAULT_PLATFORM=metal  # Fallback por seguridad
-          
-          # JVM args para LWJGL
-          export JAVA_OPTS="${JAVA_OPTS} \
-            -Dorg.lwjgl.egl.libname=${MESA_DIR}/libEGL.dylib \
-            -Dorg.lwjgl.opengl.libname=${MESA_DIR}/libGL.dylib \
-            -Dorg.lwjgl.glfw.libname=${MESA_DIR}/lib/libglfw.3.dylib"
+          export ANGLE_DEFAULT_PLATFORM=metal
           
           exec "${DIR}/trinity-bin" "$@"
           EOF
           chmod +x dist/Trinity.app/Contents/MacOS/trinity
           
-          # Copiar bibliotecas de Mesa al bundle
           cp -R ${{ env.MESA_PREFIX }}/lib/*.dylib dist/Trinity.app/Contents/Frameworks/ 2>/dev/null || true
           cp -R ${{ env.MESA_PREFIX }}/lib/dri dist/Trinity.app/Contents/Frameworks/
           mkdir -p dist/Trinity.app/Contents/Frameworks/share/vulkan/icd.d
           cp ${{ env.MESA_PREFIX }}/share/vulkan/icd.d/*.json dist/Trinity.app/Contents/Frameworks/share/vulkan/icd.d/ 2>/dev/null || true
           
-          # Copiar librerías puente
           cp -R mac-bin/lib dist/Trinity.app/Contents/Resources/mcpelauncher/
           
-          # Info.plist actualizado
           cat <<EOF > dist/Trinity.app/Contents/Info.plist
           <?xml version="1.0" encoding="UTF-8"?>
           <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
@@ -339,10 +365,7 @@ jobs:
             -executable=Trinity.app/Contents/MacOS/mcpelauncher-extract \
             -verbose=1
           
-          # Codesign para CI (sin notarización)
           codesign --force --deep --sign - --timestamp=none Trinity.app
-          
-          # Crear DMG
           hdiutil create -volname "Trinity Launcher" -srcfolder Trinity.app -ov -format UDZO Trinity.dmg
           
       - name: Subir instalador DMG
