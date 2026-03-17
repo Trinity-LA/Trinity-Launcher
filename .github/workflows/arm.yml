@@ -65,6 +65,10 @@ jobs:
         run: |
           eval "$(/opt/homebrew/bin/brew shellenv)"
           cd trinity
+          
+          # Inyectar política a la fuerza en el código fuente
+          echo "cmake_policy(SET CMP0169 OLD)" | cat - CMakeLists.txt > temp && mv temp CMakeLists.txt
+          
           mkdir -p build && cd build
           cmake .. -DCMAKE_BUILD_TYPE=Release -G Ninja -DCMAKE_PREFIX_PATH="$(brew --prefix qt@6)" -DCMAKE_OSX_DEPLOYMENT_TARGET=11.0 -DCMAKE_OSX_ARCHITECTURES=arm64 -Wno-dev
           cmake --build . --parallel $(sysctl -n hw.ncpu)
@@ -74,14 +78,15 @@ jobs:
           eval "$(/opt/homebrew/bin/brew shellenv)"
           source $HOME/.cargo/env
           cd mcpelauncher
+          
+          # Inyectar política a la fuerza en el código fuente
+          echo "cmake_policy(SET CMP0169 OLD)" | cat - CMakeLists.txt > temp && mv temp CMakeLists.txt
+          
           mkdir -p build && cd build
           cmake .. \
             -DCMAKE_BUILD_TYPE=Release \
             -G Ninja \
             -DCMAKE_PREFIX_PATH="$(brew --prefix qt@6)" \
-            -DCMAKE_POLICY_DEFAULT_CMP0074=NEW \
-            -DCMAKE_POLICY_DEFAULT_CMP0169=OLD \
-            -DCMAKE_POLICY_VERSION_MINIMUM=4.0 \
             -DJNI_USE_JNIVM=ON \
             -DGAMEWINDOW_SYSTEM=SDL3 \
             -DCMAKE_OSX_DEPLOYMENT_TARGET=11.0 \
@@ -89,21 +94,23 @@ jobs:
             -DOPENSSL_ROOT_DIR="$GITHUB_WORKSPACE/external_libs/openssl_extracted" \
             -Wno-dev
           cmake --build . --parallel $(sysctl -n hw.ncpu)
-          
+
       - name: Compilar mcpe-extract (ARM64)
         run: |
           eval "$(/opt/homebrew/bin/brew shellenv)"
           cd mcpe-extract
+          
+          # Inyectar política a la fuerza en el código fuente
+          echo "cmake_policy(SET CMP0169 OLD)" | cat - CMakeLists.txt > temp && mv temp CMakeLists.txt
+          
           mkdir -p build && cd build
           cmake .. \
             -DCMAKE_BUILD_TYPE=Release \
             -G Ninja \
-            -DCMAKE_POLICY_VERSION_MINIMUM=3.5 \
             -DCMAKE_OSX_DEPLOYMENT_TARGET=11.0 \
             -DCMAKE_OSX_ARCHITECTURES=arm64 \
             -Wno-dev
           cmake --build . --parallel $(sysctl -n hw.ncpu)
-
       - name: Crear Application Bundle y Empaquetar
         run: |
           eval "$(/opt/homebrew/bin/brew shellenv)"
