@@ -62,7 +62,7 @@ jobs:
           source ${{ runner.temp }}/mesa-venv/bin/activate
           pip install mako packaging pyyaml meson
 
-            - name: Clonar y compilar Mesa (Zink + KosmicKrisp)
+      - name: Clonar y compilar Mesa (Zink + KosmicKrisp)
         run: |
           source ${{ runner.temp }}/mesa-venv/bin/activate
           
