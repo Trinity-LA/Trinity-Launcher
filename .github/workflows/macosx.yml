@@ -124,9 +124,15 @@ jobs:
           
           cd ..
           
-          cp -R mac-bin/lib dist/Trinity.app/Contents/MacOS/
-          find mcpelauncher/build -name "libEGL.dylib" -exec cp {} dist/Trinity.app/Contents/MacOS/ \;
-          find mcpelauncher/build -name "libGLESv2.dylib" -exec cp {} dist/Trinity.app/Contents/MacOS/ \;
+          # 5. Inyectar SOLO el audio de mac-bin y el ANGLE moderno en la ruta exacta
+          mkdir -p dist/Trinity.app/Contents/MacOS/lib/native/x86_64/
+          
+          # Copiamos solo las librerías de sonido (fmod), ignorando el GLES viejo
+          cp mac-bin/lib/native/x86_64/libfmod*.dylib dist/Trinity.app/Contents/MacOS/lib/native/x86_64/
+          
+          # Movemos el ANGLE fresco y moderno a la ruta donde el linker lo exige
+          find mcpelauncher/build -name "libEGL.dylib" -exec cp {} dist/Trinity.app/Contents/MacOS/lib/native/x86_64/ \;
+          find mcpelauncher/build -name "libGLESv2.dylib" -exec cp {} dist/Trinity.app/Contents/MacOS/lib/native/x86_64/ \;
           
           cat <<EOF > dist/Trinity.app/Contents/Info.plist
           <?xml version="1.0" encoding="UTF-8"?>
