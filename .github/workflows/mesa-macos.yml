@@ -17,7 +17,7 @@ jobs:
         run: |
           brew update
           brew install meson ninja python3 bison flex llvm glslang spirv-tools molten-vk \
-                       libclc libglvnd
+                       libclc
 
       - name: Clone Mesa fork
         run: |
@@ -65,7 +65,7 @@ jobs:
         run: |
           mkdir -p $HOME/mesa-native/lib/dri
           cd $HOME/mesa-native/lib/dri
-          # Find the actual libgallium filename (avoids hardcoding the version)
+          # Dynamically find the actual libgallium filename
           GALLIUM_LIB=$(ls $HOME/mesa-native/lib/libgallium-*.dylib | head -1)
           ln -sf "$GALLIUM_LIB" zink_dri.so
           ln -sf "$GALLIUM_LIB" swrast_dri.so
