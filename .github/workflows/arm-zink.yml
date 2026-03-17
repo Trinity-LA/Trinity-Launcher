@@ -106,7 +106,6 @@ jobs:
             -Dgles2=enabled \
             -Dglx=disabled \
             -Dgbm=disabled \
-            -Dlibclc=disabled \
             -Dmoltenvk-dir=/opt/homebrew/opt/molten-vk \
             -Dzstd=disabled
           
