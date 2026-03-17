@@ -100,6 +100,9 @@ jobs:
           sed -i '' 's/secure_getenv/getenv/g' src/util/os_misc.c      
           sed -i '' "s/cc.has_function('sched_getaffinity')/false/g" meson.build
           sed -i '' 's/__has_builtin(__builtin_.*_overflow_p)/0/g' src/util/u_overflow.h
+          sed -i '' 's/__has_builtin(__builtin_add_overflow_p)/0/g' src/util/u_overflow.h
+          sed -i '' 's/__has_builtin(__builtin_sub_overflow_p)/0/g' src/util/u_overflow.h
+          sed -i '' 's/__has_builtin(__builtin_mul_overflow_p)/0/g' src/util/u_overflow.h
           # Configuración
           meson setup build --native-file native.ini \
           -Dprefix="${{ env.MESA_PREFIX }}" \
