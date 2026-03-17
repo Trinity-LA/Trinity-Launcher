@@ -19,6 +19,9 @@ jobs:
           brew install meson ninja python3 bison flex llvm glslang spirv-tools molten-vk \
                        libclc
 
+      - name: Install Python packaging module
+        run: python3 -m pip install packaging
+
       - name: Clone Mesa fork
         run: |
           git clone https://github.com/lucamignatti/mesa.git
@@ -65,7 +68,6 @@ jobs:
         run: |
           mkdir -p $HOME/mesa-native/lib/dri
           cd $HOME/mesa-native/lib/dri
-          # Dynamically find the actual libgallium filename
           GALLIUM_LIB=$(ls $HOME/mesa-native/lib/libgallium-*.dylib | head -1)
           ln -sf "$GALLIUM_LIB" zink_dri.so
           ln -sf "$GALLIUM_LIB" swrast_dri.so
