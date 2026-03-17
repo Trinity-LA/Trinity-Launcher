@@ -17,10 +17,7 @@ jobs:
         run: |
           brew update
           brew install meson ninja python3 bison flex llvm glslang spirv-tools molten-vk \
-                       libclc
-
-      - name: Install Python packaging module
-        run: python3 -m pip install packaging
+                       libclc python-packaging
 
       - name: Clone Mesa fork
         run: |
