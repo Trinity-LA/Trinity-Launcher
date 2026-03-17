@@ -7,7 +7,7 @@ on:
 
 jobs:
   build:
-    runs-on: macos-14
+    runs-on: macos-14  # latest Apple Silicon runner
 
     steps:
       - name: Checkout repository
@@ -17,18 +17,20 @@ jobs:
         run: |
           brew update
           brew install meson ninja python3 bison flex llvm glslang spirv-tools molten-vk \
-                       libclc python-packaging
+                       libclc python-packaging python-mako
 
       - name: Clone Mesa fork
         run: |
           git clone https://github.com/lucamignatti/mesa.git
           cd mesa
 
-      - name: Set up environment (PATH and PKG_CONFIG_PATH)
+      - name: Set up environment (PATH, PKG_CONFIG_PATH, and compiler flags)
         run: |
           echo "/opt/homebrew/opt/llvm/bin" >> $GITHUB_PATH
           echo "/opt/homebrew/opt/bison/bin" >> $GITHUB_PATH
           echo "PKG_CONFIG_PATH=/opt/homebrew/lib/pkgconfig" >> $GITHUB_ENV
+          echo "LDFLAGS=-L/opt/homebrew/opt/llvm/lib" >> $GITHUB_ENV
+          echo "CPPFLAGS=-I/opt/homebrew/opt/llvm/include" >> $GITHUB_ENV
 
       - name: Create native.ini with Homebrew bison
         working-directory: mesa
