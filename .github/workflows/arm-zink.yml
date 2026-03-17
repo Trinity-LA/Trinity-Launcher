@@ -91,6 +91,7 @@ jobs:
           b_lundef = false
           EOF
           
+          # Configuración minimalista - solo lo necesario para Zink + KosmicKrisp
           meson setup build --native-file native.ini \
             -Dprefix=${{ env.MESA_PREFIX }} \
             -Dbuildtype=release \
@@ -105,7 +106,6 @@ jobs:
             -Dgbm=disabled \
             -Dmoltenvk-dir=/opt/homebrew/opt/molten-vk \
             -Dzstd=disabled \
-            -Dgallium-opencl=disabled \
             --prefer-static
           
           ninja -C build -j$(sysctl -n hw.activecpu)
