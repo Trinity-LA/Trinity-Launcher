@@ -90,12 +90,12 @@ jobs:
           endian = 'little'
           
           [built-in options]
-          c_args = ['-Wno-error=implicit-function-declaration']
           c_link_args = ['-Wl,-undefined,dynamic_lookup', '-Wl,-headerpad_max_install_names']
           cpp_link_args = ['-Wl,-undefined,dynamic_lookup', '-Wl,-headerpad_max_install_names']
           b_lundef = false
           EOF
-          
+          sed -i '' "s/cc.has_function('secure_getenv')/false/g" meson.build
+          sed -i '' "s/cc.has_function('posix_fallocate')/false/g" meson.build
           # Configuración
           meson setup build --native-file native.ini \
           -Dprefix="${{ env.MESA_PREFIX }}" \
