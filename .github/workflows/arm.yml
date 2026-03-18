@@ -112,16 +112,20 @@ jobs:
           mkdir -p dist/Trinity.app/Contents/Resources/mcpelauncher/lib/arm64-v8a
           mkdir -p dist/lib
           
+          # Renombrado a mcpelauncher-client puro
           cp mcpelauncher/build/mcpelauncher-client/mcpelauncher-client dist/Trinity.app/Contents/MacOS/mcpelauncher-client
           cp mcpelauncher/build/mcpelauncher-webview/mcpelauncher-webview dist/Trinity.app/Contents/MacOS/
           cp mcpe-extract/build/mcpelauncher-extract dist/Trinity.app/Contents/MacOS/
           cp trinity/build/app/trinity dist/Trinity.app/Contents/MacOS/trinity-bin
           
+          # Script wrapper modificado para inyectar rutas gráficas a SDL
           cat << 'EOF' > dist/Trinity.app/Contents/MacOS/trinity
           #!/bin/bash
           DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
           export ANGLE_DEFAULT_PLATFORM=metal
           export QT_MAC_WANTS_LAYER=1
+          export DYLD_LIBRARY_PATH="$DIR/../Frameworks:$DYLD_LIBRARY_PATH"
+          export DYLD_FRAMEWORK_PATH="$DIR/../Frameworks:$DYLD_FRAMEWORK_PATH"
           exec "$DIR/trinity-bin" "$@"
           EOF
           chmod +x dist/Trinity.app/Contents/MacOS/trinity
@@ -145,6 +149,11 @@ jobs:
           # Inyectar ANGLE precompilado a Frameworks
           find external_libs/angle_extracted -name "libEGL.dylib" -exec cp {} dist/Trinity.app/Contents/Frameworks/ \;
           find external_libs/angle_extracted -name "libGLESv2.dylib" -exec cp {} dist/Trinity.app/Contents/Frameworks/ \;
+          
+          # Enseñar a los ejecutables dónde buscar las librerías de ANGLE
+          install_name_tool -add_rpath @loader_path/../Frameworks dist/Trinity.app/Contents/MacOS/trinity-bin || true
+          install_name_tool -add_rpath @loader_path/../Frameworks dist/Trinity.app/Contents/MacOS/mcpelauncher-client || true
+          install_name_tool -add_rpath @loader_path/../Frameworks dist/Trinity.app/Contents/MacOS/mcpelauncher-webview || true
  
           cat <<EOF > dist/Trinity.app/Contents/Info.plist
           <?xml version="1.0" encoding="UTF-8"?>
