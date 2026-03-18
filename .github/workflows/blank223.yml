@@ -98,22 +98,27 @@ jobs:
           cp mcpe-extract/build/mcpelauncher-extract dist/Trinity.app/Contents/MacOS/
           cp trinity/build/app/trinity dist/Trinity.app/Contents/MacOS/trinity-bin
           
-          # 3. SCRIPT WRAPPER BLINDADO (ANGLE + OPENGL + RUTAS)
+          # 3. SCRIPT WRAPPER BLINDADO (Rutas absolutas y permisos de escritura)
           cat << 'EOF' > dist/Trinity.app/Contents/MacOS/trinity
           #!/bin/bash
           DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
           
-          # Forzar capa de aceleración en Qt y SDL
           export QT_MAC_WANTS_LAYER=1
           export QT_QPA_PLATFORM=cocoa
           export SDL_HINT_RENDER_DRIVER=metal
-          
-          # Evitar colapsos gráficos forzando ANGLE hacia Metal nativo
           export ANGLE_DEFAULT_PLATFORM=metal
           
-          # Inyectar rutas de ANGLE, OpenSSL y dependencias de Android (FMOD/Audio) directo a la memoria
+          # FIX 1: Forzar rutas absolutas de los demonios para evitar el secuestro hacia la carpeta "assets"
+          export MSA_DAEMON_PATH="$DIR/msa-daemon"
+          export XAL_WEBVIEW_QT_PATH="$DIR/mcpelauncher-webview"
+          
           export DYLD_LIBRARY_PATH="$DIR/../Frameworks:$DIR/../Resources/mcpelauncher/lib/native/arm64-v8a:$DYLD_LIBRARY_PATH"
           export DYLD_FRAMEWORK_PATH="$DIR/../Frameworks:$DYLD_FRAMEWORK_PATH"
+          
+          # FIX 2: Mover el directorio de trabajo nativo a una zona con permisos de escritura para salvar a SQLite/PlayFab
+          DATA_DIR="$HOME/Library/Application Support/mcpelauncher"
+          mkdir -p "$DATA_DIR"
+          cd "$DATA_DIR"
           
           exec "$DIR/trinity-bin" "$@"
           EOF
@@ -131,7 +136,7 @@ jobs:
             -executable=Trinity.app/Contents/MacOS/mcpelauncher-extract
           cd ..
           
-          # 4. Copiar la estructura de "Resources" íntegra desde el tarball (Audio, SQLite, libs de Android)
+          # 4. Copiar la estructura de "Resources" íntegra
           cp -R external_libs/mcpe_mac_extracted/Resources/* dist/Trinity.app/Contents/Resources/
           
           # 5. Inyectar ANGLE y OpenSSL precompilados a Frameworks
@@ -140,10 +145,12 @@ jobs:
           find external_libs/openssl_extracted -name "libssl.dylib" -exec cp {} dist/Trinity.app/Contents/Frameworks/ \;
           find external_libs/openssl_extracted -name "libcrypto.dylib" -exec cp {} dist/Trinity.app/Contents/Frameworks/ \;
           
-          # 6. Enseñar a los ejecutables dónde buscar las librerías dinámicas
+          # 6. FIX 3: Enseñar a TODOS los ejecutables (incluyendo msa-daemon) dónde buscar las librerías dinámicas
           install_name_tool -add_rpath @loader_path/../Frameworks dist/Trinity.app/Contents/MacOS/trinity-bin || true
           install_name_tool -add_rpath @loader_path/../Frameworks dist/Trinity.app/Contents/MacOS/mcpelauncher-client || true
           install_name_tool -add_rpath @loader_path/../Frameworks dist/Trinity.app/Contents/MacOS/mcpelauncher-webview || true
+          install_name_tool -add_rpath @loader_path/../Frameworks dist/Trinity.app/Contents/MacOS/msa-daemon || true
+          install_name_tool -add_rpath @loader_path/../Frameworks dist/Trinity.app/Contents/MacOS/mcpelauncher-extract || true
           install_name_tool -id @rpath/libssl.dylib -add_rpath @loader_path/../Frameworks dist/Trinity.app/Contents/Frameworks/libssl.dylib || true
           install_name_tool -id @rpath/libcrypto.dylib -add_rpath @loader_path/../Frameworks dist/Trinity.app/Contents/Frameworks/libcrypto.dylib || true
  
