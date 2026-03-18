@@ -7,7 +7,7 @@ on:
 
 jobs:
   build:
-    runs-on: macos-latest  # Apple Silicon, macOS 15
+    runs-on: macos-latest
 
     steps:
       - name: Checkout repository
@@ -22,7 +22,6 @@ jobs:
       - name: Install Python packages (packaging, mako, pyyaml) via pip
         run: |
           python3 -m pip install --user --break-system-packages packaging mako pyyaml
-          # Ensure user site-packages are in PYTHONPATH
           echo "PYTHONPATH=$(python3 -c 'import site; print(site.getusersitepackages())')" >> $GITHUB_ENV
 
       - name: Clone Mesa fork
@@ -30,7 +29,13 @@ jobs:
           git clone https://github.com/lucamignatti/mesa.git
           cd mesa
 
-      - name: Set up environment (PATH, PKG_CONFIG_PATH, and compiler flags)
+      - name: Apply fixes to clc_helpers.cpp
+        working-directory: mesa
+        run: |
+          sed -i.bak '/^#include "clc_helpers.h"/a #undef UNUSED' src/compiler/clc/clc_helpers.cpp
+          sed -i.bak 's/Driver::GetResourcesPath/clang::GetResourcesPath/g' src/compiler/clc/clc_helpers.cpp
+
+      - name: Set up environment
         run: |
           echo "/opt/homebrew/opt/llvm/bin" >> $GITHUB_PATH
           echo "/opt/homebrew/opt/bison/bin" >> $GITHUB_PATH
