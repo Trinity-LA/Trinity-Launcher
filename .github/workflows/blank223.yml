@@ -1,0 +1,184 @@
+name: FAst (Apple Silicon ARM64) Compilar y Empaquetar para macOS 
+
+on:
+  push:
+    branches: [ appimage-rebase, master, main ]
+  workflow_dispatch:
+  pull_request:
+    branches: [ appimage-rebase, master, main ]
+
+jobs:
+  build-and-package:
+    runs-on: macos-14 # Runner nativo M1/ARM64
+
+    steps:
+      - name: Clonar repositorio Trinity
+        uses: actions/checkout@v4
+        with:
+          path: 'trinity'
+
+      - name: Clonar mcpe-extract (Codeberg)
+        run: git clone https://codeberg.org/javiercplus/mcpe-extract.git
+
+      - name: Descargar Binarios Precompilados (mcpelauncher, ANGLE y OpenSSL)
+        run: |
+          mkdir -p external_libs/angle_extracted
+          mkdir -p external_libs/openssl_extracted
+          mkdir -p external_libs/mcpe_mac_extracted
+          
+          # Descargas directas desde Hugging Face
+          curl -L "https://huggingface.co/datasets/ccoffee20/macos/resolve/main/angle-macos-latest-11.0-arm64-tar.zip" -o angle.zip
+          curl -L "https://huggingface.co/datasets/ccoffee20/macos/resolve/main/openssl-macos-latest-11.0-arm64.zip" -o openssl.zip
+          curl -L "https://huggingface.co/datasets/ccoffee20/macos/resolve/main/mcpe-mac.tar" -o mcpe-mac.tar
+          
+          # Extraer ANGLE
+          unzip angle.zip -d external_libs/angle_extracted
+          cd external_libs/angle_extracted
+          find . -name "*.tar.xz" -exec tar -xf {} \;
+          cd ../..
+          
+          # Extraer OpenSSL
+          unzip openssl.zip -d external_libs/openssl_extracted
+          
+          # Extraer mcpelauncher y librerías base
+          tar -xvf mcpe-mac.tar -C external_libs/mcpe_mac_extracted
+
+      - name: Instalar Homebrew y dependencias (Nativo ARM64)
+        run: |
+          brew update
+          brew install cmake ninja qt@6 libzip libpng pkg-config rustup-init
+          brew link --force qt@6
+          rustup-init -y
+
+      - name: Compilar Trinity (ARM64)
+        run: |
+          eval "$(/opt/homebrew/bin/brew shellenv)"
+          cd trinity
+          mkdir -p build && cd build
+          cmake .. \
+            -DCMAKE_BUILD_TYPE=Release \
+            -G Ninja \
+            -DCMAKE_PREFIX_PATH="$(brew --prefix qt@6)" \
+            -DCMAKE_OSX_DEPLOYMENT_TARGET=11.0 \
+            -DCMAKE_OSX_ARCHITECTURES=arm64 \
+            -DCMAKE_POLICY_VERSION_MINIMUM=3.5 \
+            -DCMAKE_POLICY_DEFAULT_CMP0169=OLD \
+            -Wno-dev
+          cmake --build . --parallel $(sysctl -n hw.ncpu)
+
+      - name: Compilar mcpe-extract (ARM64)
+        run: |
+          eval "$(/opt/homebrew/bin/brew shellenv)"
+          cd mcpe-extract
+          mkdir -p build && cd build
+          cmake .. \
+            -DCMAKE_BUILD_TYPE=Release \
+            -G Ninja \
+            -DCMAKE_OSX_DEPLOYMENT_TARGET=11.0 \
+            -DCMAKE_OSX_ARCHITECTURES=arm64 \
+            -DCMAKE_POLICY_VERSION_MINIMUM=3.5 \
+            -DCMAKE_POLICY_DEFAULT_CMP0169=OLD \
+            -Wno-dev
+          cmake --build . --parallel $(sysctl -n hw.ncpu)
+
+      - name: Crear Application Bundle y Empaquetar
+        run: |
+          eval "$(/opt/homebrew/bin/brew shellenv)"
+          
+          mkdir -p dist/Trinity.app/Contents/MacOS
+          mkdir -p dist/Trinity.app/Contents/Frameworks
+          mkdir -p dist/lib
+          
+          # 1. Copiar ejecutables precompilados de mcpelauncher
+          cp external_libs/mcpe_mac_extracted/MacOS/mcpelauncher-client dist/Trinity.app/Contents/MacOS/mcpelauncher-client
+          cp external_libs/mcpe_mac_extracted/MacOS/mcpelauncher-webview dist/Trinity.app/Contents/MacOS/
+          cp external_libs/mcpe_mac_extracted/MacOS/msa-daemon dist/Trinity.app/Contents/MacOS/ || true
+          
+          # 2. Copiar los que sí compilamos
+          cp mcpe-extract/build/mcpelauncher-extract dist/Trinity.app/Contents/MacOS/
+          cp trinity/build/app/trinity dist/Trinity.app/Contents/MacOS/trinity-bin
+          
+          # 3. SCRIPT WRAPPER BLINDADO (ANGLE + OPENGL + RUTAS)
+          cat << 'EOF' > dist/Trinity.app/Contents/MacOS/trinity
+          #!/bin/bash
+          DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
+          
+          # Forzar capa de aceleración en Qt y SDL
+          export QT_MAC_WANTS_LAYER=1
+          export QT_QPA_PLATFORM=cocoa
+          export SDL_HINT_RENDER_DRIVER=metal
+          
+          # Evitar colapsos gráficos forzando ANGLE hacia Metal nativo
+          export ANGLE_DEFAULT_PLATFORM=metal
+          
+          # Inyectar rutas de ANGLE, OpenSSL y dependencias de Android (FMOD/Audio) directo a la memoria
+          export DYLD_LIBRARY_PATH="$DIR/../Frameworks:$DIR/../Resources/mcpelauncher/lib/native/arm64-v8a:$DYLD_LIBRARY_PATH"
+          export DYLD_FRAMEWORK_PATH="$DIR/../Frameworks:$DYLD_FRAMEWORK_PATH"
+          
+          exec "$DIR/trinity-bin" "$@"
+          EOF
+          chmod +x dist/Trinity.app/Contents/MacOS/trinity
+          
+          ln -s /opt/homebrew/opt/qtsvg/lib/QtSvg.framework dist/lib/
+          ln -s /opt/homebrew/opt/qtvirtualkeyboard/lib/QtVirtualKeyboard.framework dist/lib/
+          ln -s /opt/homebrew/opt/qtvirtualkeyboard/lib/QtVirtualKeyboardQml.framework dist/lib/
+          
+          cd dist
+          $(brew --prefix qt@6)/bin/macdeployqt Trinity.app \
+            -executable=Trinity.app/Contents/MacOS/trinity-bin \
+            -executable=Trinity.app/Contents/MacOS/mcpelauncher-client \
+            -executable=Trinity.app/Contents/MacOS/mcpelauncher-webview \
+            -executable=Trinity.app/Contents/MacOS/mcpelauncher-extract
+          cd ..
+          
+          # 4. Copiar la estructura de "Resources" íntegra desde el tarball (Audio, SQLite, libs de Android)
+          cp -R external_libs/mcpe_mac_extracted/Resources/* dist/Trinity.app/Contents/Resources/
+          
+          # 5. Inyectar ANGLE y OpenSSL precompilados a Frameworks
+          find external_libs/angle_extracted -name "libEGL.dylib" -exec cp {} dist/Trinity.app/Contents/Frameworks/ \;
+          find external_libs/angle_extracted -name "libGLESv2.dylib" -exec cp {} dist/Trinity.app/Contents/Frameworks/ \;
+          find external_libs/openssl_extracted -name "libssl.dylib" -exec cp {} dist/Trinity.app/Contents/Frameworks/ \;
+          find external_libs/openssl_extracted -name "libcrypto.dylib" -exec cp {} dist/Trinity.app/Contents/Frameworks/ \;
+          
+          # 6. Enseñar a los ejecutables dónde buscar las librerías dinámicas
+          install_name_tool -add_rpath @loader_path/../Frameworks dist/Trinity.app/Contents/MacOS/trinity-bin || true
+          install_name_tool -add_rpath @loader_path/../Frameworks dist/Trinity.app/Contents/MacOS/mcpelauncher-client || true
+          install_name_tool -add_rpath @loader_path/../Frameworks dist/Trinity.app/Contents/MacOS/mcpelauncher-webview || true
+          install_name_tool -id @rpath/libssl.dylib -add_rpath @loader_path/../Frameworks dist/Trinity.app/Contents/Frameworks/libssl.dylib || true
+          install_name_tool -id @rpath/libcrypto.dylib -add_rpath @loader_path/../Frameworks dist/Trinity.app/Contents/Frameworks/libcrypto.dylib || true
+ 
+          cat <<EOF > dist/Trinity.app/Contents/Info.plist
+          <?xml version="1.0" encoding="UTF-8"?>
+          <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+          <plist version="1.0">
+          <dict>
+              <key>CFBundleExecutable</key>
+              <string>trinity</string>
+              <key>CFBundleIdentifier</key>
+              <string>com.trench.trinity.launcher</string>
+              <key>CFBundleName</key>
+              <string>Trinity</string>
+              <key>CFBundleIconFile</key>
+              <string>AppIcon</string>
+              <key>CFBundleShortVersionString</key>
+              <string>1.0</string>
+              <key>LSMinimumSystemVersion</key>
+              <string>11.0</string>
+              <key>NSHighResolutionCapable</key>
+              <true/>
+          </dict>
+          </plist>
+          EOF
+          
+          cp trinity/resources/branding/com.trench.trinity.launcher.icns dist/Trinity.app/Contents/Resources/AppIcon.icns
+          
+          cd dist
+          codesign --force --deep --sign - Trinity.app
+          hdiutil create -volname "Trinity Launcher" -srcfolder Trinity.app -ov -format UDZO Trinity.dmg
+          
+      - name: Subir instalador DMG
+        uses: actions/upload-artifact@v4
+        with:
+          name: trinity-mcpelauncher-macos-arm64-dmg
+          path: dist/Trinity.dmg
+          if-no-files-found: error
