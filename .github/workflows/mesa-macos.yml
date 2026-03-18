@@ -7,7 +7,7 @@ on:
 
 jobs:
   build:
-    runs-on: macos-latest  # latest Apple Silicon runner (macOS 15)
+    runs-on: macos-latest  # Apple Silicon, macOS 15
 
     steps:
       - name: Checkout repository
@@ -17,7 +17,7 @@ jobs:
         run: |
           brew update
           brew install meson ninja python3 bison flex llvm glslang spirv-tools molten-vk \
-                       libclc python-packaging
+                       libclc python-packaging spirv-llvm-translator
 
       - name: Install Python packages (packaging, mako, pyyaml) via pip
         run: |
