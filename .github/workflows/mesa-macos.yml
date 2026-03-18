@@ -29,15 +29,14 @@ jobs:
           git clone https://github.com/lucamignatti/mesa.git
           cd mesa
 
-      - name: Apply fixes to clc_helpers.cpp
+     - name: Apply fixes to clc_helpers.cpp
         working-directory: mesa
         run: |
           # Insert #undef UNUSED after #include "clc_helpers.h"
-          sed -i.bak '/#include "clc_helpers.h"/a\
-          #undef UNUSED' src/compiler/clc/clc_helpers.cpp
+          perl -i.bak -pe 'if (/^#include "clc_helpers.h"/) { $_ .= "#undef UNUSED\n"; }' src/compiler/clc/clc_helpers.cpp
           # Fix namespace for GetResourcesPath
-          sed -i.bak 's/Driver::GetResourcesPath/clang::GetResourcesPath/g' src/compiler/clc/clc_helpers.cpp
-          # Add #define UNUSED at the end of the file (so it's defined for later Mesa code)
+          perl -i.bak -pe 's/Driver::GetResourcesPath/clang::GetResourcesPath/g' src/compiler/clc/clc_helpers.cpp
+          # Restore UNUSED definition at the end of the file for Mesa code that uses ASSERTED
           echo '#define UNUSED __attribute__((unused))' >> src/compiler/clc/clc_helpers.cpp
 
       - name: Set up environment
