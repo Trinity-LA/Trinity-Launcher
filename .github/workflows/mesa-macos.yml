@@ -29,7 +29,7 @@ jobs:
           git clone https://github.com/lucamignatti/mesa.git
           cd mesa
 
-     - name: Apply fixes to clc_helpers.cpp
+      - name: Apply fixes to clc_helpers.cpp
         working-directory: mesa
         run: |
           # Insert #undef UNUSED after #include "clc_helpers.h"
