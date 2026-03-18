@@ -32,11 +32,13 @@ jobs:
       - name: Apply fixes to clc_helpers.cpp
         working-directory: mesa
         run: |
-          # Add #undef UNUSED after the include line (macOS sed syntax)
-          sed -i.bak '/#include "clc_helpers.h"/s/$/\
-          #undef UNUSED/' src/compiler/clc/clc_helpers.cpp
+          # Insert #undef UNUSED after #include "clc_helpers.h"
+          sed -i.bak '/#include "clc_helpers.h"/a\
+          #undef UNUSED' src/compiler/clc/clc_helpers.cpp
           # Fix namespace for GetResourcesPath
           sed -i.bak 's/Driver::GetResourcesPath/clang::GetResourcesPath/g' src/compiler/clc/clc_helpers.cpp
+          # Add #define UNUSED at the end of the file (so it's defined for later Mesa code)
+          echo '#define UNUSED __attribute__((unused))' >> src/compiler/clc/clc_helpers.cpp
 
       - name: Set up environment
         run: |
