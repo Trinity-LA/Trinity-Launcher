@@ -1,4 +1,4 @@
-name: FAst (Apple Silicon ARM64) Compilar y Empaquetar para macOS 
+name: Lite (Apple Silicon ARM64) Compilar y Empaquetar para macOS 
 
 on:
   push:
