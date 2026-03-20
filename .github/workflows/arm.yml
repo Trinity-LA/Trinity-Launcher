@@ -60,6 +60,10 @@ jobs:
           
           # 3. Eliminar la función qt_standard_project_setup (exclusiva de Qt6) en TODOS lados
           find . -type f -name "CMakeLists.txt" -exec sed -i '' '/qt_standard_project_setup/,/pt_BR)/d' {} +
+          
+          # 4. Cambiar comandos exclusivos de Qt6 por los estándares de CMake para Qt5
+          find . -type f -name "CMakeLists.txt" -exec sed -i '' 's/qt_add_executable/add_executable/g' {} +
+          find . -type f -name "CMakeLists.txt" -exec sed -i '' 's/qt_add_library/add_library/g' {} +
 
       - name: Compilar Trinity (ARM64)
         run: |
