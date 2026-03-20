@@ -45,28 +45,10 @@ jobs:
       - name: Instalar Homebrew y dependencias (Nativo ARM64)
         run: |
           brew update
-          brew install cmake ninja qt@5 libzip libpng pkg-config openssl@3 rustup-init
-          brew link --force qt@5
+          # Volvemos a la versión moderna Qt6
+          brew install cmake ninja qt@6 libzip libpng pkg-config openssl@3 rustup-init
+          brew link --force qt@6
           rustup-init -y
-
-      - name: Parchear Trinity para usar Qt5
-        run: |
-          cd trinity
-          # 1. Cambiar referencias de Qt6 a Qt5
-          find . -type f -name "CMakeLists.txt" -exec sed -i '' 's/Qt6/Qt5/g' {} +
-          
-          # 2. Renombrar macro de recursos
-          find . -type f -name "CMakeLists.txt" -exec sed -i '' 's/qt_add_resources/qt5_add_resources/g' {} +
-          
-          # 3. Eliminar qt_standard_project_setup
-          find . -type f -name "CMakeLists.txt" -exec sed -i '' '/qt_standard_project_setup/,/pt_BR)/d' {} +
-          
-          # 4. Cambiar comandos de ejecutables y librerías
-          find . -type f -name "CMakeLists.txt" -exec sed -i '' 's/qt_add_executable/add_executable/g' {} +
-          find . -type f -name "CMakeLists.txt" -exec sed -i '' 's/qt_add_library/add_library/g' {} +
-          
-          # 5. Eliminar qt_finalize_executable
-          find . -type f -name "CMakeLists.txt" -exec sed -i '' '/qt_finalize_executable/d' {} +
 
       - name: Compilar Trinity (ARM64)
         run: |
@@ -76,7 +58,7 @@ jobs:
           cmake .. \
             -DCMAKE_BUILD_TYPE=Release \
             -G Ninja \
-            -DCMAKE_PREFIX_PATH="$(brew --prefix qt@5)" \
+            -DCMAKE_PREFIX_PATH="$(brew --prefix qt@6)" \
             -DCMAKE_OSX_DEPLOYMENT_TARGET=11.0 \
             -DCMAKE_OSX_ARCHITECTURES=arm64 \
             -DCMAKE_POLICY_VERSION_MINIMUM=3.5 \
@@ -91,12 +73,15 @@ jobs:
           cd mcpelauncher
           mkdir -p build && cd build
           OPENSSL_DIR="$(brew --prefix openssl@3)"
+          # Añadidas las banderas para desactivar WEBVIEW y UI
           cmake .. \
             -DCMAKE_BUILD_TYPE=Release \
             -G Ninja \
-            -DCMAKE_PREFIX_PATH="$(brew --prefix qt@5)" \
+            -DCMAKE_PREFIX_PATH="$(brew --prefix qt@6)" \
             -DJNI_USE_JNIVM=ON \
             -DGAMEWINDOW_SYSTEM=SDL3 \
+            -DBUILD_WEBVIEW=OFF \
+            -DBUILD_UI=OFF \
             -DCMAKE_OSX_DEPLOYMENT_TARGET=11.0 \
             -DCMAKE_OSX_ARCHITECTURES=arm64 \
             -DCMAKE_POLICY_VERSION_MINIMUM=3.5 \
@@ -132,7 +117,6 @@ jobs:
           mkdir -p dist/lib
           
           cp mcpelauncher/build/mcpelauncher-client/mcpelauncher-client dist/Trinity.app/Contents/MacOS/mcpelauncher-client
-          cp mcpelauncher/build/mcpelauncher-webview/mcpelauncher-webview dist/Trinity.app/Contents/MacOS/
           cp mcpe-extract/build/mcpelauncher-extract dist/Trinity.app/Contents/MacOS/
           cp trinity/build/app/trinity dist/Trinity.app/Contents/MacOS/trinity-bin
           
@@ -148,7 +132,6 @@ jobs:
           export ANGLE_DEFAULT_PLATFORM=metal
           
           export MSA_DAEMON_PATH="$DIR/msa-daemon"
-          export XAL_WEBVIEW_QT_PATH="$DIR/mcpelauncher-webview"
           
           export DYLD_LIBRARY_PATH="$DIR/../Frameworks:$DIR/../Resources/mcpelauncher/lib/native/arm64-v8a:$DYLD_LIBRARY_PATH"
           export DYLD_FRAMEWORK_PATH="$DIR/../Frameworks:$DYLD_FRAMEWORK_PATH"
@@ -161,14 +144,13 @@ jobs:
           EOF
           chmod +x dist/Trinity.app/Contents/MacOS/trinity
           
-          ln -s $(brew --prefix qt@5)/lib/QtSvg.framework dist/lib/ || true
-          ln -s $(brew --prefix qt@5)/lib/QtVirtualKeyboard.framework dist/lib/ || true
+          ln -s $(brew --prefix qt@6)/lib/QtSvg.framework dist/lib/ || true
+          ln -s $(brew --prefix qt@6)/lib/QtVirtualKeyboard.framework dist/lib/ || true
           
           cd dist
-          $(brew --prefix qt@5)/bin/macdeployqt Trinity.app \
+          $(brew --prefix qt@6)/bin/macdeployqt Trinity.app \
             -executable=Trinity.app/Contents/MacOS/trinity-bin \
             -executable=Trinity.app/Contents/MacOS/mcpelauncher-client \
-            -executable=Trinity.app/Contents/MacOS/mcpelauncher-webview \
             -executable=Trinity.app/Contents/MacOS/mcpelauncher-extract
           cd ..
           
@@ -180,7 +162,6 @@ jobs:
           
           install_name_tool -add_rpath @loader_path/../Frameworks dist/Trinity.app/Contents/MacOS/trinity-bin || true
           install_name_tool -add_rpath @loader_path/../Frameworks dist/Trinity.app/Contents/MacOS/mcpelauncher-client || true
-          install_name_tool -add_rpath @loader_path/../Frameworks dist/Trinity.app/Contents/MacOS/mcpelauncher-webview || true
           install_name_tool -add_rpath @loader_path/../Frameworks dist/Trinity.app/Contents/MacOS/msa-daemon || true
           install_name_tool -add_rpath @loader_path/../Frameworks dist/Trinity.app/Contents/MacOS/mcpelauncher-extract || true
  
