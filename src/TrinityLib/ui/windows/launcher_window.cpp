@@ -1113,8 +1113,8 @@ QWidget *LauncherWindow::createSettingsPage() {
 
         QSettings settings;
         QString systemLang = QLocale::system().name().split('_').first();
-        if (!QFile::exists(":/i18n/trinity_" + systemLang + ".qm") && systemLang != "es")
-            systemLang = "es";
+        if (!QFile::exists(":/i18n/trinity_" + systemLang + ".qm") && systemLang != "en")
+            systemLang = "en";
         QString currentLang = settings.value("language", systemLang).toString();
         int langIdx = settingsLanguageCombo->findData(currentLang);
         if (langIdx != -1)
