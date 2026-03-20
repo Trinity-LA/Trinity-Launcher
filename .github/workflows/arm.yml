@@ -21,7 +21,7 @@ jobs:
         uses: actions/checkout@v4
         with:
           repository: 'minecraft-linux/mcpelauncher-manifest'
-          ref: 'qt6'
+          ref: 'ng' # <-- CAMBIO A LA RAMA NG
           submodules: 'recursive'
           path: 'mcpelauncher'
 
@@ -45,9 +45,21 @@ jobs:
       - name: Instalar Homebrew y dependencias (Nativo ARM64)
         run: |
           brew update
-          brew install cmake ninja qt@6 libzip libpng pkg-config openssl@3 rustup-init
-          brew link --force qt@6
+          brew install cmake ninja qt@5 libzip libpng pkg-config openssl@3 rustup-init # <-- CAMBIO A QT5
+          brew link --force qt@5
           rustup-init -y
+
+      - name: Parchear Trinity para usar Qt5
+        run: |
+          cd trinity
+          # 1. Cambiar todas las referencias de Qt6 a Qt5 en TODOS los CMakeLists.txt
+          find . -type f -name "CMakeLists.txt" -exec sed -i '' 's/Qt6/Qt5/g' {} +
+          
+          # 2. Renombrar la macro de recursos a la versión de Qt5 en TODOS lados
+          find . -type f -name "CMakeLists.txt" -exec sed -i '' 's/qt_add_resources/qt5_add_resources/g' {} +
+          
+          # 3. Eliminar la función qt_standard_project_setup (exclusiva de Qt6) en TODOS lados
+          find . -type f -name "CMakeLists.txt" -exec sed -i '' '/qt_standard_project_setup/,/pt_BR)/d' {} +
 
       - name: Compilar Trinity (ARM64)
         run: |
@@ -57,7 +69,7 @@ jobs:
           cmake .. \
             -DCMAKE_BUILD_TYPE=Release \
             -G Ninja \
-            -DCMAKE_PREFIX_PATH="$(brew --prefix qt@6)" \
+            -DCMAKE_PREFIX_PATH="$(brew --prefix qt@5)" \
             -DCMAKE_OSX_DEPLOYMENT_TARGET=11.0 \
             -DCMAKE_OSX_ARCHITECTURES=arm64 \
             -DCMAKE_POLICY_VERSION_MINIMUM=3.5 \
@@ -75,7 +87,7 @@ jobs:
           cmake .. \
             -DCMAKE_BUILD_TYPE=Release \
             -G Ninja \
-            -DCMAKE_PREFIX_PATH="$(brew --prefix qt@6)" \
+            -DCMAKE_PREFIX_PATH="$(brew --prefix qt@5)" \
             -DJNI_USE_JNIVM=ON \
             -DGAMEWINDOW_SYSTEM=SDL3 \
             -DCMAKE_OSX_DEPLOYMENT_TARGET=11.0 \
@@ -112,30 +124,49 @@ jobs:
           mkdir -p dist/Trinity.app/Contents/Resources/mcpelauncher/lib/arm64-v8a
           mkdir -p dist/lib
           
-          # Renombrado a mcpelauncher-client puro
+          # Copiar los binarios recién compilados
           cp mcpelauncher/build/mcpelauncher-client/mcpelauncher-client dist/Trinity.app/Contents/MacOS/mcpelauncher-client
           cp mcpelauncher/build/mcpelauncher-webview/mcpelauncher-webview dist/Trinity.app/Contents/MacOS/
           cp mcpe-extract/build/mcpelauncher-extract dist/Trinity.app/Contents/MacOS/
           cp trinity/build/app/trinity dist/Trinity.app/Contents/MacOS/trinity-bin
           
-          # Script wrapper modificado para inyectar rutas gráficas a SDL
+          # Buscar y copiar el msa-daemon compilado, esté donde esté en la carpeta build
+          find mcpelauncher/build -type f -name "msa-daemon" -exec cp {} dist/Trinity.app/Contents/MacOS/ \; || true
+          
+          # SCRIPT WRAPPER BLINDADO (Rutas absolutas, Gráficos Forzados y Permisos de Escritura para PlayFab)
           cat << 'EOF' > dist/Trinity.app/Contents/MacOS/trinity
           #!/bin/bash
-          DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
-          export ANGLE_DEFAULT_PLATFORM=metal
+          DIR="$( cd "$( dirname "${BASH_SOURCE}" )" && pwd )"
+          
+          # Aceleración gráfica forzada
           export QT_MAC_WANTS_LAYER=1
-          export DYLD_LIBRARY_PATH="$DIR/../Frameworks:$DYLD_LIBRARY_PATH"
+          export QT_QPA_PLATFORM=cocoa
+          export SDL_HINT_RENDER_DRIVER=metal
+          export ANGLE_DEFAULT_PLATFORM=metal
+          
+          # Rutas absolutas para los demonios de Xbox/Microsoft (evita secuestro de VFS)
+          export MSA_DAEMON_PATH="$DIR/msa-daemon"
+          export XAL_WEBVIEW_QT_PATH="$DIR/mcpelauncher-webview"
+          
+          # Inyección de dependencias gráficas y de audio
+          export DYLD_LIBRARY_PATH="$DIR/../Frameworks:$DIR/../Resources/mcpelauncher/lib/native/arm64-v8a:$DYLD_LIBRARY_PATH"
           export DYLD_FRAMEWORK_PATH="$DIR/../Frameworks:$DYLD_FRAMEWORK_PATH"
+          
+          # Salvavidas para SQLite/PlayFab: Mover el directorio de ejecución a una zona de lectura/escritura nativa
+          DATA_DIR="$HOME/Library/Application Support/mcpelauncher"
+          mkdir -p "$DATA_DIR"
+          cd "$DATA_DIR"
+          
           exec "$DIR/trinity-bin" "$@"
           EOF
           chmod +x dist/Trinity.app/Contents/MacOS/trinity
           
-          ln -s /opt/homebrew/opt/qtsvg/lib/QtSvg.framework dist/lib/
-          ln -s /opt/homebrew/opt/qtvirtualkeyboard/lib/QtVirtualKeyboard.framework dist/lib/
-          ln -s /opt/homebrew/opt/qtvirtualkeyboard/lib/QtVirtualKeyboardQml.framework dist/lib/
+          # Enlaces simbólicos a Frameworks usando rutas dinámicas de Homebrew para Qt5
+          ln -s $(brew --prefix qt@5)/lib/QtSvg.framework dist/lib/ || true
+          ln -s $(brew --prefix qt@5)/lib/QtVirtualKeyboard.framework dist/lib/ || true
           
           cd dist
-          $(brew --prefix qt@6)/bin/macdeployqt Trinity.app \
+          $(brew --prefix qt@5)/bin/macdeployqt Trinity.app \
             -executable=Trinity.app/Contents/MacOS/trinity-bin \
             -executable=Trinity.app/Contents/MacOS/mcpelauncher-client \
             -executable=Trinity.app/Contents/MacOS/mcpelauncher-webview \
@@ -150,10 +181,12 @@ jobs:
           find external_libs/angle_extracted -name "libEGL.dylib" -exec cp {} dist/Trinity.app/Contents/Frameworks/ \;
           find external_libs/angle_extracted -name "libGLESv2.dylib" -exec cp {} dist/Trinity.app/Contents/Frameworks/ \;
           
-          # Enseñar a los ejecutables dónde buscar las librerías de ANGLE
+          # Enseñar a los ejecutables dónde buscar las librerías de ANGLE y dependencias
           install_name_tool -add_rpath @loader_path/../Frameworks dist/Trinity.app/Contents/MacOS/trinity-bin || true
           install_name_tool -add_rpath @loader_path/../Frameworks dist/Trinity.app/Contents/MacOS/mcpelauncher-client || true
           install_name_tool -add_rpath @loader_path/../Frameworks dist/Trinity.app/Contents/MacOS/mcpelauncher-webview || true
+          install_name_tool -add_rpath @loader_path/../Frameworks dist/Trinity.app/Contents/MacOS/msa-daemon || true
+          install_name_tool -add_rpath @loader_path/../Frameworks dist/Trinity.app/Contents/MacOS/mcpelauncher-extract || true
  
           cat <<EOF > dist/Trinity.app/Contents/Info.plist
           <?xml version="1.0" encoding="UTF-8"?>
