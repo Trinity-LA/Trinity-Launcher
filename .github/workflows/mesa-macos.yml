@@ -32,14 +32,14 @@ jobs:
       - name: Apply fixes to clc_helpers.cpp
         working-directory: mesa
         run: |
-          # Corregir el espacio de nombres de Clang
+          # 1. Proteger los encabezados de Clang eliminando UNUSED
+          perl -i.bak -pe 's/^(#include "clc_helpers\.h")/#undef UNUSED\n$1/' src/compiler/clc/clc_helpers.cpp
+          
+          # 2. Corregir el espacio de nombres de Clang
           perl -i.bak -pe 's/Driver::GetResourcesPath/clang::GetResourcesPath/g' src/compiler/clc/clc_helpers.cpp
           
-          # Desactivar UNUSED iterativamente justo antes de cada inclusión directa de Clang
-          perl -i.bak -pe 's/^(#include <clang\/)/#undef UNUSED\n$1/' src/compiler/clc/clc_helpers.cpp
-          
-          # Restaurar UNUSED al final del archivo de forma segura para las macros de Mesa (como ASSERTED)
-          echo -e "\n#ifndef UNUSED\n#define UNUSED __attribute__((unused))\n#endif" >> src/compiler/clc/clc_helpers.cpp
+          # 3. Eliminar la dependencia de la macro reemplazándola por sintaxis nativa de C++17
+          perl -i.bak -pe 's/ASSERTED/[[maybe_unused]]/g' src/compiler/clc/clc_helpers.cpp
       - name: Create native.ini with Homebrew dependencies
         working-directory: mesa
         run: |
