@@ -34,10 +34,12 @@ jobs:
         run: |
           # Insert #undef UNUSED after #include "clc_helpers.h"
           perl -i.bak -pe 'if (/^#include "clc_helpers.h"/) { $_ .= "#undef UNUSED\n"; }' src/compiler/clc/clc_helpers.cpp
+          
           # Fix namespace for GetResourcesPath
           perl -i.bak -pe 's/Driver::GetResourcesPath/clang::GetResourcesPath/g' src/compiler/clc/clc_helpers.cpp
-          # Restore UNUSED definition at the end of the file for Mesa code that uses ASSERTED
-          echo '#define UNUSED __attribute__((unused))' >> src/compiler/clc/clc_helpers.cpp
+          
+          # Restore UNUSED definition immediately after the last #include
+          awk '/^#include/ {last=NR} {lines[NR]=$0} END {for(i=1;i<=NR;i++) {print lines[i]; if(i==last) print "\n#define UNUSED __attribute__((unused))"}}' src/compiler/clc/clc_helpers.cpp > tmp.cpp && mv tmp.cpp src/compiler/clc/clc_helpers.cpp
 
       - name: Set up environment
         run: |
