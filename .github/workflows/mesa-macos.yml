@@ -32,14 +32,28 @@ jobs:
       - name: Apply fixes to clc_helpers.cpp
         working-directory: mesa
         run: |
-          # 1. Eliminar UNUSED justo antes de incluir los encabezados de Clang
-          perl -i.bak -pe 's/^#include "clc_helpers\.h"/#undef UNUSED\n#include "clc_helpers.h"/' src/compiler/clc/clc_helpers.cpp
-          
-          # 2. Corregir el espacio de nombres
+          # Fix namespace for GetResourcesPath
           perl -i.bak -pe 's/Driver::GetResourcesPath/clang::GetResourcesPath/g' src/compiler/clc/clc_helpers.cpp
           
-          # 3. Restaurar UNUSED al final del archivo para el código nativo de Mesa
-          echo -e "\n#define UNUSED __attribute__((unused))" >> src/compiler/clc/clc_helpers.cpp
+          # Safely wrap Clang/LLVM includes to undefine and redefine UNUSED
+          awk '
+          BEGIN { in_includes = 1; undef_done = 0; }
+          /^#include <clang/ && !undef_done {
+              print "#undef UNUSED"
+              undef_done = 1
+          }
+          /^#/ || /^[ \t]*$/ { 
+              print $0
+              next
+          }
+          in_includes == 1 {
+              print "#define UNUSED __attribute__((unused))"
+              in_includes = 0
+              print $0
+              next
+          }
+          { print $0 }
+          ' src/compiler/clc/clc_helpers.cpp > tmp.cpp && mv tmp.cpp src/compiler/clc/clc_helpers.cpp
           
       - name: Set up environment
         run: |
