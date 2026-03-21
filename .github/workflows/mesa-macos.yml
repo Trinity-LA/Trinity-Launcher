@@ -62,12 +62,11 @@ jobs:
             -Dprefix=$HOME/mesa-native \
             -Dbuildtype=release \
             -Dplatforms=macos \
-            -Degl-native-platform=surfaceless \
-            -Degl=enabled \
+            -Degl=disabled \
             -Dgallium-drivers=zink \
             -Dvulkan-drivers=kosmickrisp \
-            -Dgles1=enabled \
-            -Dgles2=enabled \
+            -Dgles1=disabled \
+            -Dgles2=disabled \
             -Dglx=disabled \
             -Dgbm=disabled \
             -Dmoltenvk-dir=/opt/homebrew/opt/molten-vk
