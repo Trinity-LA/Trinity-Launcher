@@ -89,6 +89,11 @@ jobs:
           if [ -f /opt/homebrew/lib/libvulkan.1.dylib ]; then
             cp /opt/homebrew/lib/libvulkan.1.dylib $HOME/mesa-native/lib/
           fi
+      - name: Verify Vulkan Drivers (Smoke Test)
+        run: |
+          export VK_ICD_FILENAMES=$HOME/mesa-native/share/vulkan/icd.d/kosmickrisp_icd.aarch64.json
+          export DYLD_LIBRARY_PATH=$HOME/mesa-native/lib
+          /opt/homebrew/bin/vulkaninfo --summary
 
       - name: Upload built Mesa as artifact
         uses: actions/upload-artifact@v4
