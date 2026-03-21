@@ -19,27 +19,33 @@ jobs:
           brew install meson ninja python3 bison flex llvm glslang spirv-tools molten-vk \
                        libclc python-packaging spirv-llvm-translator
 
-      - name: Install Python packages (packaging, mako, pyyaml) via pip
+      - name: Install Python packages
         run: |
           python3 -m pip install --user --break-system-packages packaging mako pyyaml
           echo "PYTHONPATH=$(python3 -c 'import site; print(site.getusersitepackages())')" >> $GITHUB_ENV
 
-      - name: Clone Mesa fork
+      - name: Clone official Mesa repository
         run: |
-          git clone https://github.com/lucamignatti/mesa.git
+          git clone https://gitlab.freedesktop.org/mesa/mesa.git
           cd mesa
 
-      - name: Apply fixes to clc_helpers.cpp
+      - name: Apply LLVM 22 fixes conditionally
         working-directory: mesa
         run: |
-          # 1. Proteger los encabezados de Clang eliminando UNUSED
-          perl -i.bak -pe 's/^(#include "clc_helpers\.h")/#undef UNUSED\n$1/' src/compiler/clc/clc_helpers.cpp
-          
-          # 2. Corregir el espacio de nombres de Clang
-          perl -i.bak -pe 's/Driver::GetResourcesPath/clang::GetResourcesPath/g' src/compiler/clc/clc_helpers.cpp
-          
-          # 3. Eliminar la dependencia de la macro reemplazándola por sintaxis nativa de C++17
-          perl -i.bak -pe 's/ASSERTED/[[maybe_unused]]/g' src/compiler/clc/clc_helpers.cpp
+          if [ -f src/compiler/clc/clc_helpers.cpp ]; then
+            perl -i.bak -pe 's/(.*#include.*clang\/.*)/#undef UNUSED\n$1/g' src/compiler/clc/clc_helpers.cpp
+            perl -i.bak -pe 's/ASSERTED/[[maybe_unused]]/g' src/compiler/clc/clc_helpers.cpp
+            perl -i.bak -pe 's/Driver::GetResourcesPath/clang::GetResourcesPath/g' src/compiler/clc/clc_helpers.cpp
+          fi
+
+      - name: Set up environment
+        run: |
+          echo "/opt/homebrew/opt/llvm/bin" >> $GITHUB_PATH
+          echo "/opt/homebrew/opt/bison/bin" >> $GITHUB_PATH
+          echo "PKG_CONFIG_PATH=/opt/homebrew/lib/pkgconfig" >> $GITHUB_ENV
+          echo "LDFLAGS=-L/opt/homebrew/opt/llvm/lib" >> $GITHUB_ENV
+          echo "CPPFLAGS=-I/opt/homebrew/opt/llvm/include" >> $GITHUB_ENV
+
       - name: Create native.ini with Homebrew dependencies
         working-directory: mesa
         run: |
@@ -77,9 +83,13 @@ jobs:
           mkdir -p $HOME/mesa-native/lib/dri
           cd $HOME/mesa-native/lib/dri
           GALLIUM_LIB=$(ls $HOME/mesa-native/lib/libgallium-*.dylib | head -1)
-          ln -sf "$GALLIUM_LIB" zink_dri.so
-          ln -sf "$GALLIUM_LIB" swrast_dri.so
-          cp /opt/homebrew/lib/libvulkan.1.dylib $HOME/mesa-native/lib/
+          if [ -n "$GALLIUM_LIB" ]; then
+            ln -sf "$GALLIUM_LIB" zink_dri.so
+            ln -sf "$GALLIUM_LIB" swrast_dri.so
+          fi
+          if [ -f /opt/homebrew/lib/libvulkan.1.dylib ]; then
+            cp /opt/homebrew/lib/libvulkan.1.dylib $HOME/mesa-native/lib/
+          fi
 
       - name: Upload built Mesa as artifact
         uses: actions/upload-artifact@v4
