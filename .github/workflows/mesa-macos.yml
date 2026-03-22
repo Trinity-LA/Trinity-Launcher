@@ -91,7 +91,16 @@ jobs:
           fi
       - name: Verify Vulkan Drivers (Smoke Test)
         run: |
-          export VK_ICD_FILENAMES=$HOME/mesa-native/share/vulkan/icd.d/kosmickrisp_icd.aarch64.json
+          # Buscar dinámicamente el archivo JSON del ICD generado
+          ICD_JSON=$(find $HOME/mesa-native/share/vulkan/icd.d -name "*_icd.*.json" | head -n 1)
+          
+          if [ -z "$ICD_JSON" ]; then
+            echo "Error: No se encontró ningún archivo JSON de Vulkan. El controlador no se compiló."
+            exit 1
+          fi
+          
+          echo "Cargando controlador Vulkan desde: $ICD_JSON"
+          export VK_ICD_FILENAMES=$ICD_JSON
           export DYLD_LIBRARY_PATH=$HOME/mesa-native/lib
           vulkaninfo --summary
 
