@@ -58,7 +58,6 @@ jobs:
           #!/bin/sh
           HERE="$(dirname "$(readlink -f "$0")")"
           export LD_LIBRARY_PATH="$HERE/usr/lib:$LD_LIBRARY_PATH"
-          export XDG_DATA_DIRS="$HERE/usr/share:${XDG_DATA_DIRS:-/usr/share}"
           alias mcpelauncher-webview="$HERE/usr/bin/mcpelauncher-webview" &
           export QT_QPA_PLATFORM="xcb"
           export GDK_BACKEND="x11"
