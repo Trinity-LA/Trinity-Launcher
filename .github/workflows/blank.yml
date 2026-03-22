@@ -43,14 +43,17 @@ jobs:
           
           # Buscamos la librería libzip en el sistema
           LIBZIP_REAL=$(find /usr/lib/x86_64-linux-gnu -name "libzip.so*" -type f | head -n 1)
-          
-          # COPIA FÍSICA: Esto evita errores de permisos en 'strip' y asegura la portabilidad
           cp -v "$LIBZIP_REAL" APPIMAGE-TRINITY/usr/lib/libzip.so.5
-          
-          # Aseguramos que el archivo tenga permisos de escritura para que linuxdeploy pueda usar 'strip'
           chmod +w APPIMAGE-TRINITY/usr/lib/libzip.so.5
+          
           mkdir -p APPIMAGE-TRINITY/usr/share/fonts
           wget https://github.com/Trinity-LA/Trinity-Launcher/raw/refs/heads/appimage-rebase/resources/fonts/TerminessNerdFont-Bold.ttf -O APPIMAGE-TRINITY/usr/share/fonts/TerminessNerdFont-Bold.ttf 
+
+          # Inyectar módulos QML manualmente para evitar el renderizado en blanco
+          mkdir -p APPIMAGE-TRINITY/usr/qml
+          cp -r /usr/lib/qt6/qml/QtQuick APPIMAGE-TRINITY/usr/qml/
+          cp -r /usr/lib/qt6/qml/QtQml APPIMAGE-TRINITY/usr/qml/
+          cp -r /usr/lib/qt6/qml/Qt APPIMAGE-TRINITY/usr/qml/ 2>/dev/null || true
 
       - name: Crear script AppRun
         run: |
@@ -58,6 +61,8 @@ jobs:
           #!/bin/sh
           HERE="$(dirname "$(readlink -f "$0")")"
           export LD_LIBRARY_PATH="$HERE/usr/lib:$LD_LIBRARY_PATH"
+          export QML2_IMPORT_PATH="$HERE/usr/qml"
+          export QML_IMPORT_PATH="$HERE/usr/qml"
           alias mcpelauncher-webview="$HERE/usr/bin/mcpelauncher-webview" &
           export QT_QPA_PLATFORM="xcb"
           export GDK_BACKEND="x11"
@@ -81,9 +86,6 @@ jobs:
         run: |
           export QMAKE=/usr/lib/qt6/bin/qmake
           export LD_LIBRARY_PATH=$PWD/APPIMAGE-TRINITY/usr/lib:/usr/lib/x86_64-linux-gnu:$LD_LIBRARY_PATH
-          
-          # Indicar al plugin de Qt dónde escanear los archivos QML originales
-          export QML_SOURCES_PATHS=$GITHUB_WORKSPACE
           
           ARCH=x86_64 ./linuxdeploy-x86_64.AppImage \
             --appdir APPIMAGE-TRINITY \
