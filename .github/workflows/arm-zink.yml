@@ -129,6 +129,7 @@ jobs:
           OPENSSL_DIR="/opt/homebrew/opt/openssl"
           
           cmake .. \
+            -DCMAKE_POLICY_VERSION_MINIMUM=3.5 \
             -DCMAKE_BUILD_TYPE=Release \
             -G Ninja \
             -DBUILD_WEBVIEW=OFF \
@@ -144,7 +145,6 @@ jobs:
             -Wno-dev
           
           cmake --build . --parallel $(sysctl -n hw.activecpu)
-
       - name: Compilar mcpe-extract
         run: |
           cd mcpe-extract
