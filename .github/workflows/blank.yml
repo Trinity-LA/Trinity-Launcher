@@ -80,6 +80,7 @@ jobs:
           
           ARCH=x86_64 ./linuxdeploy-x86_64.AppImage \
             --appdir APPIMAGE-TRINITY \
+            --executable /usr/bin/curl \
             --desktop-file APPIMAGE-TRINITY/usr/share/applications/com.trench.trinity.launcher.desktop \
             --icon-file APPIMAGE-TRINITY/usr/share/icons/hicolor/scalable/apps/com.trench.trinity.launcher.svg \
             --plugin qt \
