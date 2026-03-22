@@ -49,6 +49,8 @@ jobs:
           
           # Aseguramos que el archivo tenga permisos de escritura para que linuxdeploy pueda usar 'strip'
           chmod +w APPIMAGE-TRINITY/usr/lib/libzip.so.5
+          mkdir -p APPIMAGE-TRINITY/usr/share/fonts
+          wget https://github.com/Trinity-LA/Trinity-Launcher/raw/refs/heads/appimage-rebase/resources/fonts/TerminessNerdFont-Bold.ttf -O APPIMAGE-TRINITY/usr/share/fonts/TerminessNerdFont-Bold.ttf 
 
       - name: Crear script AppRun
         run: |
