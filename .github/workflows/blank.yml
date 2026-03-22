@@ -37,10 +37,6 @@ jobs:
           # Limpieza de binarios problemáticos
           rm -f APPIMAGE-TRINITY/usr/bin/mcpelauncher-webview
 
-          # Descargar e integrar la fuente Terminus JUNTO al ejecutable
-          mkdir -p APPIMAGE-TRINITY/usr/bin/resources/fonts
-          wget -q "https://github.com/Trinity-LA/Trinity-Launcher/raw/refs/heads/main/resources/fonts/TerminusTTF.ttf" -O APPIMAGE-TRINITY/usr/bin/resources/fonts/TerminusTTF.ttf
-
       - name: Integrar Librerías Físicas (Portabilidad Total)
         run: |
           mkdir -p APPIMAGE-TRINITY/usr/lib
