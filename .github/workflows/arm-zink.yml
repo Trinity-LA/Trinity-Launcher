@@ -24,7 +24,7 @@ jobs:
         uses: actions/checkout@v4
         with:
           repository: 'minecraft-linux/mcpelauncher-manifest'
-          ref: 'qt6'
+          ref: 'ng'
           submodules: 'recursive'
           path: 'mcpelauncher'
 
@@ -41,7 +41,7 @@ jobs:
         run: |
           brew update
           brew install \
-            cmake pkg-config \
+            cmake ninja pkg-config \
             llvm glslang spirv-tools molten-vk \
             qt@6 libzip libpng openssl rust
           
@@ -60,10 +60,6 @@ jobs:
           
           echo "=== Extrayendo Mesa en ${MESA_PREFIX} ==="
           unzip -q mesa-native-macos.zip -d ${MESA_PREFIX}
-          
-          # Verificar estructura extraida
-          ls -la ${MESA_PREFIX}/lib/
-          ls -la ${MESA_PREFIX}/share/vulkan/icd.d/ || true
 
       - name: Clonar y compilar GLFW
         run: |
@@ -73,6 +69,7 @@ jobs:
           
           cmake .. \
             -DCMAKE_BUILD_TYPE=Release \
+            -G Ninja \
             -DCMAKE_INSTALL_PREFIX=${{ env.MESA_PREFIX }} \
             -DGLFW_BUILD_EXAMPLES=OFF \
             -DGLFW_BUILD_TESTS=OFF \
@@ -80,8 +77,8 @@ jobs:
             -DBUILD_SHARED_LIBS=ON \
             -DCMAKE_OSX_ARCHITECTURES=arm64
           
-          make -j$(sysctl -n hw.activecpu)
-          make install
+          cmake --build . --parallel $(sysctl -n hw.activecpu)
+          cmake --install .
 
       - name: Clonar y compilar SDL3 (con Vulkan nativo)
         run: |
@@ -91,6 +88,7 @@ jobs:
           
           cmake .. \
             -DCMAKE_BUILD_TYPE=Release \
+            -G Ninja \
             -DCMAKE_INSTALL_PREFIX=${{ env.MESA_PREFIX }} \
             -DCMAKE_OSX_ARCHITECTURES=arm64 \
             -DCMAKE_OSX_DEPLOYMENT_TARGET=14.0 \
@@ -102,8 +100,8 @@ jobs:
             -DSDL_TEST=OFF \
             -DSDL_INSTALL_TESTS=OFF
           
-          make -j$(sysctl -n hw.activecpu)
-          make install
+          cmake --build . --parallel $(sysctl -n hw.activecpu)
+          cmake --install .
 
       - name: Compilar Trinity
         run: |
@@ -112,6 +110,7 @@ jobs:
           
           cmake .. \
             -DCMAKE_BUILD_TYPE=Release \
+            -G Ninja \
             -DCMAKE_PREFIX_PATH="${{ env.MESA_PREFIX }};/opt/homebrew/opt/qt@6" \
             -DCMAKE_OSX_DEPLOYMENT_TARGET=14.0 \
             -DCMAKE_OSX_ARCHITECTURES=arm64 \
@@ -128,29 +127,23 @@ jobs:
           mkdir -p build && cd build
           
           OPENSSL_DIR="/opt/homebrew/opt/openssl"
-          ARM64_FLAGS="--target=arm64-apple-darwin23"
-          CMAKE_OSX_FLAGS="-DCMAKE_OSX_ARCHITECTURES=arm64 -DCMAKE_OSX_DEPLOYMENT_TARGET=14.0"
           
-          cmake ../mcpelauncher \
-            -DCMAKE_POLICY_VERSION_MINIMUM=4.0 \
+          cmake .. \
             -DCMAKE_BUILD_TYPE=Release \
+            -G Ninja \
+            -DBUILD_WEBVIEW=OFF \
             -DBUILD_UI=OFF \
-            -DCMAKE_INSTALL_PREFIX=${{ github.workspace }}/dist/mcpelauncher \
-            -DCMAKE_ASM_FLAGS="${ARM64_FLAGS}" \
-            -DCMAKE_C_FLAGS="${ARM64_FLAGS} -I${OPENSSL_DIR}/include" \
-            -DCMAKE_CXX_FLAGS="${ARM64_FLAGS} -I${OPENSSL_DIR}/include" \
-            -DCMAKE_CXX_COMPILER_TARGET=arm64-apple-darwin23 \
+            -DCMAKE_OSX_ARCHITECTURES=arm64 \
+            -DCMAKE_OSX_DEPLOYMENT_TARGET=14.0 \
+            -DCMAKE_C_FLAGS="-I${OPENSSL_DIR}/include" \
+            -DCMAKE_CXX_FLAGS="-I${OPENSSL_DIR}/include" \
             -DOPENSSL_ROOT_DIR="${OPENSSL_DIR}" \
-            -DMSA_DAEMON_PATH='.' \
-            -DENABLE_DEV_PATHS=OFF \
-            -DXAL_WEBVIEW_QT_PATH='.' \
             -DGAMEWINDOW_SYSTEM=SDL3 \
             -DJNI_USE_JNIVM=ON \
             -DCMAKE_PREFIX_PATH="${{ env.MESA_PREFIX }};/opt/homebrew/opt/qt@6" \
-            ${CMAKE_OSX_FLAGS} \
             -Wno-dev
           
-          make install -j$(sysctl -n hw.activecpu)
+          cmake --build . --parallel $(sysctl -n hw.activecpu)
 
       - name: Compilar mcpe-extract
         run: |
@@ -159,10 +152,10 @@ jobs:
           
           cmake .. \
             -DCMAKE_BUILD_TYPE=Release \
+            -G Ninja \
             -DCMAKE_POLICY_VERSION_MINIMUM=3.5 \
             -DCMAKE_OSX_DEPLOYMENT_TARGET=14.0 \
             -DCMAKE_OSX_ARCHITECTURES=arm64 \
-            -DCMAKE_INSTALL_PREFIX=${{ github.workspace }}/dist/mcpe-extract \
             -Wno-dev
           
           cmake --build . --parallel $(sysctl -n hw.activecpu)
@@ -171,10 +164,13 @@ jobs:
         run: |
           mkdir -p dist/Trinity.app/Contents/{MacOS,Frameworks,Resources/mcpelauncher}
           
+          # Copiar ejecutables
           cp mcpelauncher/build/mcpelauncher-client/mcpelauncher-client dist/Trinity.app/Contents/MacOS/
-          cp mcpelauncher/build/mcpelauncher-webview/mcpelauncher-webview dist/Trinity.app/Contents/MacOS/
           cp mcpe-extract/build/mcpelauncher-extract dist/Trinity.app/Contents/MacOS/
           cp trinity/build/app/trinity dist/Trinity.app/Contents/MacOS/trinity-bin
+          
+          # Buscar y copiar el msa-daemon compilado
+          find mcpelauncher/build -type f -name "msa-daemon" -exec cp {} dist/Trinity.app/Contents/MacOS/ \; || true
           
           cat << 'EOF' > dist/Trinity.app/Contents/MacOS/trinity
           #!/bin/bash
@@ -182,9 +178,12 @@ jobs:
           DIR="$(cd "$(dirname "${BASH_SOURCE}")" && pwd)"
           MESA_DIR="${DIR}/../../Frameworks"
           
-          export DYLD_LIBRARY_PATH="${MESA_DIR}:${DYLD_LIBRARY_PATH}"
+          # Inyección de dependencias (ARM64) y Vulkan
+          export DYLD_LIBRARY_PATH="${MESA_DIR}:${DIR}/../../Resources/mcpelauncher/lib/native/arm64:${DYLD_LIBRARY_PATH}"
           export VK_DRIVER_FILES="${MESA_DIR}/share/vulkan/icd.d/kosmickrisp_mesa_icd.aarch64.json"
+          export MSA_DAEMON_PATH="$DIR/msa-daemon"
           
+          # Variables de Mesa y Zink
           export MESA_GL_VERSION_OVERRIDE=4.6
           export MESA_GLSL_VERSION_OVERRIDE=460
           export MESA_KK_DISABLE_WORKAROUNDS=shader_cache
@@ -192,14 +191,21 @@ jobs:
           export QT_MAC_WANTS_LAYER=1
           export ANGLE_DEFAULT_PLATFORM=metal
           
+          # Salvavidas para SQLite/PlayFab: Mover el directorio de ejecución a una zona de lectura/escritura nativa
+          DATA_DIR="$HOME/Library/Application Support/mcpelauncher"
+          mkdir -p "$DATA_DIR"
+          cd "$DATA_DIR"
+          
           exec "${DIR}/trinity-bin" "$@"
           EOF
           chmod +x dist/Trinity.app/Contents/MacOS/trinity
           
+          # Copiar librerías de Mesa precompiladas al bundle
           cp -R ${{ env.MESA_PREFIX }}/lib/*.dylib dist/Trinity.app/Contents/Frameworks/ 2>/dev/null || true
           mkdir -p dist/Trinity.app/Contents/Frameworks/share/vulkan/icd.d
           cp ${{ env.MESA_PREFIX }}/share/vulkan/icd.d/*.json dist/Trinity.app/Contents/Frameworks/share/vulkan/icd.d/ 2>/dev/null || true
           
+          # Copiar estructura de librerías puente
           cp -R mac-bin/lib dist/Trinity.app/Contents/Resources/mcpelauncher/
           
           cat <<EOF > dist/Trinity.app/Contents/Info.plist
@@ -235,7 +241,6 @@ jobs:
           /opt/homebrew/opt/qt@6/bin/macdeployqt Trinity.app \
             -executable=Trinity.app/Contents/MacOS/trinity-bin \
             -executable=Trinity.app/Contents/MacOS/mcpelauncher-client \
-            -executable=Trinity.app/Contents/MacOS/mcpelauncher-webview \
             -executable=Trinity.app/Contents/MacOS/mcpelauncher-extract \
             -verbose=1
           
