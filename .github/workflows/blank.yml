@@ -37,9 +37,9 @@ jobs:
           # Limpieza de binarios problemáticos
           rm -f APPIMAGE-TRINITY/usr/bin/mcpelauncher-webview
 
-          # Descargar e integrar la fuente Terminus en la ruta esperada por el código
-          mkdir -p APPIMAGE-TRINITY/usr/resources/fonts
-          wget -q "https://github.com/Trinity-LA/Trinity-Launcher/raw/refs/heads/main/resources/fonts/TerminusTTF.ttf" -O APPIMAGE-TRINITY/usr/resources/fonts/TerminusTTF.ttf
+          # Descargar e integrar la fuente Terminus JUNTO al ejecutable
+          mkdir -p APPIMAGE-TRINITY/usr/bin/resources/fonts
+          wget -q "https://github.com/Trinity-LA/Trinity-Launcher/raw/refs/heads/main/resources/fonts/TerminusTTF.ttf" -O APPIMAGE-TRINITY/usr/bin/resources/fonts/TerminusTTF.ttf
 
       - name: Integrar Librerías Físicas (Portabilidad Total)
         run: |
@@ -67,7 +67,10 @@ jobs:
           export DISABLE_WAYLAND=1
           export MCPELAUNCHER_DATA_DIR="$HERE/usr/share/mcpelauncher"
           export PATH="$HERE/usr/bin:$PATH"
-          exec "$HERE/usr/bin/trinity" "$@"
+          
+          # Cambiar al directorio del binario para que las rutas relativas funcionen
+          cd "$HERE/usr/bin"
+          exec ./trinity "$@"
           EOF
           chmod +x APPIMAGE-TRINITY/AppRun
 
@@ -80,7 +83,6 @@ jobs:
       - name: Ejecutar empaquetado
         run: |
           export QMAKE=/usr/lib/qt6/bin/qmake
-          # LD_LIBRARY_PATH local primero para que linuxdeploy use nuestras copias físicas
           export LD_LIBRARY_PATH=$PWD/APPIMAGE-TRINITY/usr/lib:/usr/lib/x86_64-linux-gnu:$LD_LIBRARY_PATH
           
           ARCH=x86_64 ./linuxdeploy-x86_64.AppImage \
