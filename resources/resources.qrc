@@ -1,5 +1,8 @@
 <!DOCTYPE RCC>
 <RCC version="1.0">
+    <qresource prefix="/fonts">
+        <file alias="TerminusTTF.ttf">fonts/TerminusTTF.ttf</file>
+    </qresource>
     <qresource prefix="/icons">
         <file alias="appicon">icons/appicon.png</file>
         <file alias="cube">icons/cube.png</file>
