@@ -17,7 +17,7 @@ jobs:
         run: |
           brew update
           brew install meson ninja python3 bison flex llvm glslang spirv-tools molten-vk \
-                       libclc python-packaging spirv-llvm-translator
+                       libclc python-packaging spirv-llvm-translator vulkan-tools
 
       - name: Install Python packages
         run: |
@@ -93,7 +93,7 @@ jobs:
         run: |
           export VK_ICD_FILENAMES=$HOME/mesa-native/share/vulkan/icd.d/kosmickrisp_icd.aarch64.json
           export DYLD_LIBRARY_PATH=$HOME/mesa-native/lib
-          /opt/homebrew/bin/vulkaninfo --summary
+          vulkaninfo --summary
 
       - name: Upload built Mesa as artifact
         uses: actions/upload-artifact@v4
