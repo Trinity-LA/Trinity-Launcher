@@ -30,6 +30,5 @@ jobs:
         with:
           name: trinity-launcher-binarios
           path: |
-            build/app/trinchete
-            build/app/trinito
+            build/app/trinity
           if-no-files-found: warn   # No falla si solo existe uno de los binarios
