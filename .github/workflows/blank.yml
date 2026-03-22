@@ -37,9 +37,9 @@ jobs:
           # Limpieza de binarios problemáticos
           rm -f APPIMAGE-TRINITY/usr/bin/mcpelauncher-webview
 
-          # Descargar e integrar la fuente Terminus
-          mkdir -p APPIMAGE-TRINITY/usr/share/fonts/truetype
-          wget -q "https://github.com/Trinity-LA/Trinity-Launcher/raw/refs/heads/main/resources/fonts/TerminusTTF.ttf" -O APPIMAGE-TRINITY/usr/share/fonts/truetype/TerminusTTF.ttf
+          # Descargar e integrar la fuente Terminus en la ruta esperada por el código
+          mkdir -p APPIMAGE-TRINITY/usr/resources/fonts
+          wget -q "https://github.com/Trinity-LA/Trinity-Launcher/raw/refs/heads/main/resources/fonts/TerminusTTF.ttf" -O APPIMAGE-TRINITY/usr/resources/fonts/TerminusTTF.ttf
 
       - name: Integrar Librerías Físicas (Portabilidad Total)
         run: |
@@ -59,25 +59,6 @@ jobs:
           cat << 'EOF' > APPIMAGE-TRINITY/AppRun
           #!/bin/sh
           HERE="$(dirname "$(readlink -f "$0")")"
-          
-          # Generar configuración dinámica de Fontconfig para el AppImage
-          mkdir -p "$HERE/etc/fonts"
-          cat << FC_EOF > "$HERE/etc/fonts/fonts.conf"
-          <?xml version="1.0"?>
-          <!DOCTYPE fontconfig SYSTEM "fonts.dtd">
-          <fontconfig>
-              <dir>/usr/share/fonts</dir>
-              <dir>/usr/local/share/fonts</dir>
-              <dir>~/.fonts</dir>
-              <dir>$HERE/usr/share/fonts</dir>
-              <include ignore_missing="yes">/etc/fonts/conf.d</include>
-              <include ignore_missing="yes">/etc/fonts/fonts.conf</include>
-              <cachedir prefix="xdg">fontconfig</cachedir>
-              <cachedir>~/.fontconfig</cachedir>
-          </fontconfig>
-          FC_EOF
-          
-          export FONTCONFIG_FILE="$HERE/etc/fonts/fonts.conf"
           export LD_LIBRARY_PATH="$HERE/usr/lib:$LD_LIBRARY_PATH"
           export XDG_DATA_DIRS="$HERE/usr/share:${XDG_DATA_DIRS:-/usr/share}"
           alias mcpelauncher-webview="$HERE/usr/bin/mcpelauncher-webview" &
