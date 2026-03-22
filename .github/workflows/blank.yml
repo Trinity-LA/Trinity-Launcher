@@ -82,6 +82,9 @@ jobs:
           export QMAKE=/usr/lib/qt6/bin/qmake
           export LD_LIBRARY_PATH=$PWD/APPIMAGE-TRINITY/usr/lib:/usr/lib/x86_64-linux-gnu:$LD_LIBRARY_PATH
           
+          # Indicar al plugin de Qt dónde escanear los archivos QML originales
+          export QML_SOURCES_PATHS=$GITHUB_WORKSPACE
+          
           ARCH=x86_64 ./linuxdeploy-x86_64.AppImage \
             --appdir APPIMAGE-TRINITY \
             --executable /usr/bin/curl \
