@@ -162,7 +162,7 @@ jobs:
 
       - name: Crear Application Bundle con Zink
         run: |
-          mkdir -p dist/Trinity.app/Contents/{MacOS,Frameworks,Resources/mcpelauncher}
+          mkdir -p dist/Trinity.app/Contents/{MacOS,Frameworks,Resources/mcpelauncher,Resources/vulkan/icd.d}
           
           # Copiar ejecutables
           cp mcpelauncher/build/mcpelauncher-client/mcpelauncher-client dist/Trinity.app/Contents/MacOS/
@@ -180,7 +180,9 @@ jobs:
           
           # Inyección de dependencias (ARM64) y Vulkan
           export DYLD_LIBRARY_PATH="${MESA_DIR}:${DIR}/../../Resources/mcpelauncher/lib/native/arm64:${DYLD_LIBRARY_PATH}"
-          export VK_DRIVER_FILES="${MESA_DIR}/share/vulkan/icd.d/kosmickrisp_mesa_icd.aarch64.json"
+          
+          # ¡CORRECCIÓN!: Apuntando al JSON en Resources en lugar de Frameworks
+          export VK_DRIVER_FILES="${DIR}/../../Resources/vulkan/icd.d/kosmickrisp_mesa_icd.aarch64.json"
           export MSA_DAEMON_PATH="$DIR/msa-daemon"
           
           # Variables de Mesa y Zink
@@ -200,10 +202,11 @@ jobs:
           EOF
           chmod +x dist/Trinity.app/Contents/MacOS/trinity
           
-          # Copiar librerías de Mesa precompiladas al bundle
+          # Copiar SÓLO librerías (.dylib) a Frameworks
           cp -R ${{ env.MESA_PREFIX }}/lib/*.dylib dist/Trinity.app/Contents/Frameworks/ 2>/dev/null || true
-          mkdir -p dist/Trinity.app/Contents/Frameworks/share/vulkan/icd.d
-          cp ${{ env.MESA_PREFIX }}/share/vulkan/icd.d/*.json dist/Trinity.app/Contents/Frameworks/share/vulkan/icd.d/ 2>/dev/null || true
+          
+          # ¡CORRECCIÓN!: Mover el JSON de Vulkan a Resources para no romper el codesign
+          cp ${{ env.MESA_PREFIX }}/share/vulkan/icd.d/*.json dist/Trinity.app/Contents/Resources/vulkan/icd.d/ 2>/dev/null || true
           
           # Copiar estructura de librerías puente
           cp -R mac-bin/lib dist/Trinity.app/Contents/Resources/mcpelauncher/
@@ -237,13 +240,22 @@ jobs:
 
       - name: macdeployqt y codesign
         run: |
+          # ¡CORRECCIÓN!: Ayudar a macdeployqt a encontrar QtSvg y QtVirtualKeyboard en ARM64
+          mkdir -p dist/lib
+          ln -s /opt/homebrew/opt/qt@6/lib/QtSvg.framework dist/lib/ || true
+          ln -s /opt/homebrew/opt/qt@6/lib/QtVirtualKeyboard.framework dist/lib/ || true
+          ln -s /opt/homebrew/opt/qt@6/lib/QtVirtualKeyboardQml.framework dist/lib/ || true
+          
           cd dist
+          # Añadimos -libpath para guiar mejor a la herramienta
           /opt/homebrew/opt/qt@6/bin/macdeployqt Trinity.app \
             -executable=Trinity.app/Contents/MacOS/trinity-bin \
             -executable=Trinity.app/Contents/MacOS/mcpelauncher-client \
             -executable=Trinity.app/Contents/MacOS/mcpelauncher-extract \
+            -libpath=/opt/homebrew/opt/qt@6/lib \
             -verbose=1
           
+          # Firmar el bundle estructurado correctamente
           codesign --force --deep --sign - --timestamp=none Trinity.app
           hdiutil create -volname "Trinity Launcher" -srcfolder Trinity.app -ov -format UDZO Trinity.dmg
           
