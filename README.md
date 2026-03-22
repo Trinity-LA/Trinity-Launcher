@@ -28,7 +28,8 @@
 
 ## Installation
 
-Download the latest version from our [Releases](https://github.com/Trinity-LA/Trinity-Launcher/releases) and run the installer.
+### Flatpak, Appimage and DMG method:
+see it [steps for install on linux and mac](https://github.com/Trinity-LA/Trinity-Launcher/releases/tag/2.6-beta)
 
 ### Method from source code
 If you wish to compile the latest version from the repository:
