@@ -37,6 +37,10 @@ jobs:
           # Limpieza de binarios problemáticos
           rm -f APPIMAGE-TRINITY/usr/bin/mcpelauncher-webview
 
+          # Descargar e integrar la fuente Terminus
+          mkdir -p APPIMAGE-TRINITY/usr/share/fonts/truetype
+          wget -q "https://github.com/Trinity-LA/Trinity-Launcher/raw/refs/heads/main/resources/fonts/TerminusTTF.ttf" -O APPIMAGE-TRINITY/usr/share/fonts/truetype/TerminusTTF.ttf
+
       - name: Integrar Librerías Físicas (Portabilidad Total)
         run: |
           mkdir -p APPIMAGE-TRINITY/usr/lib
@@ -56,6 +60,7 @@ jobs:
           #!/bin/sh
           HERE="$(dirname "$(readlink -f "$0")")"
           export LD_LIBRARY_PATH="$HERE/usr/lib:$LD_LIBRARY_PATH"
+          export XDG_DATA_DIRS="$HERE/usr/share:${XDG_DATA_DIRS:-/usr/share}"
           alias mcpelauncher-webview="$HERE/usr/bin/mcpelauncher-webview" &
           export QT_QPA_PLATFORM="xcb"
           export GDK_BACKEND="x11"
