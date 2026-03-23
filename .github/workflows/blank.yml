@@ -75,18 +75,20 @@ jobs:
 
       - name: Ejecutar empaquetado
         run: |
-          # 1. Asegurar que el binario tenga permisos de ejecución
-          chmod +x APPIMAGE-TRINITY/usr/bin/trinity
+          # 1. Aseguramos que la librería esté en el sistema para que linuxdeploy la vea
+          # Si el sistema tiene libzip4, creamos un enlace simbólico o usamos la que descargaste
+          sudo ln -sf $PWD/APPIMAGE-TRINITY/usr/lib/libzip.so.5 /usr/lib/x86_64-linux-gnu/libzip.so.5
           
-          # 2. Configurar variables para el plugin de Qt6
+          # 2. Configuración de entorno
           export QMAKE=/usr/lib/qt6/bin/qmake
-          export QT_SELECT=6
           
-          # 3. Ejecutar linuxdeploy apuntando al binario REAL de la app
-          # Usamos --appdir para que trabaje sobre tu carpeta
+          # 3. LD_LIBRARY_PATH es CLAVE aquí para que linuxdeploy encuentre libzip.so.5
+          export LD_LIBRARY_PATH=$PWD/APPIMAGE-TRINITY/usr/lib:$LD_LIBRARY_PATH
+
           ./linuxdeploy-x86_64.AppImage \
             --appdir APPIMAGE-TRINITY \
             -e APPIMAGE-TRINITY/usr/bin/trinity \
+            -e APPIMAGE-TRINITY/usr/bin/mcpelauncher-extract \
             -d APPIMAGE-TRINITY/usr/share/applications/com.trench.trinity.launcher.desktop \
             -i APPIMAGE-TRINITY/usr/share/icons/hicolor/scalable/apps/com.trench.trinity.launcher.svg \
             --plugin qt \
