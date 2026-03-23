@@ -113,8 +113,8 @@ QWidget *TrinitoWindow::createInstancesTab() {
 
                 auto* delBtn = new QPushButton();
                 delBtn->setIcon(QIcon(":/icons/trash"));
-                delBtn->setIconSize(QSize(18, 18));
-                delBtn->setFixedSize(23, 23);
+                delBtn->setIconSize(QSize(14, 14));
+                delBtn->setFixedSize(20, 20);
                 delBtn->setCursor(Qt::PointingHandCursor);
                 delBtn->setStyleSheet("QPushButton { border: none; background: transparent; }");
 
