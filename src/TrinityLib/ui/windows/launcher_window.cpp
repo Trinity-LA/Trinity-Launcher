@@ -142,7 +142,7 @@ void LauncherWindow::setupUi() {
     titleLayout->addWidget(titleLabel);
     titleLayout->addStretch();
     
-    QPushButton *minBtn = new QPushButton("—", m_titleBar);
+    QPushButton *minBtn = new QPushButton("_", m_titleBar);
     minBtn->setObjectName("TitleBarBtn");
     minBtn->setFixedSize(46, 32);
     minBtn->setCursor(Qt::PointingHandCursor);
@@ -334,7 +334,7 @@ void LauncherWindow::setupUi() {
     playButton->setCursor(Qt::PointingHandCursor);
     playButton->setStyleSheet(
         "QPushButton#ActionButton {"
-        "  font-size: 15px;"
+        "  font-size: 16px;"
         "  font-weight: bold;"
         "  letter-spacing: 1px;"
         "}"
@@ -363,7 +363,7 @@ void LauncherWindow::setupUi() {
     statusLabel->setAlignment(Qt::AlignCenter);
     statusLabel->setStyleSheet(
         "QLabel#Status {"
-        "  font-size: 11px;"
+        "  font-size: 18px;"
         "  color: rgba(148, 163, 184, 0.8);"
         "  background: transparent;"
         "  padding: 4px 0px 6px 0px;"
@@ -454,7 +454,7 @@ void LauncherWindow::setupUi() {
     QHBoxLayout *toggleRow = new QHBoxLayout();
     toggleRow->setSpacing(12);
     QLabel *rpcLabel = new QLabel(tr("Discord Rich Presence"));
-    rpcLabel->setStyleSheet("font-size: 14px; background: transparent;"); // keep font-size override
+    rpcLabel->setStyleSheet("font-size: 16px; background: transparent;"); // keep font-size override
     QCheckBox *rpcToggle = new QCheckBox();
     rpcToggle->setChecked(DiscordManager::instance().isEnabled());
     rpcToggle->setObjectName("ThemeCheckBox");
@@ -499,7 +499,7 @@ void LauncherWindow::setupUi() {
                                       "Focused on user freedom and free redistribution, it provides a powerful interface to "
                                       "manage multiple instances, worlds, textures, and mods seamlessly."));
     aboutDesc->setWordWrap(true);
-    aboutDesc->setStyleSheet("font-size: 14px; background: transparent;");
+    aboutDesc->setStyleSheet("font-size: 16px; background: transparent;");
     aboutDesc->setAlignment(Qt::AlignJustify);
     scrollLayout->addWidget(aboutDesc);
 
@@ -510,7 +510,7 @@ void LauncherWindow::setupUi() {
 
     QLabel *teamDesc = new QLabel(tr("Trinity is built by a dedicated group of developers, designers, and contributors:"));
     teamDesc->setWordWrap(true);
-    teamDesc->setStyleSheet("font-size: 14px; background: transparent;");
+    teamDesc->setStyleSheet("font-size: 16px; background: transparent;");
     scrollLayout->addWidget(teamDesc);
 
     // Team list
@@ -530,7 +530,7 @@ void LauncherWindow::setupUi() {
         QLabel *memberLabel = new QLabel(member);
         memberLabel->setTextFormat(Qt::RichText);
         memberLabel->setWordWrap(true);
-        memberLabel->setStyleSheet("font-size: 14px; margin-left: 10px; background: transparent;");
+        memberLabel->setStyleSheet("font-size: 16px; margin-left: 10px; background: transparent;");
         scrollLayout->addWidget(memberLabel);
     }
 
@@ -544,7 +544,7 @@ void LauncherWindow::setupUi() {
                                        "to run Minecraft, which has been fundamental to the development of this project."));
     thanksDesc->setTextFormat(Qt::RichText);
     thanksDesc->setWordWrap(true);
-    thanksDesc->setStyleSheet("font-size: 14px; background: transparent;");
+    thanksDesc->setStyleSheet("font-size: 16px; background: transparent;");
     thanksDesc->setAlignment(Qt::AlignJustify);
     scrollLayout->addWidget(thanksDesc);
 
@@ -1056,7 +1056,7 @@ void LauncherWindow::applyTheme(const QString &accent,
     QString ss =
         QString(
             "QWidget { background-color: %2; color: %7; "
-            "font-family: 'Terminus (TTF)', 'Terminus', monospace; }"
+            "font-family: 'Terminess Nerd Font', monospace; }"
             "QListWidget { background-color: %3; border: 1px solid %4; "
             "border-radius: 8px; padding: 5px; outline: 0; }"
             "QListWidget::item { padding: 10px; border-radius: 5px; "
@@ -1070,10 +1070,10 @@ void LauncherWindow::applyTheme(const QString &accent,
             "QPushButton:pressed { background-color: %2; }"
             "QPushButton#ActionButton { background-color: %1; color: %7; }"
             "QPushButton#ActionButton:hover { background-color: %1; opacity: 0.85; }"
-            "QLabel#LauncherTitle { font-size: 56px; font-weight: bold; color: %7; background: transparent; margin-bottom: 20px; font-family: 'Terminus (TTF)', 'Terminus', monospace; }"
-            "QLabel#Title { font-size: 18px; font-weight: bold; color: %1; background: transparent; }"
-            "QLabel#VersionName { font-size: 24px; font-weight: bold; background: transparent; }"
-            "QLabel#VersionType { font-size: 14px; color: %6; background: transparent; }"
+            "QLabel#LauncherTitle { font-size: 36px; font-weight: bold; color: %7; background: transparent; margin-bottom: 20px; font-family: 'Terminess Nerd Font', monospace; }"
+            "QLabel#Title { font-size: 16px; font-weight: bold; color: %1; background: transparent; }"
+            "QLabel#VersionName { font-size: 16px; font-weight: bold; background: transparent; }"
+            "QLabel#VersionType { font-size: 16px; color: %6; background: transparent; }"
             "QLabel#Status { font-size: 12px; color: %6; padding: 5px; background: transparent; }"
             "QWidget#ContextPanel { background-color: %3; border-radius: 12px; }"
             "QWidget#Sidebar { background-color: %2; }"
@@ -1083,10 +1083,10 @@ void LauncherWindow::applyTheme(const QString &accent,
             "QPushButton#SidebarBtnActive { background: transparent; border: none; "
             "border-left: 3px solid %1; border-radius: 0px; padding: 14px; }"
             "QWidget#TitleBar { background-color: %2; }"
-            "QLabel#TitleBarLabel { color: %6; font-size: 13px; font-weight: bold; background: transparent; }"
-            "QPushButton#TitleBarBtn { background: transparent; border: none; border-radius: 0px; padding: 0px; color: %6; font-size: 14px; }"
+            "QLabel#TitleBarLabel { color: %6; font-size: 16px; font-weight: bold; background: transparent; }"
+            "QPushButton#TitleBarBtn { background: transparent; border: none; border-radius: 0px; padding: 0px; color: %6; font-size: 16px; }"
             "QPushButton#TitleBarBtn:hover { background-color: %5; color: %7; }"
-            "QPushButton#TitleBarCloseBtn { background: transparent; border: none; border-radius: 0px; padding: 0px; color: %6; font-size: 14px; }"
+            "QPushButton#TitleBarCloseBtn { background: transparent; border: none; border-radius: 0px; padding: 0px; color: %6; font-size: 16px; }"
             "QPushButton#TitleBarCloseBtn:hover { background-color: #e81123; color: %7; }"
             "QTabWidget::pane { border: 1px solid %4; background-color: %3; border-radius: 8px; top: -1px; }"
             "QTabBar::tab { background: %4; color: %6; padding: 10px 20px; "
@@ -1100,20 +1100,20 @@ void LauncherWindow::applyTheme(const QString &accent,
             "border-radius: 12px; border: 1px solid rgba(%11, %12, %13, 0.25); }"
             // Dock combo
             "QComboBox#DockCombo { background-color: %4; color: %7; border-radius: 8px; "
-            "border: 1px solid %1; padding: 6px 12px; font-size: 13px; }"
+            "border: 1px solid %1; padding: 6px 12px; font-size: 16px; }"
             "QComboBox#DockCombo::drop-down { border: 0px; }"
             "QComboBox#DockCombo QAbstractItemView { background-color: %3; "
             "selection-background-color: %1; color: %7; border-radius: 6px; }"
             // Generic ComboBox (settings, etc.)
             "QComboBox { background-color: %4; color: %7; border-radius: 6px; "
-            "padding: 6px 10px; font-size: 13px; }"
+            "padding: 6px 10px; font-size: 16px; }"
             "QComboBox::drop-down { border: 0px; }"
             "QComboBox QAbstractItemView { background-color: %3; "
             "selection-background-color: %1; color: %7; }"
             // Discord URL box
             "QPushButton#DiscordUrlBox { background-color: %4; color: %1; "
             "border: 1px dashed %5; border-radius: 6px; padding: 8px; "
-            "font-size: 14px; font-weight: bold; text-align: center; }"
+            "font-size: 16px; font-weight: bold; text-align: center; }"
             // Themed checkbox
             "QCheckBox#ThemeCheckBox::indicator { width: 22px; height: 22px; border-radius: 11px; "
             "background-color: %4; border: 2px solid %5; }"
@@ -1146,11 +1146,26 @@ void LauncherWindow::applyTheme(const QString &accent,
 
     qApp->setStyleSheet(ss);
 
+    // Improve title shadow for better text contrast on any wallpaper
     auto *titleShadow = this->findChild<QGraphicsDropShadowEffect*>("TitleShadow");
     if (titleShadow) {
-        QColor shadowColor(bg); // Use the theme's dark background color
-        shadowColor.setAlpha(220); // Make it slightly more opaque to stand out more
-        titleShadow->setColor(shadowColor);
+        // Use darker shadow for bright wallpapers, lighter shadow for dark wallpapers
+        QColor textColorObj(text);
+        bool isDarkText = textColorObj.lightnessF() < 0.5;
+        
+        if (isDarkText) {
+            // Dark text: use light shadow/glow for contrast
+            QColor shadowColor(255, 255, 255, 180);  // White semi-transparent
+            titleShadow->setColor(shadowColor);
+            titleShadow->setBlurRadius(8);
+            titleShadow->setOffset(0, 1);
+        } else {
+            // Light text: use dark shadow for contrast
+            QColor shadowColor(0, 0, 0, 200);  // Dark semi-transparent
+            titleShadow->setColor(shadowColor);
+            titleShadow->setBlurRadius(6);
+            titleShadow->setOffset(0, 1);
+        }
     }
 
     // Persistir
@@ -1170,6 +1185,13 @@ void LauncherWindow::generateThemeFromWallpaper(const QString &wallpaperPath) {
         qWarning() << "[Theme] Could not extract colors from wallpaper";
         return;
     }
+
+    // Calculate average brightness of the wallpaper to determine text color
+    double totalLightness = 0;
+    for (const auto &c : colors) {
+        totalLightness += c.color.lightnessF();
+    }
+    double avgLightness = totalLightness / colors.size();
 
     // Find the most vibrant color (highest saturation) for accent
     int accentIdx = 0;
@@ -1196,9 +1218,22 @@ void LauncherWindow::generateThemeFromWallpaper(const QString &wallpaperPath) {
     QColor hover    = QColor::fromHslF(hue, sat * 0.3, 0.15);
     QColor btnHover = QColor::fromHslF(hue, sat * 0.2, 0.25);
     QColor muted    = QColor::fromHslF(hue, sat * 0.15, 0.65);
-    QColor text     = (bg.lightnessF() > 0.5) ? QColor("#0f172a") : QColor("#ffffff");
+    
+    // Text color based on wallpaper average brightness
+    // If wallpaper is bright (avgLightness > 0.6), use dark text
+    // If wallpaper is dark (avgLightness < 0.4), use light text
+    // For mid-tone wallpapers, use the bg lightness as fallback
+    QColor text;
+    if (avgLightness > 0.6) {
+        text = QColor("#0f172a");  // Dark text for bright wallpapers
+    } else if (avgLightness < 0.4) {
+        text = QColor("#ffffff");  // Light text for dark wallpapers
+    } else {
+        text = (bg.lightnessF() > 0.5) ? QColor("#0f172a") : QColor("#ffffff");
+    }
 
     qDebug() << "[Theme] Generated from wallpaper:";
+    qDebug() << "  avgLightness:" << avgLightness;
     qDebug() << "  accent:"   << accent.name();
     qDebug() << "  bg:"       << bg.name();
     qDebug() << "  panel:"    << panel.name();
@@ -1265,24 +1300,79 @@ QWidget *LauncherWindow::createSettingsPage() {
     {
         auto *langRow = new QHBoxLayout();
         auto *langLabel = new QLabel(tr("Interface language:"));
-        langLabel->setStyleSheet("font-size: 14px;");
+        langLabel->setStyleSheet("font-size: 16px;");
         langLabel->setMinimumWidth(180);
 
         settingsLanguageCombo = new QComboBox();
         settingsLanguageCombo->setFixedWidth(180);
+        // Explicit styles for AppImage compatibility
+        settingsLanguageCombo->setStyleSheet(
+            "QComboBox {"
+            "    background-color: #1e293b;"
+            "    color: #ffffff;"
+            "    border: 1px solid #334155;"
+            "    border-radius: 4px;"
+            "    padding: 4px 8px;"
+            "    font-size: 14px;"
+            "}"
+            "QComboBox:hover {"
+            "    background-color: #334155;"
+            "    border-color: #475569;"
+            "}"
+            "QComboBox::drop-down {"
+            "    border: none;"
+            "    width: 20px;"
+            "}"
+            "QComboBox::down-arrow {"
+            "    image: none;"
+            "    border-left: 5px solid transparent;"
+            "    border-right: 5px solid transparent;"
+            "    border-top: 6px solid #94a3b8;"
+            "    margin-right: 8px;"
+            "}"
+            "QComboBox QAbstractItemView {"
+            "    background-color: #1e293b;"
+            "    color: #ffffff;"
+            "    border: 1px solid #334155;"
+            "    selection-background-color: #475569;"
+            "    selection-color: #ffffff;"
+            "    outline: none;"
+            "    padding: 4px;"
+            "}"
+            "QComboBox QAbstractItemView::item {"
+            "    min-height: 30px;"
+            "    padding: 4px 8px;"
+            "}"
+            "QComboBox QAbstractItemView::item:hover {"
+            "    background-color: #334155;"
+            "}"
+            "QComboBox QAbstractItemView::item:selected {"
+            "    background-color: #475569;"
+            "    color: #ffffff;"
+            "}"
+        );
 
-        settingsLanguageCombo->addItem("Espa\u00f1ol", "es");
+        // Available languages (explicit list for AppImage compatibility)
+        // Format: { language code, native name }
+        const QStringList availableLanguages = {
+            "es",     // Español (always available)
+            "pt_BR",  // Português (Brasil) (always available)
+            "en",     // English
+            "ca",     // Català
+            "uk"      // Українська
+        };
+
+        // Add default languages
+        settingsLanguageCombo->addItem("Español", "es");
         settingsLanguageCombo->addItem("Português (Brasil)", "pt_BR");
 
-        QDir translationsDir(":/i18n");
-        QStringList langFiles =
-            translationsDir.entryList(QStringList() << "trinity_*.qm", QDir::Files);
-
-        for (const QString &file : langFiles) {
-            if (file.length() <= 11) continue;
-            QString code = file.mid(8, file.length() - 11);
-            if (code == "es") continue;
-            if (code == "pt_BR") continue;
+        // Add other available languages
+        for (const QString &code : availableLanguages) {
+            if (code == "es" || code == "pt_BR")
+                continue;
+            // Check if translation file exists
+            if (!QFile::exists(":/i18n/trinity_" + code + ".qm"))
+                continue;
             QLocale loc(code);
             QString nativeName = loc.nativeLanguageName();
             if (!nativeName.isEmpty())
@@ -1343,7 +1433,7 @@ QWidget *LauncherWindow::createSettingsPage() {
                             const QString &settingKey) {
         auto *row = new QHBoxLayout();
         auto *lbl = new QLabel(labelText);
-        lbl->setStyleSheet("font-size: 14px;");
+        lbl->setStyleSheet("font-size: 16px;");
         lbl->setMinimumWidth(180);
 
         auto *preview = new QPushButton();
@@ -1355,7 +1445,7 @@ QWidget *LauncherWindow::createSettingsPage() {
         preview->setToolTip(tr("Click to change color"));
 
         auto *hexLabel = new QLabel(*colorRef);
-        hexLabel->setStyleSheet("font-size: 12px; color: #64748b; font-family: monospace;");
+        hexLabel->setStyleSheet("font-size: 16px; color: #64748b; font-family: monospace;");
         hexLabel->setMinimumWidth(80);
 
         connect(preview, &QPushButton::clicked, this,
@@ -1445,7 +1535,7 @@ QWidget *LauncherWindow::createSettingsPage() {
 
         auto *wpInfoLayout = new QVBoxLayout();
         auto *wpPathLabel = new QLabel(savedBg.isEmpty() ? tr("Default background") : QFileInfo(savedBg).fileName());
-        wpPathLabel->setStyleSheet("font-size: 12px; color: #94a3b8;");
+        wpPathLabel->setStyleSheet("font-size: 16px; color: #94a3b8;");
         wpPathLabel->setWordWrap(true);
         wpInfoLayout->addWidget(wpPathLabel);
 
@@ -1535,7 +1625,7 @@ QWidget *LauncherWindow::createSettingsPage() {
 
     auto *iconNote = new QLabel(tr("You can customize the sidebar icons. The app logo is fixed and cannot be changed."));
     iconNote->setWordWrap(true);
-    iconNote->setStyleSheet("font-size: 12px; color: #64748b;");
+    iconNote->setStyleSheet("font-size: 16px; color: #64748b;");
     layout->addWidget(iconNote);
 
     // Datos de iconos cambiables
@@ -1571,7 +1661,7 @@ QWidget *LauncherWindow::createSettingsPage() {
         iconPreview->setAlignment(Qt::AlignCenter);
 
         auto *nameLbl = new QLabel(entry.name);
-        nameLbl->setStyleSheet("font-size: 14px;");
+        nameLbl->setStyleSheet("font-size: 16px;");
         nameLbl->setMinimumWidth(180);
 
         auto *changeBtn = new QPushButton(tr("Change..."));

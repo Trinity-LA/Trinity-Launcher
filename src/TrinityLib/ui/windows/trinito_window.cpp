@@ -66,11 +66,11 @@ QWidget *TrinitoWindow::createInstancesTab() {
     headerRow->setSpacing(16);
 
     QLabel *listLabel = new QLabel(tr("Installed versions:"));
-    listLabel->setStyleSheet("font-size: 13px; background: transparent;");
+    listLabel->setStyleSheet("font-size: 16px; background: transparent;");
     headerRow->addWidget(listLabel, 3);
 
     QLabel *actionsLabel = new QLabel(tr("Actions"));
-    actionsLabel->setStyleSheet("font-size: 13px; background: transparent;");
+    actionsLabel->setStyleSheet("font-size: 16px; background: transparent;");
     headerRow->addWidget(actionsLabel, 2);
 
     outerLayout->addLayout(headerRow);
@@ -917,7 +917,7 @@ QWidget *TrinitoWindow::createShadersModsTab() {
 
     // Available Libs
     auto *availableLibsLabel = new QLabel(tr("Available libs:"));
-    availableLibsLabel->setStyleSheet("font-size: 12px; background: transparent;");
+    availableLibsLabel->setStyleSheet("font-size: 16px; background: transparent;");
     libsLayout->addWidget(availableLibsLabel);
 
     availableModsList = new QListWidget();
@@ -933,7 +933,7 @@ QWidget *TrinitoWindow::createShadersModsTab() {
 
     // Installed Libs
     auto *installedLibsLabel = new QLabel(tr("Installed libs (✓ = active):"));
-    installedLibsLabel->setStyleSheet("font-size: 12px; background: transparent;");
+    installedLibsLabel->setStyleSheet("font-size: 16px; background: transparent;");
     libsLayout->addWidget(installedLibsLabel);
 
     installedModsList = new QListWidget();
@@ -1292,7 +1292,7 @@ QWidget *TrinitoWindow::createDirectoryTab() {
     auto *descLabel = new QLabel(
         tr("This is where Minecraft Bedrock stores your worlds, packs, and other user data."));
     descLabel->setWordWrap(true);
-    descLabel->setStyleSheet("font-size: 13px; background: transparent;");
+    descLabel->setStyleSheet("font-size: 16px; background: transparent;");
     layout->addWidget(descLabel);
 
     // Detectar la ruta de datos (mismo patrón que getShadersDir())
@@ -1323,7 +1323,7 @@ QWidget *TrinitoWindow::createDirectoryTab() {
     cardLayout->setSpacing(8);
 
     auto *typeLbl = new QLabel(typeLabel);
-    typeLbl->setStyleSheet("font-size: 12px; font-weight: bold; "
+    typeLbl->setStyleSheet("font-size: 16px; font-weight: bold; "
                            "letter-spacing: 1px; text-transform: uppercase; background: transparent;");
     cardLayout->addWidget(typeLbl);
 
@@ -1332,7 +1332,7 @@ QWidget *TrinitoWindow::createDirectoryTab() {
     pathLbl->setTextInteractionFlags(Qt::TextSelectableByMouse);
     pathLbl->setCursor(Qt::IBeamCursor);
     pathLbl->setStyleSheet(
-        "font-size: 14px; font-family: monospace; background: transparent;");
+        "font-size: 16px; font-family: monospace; background: transparent;");
     cardLayout->addWidget(pathLbl);
 
     layout->addWidget(card);
