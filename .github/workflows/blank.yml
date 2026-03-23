@@ -49,12 +49,6 @@ jobs:
           mkdir -p APPIMAGE-TRINITY/usr/share/fonts
           wget https://github.com/Trinity-LA/Trinity-Launcher/raw/refs/heads/appimage-rebase/resources/fonts/TerminessNerdFont-Bold.ttf -O APPIMAGE-TRINITY/usr/share/fonts/TerminessNerdFont-Bold.ttf 
 
-          # Inyectar módulos QML manualmente para evitar el renderizado en blanco
-          mkdir -p APPIMAGE-TRINITY/usr/qml
-          cp -r /usr/lib/qt6/qml/QtQuick APPIMAGE-TRINITY/usr/qml/
-          cp -r /usr/lib/qt6/qml/QtQml APPIMAGE-TRINITY/usr/qml/
-          cp -r /usr/lib/qt6/qml/Qt APPIMAGE-TRINITY/usr/qml/ 2>/dev/null || true
-
       - name: Crear script AppRun
         run: |
           cat << 'EOF' > APPIMAGE-TRINITY/AppRun
