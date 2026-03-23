@@ -338,13 +338,6 @@ void LauncherWindow::setupUi() {
     playButton->setMinimumHeight(44);
     playButton->setEnabled(false);
     playButton->setCursor(Qt::PointingHandCursor);
-    playButton->setStyleSheet(
-        "QPushButton#ActionButton {"
-        "  font-size: 16px;"
-        "  font-weight: bold;"
-        "  letter-spacing: 1px;"
-        "}"
-    );
     dockLayout->addWidget(playButton);
 
     dockLayout->addStretch();
@@ -577,7 +570,7 @@ void LauncherWindow::setupUi() {
             btns[i]->style()->polish(btns[i]);
         }
     };
-
+    
     // Sidebar button connections
     connect(sidebarTrinityBtn, &QPushButton::clicked, this, [updateSidebar]() {
         updateSidebar(0);
@@ -1069,13 +1062,16 @@ void LauncherWindow::applyTheme(const QString &accent,
             "margin-bottom: 5px; border: none; }"
             "QListWidget::item:selected { background-color: %1; color: %7; }"
             "QListWidget::item:hover { background-color: %4; }"
-            "QPushButton { background-color: %4; border: none; "
+            "QPushButton { background-color: %4; border: 1px solid %5; "
             "border-radius: 6px; padding: 8px 16px; color: %7; "
             "font-weight: bold; font-size: 14px; }"
             "QPushButton:hover { background-color: %5; }"
             "QPushButton:pressed { background-color: %2; }"
-            "QPushButton#ActionButton { background-color: %1; color: %7; }"
-            "QPushButton#ActionButton:hover { background-color: %1; opacity: 0.85; }"
+            "QPushButton#ActionButton { background-color: %1; color: #ffffff; "
+            "border: none; border-radius: 6px; "
+            "font-size: 16px; font-weight: bold; padding: 12px 24px; }"
+            "QPushButton#ActionButton:hover { background-color: %4; }"
+            "QPushButton#ActionButton:pressed { background-color: %4; }"
             "QLabel#LauncherTitle { font-size: 36px; font-weight: bold; "
             "color: #ffffff; background: transparent; "
             "font-family: 'Pixellari', sans-serif; }"
@@ -1211,8 +1207,8 @@ void LauncherWindow::generateThemeFromWallpaper(const QString &wallpaperPath) {
     QColor accent   = QColor::fromHslF(hue, qMin(sat * 1.1, 1.0), 0.55);
     QColor bg       = QColor::fromHslF(hue, sat * 0.6, 0.02);
     QColor panel    = QColor::fromHslF(hue, sat * 0.5, 0.06);
-    QColor hover    = QColor::fromHslF(hue, sat * 0.3, 0.15);
-    QColor btnHover = QColor::fromHslF(hue, sat * 0.2, 0.25);
+    QColor hover    = accent.darker(120);  // 20% más oscuro que el accent - para hover de botones
+    QColor btnHover = accent.lighter(180);  // 80% más claro
     QColor muted    = QColor::fromHslF(hue, sat * 0.15, 0.65);
 
     // Text color based on wallpaper average brightness
