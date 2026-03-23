@@ -268,7 +268,7 @@ void LauncherWindow::setupUi() {
     // Hidden version list — keeps all installed-version logic intact
     versionList = new QListWidget();
     versionList->setVisible(false);
-    versionList->setIconSize(QSize(48, 48));
+    versionList->setIconSize(QSize(32, 32));
 
     // Logo overlay — top-right of the background image
     {
@@ -1058,9 +1058,9 @@ void LauncherWindow::applyTheme(const QString &accent,
             "QWidget { background-color: %2; color: %7; "
             "font-family: 'Terminess Nerd Font', monospace; }"
             "QListWidget { background-color: %3; border: 1px solid %4; "
-            "border-radius: 8px; padding: 5px; outline: 0; }"
-            "QListWidget::item { padding: 10px; border-radius: 5px; "
-            "margin-bottom: 5px; border: none; }"
+            "border-radius: 8px; padding: 8px; outline: 0; }"
+            "QListWidget::item { padding: 8px 12px; border-radius: 5px; "
+            "margin-bottom: 5px; border: none; min-height: 48px; }"
             "QListWidget::item:selected { background-color: %1; color: %7; }"
             "QListWidget::item:hover { background-color: %4; }"
             "QPushButton { background-color: %4; border: none; "
