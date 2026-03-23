@@ -289,7 +289,7 @@ void LauncherWindow::setupUi() {
     rootLayout->addStretch();
 
     // ── Launcher Title ─────────────────────────────────────────────────────
-    QLabel *launcherTitle = new QLabel(tr("Trinity Launcher"), launcherTab);
+    QLabel *launcherTitle = new QLabel(tr("TRINITY LAUNCHER"), launcherTab);
     launcherTitle->setObjectName("LauncherTitle");
     launcherTitle->setAlignment(Qt::AlignCenter);
 
@@ -1056,7 +1056,7 @@ void LauncherWindow::applyTheme(const QString &accent,
     QString ss =
         QString(
             "QWidget { background-color: %2; color: %7; "
-            "font-family: 'Terminess Nerd Font', monospace; }"
+            "font-family: 'Roboto', sans-serif; }"
             "QListWidget { background-color: %3; border: 1px solid %4; "
             "border-radius: 8px; padding: 5px; outline: 0; }"
             "QListWidget::item { padding: 10px; border-radius: 5px; "
@@ -1070,7 +1070,7 @@ void LauncherWindow::applyTheme(const QString &accent,
             "QPushButton:pressed { background-color: %2; }"
             "QPushButton#ActionButton { background-color: %1; color: %7; }"
             "QPushButton#ActionButton:hover { background-color: %1; opacity: 0.85; }"
-            "QLabel#LauncherTitle { font-size: 36px; font-weight: bold; color: %7; background: transparent; margin-bottom: 20px; font-family: 'Terminess Nerd Font', monospace; }"
+            "QLabel#LauncherTitle { font-size: 36px; font-weight: bold; color: #ffffff; background: transparent; margin-bottom: 20px; font-family: 'Pixellari', sans-serif; }"
             "QLabel#Title { font-size: 16px; font-weight: bold; color: %1; background: transparent; }"
             "QLabel#VersionName { font-size: 16px; font-weight: bold; background: transparent; }"
             "QLabel#VersionType { font-size: 16px; color: %6; background: transparent; }"
@@ -1130,7 +1130,7 @@ void LauncherWindow::applyTheme(const QString &accent,
         .arg(hover)     // %4
         .arg(btnHover)  // %5
         .arg(textMuted) // %6
-        .arg(text);      // %7
+        .arg(text);     // %7
 
     // Replace dock RGBA placeholders with actual panel color values
     {
@@ -1145,28 +1145,6 @@ void LauncherWindow::applyTheme(const QString &accent,
     }
 
     qApp->setStyleSheet(ss);
-
-    // Improve title shadow for better text contrast on any wallpaper
-    auto *titleShadow = this->findChild<QGraphicsDropShadowEffect*>("TitleShadow");
-    if (titleShadow) {
-        // Use darker shadow for bright wallpapers, lighter shadow for dark wallpapers
-        QColor textColorObj(text);
-        bool isDarkText = textColorObj.lightnessF() < 0.5;
-
-        if (isDarkText) {
-            // Dark text: use light shadow/glow for contrast
-            QColor shadowColor(255, 255, 255, 180);  // White semi-transparent
-            titleShadow->setColor(shadowColor);
-            titleShadow->setBlurRadius(8);
-            titleShadow->setOffset(0, 1);
-        } else {
-            // Light text: use dark shadow for contrast
-            QColor shadowColor(0, 0, 0, 200);  // Dark semi-transparent
-            titleShadow->setColor(shadowColor);
-            titleShadow->setBlurRadius(6);
-            titleShadow->setOffset(0, 1);
-        }
-    }
 
     // Persistir
     QSettings settings;
@@ -1456,7 +1434,7 @@ QWidget *LauncherWindow::createSettingsPage() {
                     if (!chosen.isValid()) return;
                     *colorRef = chosen.name();
                     preview->setStyleSheet(
-                        QString("background-color: %1; border-radius: 6px; border: 2px solid #334155;")
+                        QString("background-color: %1; border: 1px solid #334155;")
                             .arg(*colorRef));
                     hexLabel->setText(*colorRef);
                     applyTheme(*accentVal, *bgVal, *panelVal, *hoverVal, *btnHoverVal, *textMutedVal, *textVal);
@@ -1491,7 +1469,7 @@ QWidget *LauncherWindow::createSettingsPage() {
                 *hoverVal     = DEF_HOVER;
                 *btnHoverVal  = DEF_BTNHOVER;
                 *textMutedVal = DEF_TEXTMUTED;
-                applyTheme(DEF_ACCENT, DEF_BG, DEF_PANEL, DEF_HOVER, DEF_BTNHOVER, DEF_TEXTMUTED);
+                applyTheme(DEF_ACCENT, DEF_BG, DEF_PANEL, DEF_HOVER, DEF_BTNHOVER, DEF_TEXTMUTED, DEF_TEXT);
                 QMessageBox::information(this, tr("Settings"),
                     tr("Colors reset to default. Reopen Settings to see the updated previews."));
             });

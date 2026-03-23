@@ -8,13 +8,19 @@
 int main(int argc, char *argv[]) {
     QApplication app(argc, argv);
 
-    // Load custom font
-    int fontId = QFontDatabase::addApplicationFont(":/fonts/TerminessNerdFontMono-Regular.ttf");
+    // Load Roboto font (clean modern sans-serif)
+    int fontId = QFontDatabase::addApplicationFont(":/fonts/Roboto.ttf");
     if (fontId != -1) {
         QStringList fontFamilies = QFontDatabase::applicationFontFamilies(fontId);
         if (!fontFamilies.isEmpty()) {
-            app.setFont(QFont(fontFamilies.first(), 12));
+            app.setFont(QFont(fontFamilies.first(), 11));
         }
+    }
+
+    // Load Pixellari font for title (pixel-style font)
+    int pixellariFontId = QFontDatabase::addApplicationFont(":/fonts/Pixellari.ttf");
+    if (pixellariFontId != -1) {
+        qDebug() << "[Font] Pixellari loaded successfully";
     }
 
     // Now more simpler!

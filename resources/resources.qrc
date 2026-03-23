@@ -1,7 +1,8 @@
 <!DOCTYPE RCC>
 <RCC version="1.0">
     <qresource prefix="/fonts">
-        <file alias="TerminessNerdFontMono-Regular.ttf">fonts/TerminessNerdFontMono-Regular.ttf</file>
+        <file alias="Roboto.ttf">fonts/Roboto.ttf</file>
+        <file alias="Pixellari.ttf">fonts/Pixellari.ttf</file>
     </qresource>
     <qresource prefix="/icons">
         <file alias="appicon">icons/appicon.png</file>
