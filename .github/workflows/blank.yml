@@ -5,9 +5,10 @@ on:
   workflow_dispatch:
   pull_request:
     branches: [ appimage-rebase, master ]
+
 jobs:
   package:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-22.04 # Usar 22.04 mejora la compatibilidad de glibc respecto a latest
 
     steps:
       - name: Clonar repositorio
@@ -34,40 +35,19 @@ jobs:
           curl -L https://github.com/Trinity-LA/Trinity-Launcher/releases/download/2.6-beta/trinity-files.tar.gz -o trinity-files.tar.gz
           tar -xvf trinity-files.tar.gz -C APPIMAGE-TRINITY/
           
-          # Limpieza de binarios problemáticos
+          # Limpieza y permisos
           rm -f APPIMAGE-TRINITY/usr/bin/mcpelauncher-webview
+          chmod +x APPIMAGE-TRINITY/usr/bin/*
 
-      - name: Integrar Librerías Físicas (Portabilidad Total)
+      - name: Integrar Librerías Físicas
         run: |
           mkdir -p APPIMAGE-TRINITY/usr/lib
-          
-          # Buscamos la librería libzip en el sistema
           LIBZIP_REAL=$(find /usr/lib/x86_64-linux-gnu -name "libzip.so*" -type f | head -n 1)
           cp -v "$LIBZIP_REAL" APPIMAGE-TRINITY/usr/lib/libzip.so.5
-          chmod +w APPIMAGE-TRINITY/usr/lib/libzip.so.5
-          
-      - name: Crear script AppRun
-        run: |
-          cat << 'EOF' > APPIMAGE-TRINITY/AppRun
-          #!/bin/sh
-          HERE="$(dirname "$(readlink -f "$0")")"
-          export LD_LIBRARY_PATH="$HERE/usr/lib:$LD_LIBRARY_PATH"
-          export QML2_IMPORT_PATH="$HERE/usr/qml"
-          export QML_IMPORT_PATH="$HERE/usr/qml"
-          alias mcpelauncher-webview="$HERE/usr/bin/mcpelauncher-webview" &
-          export QT_QPA_PLATFORM="xcb"
-          export GDK_BACKEND="x11"
-          export DISABLE_WAYLAND=1
-          export MCPELAUNCHER_DATA_DIR="$HERE/usr/share/mcpelauncher"
-          export PATH="$HERE/usr/bin:$PATH"
-          
-          # Cambiar al directorio del binario para que las rutas relativas funcionen
-          cd "$HERE/usr/bin"
-          exec ./trinity "$@"
-          EOF
-          chmod +x APPIMAGE-TRINITY/AppRun
+          # Enlace simbólico interno para el sistema de compilación
+          sudo ln -sf $PWD/APPIMAGE-TRINITY/usr/lib/libzip.so.5 /usr/lib/x86_64-linux-gnu/libzip.so.5
 
-      - name: Descargar linuxdeploy y plugin Qt
+      - name: Descargar herramientas de empaquetado
         run: |
           wget https://github.com/linuxdeploy/linuxdeploy/releases/download/continuous/linuxdeploy-x86_64.AppImage
           wget https://github.com/linuxdeploy/linuxdeploy-plugin-qt/releases/download/continuous/linuxdeploy-plugin-qt-x86_64.AppImage
@@ -75,24 +55,39 @@ jobs:
 
       - name: Ejecutar empaquetado
         run: |
-          # 1. Aseguramos que la librería esté en el sistema para que linuxdeploy la vea
-          # Si el sistema tiene libzip4, creamos un enlace simbólico o usamos la que descargaste
-          sudo ln -sf $PWD/APPIMAGE-TRINITY/usr/lib/libzip.so.5 /usr/lib/x86_64-linux-gnu/libzip.so.5
-          
-          # 2. Configuración de entorno
+          export ARCH=x86_64
           export QMAKE=/usr/lib/qt6/bin/qmake
-          
-          # 3. LD_LIBRARY_PATH es CLAVE aquí para que linuxdeploy encuentre libzip.so.5
           export LD_LIBRARY_PATH=$PWD/APPIMAGE-TRINITY/usr/lib:$LD_LIBRARY_PATH
-
+          
+          # 1. Ejecutar linuxdeploy SIN crear el AppImage aún (--output appimage se quita de aquí)
+          # Esto analiza dependencias y despliega Qt.
           ./linuxdeploy-x86_64.AppImage \
             --appdir APPIMAGE-TRINITY \
             -e APPIMAGE-TRINITY/usr/bin/trinity \
             -e APPIMAGE-TRINITY/usr/bin/mcpelauncher-extract \
             -d APPIMAGE-TRINITY/usr/share/applications/com.trench.trinity.launcher.desktop \
             -i APPIMAGE-TRINITY/usr/share/icons/hicolor/scalable/apps/com.trench.trinity.launcher.svg \
-            --plugin qt \
-            --output appimage
+            --plugin qt
+
+          # 2. Ahora que linuxdeploy terminó, sobreescribimos su AppRun con el tuyo
+          cat << 'EOF' > APPIMAGE-TRINITY/AppRun
+          #!/bin/sh
+          HERE="$(dirname "$(readlink -f "$0")")"
+          export LD_LIBRARY_PATH="$HERE/usr/lib:$HERE/usr/lib/x86_64-linux-gnu:$LD_LIBRARY_PATH"
+          export QML2_IMPORT_PATH="$HERE/usr/qml"
+          export QML_IMPORT_PATH="$HERE/usr/qml"
+          export QT_QPA_PLATFORM="xcb"
+          export GDK_BACKEND="x11"
+          export DISABLE_WAYLAND=1
+          export MCPELAUNCHER_DATA_DIR="$HERE/usr/share/mcpelauncher"
+          export PATH="$HERE/usr/bin:$PATH"
+          cd "$HERE/usr/bin"
+          exec ./trinity "$@"
+          EOF
+          chmod +x APPIMAGE-TRINITY/AppRun
+
+          # 3. Generar el AppImage final a partir del AppDir modificado
+          ./linuxdeploy-x86_64.AppImage --appdir APPIMAGE-TRINITY --output appimage
 
       - name: Subir AppImage resultante
         uses: actions/upload-artifact@v4
