@@ -1074,7 +1074,7 @@ void LauncherWindow::applyTheme(const QString &accent,
             "QLabel#Title { font-size: 16px; font-weight: bold; color: %1; background: transparent; }"
             "QLabel#VersionName { font-size: 16px; font-weight: bold; background: transparent; }"
             "QLabel#VersionType { font-size: 16px; color: %6; background: transparent; }"
-            "QLabel#Status { font-size: 12px; color: %6; padding: 5px; background: transparent; }"
+            "QLabel#Status { font-size: 8px; color: %6; padding: 5px; background: transparent; }"
             "QWidget#ContextPanel { background-color: %3; border-radius: 12px; }"
             "QWidget#Sidebar { background-color: %2; }"
             "QPushButton#SidebarBtn { background: transparent; border: none; "
