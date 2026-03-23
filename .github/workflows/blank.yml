@@ -8,7 +8,7 @@ on:
 
 jobs:
   package:
-    runs-on: ubuntu-22.04 # Usar 22.04 mejora la compatibilidad de glibc respecto a latest
+    runs-on: ubuntu-22.04
 
     steps:
       - name: Clonar repositorio
@@ -28,6 +28,7 @@ jobs:
             libibus-1.0-dev libxkbcommon-dev libpng-dev libzip-dev libcups2-dev \
             libwayland-dev libunwind-dev libdecor-0-dev \
             libfuse2 wget file
+
       - name: Preparar estructura AppDir
         run: |
           mkdir -p APPIMAGE-TRINITY
@@ -58,35 +59,36 @@ jobs:
           export QMAKE=/usr/lib/qt6/bin/qmake
           export LD_LIBRARY_PATH=$PWD/APPIMAGE-TRINITY/usr/lib:$LD_LIBRARY_PATH
           
-          # 1. Ejecutar linuxdeploy SIN crear el AppImage aún (--output appimage se quita de aquí)
-          # Esto analiza dependencias y despliega Qt.
-          ./linuxdeploy-x86_64.AppImage \
-            --appdir APPIMAGE-TRINITY \
-            -e APPIMAGE-TRINITY/usr/bin/trinity \
-            -e APPIMAGE-TRINITY/usr/bin/mcpelauncher-extract \
-            -d APPIMAGE-TRINITY/usr/share/applications/com.trench.trinity.launcher.desktop \
-            -i APPIMAGE-TRINITY/usr/share/icons/hicolor/scalable/apps/com.trench.trinity.launcher.svg \
-            --plugin qt
-
-          # 2. Ahora que linuxdeploy terminó, sobreescribimos su AppRun con el tuyo
-          cat << 'EOF' > APPIMAGE-TRINITY/AppRun
+          # Crear un script envoltura (wrapper) en lugar de sobrescribir AppRun.
+          # linuxdeploy usará este wrapper como el ejecutable principal.
+          cat << 'EOF' > APPIMAGE-TRINITY/usr/bin/trinity-wrapper
           #!/bin/sh
           HERE="$(dirname "$(readlink -f "$0")")"
-          export LD_LIBRARY_PATH="$HERE/usr/lib:$HERE/usr/lib/x86_64-linux-gnu:$LD_LIBRARY_PATH"
-          export QML2_IMPORT_PATH="$HERE/usr/qml"
-          export QML_IMPORT_PATH="$HERE/usr/qml"
+          export LD_LIBRARY_PATH="$HERE/../lib:$HERE/../lib/x86_64-linux-gnu:$LD_LIBRARY_PATH"
+          export QML2_IMPORT_PATH="$HERE/../qml"
+          export QML_IMPORT_PATH="$HERE/../qml"
           export QT_QPA_PLATFORM="xcb"
           export GDK_BACKEND="x11"
           export DISABLE_WAYLAND=1
-          export MCPELAUNCHER_DATA_DIR="$HERE/usr/share/mcpelauncher"
-          export PATH="$HERE/usr/bin:$PATH"
-          cd "$HERE/usr/bin"
+          export MCPELAUNCHER_DATA_DIR="$HERE/../share/mcpelauncher"
+          export PATH="$HERE:$PATH"
+          cd "$HERE"
           exec ./trinity "$@"
           EOF
-          chmod +x APPIMAGE-TRINITY/AppRun
+          chmod +x APPIMAGE-TRINITY/usr/bin/trinity-wrapper
 
-          # 3. Generar el AppImage final a partir del AppDir modificado
-          ./linuxdeploy-x86_64.AppImage --appdir APPIMAGE-TRINITY --output appimage
+          # Asegurarse de que el archivo desktop apunte al wrapper
+          sed -i 's/^Exec=.*/Exec=trinity-wrapper/' APPIMAGE-TRINITY/usr/share/applications/com.trench.trinity.launcher.desktop
+
+          # Ejecutar linuxdeploy en un solo paso, apuntando al wrapper y generando la salida
+          ./linuxdeploy-x86_64.AppImage \
+            --appdir APPIMAGE-TRINITY \
+            -e APPIMAGE-TRINITY/usr/bin/trinity-wrapper \
+            -e APPIMAGE-TRINITY/usr/bin/mcpelauncher-extract \
+            -d APPIMAGE-TRINITY/usr/share/applications/com.trench.trinity.launcher.desktop \
+            -i APPIMAGE-TRINITY/usr/share/icons/hicolor/scalable/apps/com.trench.trinity.launcher.svg \
+            --plugin qt \
+            --output appimage
 
       - name: Subir AppImage resultante
         uses: actions/upload-artifact@v4
