@@ -18,5 +18,6 @@
     <qresource prefix="/branding">
         <file alias="logo">branding/logo_full.png</file>
         <file alias="background">branding/background.png</file>
+        <file alias="letter-brand">branding/letter-brand.png</file>
     </qresource>
 </RCC>

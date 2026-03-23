@@ -288,23 +288,13 @@ void LauncherWindow::setupUi() {
 
     rootLayout->addStretch();
 
-    // ── Launcher Title ─────────────────────────────────────────────────────
-    launcherTitle = new QLabel(tr("TRINITY LAUNCHER"), launcherTab);
+    // ── Launcher Brand Image ─────────────────────────────────────────────────────
+    launcherTitle = new QLabel(launcherTab);
     launcherTitle->setObjectName("LauncherTitle");
     launcherTitle->setAlignment(Qt::AlignCenter);
-    launcherTitle->setStyleSheet(
-        "QLabel#LauncherTitle { font-size: 36px; font-weight: bold; "
-        "color: #ffffff; background: transparent; "
-        "font-family: 'Pixellari', sans-serif; }"
-    );
-
-    // Glow effect using accent color (updated in applyTheme)
-    QGraphicsDropShadowEffect *titleShadow = new QGraphicsDropShadowEffect(launcherTitle);
-    titleShadow->setObjectName("TitleShadow");
-    titleShadow->setBlurRadius(15);
-    titleShadow->setOffset(0, 0);
-    titleShadow->setColor(QColor("#e429ef")); // Default accent, updated in applyTheme
-    launcherTitle->setGraphicsEffect(titleShadow);
+    launcherTitle->setPixmap(QPixmap(":/branding/letter-brand")
+        .scaled(400, 162, Qt::KeepAspectRatio, Qt::SmoothTransformation));
+    launcherTitle->setStyleSheet("background: transparent;");
 
     rootLayout->addWidget(launcherTitle, 0, Qt::AlignCenter);
 
@@ -338,6 +328,13 @@ void LauncherWindow::setupUi() {
     playButton->setMinimumHeight(44);
     playButton->setEnabled(false);
     playButton->setCursor(Qt::PointingHandCursor);
+    playButton->setStyleSheet(
+        "QPushButton#ActionButton {"
+        "  font-size: 14px;"
+        "  font-weight: bold;"
+        "  letter-spacing: 1px;"
+        "}"
+    );
     dockLayout->addWidget(playButton);
 
     dockLayout->addStretch();
@@ -570,7 +567,7 @@ void LauncherWindow::setupUi() {
             btns[i]->style()->polish(btns[i]);
         }
     };
-    
+
     // Sidebar button connections
     connect(sidebarTrinityBtn, &QPushButton::clicked, this, [updateSidebar]() {
         updateSidebar(0);
@@ -1062,22 +1059,16 @@ void LauncherWindow::applyTheme(const QString &accent,
             "margin-bottom: 5px; border: none; }"
             "QListWidget::item:selected { background-color: %1; color: %7; }"
             "QListWidget::item:hover { background-color: %4; }"
-            "QPushButton { background-color: %4; border: 1px solid %5; "
+            "QPushButton { background-color: %4; border: none; "
             "border-radius: 6px; padding: 8px 16px; color: %7; "
             "font-weight: bold; font-size: 14px; }"
             "QPushButton:hover { background-color: %5; }"
             "QPushButton:pressed { background-color: %2; }"
-            "QPushButton#ActionButton { background-color: %1; color: #ffffff; "
-            "border: none; border-radius: 6px; "
-            "font-size: 16px; font-weight: bold; padding: 12px 24px; }"
-            "QPushButton#ActionButton:hover { background-color: %4; }"
-            "QPushButton#ActionButton:pressed { background-color: %4; }"
-            "QLabel#LauncherTitle { font-size: 36px; font-weight: bold; "
-            "color: #ffffff; background: transparent; "
-            "font-family: 'Pixellari', sans-serif; }"
-            "QLabel#Title { font-size: 16px; font-weight: bold; color: %1; background: transparent; }"
-            "QLabel#VersionName { font-size: 16px; font-weight: bold; background: transparent; }"
-            "QLabel#VersionType { font-size: 16px; color: %6; background: transparent; }"
+            "QPushButton#ActionButton { background-color: %1; color: %7; }"
+            "QPushButton#ActionButton:hover { background-color: %1; opacity: 0.85; }"
+            "QLabel#Title { font-size: 14px; font-weight: bold; color: %1; background: transparent; }"
+            "QLabel#VersionName { font-size: 14px; font-weight: bold; background: transparent; }"
+            "QLabel#VersionType { font-size: 14px; color: %6; background: transparent; }"
             "QLabel#Status { font-size: 4px; color: %6; padding: 5px; background: transparent; }"
             "QWidget#ContextPanel { background-color: %3; border-radius: 12px; }"
             "QWidget#Sidebar { background-color: %2; }"
@@ -1087,10 +1078,10 @@ void LauncherWindow::applyTheme(const QString &accent,
             "QPushButton#SidebarBtnActive { background: transparent; border: none; "
             "border-left: 3px solid %1; border-radius: 0px; padding: 14px; }"
             "QWidget#TitleBar { background-color: %2; }"
-            "QLabel#TitleBarLabel { color: %6; font-size: 16px; font-weight: bold; background: transparent; }"
-            "QPushButton#TitleBarBtn { background: transparent; border: none; border-radius: 0px; padding: 0px; color: %6; font-size: 16px; }"
+            "QLabel#TitleBarLabel { color: %6; font-size: 14px; font-weight: bold; background: transparent; }"
+            "QPushButton#TitleBarBtn { background: transparent; border: none; border-radius: 0px; padding: 0px; color: %6; font-size: 14px; }"
             "QPushButton#TitleBarBtn:hover { background-color: %5; color: %7; }"
-            "QPushButton#TitleBarCloseBtn { background: transparent; border: none; border-radius: 0px; padding: 0px; color: %6; font-size: 16px; }"
+            "QPushButton#TitleBarCloseBtn { background: transparent; border: none; border-radius: 0px; padding: 0px; color: %6; font-size: 14px; }"
             "QPushButton#TitleBarCloseBtn:hover { background-color: #e81123; color: %7; }"
             "QTabWidget::pane { border: 1px solid %4; background-color: %3; border-radius: 8px; top: -1px; }"
             "QTabBar::tab { background: %4; color: %6; padding: 10px 20px; "
@@ -1104,20 +1095,20 @@ void LauncherWindow::applyTheme(const QString &accent,
             "border-radius: 12px; border: 1px solid rgba(%11, %12, %13, 0.25); }"
             // Dock combo
             "QComboBox#DockCombo { background-color: %4; color: %7; border-radius: 8px; "
-            "border: 1px solid %1; padding: 6px 12px; font-size: 16px; }"
+            "border: 1px solid %1; padding: 6px 12px; font-size: 14px; }"
             "QComboBox#DockCombo::drop-down { border: 0px; }"
             "QComboBox#DockCombo QAbstractItemView { background-color: %3; "
             "selection-background-color: %1; color: %7; border-radius: 6px; }"
             // Generic ComboBox (settings, etc.)
             "QComboBox { background-color: %4; color: %7; border-radius: 6px; "
-            "padding: 6px 10px; font-size: 16px; }"
+            "padding: 6px 10px; font-size: 14px; }"
             "QComboBox::drop-down { border: 0px; }"
             "QComboBox QAbstractItemView { background-color: %3; "
             "selection-background-color: %1; color: %7; }"
             // Discord URL box
             "QPushButton#DiscordUrlBox { background-color: %4; color: %1; "
             "border: 1px dashed %5; border-radius: 6px; padding: 8px; "
-            "font-size: 16px; font-weight: bold; text-align: center; }"
+            "font-size: 14px; font-weight: bold; text-align: center; }"
             // Themed checkbox
             "QCheckBox#ThemeCheckBox::indicator { width: 22px; height: 22px; border-radius: 11px; "
             "background-color: %4; border: 2px solid %5; }"
@@ -1149,16 +1140,6 @@ void LauncherWindow::applyTheme(const QString &accent,
     }
 
     qApp->setStyleSheet(ss);
-
-    // Update title glow effect with accent color
-    if (launcherTitle) {
-        auto *titleShadow = launcherTitle->findChild<QGraphicsDropShadowEffect*>("TitleShadow");
-        if (titleShadow) {
-            titleShadow->setColor(QColor(accent));
-            titleShadow->setBlurRadius(20);
-            titleShadow->setOffset(0, 0);
-        }
-    }
 
     // Persistir
     QSettings settings;
@@ -1207,8 +1188,8 @@ void LauncherWindow::generateThemeFromWallpaper(const QString &wallpaperPath) {
     QColor accent   = QColor::fromHslF(hue, qMin(sat * 1.1, 1.0), 0.55);
     QColor bg       = QColor::fromHslF(hue, sat * 0.6, 0.02);
     QColor panel    = QColor::fromHslF(hue, sat * 0.5, 0.06);
-    QColor hover    = accent.darker(120);  // 20% más oscuro que el accent - para hover de botones
-    QColor btnHover = accent.lighter(180);  // 80% más claro
+    QColor hover    = QColor::fromHslF(hue, sat * 0.3, 0.15);
+    QColor btnHover = QColor::fromHslF(hue, sat * 0.2, 0.25);
     QColor muted    = QColor::fromHslF(hue, sat * 0.15, 0.65);
 
     // Text color based on wallpaper average brightness

@@ -2,7 +2,6 @@
 
 #include <QCoreApplication>
 #include <QDebug>
-#include <QFileInfo>
 #include <QJsonDocument>
 #include <QJsonObject>
 #include <QSettings>
@@ -163,48 +162,23 @@ bool DiscordManager::isEnabled() const { return m_enabled; }
 // ──────────────────────────────────────────────
 
 bool DiscordManager::connectToDiscord() {
-  // Clean up any existing socket first
-  if (m_socket) {
-    m_socket->abort();
-    m_socket->deleteLater();
-    m_socket = nullptr;
-  }
-  
+  disconnect();
   m_socket = new QLocalSocket(this);
 
-  // Only connect signals if not already connected
-  static bool signalsConnected = false;
-  if (!signalsConnected) {
-    connect(m_socket, &QLocalSocket::readyRead, this,
-            &DiscordManager::drainSocket, Qt::UniqueConnection);
-    connect(m_socket, &QLocalSocket::disconnected, this,
-            &DiscordManager::scheduleReconnect, Qt::UniqueConnection);
-    signalsConnected = true;
-  }
+  connect(m_socket, &QLocalSocket::readyRead, this,
+          &DiscordManager::drainSocket);
+  connect(m_socket, &QLocalSocket::disconnected, this,
+          &DiscordManager::scheduleReconnect);
 
   QString runtimeDir = qEnvironmentVariable("XDG_RUNTIME_DIR", "/tmp");
 
   for (int i = 0; i < 10; ++i) {
     QString path = QString("%1/discord-ipc-%2").arg(runtimeDir).arg(i);
-    
-    // Check if socket file exists before trying to connect (Flatpak fix)
-    QFileInfo socketInfo(path);
-    if (!socketInfo.exists()) {
-      continue;
-    }
-    
     m_socket->connectToServer(path);
     if (m_socket->waitForConnected(100)) {
       m_connected = true;
       return sendHandshake();
     }
-  }
-  
-  // Clean up socket if connection failed
-  if (m_socket) {
-    m_socket->abort();
-    m_socket->deleteLater();
-    m_socket = nullptr;
   }
   return false;
 }
@@ -280,9 +254,6 @@ void DiscordManager::disconnect() {
 }
 
 void DiscordManager::scheduleReconnect() {
-  if (!m_enabled)
-    return;
-    
   if (m_reconnectTimer && !m_reconnectTimer->isActive()) {
     qDebug() << "[Discord] Scheduling reconnect in 5 s.";
     m_reconnectTimer->start();

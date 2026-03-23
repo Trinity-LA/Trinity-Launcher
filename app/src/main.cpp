@@ -6,9 +6,6 @@
 #include <TrinityLib/core/discord_manager.hpp>
 
 int main(int argc, char *argv[]) {
-    // Disable X11 session management (fixes Flatpak "Could not open network socket")
-    QApplication::setAttribute(Qt::AA_DisableSessionManager);
-    
     QApplication app(argc, argv);
 
     // Load Roboto font (clean modern sans-serif)
