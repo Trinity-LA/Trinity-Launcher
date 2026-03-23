@@ -136,18 +136,18 @@ void LauncherWindow::setupUi() {
     QHBoxLayout *titleLayout = new QHBoxLayout(m_titleBar);
     titleLayout->setContentsMargins(12, 0, 0, 0);
     titleLayout->setSpacing(0);
-    
+
     QLabel *titleLabel = new QLabel(tr(""), m_titleBar);
     titleLabel->setObjectName("TitleBarLabel");
     titleLayout->addWidget(titleLabel);
     titleLayout->addStretch();
-    
+
     QPushButton *minBtn = new QPushButton("_", m_titleBar);
     minBtn->setObjectName("TitleBarBtn");
     minBtn->setFixedSize(46, 32);
     minBtn->setCursor(Qt::PointingHandCursor);
     connect(minBtn, &QPushButton::clicked, this, &QWidget::showMinimized);
-    
+
     QPushButton *maxBtn = new QPushButton(QString::fromUtf8("\xE2\x96\xA1"), m_titleBar); // Square symbol for maximize
     maxBtn->setObjectName("TitleBarBtn");
     maxBtn->setFixedSize(46, 32);
@@ -156,17 +156,17 @@ void LauncherWindow::setupUi() {
         if (isMaximized()) showNormal();
         else showMaximized();
     });
-    
+
     QPushButton *closeBtn = new QPushButton(QString::fromUtf8("x"), m_titleBar); // Cross symbol for close
     closeBtn->setObjectName("TitleBarCloseBtn");
     closeBtn->setFixedSize(46, 32);
     closeBtn->setCursor(Qt::PointingHandCursor);
     connect(closeBtn, &QPushButton::clicked, this, &QWidget::close);
-    
+
     titleLayout->addWidget(minBtn);
     titleLayout->addWidget(maxBtn);
     titleLayout->addWidget(closeBtn);
-    
+
     mainVLayout->addWidget(m_titleBar);
 
     // Root: horizontal layout (sidebar | divider | content)
@@ -292,7 +292,7 @@ void LauncherWindow::setupUi() {
     QLabel *launcherTitle = new QLabel(tr("Trinity Launcher"), launcherTab);
     launcherTitle->setObjectName("LauncherTitle");
     launcherTitle->setAlignment(Qt::AlignCenter);
-    
+
     QGraphicsDropShadowEffect *titleShadow = new QGraphicsDropShadowEffect(launcherTitle);
     titleShadow->setObjectName("TitleShadow");
     titleShadow->setBlurRadius(5);
@@ -301,7 +301,7 @@ void LauncherWindow::setupUi() {
     launcherTitle->setGraphicsEffect(titleShadow);
 
     rootLayout->addWidget(launcherTitle, 0, Qt::AlignCenter);
-    
+
     rootLayout->addStretch();
 
     // ── Floating dock ──────────────────────────────────────────────────────
@@ -363,21 +363,21 @@ void LauncherWindow::setupUi() {
     statusLabel->setAlignment(Qt::AlignCenter);
     statusLabel->setStyleSheet(
         "QLabel#Status {"
-        "  font-size: 18px;"
+        "  font-size: 12px;"
         "  color: rgba(148, 163, 184, 0.8);"
         "  background: transparent;"
         "  padding: 4px 0px 6px 0px;"
         "}"
     );
     statusLabel->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Preferred);
-    
+
     // Contenedor horizontal para forzar el centrado del statusLabel
     QHBoxLayout *statusRow = new QHBoxLayout();
     statusRow->setContentsMargins(0, 0, 0, 0);
     statusRow->addStretch();
     statusRow->addWidget(statusLabel);
     statusRow->addStretch();
-    
+
     rootLayout->addLayout(statusRow);
 
     // Placeholder members that were used by old context panel — kept to avoid linker errors
@@ -435,13 +435,13 @@ void LauncherWindow::setupUi() {
     discordUrlBox->setCursor(Qt::PointingHandCursor);
     discordUrlBox->setToolTip(tr("Click to copy the link"));
     discordLayout->addWidget(discordUrlBox, 0, Qt::AlignCenter);
-    
+
     connect(discordUrlBox, &QPushButton::clicked, this, [discordUrlBox]() {
         QApplication::clipboard()->setText("https://discord.gg/xTdmDHfgZT");
-        
+
         discordUrlBox->setText(tr("✓ Copied!"));
         discordUrlBox->setStyleSheet("color: #4ade80; border-color: #4ade80;");
-        
+
         QTimer::singleShot(1500, discordUrlBox, [discordUrlBox]() {
             discordUrlBox->setText("https://discord.gg/xTdmDHfgZT");
             discordUrlBox->setStyleSheet(""); // revert to theme default
@@ -1065,7 +1065,7 @@ void LauncherWindow::applyTheme(const QString &accent,
             "QListWidget::item:hover { background-color: %4; }"
             "QPushButton { background-color: %4; border: none; "
             "border-radius: 6px; padding: 8px 16px; color: %7; "
-            "font-weight: bold; }"
+            "font-weight: bold; font-size: 14px; }"
             "QPushButton:hover { background-color: %5; }"
             "QPushButton:pressed { background-color: %2; }"
             "QPushButton#ActionButton { background-color: %1; color: %7; }"
@@ -1074,7 +1074,7 @@ void LauncherWindow::applyTheme(const QString &accent,
             "QLabel#Title { font-size: 16px; font-weight: bold; color: %1; background: transparent; }"
             "QLabel#VersionName { font-size: 16px; font-weight: bold; background: transparent; }"
             "QLabel#VersionType { font-size: 16px; color: %6; background: transparent; }"
-            "QLabel#Status { font-size: 8px; color: %6; padding: 5px; background: transparent; }"
+            "QLabel#Status { font-size: 4px; color: %6; padding: 5px; background: transparent; }"
             "QWidget#ContextPanel { background-color: %3; border-radius: 12px; }"
             "QWidget#Sidebar { background-color: %2; }"
             "QPushButton#SidebarBtn { background: transparent; border: none; "
@@ -1152,7 +1152,7 @@ void LauncherWindow::applyTheme(const QString &accent,
         // Use darker shadow for bright wallpapers, lighter shadow for dark wallpapers
         QColor textColorObj(text);
         bool isDarkText = textColorObj.lightnessF() < 0.5;
-        
+
         if (isDarkText) {
             // Dark text: use light shadow/glow for contrast
             QColor shadowColor(255, 255, 255, 180);  // White semi-transparent
@@ -1218,7 +1218,7 @@ void LauncherWindow::generateThemeFromWallpaper(const QString &wallpaperPath) {
     QColor hover    = QColor::fromHslF(hue, sat * 0.3, 0.15);
     QColor btnHover = QColor::fromHslF(hue, sat * 0.2, 0.25);
     QColor muted    = QColor::fromHslF(hue, sat * 0.15, 0.65);
-    
+
     // Text color based on wallpaper average brightness
     // If wallpaper is bright (avgLightness > 0.6), use dark text
     // If wallpaper is dark (avgLightness < 0.4), use light text
@@ -1731,4 +1731,3 @@ QWidget *LauncherWindow::createSettingsPage() {
 
     return page;
 }
-
