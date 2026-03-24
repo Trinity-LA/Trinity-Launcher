@@ -31,6 +31,8 @@
 ### Flatpak, Appimage and DMG method:
 Read [steps for install on linux and mac](https://github.com/Trinity-LA/Trinity-Launcher/releases/tag/2.6-beta)
 
+### FOR NIXOS USERS 
+Read [STEPS FOR RUN ON NIXOS OR USING NIX](https://codeberg.org/javiercplus/Trinity-Launcher-NIXOS/src/branch/main/)
 ### Method from source code
 If you wish to compile the latest version from the repository:
 
@@ -46,7 +48,7 @@ If you wish to compile the latest version from the repository:
 
 *(For a detailed guide, refer to [docs/BUILD.md](docs/BUILD.md))*
 
-if you wanna use nix run:
+if you wanna use nix run only for test compile:
 ``` 
 nix --extra-experimental-features "nix-command flakes" develop
 ```
