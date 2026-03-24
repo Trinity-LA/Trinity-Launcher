@@ -19,7 +19,7 @@ jobs:
 
       - name: Descargar Dockerfile de construcción
         run: |
-          curl -L https://github.com/franckey02/my-dockers-setup/raw/refs/heads/main/Dockerfile.build -o Dockerfile.build
+          curl -L https://github.com/javiercplus/my-dockers-setup/raw/refs/heads/main/Dockerfile.build -o Dockerfile.build
 
       - name: Construir imagen de entorno
         run: docker build -t mcpelauncher-builder -f Dockerfile.build .
