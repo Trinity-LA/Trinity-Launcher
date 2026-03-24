@@ -5,9 +5,9 @@
 [![Version](https://img.shields.io/badge/version-1.0.0-blue)]()
 [![Platform](https://img.shields.io/badge/platform-Linux-lightgrey)]()
 [![License](https://img.shields.io/badge/license-BSD--3--Clause-green)]()
-<img width="964" height="594" alt="image" src="https://huggingface.co/datasets/JaviercPLUS/servers/resolve/main/Trinity.png" />
 
 **Trinity Launcher** is a modular graphical environment designed to manage and run Minecraft: Bedrock Edition natively on Linux environments.
+<img width="960" height="560" alt="image" src="https://github.com/user-attachments/assets/f7b14066-0a31-4eae-ac82-6b989d5ae786" />
 
 ---
 
