@@ -94,12 +94,10 @@ jobs:
           find mcpelauncher/build -type f -name "msa-daemon" -exec cp {} APPIMAGE-TRINITY/usr/bin/ \;
           find mcpelauncher/build -type f -name "mcpelauncher-error" -exec cp {} APPIMAGE-TRINITY/usr/bin/ \;
 
-          cp trinity/resources/linux/com.trench.trinity.launcher.desktop APPIMAGE-TRINITY/usr/share/applications/ || true
-          cp trinity/resources/branding/com.trench.trinity.launcher.svg APPIMAGE-TRINITY/usr/share/icons/hicolor/scalable/apps/ || true
-          cp trinity/resources/linux/com.trench.trinity.launcher.metainfo.xml APPIMAGE-TRINITY/usr/share/metainfo/ || true
+          cp trinity/resources/shortcuts/com.trench.trinity.launcher.desktop APPIMAGE-TRINITY/usr/share/applications/
+          cp trinity/resources/branding/com.trench.trinity.launcher.svg APPIMAGE-TRINITY/usr/share/icons/hicolor/scalable/apps/
           
           cp -r linux-bin/* APPIMAGE-TRINITY/usr/share/mcpelauncher/
-
       - name: Integrar Librería libzip (Portabilidad Total)
         run: |
           LIBZIP_REAL=$(find /usr/lib/x86_64-linux-gnu -name "libzip.so*" -type f | head -n 1)
