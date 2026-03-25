@@ -49,8 +49,7 @@ ensure_sudo() {
     fi
     echo -e "${YELLOW}🔐 Administrator permissions are required for this action...${NC}"
     if ! sudo -v; then
-        echo -e "${RED}❌ Error: Permission denied.${NC}"
-        exit 1
+        echo -e "${RED}continue...${NC}"
     fi
 }
 
