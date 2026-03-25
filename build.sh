@@ -231,11 +231,9 @@ done
 show_banner;
 
 if [ "$(id -u)" -eq 0 ]; then
-   echo -e "${RED}❌ CRITICAL ERROR:${NC} Do not run this script with 'sudo'."
-   echo -e "   The script will ask for administrator permissions automatically"
-   echo -e "   only when needed to install dependencies and configure."
-   echo -e "   ${YELLOW}Run: make start or make run (./build.sh)${NC}"
-   exit 1
+   echo -e "Do not run this script with 'sudo'."
+   echo -e "The script will ask for administrator permissions automatically"
+   echo -e "only when needed to install dependencies and configure."
 fi
 
 # This is vital: If you are going to clean or compile, we first ensure the folder is yours.
