@@ -50,6 +50,8 @@ jobs:
 
       - name: Compilar mcpelauncher (Modo sin GUI)
         run: |
+          export CC=clang
+          export CXX=clang++
           cd mcpelauncher
           mkdir -p build && cd build
           cmake .. \
@@ -58,8 +60,7 @@ jobs:
             -DBUILD_WEBVIEW=OFF \
             -DBUILD_UI=OFF \
             -Wno-dev
-          ninja
-
+          ninja -v
       - name: Compilar mcpe-extract
         run: |
           cd mcpe-extract
