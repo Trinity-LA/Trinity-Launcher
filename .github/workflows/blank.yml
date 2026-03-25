@@ -1,17 +1,38 @@
-name: Empaquetar AppImage (Portable)
+name: Compilar y Empaquetar AppImage
+
 on:
   push:
-    branches: [ appimage-rebase, master ]
+    branches: [ main, master, appimage-rebase ]
   workflow_dispatch:
   pull_request:
-    branches: [ appimage-rebase, master ]
+    branches: [ main, master, appimage-rebase ]
+
 jobs:
-  package:
+  build-and-package:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Clonar repositorio
+      - name: Clonar repositorio Trinity
         uses: actions/checkout@v4
+        with:
+          path: 'trinity'
+
+      - name: Clonar Manifiesto de mcpelauncher
+        uses: actions/checkout@v4
+        with:
+          repository: 'minecraft-linux/mcpelauncher-manifest'
+          ref: 'ng'
+          submodules: 'recursive'
+          path: 'mcpelauncher'
+
+      - name: Clonar mcpe-extract
+        run: git clone https://codeberg.org/javiercplus/mcpe-extract.git
+
+      - name: Clonar mcpelauncher-linux-bin
+        uses: actions/checkout@v4
+        with:
+          repository: 'minecraft-linux/mcpelauncher-linux-bin'
+          path: 'linux-bin'
 
       - name: Instalar dependencias del sistema
         run: |
@@ -25,38 +46,71 @@ jobs:
             libgles2-mesa-dev libvulkan-dev vulkan-validationlayers libdrm-dev libgbm-dev \
             libudev-dev libevdev-dev libusb-1.0-0-dev libdbus-1-dev libbluetooth-dev bluez \
             libibus-1.0-dev libxkbcommon-dev libpng-dev libzip-dev libcups2-dev \
-            libwayland-dev libunwind-dev libdecor-0-dev \
-            libfuse2 wget file
+            libwayland-dev libunwind-dev libdecor-0-dev libfuse2 wget file python3
+
+      - name: Compilar mcpelauncher (Modo sin GUI)
+        run: |
+          cd mcpelauncher
+          mkdir -p build && cd build
+          cmake .. \
+            -DCMAKE_BUILD_TYPE=Release \
+            -G Ninja \
+            -DBUILD_WEBVIEW=OFF \
+            -DBUILD_UI=OFF \
+            -Wno-dev
+          ninja
+
+      - name: Compilar mcpe-extract
+        run: |
+          cd mcpe-extract
+          mkdir -p build && cd build
+          cmake .. \
+            -DCMAKE_BUILD_TYPE=Release \
+            -G Ninja \
+            -Wno-dev
+          ninja
+
+      - name: Compilar Trinity Launcher
+        run: |
+          cd trinity
+          chmod +x build.sh
+          ./build.sh --deps
+          ./build.sh --release
 
       - name: Preparar estructura AppDir
         run: |
-          mkdir -p APPIMAGE-TRINITY
-          curl -L https://github.com/Trinity-LA/Trinity-Launcher/releases/download/2.6-beta/trinity-files.tar.gz -o trinity-files.tar.gz
-          tar -xvf trinity-files.tar.gz -C APPIMAGE-TRINITY/
-          
-          # Limpieza de binarios problemáticos
-          rm -f APPIMAGE-TRINITY/usr/bin/mcpelauncher-webview
-
-      - name: Integrar Librerías Físicas (Portabilidad Total)
-        run: |
+          mkdir -p APPIMAGE-TRINITY/usr/bin
           mkdir -p APPIMAGE-TRINITY/usr/lib
+          mkdir -p APPIMAGE-TRINITY/usr/share/applications
+          mkdir -p APPIMAGE-TRINITY/usr/share/icons/hicolor/scalable/apps
+          mkdir -p APPIMAGE-TRINITY/usr/share/metainfo
+          mkdir -p APPIMAGE-TRINITY/usr/share/mcpelauncher
+
+          cp mcpelauncher/build/mcpelauncher-client/mcpelauncher-client APPIMAGE-TRINITY/usr/bin/
+          cp mcpe-extract/build/mcpelauncher-extract APPIMAGE-TRINITY/usr/bin/
+          cp trinity/build/app/trinity APPIMAGE-TRINITY/usr/bin/
           
-          # Buscamos la librería libzip en el sistema
+          find mcpelauncher/build -type f -name "msa-daemon" -exec cp {} APPIMAGE-TRINITY/usr/bin/ \;
+          find mcpelauncher/build -type f -name "mcpelauncher-error" -exec cp {} APPIMAGE-TRINITY/usr/bin/ \;
+
+          cp trinity/resources/linux/com.trench.trinity.launcher.desktop APPIMAGE-TRINITY/usr/share/applications/ || true
+          cp trinity/resources/branding/com.trench.trinity.launcher.svg APPIMAGE-TRINITY/usr/share/icons/hicolor/scalable/apps/ || true
+          cp trinity/resources/linux/com.trench.trinity.launcher.metainfo.xml APPIMAGE-TRINITY/usr/share/metainfo/ || true
+          
+          cp -r linux-bin/* APPIMAGE-TRINITY/usr/share/mcpelauncher/
+
+      - name: Integrar Librería libzip (Portabilidad Total)
+        run: |
           LIBZIP_REAL=$(find /usr/lib/x86_64-linux-gnu -name "libzip.so*" -type f | head -n 1)
-          
-          # COPIA FÍSICA: Esto evita errores de permisos en 'strip' y asegura la portabilidad
           cp -v "$LIBZIP_REAL" APPIMAGE-TRINITY/usr/lib/libzip.so.5
-          
-          # Aseguramos que el archivo tenga permisos de escritura para que linuxdeploy pueda usar 'strip'
           chmod +w APPIMAGE-TRINITY/usr/lib/libzip.so.5
 
-      - name: Crear script AppRun
+      - name: Crear script AppRun y enlaces en raíz
         run: |
           cat << 'EOF' > APPIMAGE-TRINITY/AppRun
           #!/bin/sh
           HERE="$(dirname "$(readlink -f "$0")")"
           export LD_LIBRARY_PATH="$HERE/usr/lib:$LD_LIBRARY_PATH"
-          alias mcpelauncher-webview="$HERE/usr/bin/mcpelauncher-webview" &
           export QT_QPA_PLATFORM="xcb"
           export GDK_BACKEND="x11"
           export DISABLE_WAYLAND=1
@@ -65,6 +119,9 @@ jobs:
           exec "$HERE/usr/bin/trinity" "$@"
           EOF
           chmod +x APPIMAGE-TRINITY/AppRun
+          
+          ln -s usr/share/applications/com.trench.trinity.launcher.desktop APPIMAGE-TRINITY/com.trench.trinity.launcher.desktop
+          ln -s usr/share/icons/hicolor/scalable/apps/com.trench.trinity.launcher.svg APPIMAGE-TRINITY/com.trench.trinity.launcher.svg
 
       - name: Descargar linuxdeploy y plugin Qt
         run: |
@@ -75,7 +132,6 @@ jobs:
       - name: Ejecutar empaquetado
         run: |
           export QMAKE=/usr/lib/qt6/bin/qmake
-          # LD_LIBRARY_PATH local primero para que linuxdeploy use nuestras copias físicas
           export LD_LIBRARY_PATH=$PWD/APPIMAGE-TRINITY/usr/lib:/usr/lib/x86_64-linux-gnu:$LD_LIBRARY_PATH
           
           ARCH=x86_64 ./linuxdeploy-x86_64.AppImage \
