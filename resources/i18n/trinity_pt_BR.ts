@@ -264,8 +264,8 @@ No: Only exports mods, maps, etc.</translation>
 <context>
     <name>LauncherWindow</name>
     <message>
-        <location filename="../../src/TrinityLib/ui/windows/launcher_window.cpp" line="668"/>
-        <location filename="../../src/TrinityLib/ui/windows/launcher_window.cpp" line="782"/>
+        <location filename="../../src/TrinityLib/ui/windows/launcher_window.cpp" line="742"/>
+        <location filename="../../src/TrinityLib/ui/windows/launcher_window.cpp" line="856"/>
         <source>Error</source>
         <translation>Erro</translation>
     </message>
@@ -275,42 +275,40 @@ No: Only exports mods, maps, etc.</translation>
         <translation></translation>
     </message>
     <message>
-        <location filename="../../src/TrinityLib/ui/windows/launcher_window.cpp" line="139"/>
+        <location filename="../../src/TrinityLib/ui/windows/launcher_window.cpp" line="191"/>
         <source>Trinity</source>
         <translation>Trinity</translation>
     </message>
     <message>
-        <location filename="../../src/TrinityLib/ui/windows/launcher_window.cpp" line="146"/>
-        <location filename="../../src/TrinityLib/ui/windows/launcher_window.cpp" line="1449"/>
+        <location filename="../../src/TrinityLib/ui/windows/launcher_window.cpp" line="198"/>
+        <location filename="../../src/TrinityLib/ui/windows/launcher_window.cpp" line="1615"/>
         <source>Content Manager</source>
         <translation>Gerenciador de Conteúdo</translation>
     </message>
     <message>
-        <location filename="../../src/TrinityLib/ui/windows/launcher_window.cpp" line="153"/>
-        <location filename="../../src/TrinityLib/ui/windows/launcher_window.cpp" line="340"/>
-        <location filename="../../src/TrinityLib/ui/windows/launcher_window.cpp" line="1450"/>
+        <location filename="../../src/TrinityLib/ui/windows/launcher_window.cpp" line="205"/>
+        <location filename="../../src/TrinityLib/ui/windows/launcher_window.cpp" line="413"/>
+        <location filename="../../src/TrinityLib/ui/windows/launcher_window.cpp" line="1616"/>
         <source>Discord</source>
         <translation>Discord</translation>
     </message>
     <message>
-        <location filename="../../src/TrinityLib/ui/windows/launcher_window.cpp" line="160"/>
-        <location filename="../../src/TrinityLib/ui/windows/launcher_window.cpp" line="416"/>
+        <location filename="../../src/TrinityLib/ui/windows/launcher_window.cpp" line="212"/>
+        <location filename="../../src/TrinityLib/ui/windows/launcher_window.cpp" line="489"/>
         <source>About Trinity Launcher</source>
         <translation>Sobre o Trinity Launcher</translation>
     </message>
     <message>
-        <location filename="../../src/TrinityLib/ui/windows/launcher_window.cpp" line="167"/>
-        <location filename="../../src/TrinityLib/ui/windows/launcher_window.cpp" line="1124"/>
-        <location filename="../../src/TrinityLib/ui/windows/launcher_window.cpp" line="1278"/>
-        <location filename="../../src/TrinityLib/ui/windows/launcher_window.cpp" line="1283"/>
-        <location filename="../../src/TrinityLib/ui/windows/launcher_window.cpp" line="1304"/>
-        <location filename="../../src/TrinityLib/ui/windows/launcher_window.cpp" line="1452"/>
-        <location filename="../../src/TrinityLib/ui/windows/launcher_window.cpp" line="1527"/>
+        <location filename="../../src/TrinityLib/ui/windows/launcher_window.cpp" line="219"/>
+        <location filename="../../src/TrinityLib/ui/windows/launcher_window.cpp" line="1257"/>
+        <location filename="../../src/TrinityLib/ui/windows/launcher_window.cpp" line="1469"/>
+        <location filename="../../src/TrinityLib/ui/windows/launcher_window.cpp" line="1618"/>
+        <location filename="../../src/TrinityLib/ui/windows/launcher_window.cpp" line="1694"/>
         <source>Settings</source>
         <translation>Configurações</translation>
     </message>
     <message>
-        <location filename="../../src/TrinityLib/ui/windows/launcher_window.cpp" line="251"/>
+        <location filename="../../src/TrinityLib/ui/windows/launcher_window.cpp" line="315"/>
         <source>Extract</source>
         <translation>Extrair</translation>
     </message>
@@ -319,155 +317,160 @@ No: Only exports mods, maps, etc.</translation>
         <translation type="vanished">▶  JOGAR</translation>
     </message>
     <message>
-        <location filename="../../src/TrinityLib/ui/windows/launcher_window.cpp" line="293"/>
+        <location filename="../../src/TrinityLib/ui/windows/launcher_window.cpp" line="357"/>
         <source>Ready</source>
         <translation>Pronto</translation>
     </message>
     <message>
-        <location filename="../../src/TrinityLib/ui/windows/launcher_window.cpp" line="345"/>
+        <location filename="../../src/TrinityLib/ui/windows/launcher_window.cpp" line="418"/>
         <source>Join our community on Discord</source>
         <translation>Junte-se à nossa comunidade no Discord</translation>
     </message>
     <message>
-        <location filename="../../src/TrinityLib/ui/windows/launcher_window.cpp" line="379"/>
-        <location filename="../../src/TrinityLib/ui/windows/launcher_window.cpp" line="393"/>
+        <location filename="../../src/TrinityLib/ui/windows/launcher_window.cpp" line="452"/>
+        <location filename="../../src/TrinityLib/ui/windows/launcher_window.cpp" line="466"/>
         <source>Discord Rich Presence</source>
         <translation>Status do Discord</translation>
     </message>
     <message>
-        <location filename="../../src/TrinityLib/ui/windows/launcher_window.cpp" line="421"/>
+        <location filename="../../src/TrinityLib/ui/windows/launcher_window.cpp" line="494"/>
         <source>Trinity Launcher is an open-source, community-driven launcher for Minecraft Bedrock. Focused on user freedom and free redistribution, it provides a powerful interface to manage multiple instances, worlds, textures, and mods seamlessly.</source>
         <translation>O Trinity Launcher é um inicializador de código aberto e movido pela comunidade para Minecraft Bedrock. Focado na liberdade do usuário e na redistribuição gratuita, ele fornece uma interface poderosa para gerenciar múltiplas instâncias, mundos, texturas e mods de forma integrada.</translation>
     </message>
     <message>
-        <location filename="../../src/TrinityLib/ui/windows/launcher_window.cpp" line="429"/>
+        <location filename="../../src/TrinityLib/ui/windows/launcher_window.cpp" line="502"/>
         <source>Our Team</source>
         <translation>Nossa Equipe</translation>
     </message>
     <message>
-        <location filename="../../src/TrinityLib/ui/windows/launcher_window.cpp" line="434"/>
+        <location filename="../../src/TrinityLib/ui/windows/launcher_window.cpp" line="507"/>
         <source>Trinity is built by a dedicated group of developers, designers, and contributors:</source>
         <translation>O Trinity é construído por um grupo dedicado de desenvolvedores, designers e colaboradores:</translation>
     </message>
     <message>
-        <location filename="../../src/TrinityLib/ui/windows/launcher_window.cpp" line="441"/>
+        <location filename="../../src/TrinityLib/ui/windows/launcher_window.cpp" line="514"/>
         <source>&lt;b&gt;Crow&lt;/b&gt;: Project Creator &amp; Visionary.</source>
         <translation>&lt;b&gt;Crow&lt;/b&gt;: Criador do Projeto e Visionário.</translation>
     </message>
     <message>
-        <location filename="../../src/TrinityLib/ui/windows/launcher_window.cpp" line="442"/>
+        <location filename="../../src/TrinityLib/ui/windows/launcher_window.cpp" line="515"/>
         <source>&lt;b&gt;JavierC&lt;/b&gt;: Co-Creator &amp; Development Supervisor.</source>
         <translation>&lt;b&gt;JavierC&lt;/b&gt;: Cocriador e Supervisor de Desenvolvimento.</translation>
     </message>
     <message>
-        <location filename="../../src/TrinityLib/ui/windows/launcher_window.cpp" line="443"/>
+        <location filename="../../src/TrinityLib/ui/windows/launcher_window.cpp" line="516"/>
         <source>&lt;b&gt;Orta&lt;/b&gt;: Project Supervisor &amp; Software Architect.</source>
         <translation>&lt;b&gt;Orta&lt;/b&gt;: Supervisor do Projeto e Arquiteto de Software.</translation>
     </message>
     <message>
-        <location filename="../../src/TrinityLib/ui/windows/launcher_window.cpp" line="444"/>
+        <location filename="../../src/TrinityLib/ui/windows/launcher_window.cpp" line="517"/>
         <source>&lt;b&gt;MrTanuk&lt;/b&gt;: Core Developer.</source>
         <translation>&lt;b&gt;MrTanuk&lt;/b&gt;: Desenvolvedor Principal.</translation>
     </message>
     <message>
-        <location filename="../../src/TrinityLib/ui/windows/launcher_window.cpp" line="445"/>
+        <location filename="../../src/TrinityLib/ui/windows/launcher_window.cpp" line="518"/>
         <source>&lt;b&gt;Ezequiel&lt;/b&gt;: Web Design &amp; Frontend Developer.</source>
         <translation>&lt;b&gt;Ezequiel&lt;/b&gt;: Web Design e Desenvolvedor Frontend.</translation>
     </message>
     <message>
-        <location filename="../../src/TrinityLib/ui/windows/launcher_window.cpp" line="446"/>
+        <location filename="../../src/TrinityLib/ui/windows/launcher_window.cpp" line="519"/>
         <source>&lt;b&gt;KevinRunforrestt&lt;/b&gt;: Documentation, Translation &amp; Support.</source>
         <translation>&lt;b&gt;KevinRunforrestt&lt;/b&gt;: Documentação, Tradução e Suporte.</translation>
     </message>
     <message>
-        <location filename="../../src/TrinityLib/ui/windows/launcher_window.cpp" line="447"/>
+        <location filename="../../src/TrinityLib/ui/windows/launcher_window.cpp" line="520"/>
         <source>&lt;b&gt;IoselDev&lt;/b&gt;: AUR Package Maintainer.</source>
         <translation>&lt;b&gt;IoselDev&lt;/b&gt;: Mantenedor do pacote AUR.</translation>
     </message>
     <message>
-        <location filename="../../src/TrinityLib/ui/windows/launcher_window.cpp" line="448"/>
+        <location filename="../../src/TrinityLib/ui/windows/launcher_window.cpp" line="521"/>
         <source>&lt;b&gt;HylianSoul&lt;/b&gt;: Catalan Translation &amp; Community Support.</source>
         <translation>&lt;b&gt;HylianSoul&lt;/b&gt;: Tradução para o Catalão e Suporte da Comunidade.</translation>
     </message>
     <message>
-        <location filename="../../src/TrinityLib/ui/windows/launcher_window.cpp" line="449"/>
+        <location filename="../../src/TrinityLib/ui/windows/launcher_window.cpp" line="522"/>
+        <source>&lt;b&gt;BrokenByteOfCode&lt;/b&gt;: Ukrainian Translation</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../../src/TrinityLib/ui/windows/launcher_window.cpp" line="523"/>
         <source>&lt;b&gt;Future Contributor&lt;/b&gt;: This spot is reserved for you. Join us!</source>
         <translation>&lt;b&gt;Futuro Colaborador&lt;/b&gt;: Este espaço é reservado para você. Junte-se a nós!</translation>
     </message>
     <message>
-        <location filename="../../src/TrinityLib/ui/windows/launcher_window.cpp" line="460"/>
+        <location filename="../../src/TrinityLib/ui/windows/launcher_window.cpp" line="534"/>
         <source>Special Thanks</source>
         <translation>Agradecimentos Especiais</translation>
     </message>
     <message>
-        <location filename="../../src/TrinityLib/ui/windows/launcher_window.cpp" line="465"/>
+        <location filename="../../src/TrinityLib/ui/windows/launcher_window.cpp" line="539"/>
         <source>We would like to express our sincere gratitude to the team behind the &lt;b&gt;Unofficial NIX Launcher for Minecraft&lt;/b&gt;. Their work provides the essential runtime to run Minecraft, which has been fundamental to the development of this project.</source>
         <translation>Queremos agradecer sinceramente à equipe do &lt;b&gt;Unofficial NIX Launcher for Minecraft&lt;/b&gt;. O trabalho deles fornece o ambiente de execução necessário para rodar o Minecraft, algo fundamental para o desenvolvimento deste projeto.</translation>
     </message>
     <message>
-        <location filename="../../src/TrinityLib/ui/windows/launcher_window.cpp" line="607"/>
+        <location filename="../../src/TrinityLib/ui/windows/launcher_window.cpp" line="681"/>
         <source>Bedrock Edition</source>
         <translation>Edição Bedrock</translation>
     </message>
     <message>
-        <location filename="../../src/TrinityLib/ui/windows/launcher_window.cpp" line="640"/>
+        <location filename="../../src/TrinityLib/ui/windows/launcher_window.cpp" line="714"/>
         <source>Extracting Version...</source>
         <translation>Extraindo Versão...</translation>
     </message>
     <message>
-        <location filename="../../src/TrinityLib/ui/windows/launcher_window.cpp" line="890"/>
+        <location filename="../../src/TrinityLib/ui/windows/launcher_window.cpp" line="990"/>
         <source>No se pudo crear el archivo de acceso directo en:
 </source>
         <translation>Não foi possível criar o arquivo de atalho em:
 </translation>
     </message>
     <message>
-        <location filename="../../src/TrinityLib/ui/windows/launcher_window.cpp" line="359"/>
+        <location filename="../../src/TrinityLib/ui/windows/launcher_window.cpp" line="432"/>
         <source>Click to copy the link</source>
         <translation>Clique para copiar o link</translation>
     </message>
     <message>
-        <location filename="../../src/TrinityLib/ui/windows/launcher_window.cpp" line="261"/>
+        <location filename="../../src/TrinityLib/ui/windows/launcher_window.cpp" line="325"/>
         <source>PLAY</source>
         <translation>JOGAR</translation>
     </message>
     <message>
-        <location filename="../../src/TrinityLib/ui/windows/launcher_window.cpp" line="365"/>
+        <location filename="../../src/TrinityLib/ui/windows/launcher_window.cpp" line="438"/>
         <source>✓ Copied!</source>
         <translation>✓ Copiado!</translation>
     </message>
     <message>
-        <location filename="../../src/TrinityLib/ui/windows/launcher_window.cpp" line="394"/>
+        <location filename="../../src/TrinityLib/ui/windows/launcher_window.cpp" line="467"/>
         <source>Close and reopen the launcher to apply the configuration.</source>
         <translation>Feche e reabra o inicializador para aplicar as configurações.</translation>
     </message>
     <message>
-        <location filename="../../src/TrinityLib/ui/windows/launcher_window.cpp" line="599"/>
+        <location filename="../../src/TrinityLib/ui/windows/launcher_window.cpp" line="673"/>
         <source>No versions</source>
         <translation>Sem versões</translation>
     </message>
     <message>
-        <location filename="../../src/TrinityLib/ui/windows/launcher_window.cpp" line="602"/>
+        <location filename="../../src/TrinityLib/ui/windows/launcher_window.cpp" line="676"/>
         <source>No versions installed.</source>
         <translation>Nenhuma versão instalada.</translation>
     </message>
     <message>
-        <location filename="../../src/TrinityLib/ui/windows/launcher_window.cpp" line="613"/>
+        <location filename="../../src/TrinityLib/ui/windows/launcher_window.cpp" line="687"/>
         <source>Selected: %1 | Path: %2</source>
         <translation>Selecionado: %1 | Caminho: %2</translation>
     </message>
     <message>
-        <location filename="../../src/TrinityLib/ui/windows/launcher_window.cpp" line="630"/>
-        <location filename="../../src/TrinityLib/ui/windows/launcher_window.cpp" line="697"/>
-        <location filename="../../src/TrinityLib/ui/windows/launcher_window.cpp" line="753"/>
-        <location filename="../../src/TrinityLib/ui/windows/launcher_window.cpp" line="764"/>
-        <location filename="../../src/TrinityLib/ui/windows/launcher_window.cpp" line="770"/>
-        <location filename="../../src/TrinityLib/ui/windows/launcher_window.cpp" line="829"/>
+        <location filename="../../src/TrinityLib/ui/windows/launcher_window.cpp" line="704"/>
+        <location filename="../../src/TrinityLib/ui/windows/launcher_window.cpp" line="771"/>
+        <location filename="../../src/TrinityLib/ui/windows/launcher_window.cpp" line="827"/>
+        <location filename="../../src/TrinityLib/ui/windows/launcher_window.cpp" line="838"/>
+        <location filename="../../src/TrinityLib/ui/windows/launcher_window.cpp" line="844"/>
+        <location filename="../../src/TrinityLib/ui/windows/launcher_window.cpp" line="929"/>
         <source>Warning</source>
         <translation>Aviso</translation>
     </message>
     <message>
-        <location filename="../../src/TrinityLib/ui/windows/launcher_window.cpp" line="631"/>
+        <location filename="../../src/TrinityLib/ui/windows/launcher_window.cpp" line="705"/>
         <source>A version named &apos;%1&apos; already exists.
 Replace it?</source>
         <translation>Uma versão nomeada de &apos;%1&apos; já existe.
@@ -478,272 +481,262 @@ Substituir?</translation>
         <translation type="vanished">Extraindo APK...</translation>
     </message>
     <message>
-        <location filename="../../src/TrinityLib/ui/windows/launcher_window.cpp" line="644"/>
+        <location filename="../../src/TrinityLib/ui/windows/launcher_window.cpp" line="718"/>
         <source>Extracting version...</source>
         <translation>Extraindo versão...</translation>
     </message>
     <message>
-        <location filename="../../src/TrinityLib/ui/windows/launcher_window.cpp" line="669"/>
+        <location filename="../../src/TrinityLib/ui/windows/launcher_window.cpp" line="743"/>
         <source>Extraction failed:
 </source>
         <translation>Falha na extração:
 </translation>
     </message>
     <message>
-        <location filename="../../src/TrinityLib/ui/windows/launcher_window.cpp" line="673"/>
-        <location filename="../../src/TrinityLib/ui/windows/launcher_window.cpp" line="737"/>
-        <location filename="../../src/TrinityLib/ui/windows/launcher_window.cpp" line="788"/>
-        <location filename="../../src/TrinityLib/ui/windows/launcher_window.cpp" line="901"/>
+        <location filename="../../src/TrinityLib/ui/windows/launcher_window.cpp" line="747"/>
+        <location filename="../../src/TrinityLib/ui/windows/launcher_window.cpp" line="811"/>
+        <location filename="../../src/TrinityLib/ui/windows/launcher_window.cpp" line="862"/>
+        <location filename="../../src/TrinityLib/ui/windows/launcher_window.cpp" line="1001"/>
         <source>Success</source>
         <translation>Sucesso</translation>
     </message>
     <message>
-        <location filename="../../src/TrinityLib/ui/windows/launcher_window.cpp" line="674"/>
+        <location filename="../../src/TrinityLib/ui/windows/launcher_window.cpp" line="748"/>
         <source>Version extracted successfully!</source>
         <translation>Versão extraida com sucesso!</translation>
     </message>
     <message>
-        <location filename="../../src/TrinityLib/ui/windows/launcher_window.cpp" line="698"/>
-        <location filename="../../src/TrinityLib/ui/windows/launcher_window.cpp" line="754"/>
-        <location filename="../../src/TrinityLib/ui/windows/launcher_window.cpp" line="765"/>
-        <location filename="../../src/TrinityLib/ui/windows/launcher_window.cpp" line="830"/>
+        <location filename="../../src/TrinityLib/ui/windows/launcher_window.cpp" line="772"/>
+        <location filename="../../src/TrinityLib/ui/windows/launcher_window.cpp" line="828"/>
+        <location filename="../../src/TrinityLib/ui/windows/launcher_window.cpp" line="839"/>
+        <location filename="../../src/TrinityLib/ui/windows/launcher_window.cpp" line="930"/>
         <source>No version selected.</source>
         <translation>Nenhuma versão selecionada.</translation>
     </message>
     <message>
-        <location filename="../../src/TrinityLib/ui/windows/launcher_window.cpp" line="704"/>
+        <location filename="../../src/TrinityLib/ui/windows/launcher_window.cpp" line="778"/>
         <source>Edit configuration of </source>
         <translation>Editar configurações de </translation>
     </message>
     <message>
-        <location filename="../../src/TrinityLib/ui/windows/launcher_window.cpp" line="709"/>
+        <location filename="../../src/TrinityLib/ui/windows/launcher_window.cpp" line="783"/>
         <source>Launch parameters (before mcpelauncher-client):</source>
         <translation>Parâmetros de inicialização (antes mcpelauncher-client):</translation>
     </message>
     <message>
-        <location filename="../../src/TrinityLib/ui/windows/launcher_window.cpp" line="734"/>
+        <location filename="../../src/TrinityLib/ui/windows/launcher_window.cpp" line="808"/>
         <source>Could not save configuration:
 </source>
         <translation>Não foi possível salvar as configurações:
 </translation>
     </message>
     <message>
-        <location filename="../../src/TrinityLib/ui/windows/launcher_window.cpp" line="738"/>
+        <location filename="../../src/TrinityLib/ui/windows/launcher_window.cpp" line="812"/>
         <source>Configuration saved.</source>
         <translation>Configurações salvas.</translation>
     </message>
     <message>
-        <location filename="../../src/TrinityLib/ui/windows/launcher_window.cpp" line="745"/>
+        <location filename="../../src/TrinityLib/ui/windows/launcher_window.cpp" line="819"/>
         <source>Configuration of %1 updated.</source>
         <translation>Configurações de %1 atualizadas.</translation>
     </message>
     <message>
-        <location filename="../../src/TrinityLib/ui/windows/launcher_window.cpp" line="771"/>
+        <location filename="../../src/TrinityLib/ui/windows/launcher_window.cpp" line="845"/>
         <source>Are you sure you want to delete version &apos;%1&apos;?
 This action cannot be undone.</source>
         <translation>Tem certeza de que quer remover a versão &apos;%1&apos;?
 Esta ação não poderá ser desfeita.</translation>
     </message>
     <message>
-        <location filename="../../src/TrinityLib/ui/windows/launcher_window.cpp" line="783"/>
+        <location filename="../../src/TrinityLib/ui/windows/launcher_window.cpp" line="857"/>
         <source>Could not delete version:
 </source>
         <translation>Não foi possível remover a versão:
 </translation>
     </message>
     <message>
-        <location filename="../../src/TrinityLib/ui/windows/launcher_window.cpp" line="789"/>
+        <location filename="../../src/TrinityLib/ui/windows/launcher_window.cpp" line="863"/>
         <source>Version deleted successfully.</source>
         <translation>Versão removida com sucesso.</translation>
     </message>
     <message>
-        <location filename="../../src/TrinityLib/ui/windows/launcher_window.cpp" line="792"/>
+        <location filename="../../src/TrinityLib/ui/windows/launcher_window.cpp" line="866"/>
         <source>Version %1 deleted.</source>
         <translation>Versão %1 removida.</translation>
     </message>
     <message>
-        <location filename="../../src/TrinityLib/ui/windows/launcher_window.cpp" line="841"/>
+        <location filename="../../src/TrinityLib/ui/windows/launcher_window.cpp" line="941"/>
         <source>Version &apos;%1&apos; is not valid or complete.</source>
         <translation>Versão &apos;%1&apos; não é válida ou está incompleta.</translation>
     </message>
     <message>
-        <location filename="../../src/TrinityLib/ui/windows/launcher_window.cpp" line="855"/>
+        <location filename="../../src/TrinityLib/ui/windows/launcher_window.cpp" line="955"/>
         <source>Confirm</source>
         <translation>Confirmar</translation>
     </message>
     <message>
-        <location filename="../../src/TrinityLib/ui/windows/launcher_window.cpp" line="857"/>
+        <location filename="../../src/TrinityLib/ui/windows/launcher_window.cpp" line="957"/>
         <source>A shortcut for &apos;%1&apos; already exists.
 Replace it?</source>
         <translation>Um atalho para &apos;%1&apos; já existe.
 Substituir?</translation>
     </message>
     <message>
-        <location filename="../../src/TrinityLib/ui/windows/launcher_window.cpp" line="902"/>
+        <location filename="../../src/TrinityLib/ui/windows/launcher_window.cpp" line="1002"/>
         <source>Shortcut created in Downloads folder</source>
         <translation>Atalho criado na pasta de Downloads</translation>
     </message>
     <message>
-        <location filename="../../src/TrinityLib/ui/windows/launcher_window.cpp" line="920"/>
+        <location filename="../../src/TrinityLib/ui/windows/launcher_window.cpp" line="1020"/>
         <source>Restart required</source>
         <translation>Requerido reiniciar</translation>
     </message>
     <message>
-        <location filename="../../src/TrinityLib/ui/windows/launcher_window.cpp" line="921"/>
+        <location filename="../../src/TrinityLib/ui/windows/launcher_window.cpp" line="1021"/>
         <source>The language will change to &apos;%1&apos;.
 Do you want to restart the application now to apply the changes?</source>
         <translation>O idioma será alterado para &apos;%1&apos;.
 Deseja reiniciar o aplicativo para aplicar as alterações?</translation>
     </message>
     <message>
-        <location filename="../../src/TrinityLib/ui/windows/launcher_window.cpp" line="1132"/>
+        <location filename="../../src/TrinityLib/ui/windows/launcher_window.cpp" line="1265"/>
         <source>Language</source>
         <translation>Idioma</translation>
     </message>
     <message>
-        <location filename="../../src/TrinityLib/ui/windows/launcher_window.cpp" line="1143"/>
+        <location filename="../../src/TrinityLib/ui/windows/launcher_window.cpp" line="1276"/>
         <source>Interface language:</source>
         <translation>Idioma da Interface:</translation>
     </message>
     <message>
-        <location filename="../../src/TrinityLib/ui/windows/launcher_window.cpp" line="1200"/>
+        <location filename="../../src/TrinityLib/ui/windows/launcher_window.cpp" line="1382"/>
         <source>UI Colors</source>
         <translation>Cores de UI</translation>
     </message>
     <message>
-        <location filename="../../src/TrinityLib/ui/windows/launcher_window.cpp" line="1236"/>
+        <location filename="../../src/TrinityLib/ui/windows/launcher_window.cpp" line="1419"/>
         <source>Click to change color</source>
         <translation>Clique para alterar a cor</translation>
     </message>
     <message>
-        <location filename="../../src/TrinityLib/ui/windows/launcher_window.cpp" line="1246"/>
+        <location filename="../../src/TrinityLib/ui/windows/launcher_window.cpp" line="1429"/>
         <source>Select Color</source>
         <translation>Selecionar Cor</translation>
     </message>
     <message>
-        <location filename="../../src/TrinityLib/ui/windows/launcher_window.cpp" line="1263"/>
+        <location filename="../../src/TrinityLib/ui/windows/launcher_window.cpp" line="1446"/>
         <source>Accent color</source>
         <translation>Cor de destaque</translation>
     </message>
     <message>
-        <location filename="../../src/TrinityLib/ui/windows/launcher_window.cpp" line="1264"/>
+        <location filename="../../src/TrinityLib/ui/windows/launcher_window.cpp" line="1447"/>
         <source>Background color</source>
         <translation>Cor de fundo</translation>
     </message>
     <message>
-        <location filename="../../src/TrinityLib/ui/windows/launcher_window.cpp" line="1265"/>
+        <location filename="../../src/TrinityLib/ui/windows/launcher_window.cpp" line="1448"/>
         <source>Panel color</source>
         <translation>Cor de painel</translation>
     </message>
     <message>
-        <location filename="../../src/TrinityLib/ui/windows/launcher_window.cpp" line="1266"/>
+        <location filename="../../src/TrinityLib/ui/windows/launcher_window.cpp" line="1449"/>
         <source>Hover / border color</source>
         <translation>Cor hover / borda</translation>
     </message>
     <message>
-        <location filename="../../src/TrinityLib/ui/windows/launcher_window.cpp" line="1267"/>
+        <location filename="../../src/TrinityLib/ui/windows/launcher_window.cpp" line="1450"/>
         <source>Button hover color</source>
         <translation>Cor hover de botões</translation>
     </message>
     <message>
-        <location filename="../../src/TrinityLib/ui/windows/launcher_window.cpp" line="1268"/>
+        <location filename="../../src/TrinityLib/ui/windows/launcher_window.cpp" line="1451"/>
         <source>Muted text color</source>
         <translation>Cor de texto atenuado</translation>
     </message>
     <message>
-        <location filename="../../src/TrinityLib/ui/windows/launcher_window.cpp" line="1272"/>
-        <source>Generate Colors from Wallpaper</source>
+        <location filename="../../src/TrinityLib/ui/windows/launcher_window.cpp" line="1452"/>
+        <source>Text color</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../src/TrinityLib/ui/windows/launcher_window.cpp" line="1279"/>
-        <source>No custom wallpaper set. Please set a wallpaper first in the Wallpaper section below.</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../../src/TrinityLib/ui/windows/launcher_window.cpp" line="1284"/>
-        <source>Theme colors generated from wallpaper! Reopen Settings to see the updated previews.</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../../src/TrinityLib/ui/windows/launcher_window.cpp" line="1292"/>
+        <location filename="../../src/TrinityLib/ui/windows/launcher_window.cpp" line="1457"/>
         <source>Reset Colors to Default</source>
         <translation>Redefinir Cores para o Padão</translation>
     </message>
     <message>
-        <location filename="../../src/TrinityLib/ui/windows/launcher_window.cpp" line="1305"/>
+        <location filename="../../src/TrinityLib/ui/windows/launcher_window.cpp" line="1470"/>
         <source>Colors reset to default. Reopen Settings to see the updated previews.</source>
         <translation>Cores redefinidas para o padrão. Reabra as Configurações para ver as pré-visualizações atualizadas.</translation>
     </message>
     <message>
-        <location filename="../../src/TrinityLib/ui/windows/launcher_window.cpp" line="1317"/>
+        <location filename="../../src/TrinityLib/ui/windows/launcher_window.cpp" line="1482"/>
         <source>Wallpaper</source>
         <translation>Fundo de parede</translation>
     </message>
     <message>
-        <location filename="../../src/TrinityLib/ui/windows/launcher_window.cpp" line="1346"/>
-        <location filename="../../src/TrinityLib/ui/windows/launcher_window.cpp" line="1408"/>
+        <location filename="../../src/TrinityLib/ui/windows/launcher_window.cpp" line="1511"/>
+        <location filename="../../src/TrinityLib/ui/windows/launcher_window.cpp" line="1574"/>
         <source>Default background</source>
         <translation>Fundo padrão</translation>
     </message>
     <message>
-        <location filename="../../src/TrinityLib/ui/windows/launcher_window.cpp" line="1353"/>
-        <location filename="../../src/TrinityLib/ui/windows/launcher_window.cpp" line="1475"/>
+        <location filename="../../src/TrinityLib/ui/windows/launcher_window.cpp" line="1518"/>
+        <location filename="../../src/TrinityLib/ui/windows/launcher_window.cpp" line="1641"/>
         <source>Change...</source>
         <translation>Alterar...</translation>
     </message>
     <message>
-        <location filename="../../src/TrinityLib/ui/windows/launcher_window.cpp" line="1357"/>
+        <location filename="../../src/TrinityLib/ui/windows/launcher_window.cpp" line="1522"/>
         <source>Reset</source>
         <translation>Redefinir</translation>
     </message>
     <message>
-        <location filename="../../src/TrinityLib/ui/windows/launcher_window.cpp" line="1376"/>
+        <location filename="../../src/TrinityLib/ui/windows/launcher_window.cpp" line="1542"/>
         <source>Select background image</source>
         <translation>Selecionar a imagem de fundo</translation>
     </message>
     <message>
-        <location filename="../../src/TrinityLib/ui/windows/launcher_window.cpp" line="1377"/>
+        <location filename="../../src/TrinityLib/ui/windows/launcher_window.cpp" line="1543"/>
         <source>Images (*.png *.jpg *.jpeg *.bmp *.webp);;All files (*)</source>
         <translation>Imagens (*.png *.jpg *.jpeg *.bmp *.webp);;Todos os arquivos (*)</translation>
     </message>
     <message>
-        <location filename="../../src/TrinityLib/ui/windows/launcher_window.cpp" line="1425"/>
+        <location filename="../../src/TrinityLib/ui/windows/launcher_window.cpp" line="1591"/>
         <source>Sidebar Icons</source>
         <translation>Ícones da barra lateral</translation>
     </message>
     <message>
-        <location filename="../../src/TrinityLib/ui/windows/launcher_window.cpp" line="1434"/>
+        <location filename="../../src/TrinityLib/ui/windows/launcher_window.cpp" line="1600"/>
         <source>You can customize the sidebar icons. The app logo is fixed and cannot be changed.</source>
         <translation>Você pode customizar os ícones da barra lateral. A logodo app é fixa e não pode ser alterada.</translation>
     </message>
     <message>
-        <location filename="../../src/TrinityLib/ui/windows/launcher_window.cpp" line="1448"/>
+        <location filename="../../src/TrinityLib/ui/windows/launcher_window.cpp" line="1614"/>
         <source>Trinity (Home)</source>
         <translation>Trinity (Home)</translation>
     </message>
     <message>
-        <location filename="../../src/TrinityLib/ui/windows/launcher_window.cpp" line="1451"/>
+        <location filename="../../src/TrinityLib/ui/windows/launcher_window.cpp" line="1617"/>
         <source>About</source>
         <translation>Sobre</translation>
     </message>
     <message>
-        <location filename="../../src/TrinityLib/ui/windows/launcher_window.cpp" line="1486"/>
+        <location filename="../../src/TrinityLib/ui/windows/launcher_window.cpp" line="1653"/>
         <source>Select Icon</source>
         <translation>Selecionar Ícone</translation>
     </message>
     <message>
-        <location filename="../../src/TrinityLib/ui/windows/launcher_window.cpp" line="1487"/>
+        <location filename="../../src/TrinityLib/ui/windows/launcher_window.cpp" line="1654"/>
         <source>Images (*.png *.svg *.ico *.jpg);;All files (*)</source>
         <translation>Imagens (*.png *.svg *.ico *.jpg);;Todos os arquivos (*)</translation>
     </message>
     <message>
-        <location filename="../../src/TrinityLib/ui/windows/launcher_window.cpp" line="1518"/>
+        <location filename="../../src/TrinityLib/ui/windows/launcher_window.cpp" line="1685"/>
         <source>Reset Icons to Default</source>
         <translation>Redefinir ícones para o Padão</translation>
     </message>
     <message>
-        <location filename="../../src/TrinityLib/ui/windows/launcher_window.cpp" line="1528"/>
+        <location filename="../../src/TrinityLib/ui/windows/launcher_window.cpp" line="1695"/>
         <source>Icons reset to default. Reopen Settings to see the updated previews.</source>
         <translation>Ícones redefinidas para o padrão. Reabra as Configurações para ver as pré-visualizações atualizadas.</translation>
     </message>
