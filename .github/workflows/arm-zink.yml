@@ -1,7 +1,5 @@
 name: (MAC ARM64 Nativo con Zink y Wrapper C) Compilar y Empaquetar para macOS
 on:
-  push:
-    branches: [ appimage-rebase, master, main ]
   workflow_dispatch:
   pull_request:
     branches: [ appimage-rebase, master, main ]
