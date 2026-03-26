@@ -519,6 +519,7 @@ void LauncherWindow::setupUi() {
         tr("<b>KevinRunforrestt</b>: Documentation, Translation & Support."),
         tr("<b>IoselDev</b>: AUR Package Maintainer."),
         tr("<b>HylianSoul</b>: Catalan Translation & Community Support."),
+        tr("<b>BrokenByteOfCode</b>: Ukrainian Translation")
         tr("<b>Future Contributor</b>: This spot is reserved for you. Join us!")
     };
 
