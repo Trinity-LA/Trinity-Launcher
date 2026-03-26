@@ -1,9 +1,6 @@
 name: (MAC ARM64 Nativo con Zink y Wrapper C) Compilar y Empaquetar para macOS
 on:
   workflow_dispatch:
-  pull_request:
-    branches: [ appimage-rebase, master, main ]
-
 env:
   MESA_PREFIX: ${{ github.workspace }}/mesa-native
 
