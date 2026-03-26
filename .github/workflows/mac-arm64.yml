@@ -1,4 +1,4 @@
-name: (Apple Silicon ARM64) Compilar y Empaquetar para macOS 
+name: (Apple Silicon ARM64) Compilar y Empaquetar para macOS
 
 on:
   push:
@@ -110,6 +110,7 @@ jobs:
           #include <unistd.h>
           #include <stdlib.h>
           #include <string.h>
+          #include <stdio.h>
           #include <libgen.h>
           #include <limits.h>
           #include <pwd.h>
@@ -125,6 +126,7 @@ jobs:
               }
               char exe_copy[PATH_MAX];
               strncpy(exe_copy, exe_path, sizeof(exe_copy) - 1);
+              exe_copy[sizeof(exe_copy) - 1] = '\0';
               char *dir = dirname(exe_copy);
               
               char bin_path[PATH_MAX];
