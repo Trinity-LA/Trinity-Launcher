@@ -1,12 +1,7 @@
 name: Compilar y Empaquetar para macOS (Intel x86_64 via Rosetta)
 
 on:
-  push:
-    branches: [ appimage-rebase, master, main ]
   workflow_dispatch:
-  pull_request:
-    branches: [ appimage-rebase, master, main ]
-
 jobs:
   build-and-package:
     runs-on: macos-latest
