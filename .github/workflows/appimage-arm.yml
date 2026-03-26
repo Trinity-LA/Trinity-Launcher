@@ -1,4 +1,4 @@
-name: Compilar y Empaquetar AppImage (Debian ARM64)
+name: (Debian ARM64) Compilar y Empaquetar AppImage 
 
 on:
   push:
