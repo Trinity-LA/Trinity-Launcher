@@ -5,9 +5,9 @@
 [![Version](https://img.shields.io/badge/version-1.0.0-blue)]()
 [![Platform](https://img.shields.io/badge/platform-Linux-lightgrey)]()
 [![License](https://img.shields.io/badge/license-BSD--3--Clause-green)]()
-<img width="964" height="594" alt="image" src="https://huggingface.co/datasets/JaviercPLUS/servers/resolve/main/Trinity.png" />
 
 **Trinity Launcher** is a modular graphical environment designed to manage and run Minecraft: Bedrock Edition natively on Linux environments.
+<img width="960" height="560" alt="image" src="https://github.com/user-attachments/assets/f7b14066-0a31-4eae-ac82-6b989d5ae786" />
 
 ---
 
@@ -28,8 +28,11 @@
 
 ## Installation
 
-Download the latest version from our [Releases](https://github.com/Trinity-LA/Trinity-Launcher/releases) and run the installer.
+### Flatpak, Appimage and DMG method:
+Read [steps for install on linux and mac](https://github.com/Trinity-LA/Trinity-Launcher/releases/tag/2.6-beta)
 
+### FOR NIXOS USERS 
+Read [STEPS FOR RUN ON NIXOS OR USING NIX](https://codeberg.org/javiercplus/Trinity-Launcher-NIXOS/src/branch/main/)
 ### Method from source code
 If you wish to compile the latest version from the repository:
 
@@ -45,7 +48,7 @@ If you wish to compile the latest version from the repository:
 
 *(For a detailed guide, refer to [docs/BUILD.md](docs/BUILD.md))*
 
-if you wanna use nix run:
+if you wanna use nix run only for test compile:
 ``` 
 nix --extra-experimental-features "nix-command flakes" develop
 ```

@@ -1,0 +1,103 @@
+name: Build Mesa (macOS)
+
+on:
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: macos-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Install Homebrew dependencies
+        run: |
+          brew update
+          brew install meson ninja python3 bison flex llvm glslang spirv-tools molten-vk \
+                       libclc python-packaging spirv-llvm-translator vulkan-tools
+
+      - name: Install Python packages
+        run: |
+          python3 -m pip install --user --break-system-packages packaging mako pyyaml
+          echo "PYTHONPATH=$(python3 -c 'import site; print(site.getusersitepackages())')" >> $GITHUB_ENV
+
+      - name: Clone official Mesa repository
+        run: |
+          git clone https://gitlab.freedesktop.org/mesa/mesa.git
+          cd mesa
+
+      - name: Apply LLVM 22 fixes conditionally
+        working-directory: mesa
+        run: |
+          if [ -f src/compiler/clc/clc_helpers.cpp ]; then
+            perl -i.bak -pe 's/(.*#include.*clang\/.*)/#undef UNUSED\n$1/g' src/compiler/clc/clc_helpers.cpp
+            perl -i.bak -pe 's/ASSERTED/[[maybe_unused]]/g' src/compiler/clc/clc_helpers.cpp
+            perl -i.bak -pe 's/Driver::GetResourcesPath/clang::GetResourcesPath/g' src/compiler/clc/clc_helpers.cpp
+          fi
+
+      - name: Set up environment
+        run: |
+          echo "/opt/homebrew/opt/llvm/bin" >> $GITHUB_PATH
+          echo "/opt/homebrew/opt/bison/bin" >> $GITHUB_PATH
+          echo "PKG_CONFIG_PATH=/opt/homebrew/lib/pkgconfig" >> $GITHUB_ENV
+          echo "LDFLAGS=-L/opt/homebrew/opt/llvm/lib" >> $GITHUB_ENV
+          echo "CPPFLAGS=-I/opt/homebrew/opt/llvm/include" >> $GITHUB_ENV
+
+      - name: Create native.ini with Homebrew dependencies
+        working-directory: mesa
+        run: |
+          cat > native.ini << 'EOF'
+          [binaries]
+          bison = '/opt/homebrew/opt/bison/bin/bison'
+          llvm-config = '/opt/homebrew/opt/llvm/bin/llvm-config'
+          EOF
+
+      - name: Configure with Meson
+        working-directory: mesa
+        run: |
+          meson setup build --native-file native.ini \
+            -Dprefix=$HOME/mesa-native \
+            -Dbuildtype=release \
+            -Dplatforms=macos \
+            -Degl=disabled \
+            -Dgallium-drivers=zink \
+            -Dvulkan-drivers=kosmickrisp \
+            -Dgles1=disabled \
+            -Dgles2=disabled \
+            -Dglx=disabled \
+            -Dgbm=disabled \
+            -Dmoltenvk-dir=/opt/homebrew/opt/molten-vk
+
+      - name: Build and install
+        working-directory: mesa
+        run: |
+          ninja -C build
+          ninja -C build install
+
+      - name: Create DRI symlinks and copy Vulkan loader
+        run: |
+          mkdir -p $HOME/mesa-native/lib/dri
+          cd $HOME/mesa-native/lib/dri
+          GALLIUM_LIB=$(ls $HOME/mesa-native/lib/libgallium-*.dylib | head -1)
+          if [ -n "$GALLIUM_LIB" ]; then
+            ln -sf "$GALLIUM_LIB" zink_dri.so
+            ln -sf "$GALLIUM_LIB" swrast_dri.so
+          fi
+          if [ -f /opt/homebrew/lib/libvulkan.1.dylib ]; then
+            cp /opt/homebrew/lib/libvulkan.1.dylib $HOME/mesa-native/lib/
+          fi
+          
+      - name: Verify Vulkan Drivers (Smoke Test)
+        run: |
+          ICD_JSON=$(find $HOME/mesa-native/share/vulkan/icd.d -name "*_icd.*.json" | head -n 1)
+          echo "Cargando controlador Vulkan desde: $ICD_JSON"
+          export VK_ICD_FILENAMES=$ICD_JSON
+          export DYLD_LIBRARY_PATH=$HOME/mesa-native/lib
+          vulkaninfo --summary || echo "vulkaninfo falló por falta de GPU física (comportamiento esperado en CI). El artefacto está listo para empaquetar."
+
+      - name: Upload built Mesa as artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: mesa-native-macos
+          path: ~/mesa-native

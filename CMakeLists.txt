@@ -38,6 +38,7 @@ add_subdirectory(src/TrinityLib/core)
 add_subdirectory(src/TrinityLib/ui)
 
 add_subdirectory(app)
+add_subdirectory(src/mini-matugen-j)
 
 # --- Translations ---
 # Must be after add_subdirectory(app) so trinity target exists Using

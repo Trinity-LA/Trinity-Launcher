@@ -12,12 +12,20 @@
 #include <QStackedWidget>
 #include <QVBoxLayout>
 #include <QWidget>
+#include <QMouseEvent>
+
 class LauncherWindow : public QWidget {
         Q_OBJECT
 
     public:
         explicit LauncherWindow(QWidget *parent = nullptr);
 
+    protected:
+        void mousePressEvent(QMouseEvent *event) override;
+        void mouseMoveEvent(QMouseEvent *event) override;
+
+
+    public:
         /**
          * Carga las versiones instaladas desde el directorio mcpelauncher
          */
@@ -46,6 +54,10 @@ class LauncherWindow : public QWidget {
         void launchGame();
 
     private:
+        // Title Bar Variables
+        QPoint m_dragPos;
+        QWidget *m_titleBar;
+
         // Layouts
         QHBoxLayout *mainLayout;
         QVBoxLayout *rightPanelLayout;
@@ -74,6 +86,7 @@ class LauncherWindow : public QWidget {
         Exporter *exporter;
         // Status Bar
         QLabel *statusLabel;
+        QLabel *launcherTitle; // Title label for glow effect
         QPushButton *shortcutButton;
         QComboBox *settingsLanguageCombo; // Language selector shown in Settings
 
@@ -88,7 +101,9 @@ class LauncherWindow : public QWidget {
         void applyTheme(const QString &accent, const QString &bg,
                         const QString &panel,  const QString &hover,
                         const QString &btnHover  = "#334155",
-                        const QString &textMuted = "#94a3b8");
+                        const QString &textMuted = "#94a3b8",
+                        const QString &text = "#ffffff");
+        void generateThemeFromWallpaper(const QString &wallpaperPath);
 };
 
 #endif // LAUNCHER_WINDOW_H

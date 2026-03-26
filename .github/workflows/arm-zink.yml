@@ -1,0 +1,362 @@
+name: (MAC ARM64 Nativo con Zink y Wrapper C) Compilar y Empaquetar para macOS
+on:
+  workflow_dispatch:
+env:
+  MESA_PREFIX: ${{ github.workspace }}/mesa-native
+
+jobs:
+  build-and-package:
+    runs-on: macos-latest
+
+    steps:
+      - name: Clonar repositorio Trinity
+        uses: actions/checkout@v4
+        with:
+          path: 'trinity'
+
+      - name: Clonar Manifiesto de mcpelauncher
+        uses: actions/checkout@v4
+        with:
+          repository: 'minecraft-linux/mcpelauncher-manifest'
+          ref: 'ng'
+          submodules: 'recursive'
+          path: 'mcpelauncher'
+
+      - name: Clonar mcpe-extract (Codeberg)
+        run: git clone https://codeberg.org/javiercplus/mcpe-extract.git
+
+      - name: Clonar mcpelauncher-mac-bin (Librerías puente)
+        uses: actions/checkout@v4
+        with:
+          repository: 'minecraft-linux/mcpelauncher-mac-bin'
+          path: 'mac-bin'
+
+      - name: Instalar dependencias de Homebrew (ARM64)
+        run: |
+          brew update
+          brew install \
+            cmake ninja pkg-config \
+            llvm glslang spirv-tools molten-vk \
+            qt@6 libzip libpng openssl rust
+
+          echo "/opt/homebrew/opt/llvm/bin" >> $GITHUB_PATH
+          echo "PKG_CONFIG_PATH=/opt/homebrew/opt/llvm/lib/pkgconfig:$PKG_CONFIG_PATH" >> $GITHUB_ENV
+
+          echo "OPENSSL_ROOT_DIR=/opt/homebrew/opt/openssl" >> $GITHUB_ENV
+          echo "OPENSSL_INCLUDE_DIR=/opt/homebrew/opt/openssl/include" >> $GITHUB_ENV
+          echo "OPENSSL_CRYPTO_LIBRARY=/opt/homebrew/opt/openssl/lib/libcrypto.dylib" >> $GITHUB_ENV
+          echo "OPENSSL_SSL_LIBRARY=/opt/homebrew/opt/openssl/lib/libssl.dylib" >> $GITHUB_ENV
+
+      - name: Descargar y extraer Mesa (Kosmickrisp precompilado)
+        run: |
+          echo "=== Descargando Mesa precompilado desde Hugging Face ==="
+          curl -L -o mesa-native-macos.zip https://huggingface.co/datasets/ccoffee20/macos/resolve/main/mesa-native-macos.zip
+
+          echo "=== Extrayendo Mesa en ${MESA_PREFIX} ==="
+          unzip -q mesa-native-macos.zip -d ${MESA_PREFIX}
+
+      - name: Clonar y compilar GLFW
+        run: |
+          git clone https://github.com/lucamignatti/glfw.git glfw-src
+          cd glfw-src
+          mkdir build && cd build
+
+          cmake .. \
+            -DCMAKE_BUILD_TYPE=Release \
+            -G Ninja \
+            -DCMAKE_INSTALL_PREFIX=${{ env.MESA_PREFIX }} \
+            -DGLFW_BUILD_EXAMPLES=OFF \
+            -DGLFW_BUILD_TESTS=OFF \
+            -DGLFW_BUILD_DOCS=OFF \
+            -DBUILD_SHARED_LIBS=ON \
+            -DCMAKE_OSX_ARCHITECTURES=arm64
+
+          cmake --build . --parallel $(sysctl -n hw.activecpu)
+          cmake --install .
+
+      - name: Clonar y compilar SDL3 (con Vulkan nativo)
+        run: |
+          git clone --depth 1 https://github.com/libsdl-org/SDL.git sdl3-src
+          cd sdl3-src
+          mkdir build && cd build
+
+          cmake .. \
+            -DCMAKE_BUILD_TYPE=Release \
+            -G Ninja \
+            -DCMAKE_INSTALL_PREFIX=${{ env.MESA_PREFIX }} \
+            -DCMAKE_OSX_ARCHITECTURES=arm64 \
+            -DCMAKE_OSX_DEPLOYMENT_TARGET=14.0 \
+            -DSDL_VIDEO_VULKAN=ON \
+            -DSDL_VIDEO_DRIVER_COCOA=ON \
+            -DSDL_VIDEO_OFFSCREEN=ON \
+            -DSDL_SHARED=ON \
+            -DSDL_STATIC=OFF \
+            -DSDL_TEST=OFF \
+            -DSDL_INSTALL_TESTS=OFF
+
+          cmake --build . --parallel $(sysctl -n hw.activecpu)
+          cmake --install .
+
+      - name: Compilar Trinity
+        run: |
+          cd trinity
+          mkdir -p build && cd build
+
+          cmake .. \
+            -DCMAKE_BUILD_TYPE=Release \
+            -G Ninja \
+            -DCMAKE_PREFIX_PATH="${{ env.MESA_PREFIX }};/opt/homebrew/opt/qt@6" \
+            -DCMAKE_OSX_DEPLOYMENT_TARGET=14.0 \
+            -DCMAKE_OSX_ARCHITECTURES=arm64 \
+            -DCMAKE_INSTALL_PREFIX=${{ github.workspace }}/dist/trinity \
+            -Wno-dev
+
+          cmake --build . --parallel $(sysctl -n hw.activecpu)
+
+      - name: Compilar mcpelauncher (ARM64 + OpenSSL Homebrew)
+        run: |
+          source $HOME/.cargo/env
+
+          cd mcpelauncher
+          mkdir -p build && cd build
+
+          OPENSSL_DIR="/opt/homebrew/opt/openssl"
+
+          cmake .. \
+            -DCMAKE_POLICY_VERSION_MINIMUM=3.5 \
+            -DCMAKE_BUILD_TYPE=Release \
+            -G Ninja \
+            -DBUILD_WEBVIEW=OFF \
+            -DBUILD_UI=OFF \
+            -DCMAKE_OSX_ARCHITECTURES=arm64 \
+            -DCMAKE_OSX_DEPLOYMENT_TARGET=14.0 \
+            -DCMAKE_C_FLAGS="-I${OPENSSL_DIR}/include" \
+            -DCMAKE_CXX_FLAGS="-I${OPENSSL_DIR}/include" \
+            -DOPENSSL_ROOT_DIR="${OPENSSL_DIR}" \
+            -DGAMEWINDOW_SYSTEM=SDL3 \
+            -DJNI_USE_JNIVM=ON \
+            -DCMAKE_PREFIX_PATH="${{ env.MESA_PREFIX }};/opt/homebrew/opt/qt@6" \
+            -Wno-dev
+
+          cmake --build . --parallel $(sysctl -n hw.activecpu)
+
+      - name: Compilar mcpe-extract
+        run: |
+          cd mcpe-extract
+          mkdir -p build && cd build
+
+          cmake .. \
+            -DCMAKE_BUILD_TYPE=Release \
+            -G Ninja \
+            -DCMAKE_POLICY_VERSION_MINIMUM=3.5 \
+            -DCMAKE_OSX_DEPLOYMENT_TARGET=14.0 \
+            -DCMAKE_OSX_ARCHITECTURES=arm64 \
+            -Wno-dev
+
+          cmake --build . --parallel $(sysctl -n hw.activecpu)
+
+      - name: Compilar launcher nativo con soporte Zink (C wrapper)
+        run: |
+          cat << 'LAUNCHER_EOF' > trinity_launcher.c
+          #include <unistd.h>
+          #include <stdlib.h>
+          #include <string.h>
+          #include <stdio.h>
+          #include <libgen.h>
+          #include <limits.h>
+          #include <pwd.h>
+          #include <sys/param.h>
+          #include <sys/stat.h>
+          #include <mach-o/dyld.h>
+
+          int main(int argc, char *argv[], char *envp[]) {
+              char exe_path[PATH_MAX];
+              uint32_t size = sizeof(exe_path);
+              if (_NSGetExecutablePath(exe_path, &size) != 0) {
+                  return 1;
+              }
+              char exe_copy[PATH_MAX];
+              strncpy(exe_copy, exe_path, sizeof(exe_copy) - 1);
+              exe_copy[sizeof(exe_copy) - 1] = '\0';
+              char *dir = dirname(exe_copy);
+
+              char bin_path[PATH_MAX];
+              snprintf(bin_path, sizeof(bin_path), "%s/trinity-bin", dir);
+
+              // Variables específicas de Zink / Mesa
+              setenv("MESA_GL_VERSION_OVERRIDE", "4.6", 1);
+              setenv("MESA_GLSL_VERSION_OVERRIDE", "460", 1);
+              setenv("MESA_KK_DISABLE_WORKAROUNDS", "shader_cache", 1);
+
+              // Variables generales para Qt, SDL y ANGLE (opcional)
+              setenv("QT_MAC_WANTS_LAYER", "1", 1);
+              setenv("SDL_HINT_RENDER_DRIVER", "metal", 1);
+              setenv("ANGLE_DEFAULT_PLATFORM", "metal", 1);
+
+              // Configurar VK_DRIVER_FILES apuntando al ICD de Mesa dentro del bundle
+              char bundle_root[PATH_MAX];
+              snprintf(bundle_root, sizeof(bundle_root), "%s/../../..", dir);
+              char vk_driver_path[PATH_MAX];
+              snprintf(vk_driver_path, sizeof(vk_driver_path),
+                       "%s/Resources/vulkan/icd.d/kosmickrisp_mesa_icd.aarch64.json",
+                       bundle_root);
+              setenv("VK_DRIVER_FILES", vk_driver_path, 1);
+
+              // Configurar ruta de msa-daemon
+              char msa_path[PATH_MAX];
+              snprintf(msa_path, sizeof(msa_path), "%s/msa-daemon", dir);
+              setenv("MSA_DAEMON_PATH", msa_path, 1);
+
+              // Configurar DYLD_LIBRARY_PATH para incluir Frameworks y librerías puente
+              char lib_path[PATH_MAX * 2];
+              snprintf(lib_path, sizeof(lib_path), "%s/Frameworks:%s/Resources/mcpelauncher/lib/native/arm64",
+                       bundle_root, bundle_root);
+              const char *existing_dyld = getenv("DYLD_LIBRARY_PATH");
+              if (existing_dyld && strlen(existing_dyld) > 0) {
+                  char full_path[PATH_MAX * 3];
+                  snprintf(full_path, sizeof(full_path), "%s:%s", lib_path, existing_dyld);
+                  setenv("DYLD_LIBRARY_PATH", full_path, 1);
+              } else {
+                  setenv("DYLD_LIBRARY_PATH", lib_path, 1);
+              }
+
+              // Configurar DYLD_FRAMEWORK_PATH (si es necesario)
+              char fw_path[PATH_MAX];
+              snprintf(fw_path, sizeof(fw_path), "%s/Frameworks", bundle_root);
+              const char *existing_fw = getenv("DYLD_FRAMEWORK_PATH");
+              if (existing_fw && strlen(existing_fw) > 0) {
+                  char full_fw[PATH_MAX * 2];
+                  snprintf(full_fw, sizeof(full_fw), "%s:%s", fw_path, existing_fw);
+                  setenv("DYLD_FRAMEWORK_PATH", full_fw, 1);
+              } else {
+                  setenv("DYLD_FRAMEWORK_PATH", fw_path, 1);
+              }
+
+              // Cambiar al directorio de datos del usuario (necesario para PlayFab/SQLite)
+              struct passwd *pw = getpwuid(getuid());
+              if (pw && pw->pw_dir) {
+                  char data_dir[PATH_MAX];
+                  snprintf(data_dir, sizeof(data_dir), "%s/Library/Application Support/mcpelauncher", pw->pw_dir);
+                  mkdir(data_dir, 0755);
+                  chdir(data_dir);
+              }
+
+              // Preparar argumentos para execv
+              char **new_argv = malloc((argc + 1) * sizeof(char *));
+              if (!new_argv) return 1;
+              new_argv[0] = bin_path;
+              for (int i = 1; i < argc; i++) {
+                  new_argv[i] = argv[i];
+              }
+              new_argv[argc] = NULL;
+
+              execv(bin_path, new_argv);
+
+              perror("execv failed");
+              free(new_argv);
+              return 1;
+          }
+          LAUNCHER_EOF
+
+          clang -target arm64-apple-macos14.0 \
+                -o launcher \
+                trinity_launcher.c \
+                -framework CoreFoundation \
+                -mmacosx-version-min=14.0 \
+                -O2 \
+                -Wno-deprecated-declarations
+
+      - name: Crear Application Bundle con Zink y Wrapper C
+        run: |
+          mkdir -p dist/Trinity.app/Contents/{MacOS,Frameworks,Resources/mcpelauncher,Resources/vulkan/icd.d}
+
+          # Copiar ejecutables
+          cp mcpelauncher/build/mcpelauncher-client/mcpelauncher-client dist/Trinity.app/Contents/MacOS/
+          cp mcpe-extract/build/mcpelauncher-extract dist/Trinity.app/Contents/MacOS/
+          cp trinity/build/app/trinity dist/Trinity.app/Contents/MacOS/trinity-bin
+          cp launcher dist/Trinity.app/Contents/MacOS/trinity
+
+          # Buscar y copiar el msa-daemon
+          find mcpelauncher/build -type f -name "msa-daemon" -exec cp {} dist/Trinity.app/Contents/MacOS/ \; || true
+
+          chmod +x dist/Trinity.app/Contents/MacOS/trinity
+
+          # Copiar librerías de Mesa a Frameworks
+          cp -R ${{ env.MESA_PREFIX }}/lib/*.dylib dist/Trinity.app/Contents/Frameworks/ 2>/dev/null || true
+
+          # Copiar JSON de Vulkan ICD a Resources
+          cp ${{ env.MESA_PREFIX }}/share/vulkan/icd.d/*.json dist/Trinity.app/Contents/Resources/vulkan/icd.d/ 2>/dev/null || true
+
+          # Copiar estructura de librerías puente (mcpelauncher-mac-bin)
+          cp -R mac-bin/lib dist/Trinity.app/Contents/Resources/mcpelauncher/
+
+          # Crear Info.plist (el ejecutable principal es el wrapper "trinity")
+          cat <<EOF > dist/Trinity.app/Contents/Info.plist
+          <?xml version="1.0" encoding="UTF-8"?>
+          <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+          <plist version="1.0">
+          <dict>
+              <key>CFBundleExecutable</key>
+              <string>trinity</string>
+              <key>CFBundleIdentifier</key>
+              <string>com.trench.trinity.launcher</string>
+              <key>CFBundleName</key>
+              <string>Trinity</string>
+              <key>CFBundleIconFile</key>
+              <string>AppIcon</string>
+              <key>CFBundleShortVersionString</key>
+              <string>1.0</string>
+              <key>LSMinimumSystemVersion</key>
+              <string>14.0</string>
+              <key>NSHighResolutionCapable</key>
+              <true/>
+              <key>NSSupportsAutomaticGraphicsSwitching</key>
+              <true/>
+              <key>CFBundlePackageType</key>
+              <string>APPL</string>
+              <key>CFBundleSignature</key>
+              <string>????</string>
+          </dict>
+          </plist>
+          EOF
+
+          # Copiar ícono (si existe)
+          cp trinity/resources/branding/com.trench.trinity.launcher.icns dist/Trinity.app/Contents/Resources/AppIcon.icns 2>/dev/null || true
+
+      - name: macdeployqt y codesign
+        run: |
+          # Crear enlaces simbólicos para que macdeployqt encuentre frameworks adicionales de Qt
+          mkdir -p dist/lib
+          ln -s /opt/homebrew/opt/qt@6/lib/QtSvg.framework dist/lib/ || true
+          ln -s /opt/homebrew/opt/qt@6/lib/QtVirtualKeyboard.framework dist/lib/ || true
+          ln -s /opt/homebrew/opt/qt@6/lib/QtVirtualKeyboardQml.framework dist/lib/ || true
+
+          cd dist
+          # Ejecutar macdeployqt para copiar dependencias de Qt
+          /opt/homebrew/opt/qt@6/bin/macdeployqt Trinity.app \
+            -executable=Trinity.app/Contents/MacOS/trinity-bin \
+            -executable=Trinity.app/Contents/MacOS/mcpelauncher-client \
+            -executable=Trinity.app/Contents/MacOS/mcpelauncher-extract \
+            -executable=Trinity.app/Contents/MacOS/trinity \
+            -libpath=/opt/homebrew/opt/qt@6/lib \
+            -verbose=1
+
+          # Añadir rpath adicional para asegurar carga de Frameworks
+          install_name_tool -add_rpath @loader_path/../Frameworks Trinity.app/Contents/MacOS/trinity-bin 2>/dev/null || true
+          install_name_tool -add_rpath @loader_path/../Frameworks Trinity.app/Contents/MacOS/mcpelauncher-client 2>/dev/null || true
+          install_name_tool -add_rpath @loader_path/../Frameworks Trinity.app/Contents/MacOS/msa-daemon 2>/dev/null || true
+          install_name_tool -add_rpath @loader_path/../Frameworks Trinity.app/Contents/MacOS/mcpelauncher-extract 2>/dev/null || true
+          install_name_tool -add_rpath @loader_path/../Frameworks Trinity.app/Contents/MacOS/trinity 2>/dev/null || true
+
+          # Firmar todo el bundle (ad-hoc)
+          codesign --force --deep --sign - --timestamp=none Trinity.app
+
+          # Crear DMG
+          hdiutil create -volname "Trinity Launcher" -srcfolder Trinity.app -ov -format UDZO Trinity.dmg
+
+      - name: Subir instalador DMG
+        uses: actions/upload-artifact@v4
+        with:
+          name: trinity-mcpelauncher-macos-arm64-zink
+          path: dist/Trinity.dmg
+          if-no-files-found: error

@@ -1,17 +1,19 @@
-name: Compilar y Empaquetar AppImage
+name: (Debian ARM64) Compilar y Empaquetar AppImage 
 
 on:
-  push:
-    branches: [ main, master, appimage-rebase ]
   workflow_dispatch:
-  pull_request:
-    branches: [ main, master, appimage-rebase ]
-
 jobs:
-  build-and-package:
-    runs-on: ubuntu-latest
+  build-and-package-arm64:
+    runs-on: ubuntu-24.04-arm
+    container: debian:12
 
     steps:
+      - name: Preparar entorno base del contenedor
+        run: |
+          apt-get update
+          apt-get install -y --no-install-recommends git sudo ca-certificates curl wget
+          git config --global --add safe.directory '*'
+
       - name: Clonar repositorio Trinity
         uses: actions/checkout@v4
         with:
@@ -36,9 +38,8 @@ jobs:
 
       - name: Instalar dependencias del sistema
         run: |
-          sudo apt-get update
-          sudo apt-get install -y --no-install-recommends \
-            ca-certificates build-essential git curl cmake clang ninja-build \
+          apt-get install -y --no-install-recommends \
+            build-essential cmake clang ninja-build \
             qt6-base-dev qt6-base-dev-tools qt6-declarative-dev qt6-webengine-dev qt6-svg-dev qt6-tools-dev \
             libcurl4-openssl-dev libssl-dev libasound2-dev libpulse-dev libjack-jackd2-dev \
             libpipewire-0.3-dev libsndio-dev libx11-dev libxi-dev libxext-dev libxfixes-dev \
@@ -46,7 +47,7 @@ jobs:
             libgles2-mesa-dev libvulkan-dev vulkan-validationlayers libdrm-dev libgbm-dev \
             libudev-dev libevdev-dev libusb-1.0-0-dev libdbus-1-dev libbluetooth-dev bluez \
             libibus-1.0-dev libxkbcommon-dev libpng-dev libzip-dev libcups2-dev \
-            libwayland-dev libunwind-dev libdecor-0-dev libfuse2 wget file python3
+            libwayland-dev libunwind-dev libdecor-0-dev libfuse2 file python3
 
       - name: Compilar mcpelauncher (Modo sin GUI)
         run: |
@@ -61,6 +62,7 @@ jobs:
             -DBUILD_UI=OFF \
             -Wno-dev
           ninja -v
+
       - name: Compilar mcpe-extract
         run: |
           cd mcpe-extract
@@ -73,10 +75,16 @@ jobs:
 
       - name: Compilar Trinity Launcher
         run: |
+          # Crear usuario sin privilegios de root para evitar el bloqueo del script
+          useradd -m builder
+          echo "builder ALL=(ALL) NOPASSWD:ALL" >> /etc/sudoers
+          chown -R builder:builder .
+          
           cd trinity
           chmod +x build.sh
-          ./build.sh --deps
-          ./build.sh --release
+          # Ejecutar la compilación asumiendo la identidad del nuevo usuario
+          su builder -c "./build.sh --deps"
+          su builder -c "./build.sh --release"
 
       - name: Preparar estructura AppDir
         run: |
@@ -98,9 +106,10 @@ jobs:
           cp trinity/resources/branding/com.trench.trinity.launcher.svg APPIMAGE-TRINITY/usr/share/icons/hicolor/scalable/apps/
           
           cp -r linux-bin/* APPIMAGE-TRINITY/usr/share/mcpelauncher/
+
       - name: Integrar Librería libzip (Portabilidad Total)
         run: |
-          LIBZIP_REAL=$(find /usr/lib/x86_64-linux-gnu -name "libzip.so*" -type f | head -n 1)
+          LIBZIP_REAL=$(find /usr/lib/aarch64-linux-gnu -name "libzip.so*" -type f | head -n 1)
           cp -v "$LIBZIP_REAL" APPIMAGE-TRINITY/usr/lib/libzip.so.5
           chmod +w APPIMAGE-TRINITY/usr/lib/libzip.so.5
 
@@ -122,26 +131,42 @@ jobs:
           ln -s usr/share/applications/com.trench.trinity.launcher.desktop APPIMAGE-TRINITY/com.trench.trinity.launcher.desktop
           ln -s usr/share/icons/hicolor/scalable/apps/com.trench.trinity.launcher.svg APPIMAGE-TRINITY/com.trench.trinity.launcher.svg
 
-      - name: Descargar linuxdeploy y plugin Qt
+      - name: Descargar y preparar linuxdeploy y plugin Qt (ARM64)
         run: |
-          wget https://github.com/linuxdeploy/linuxdeploy/releases/download/continuous/linuxdeploy-x86_64.AppImage
-          wget https://github.com/linuxdeploy/linuxdeploy-plugin-qt/releases/download/continuous/linuxdeploy-plugin-qt-x86_64.AppImage
+          wget https://github.com/linuxdeploy/linuxdeploy/releases/download/continuous/linuxdeploy-aarch64.AppImage
+          wget https://github.com/linuxdeploy/linuxdeploy-plugin-qt/releases/download/continuous/linuxdeploy-plugin-qt-aarch64.AppImage
           chmod +x linuxdeploy*.AppImage
+
+          # Extraer ambos AppImages para evadir completamente el uso de FUSE
+          ./linuxdeploy-aarch64.AppImage --appimage-extract
+          mv squashfs-root linuxdeploy-bin
+          
+          ./linuxdeploy-plugin-qt-aarch64.AppImage --appimage-extract
+          mv squashfs-root linuxdeploy-qt-bin
+          
+          # ¡CRÍTICO! Eliminar los archivos .AppImage originales
+          rm linuxdeploy-aarch64.AppImage linuxdeploy-plugin-qt-aarch64.AppImage
+          
+          # Enlazar el AppRun del plugin como un ejecutable estándar
+          ln -s $PWD/linuxdeploy-qt-bin/AppRun $PWD/linuxdeploy-plugin-qt
 
       - name: Ejecutar empaquetado
         run: |
+          export PATH=$PWD:$PATH
           export QMAKE=/usr/lib/qt6/bin/qmake
-          export LD_LIBRARY_PATH=$PWD/APPIMAGE-TRINITY/usr/lib:/usr/lib/x86_64-linux-gnu:$LD_LIBRARY_PATH
+          export LD_LIBRARY_PATH=$PWD/APPIMAGE-TRINITY/usr/lib:/usr/lib/aarch64-linux-gnu:$LD_LIBRARY_PATH
+          export APPIMAGE_EXTRACT_AND_RUN=1
           
-          ARCH=x86_64 ./linuxdeploy-x86_64.AppImage \
+          ARCH=aarch64 ./linuxdeploy-bin/AppRun \
             --appdir APPIMAGE-TRINITY \
             --desktop-file APPIMAGE-TRINITY/usr/share/applications/com.trench.trinity.launcher.desktop \
             --icon-file APPIMAGE-TRINITY/usr/share/icons/hicolor/scalable/apps/com.trench.trinity.launcher.svg \
             --plugin qt \
             --output appimage
 
+      
       - name: Subir AppImage resultante
         uses: actions/upload-artifact@v4
         with:
-          name: Trinity-Launcher-AppImage
+          name: Trinity-Launcher-AppImage-ARM64
           path: "*.AppImage"

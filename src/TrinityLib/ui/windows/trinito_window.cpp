@@ -66,11 +66,11 @@ QWidget *TrinitoWindow::createInstancesTab() {
     headerRow->setSpacing(16);
 
     QLabel *listLabel = new QLabel(tr("Installed versions:"));
-    listLabel->setStyleSheet("font-size: 13px; color: #94a3b8;");
+    listLabel->setStyleSheet("font-size: 16px; background: transparent;");
     headerRow->addWidget(listLabel, 3);
 
     QLabel *actionsLabel = new QLabel(tr("Actions"));
-    actionsLabel->setStyleSheet("font-size: 13px; color: #94a3b8;");
+    actionsLabel->setStyleSheet("font-size: 16px; background: transparent;");
     headerRow->addWidget(actionsLabel, 2);
 
     outerLayout->addLayout(headerRow);
@@ -78,7 +78,7 @@ QWidget *TrinitoWindow::createInstancesTab() {
     // ── Thin separator below headers ──────────────────────────────────────
     auto *sep = new QFrame();
     sep->setFrameShape(QFrame::HLine);
-    sep->setStyleSheet("color: #1e293b;");
+    sep->setObjectName("Divider");
     outerLayout->addWidget(sep);
 
     // ── Split: [version list] | [action panel] ────────────────────────────
@@ -93,10 +93,7 @@ QWidget *TrinitoWindow::createInstancesTab() {
 
     auto *versionsList = new QListWidget();
     versionsList->setIconSize(QSize(20, 20));
-    versionsList->setStyleSheet(
-        "QListWidget { border-radius: 8px; padding: 4px; outline: 0; }"
-        "QListWidget::item { padding: 8px; border-radius: 5px; margin-bottom: 3px; }"
-    );
+    // ListWidget style handled by applyTheme global stylesheet
 
     // Refresh function for instances list
     auto refreshInstancesList = [this, versionsList]() {
@@ -116,10 +113,10 @@ QWidget *TrinitoWindow::createInstancesTab() {
 
                 auto* delBtn = new QPushButton();
                 delBtn->setIcon(QIcon(":/icons/trash"));
-                delBtn->setIconSize(QSize(18, 18));
-                delBtn->setFixedSize(23, 23);
+                delBtn->setIconSize(QSize(14, 14));
+                delBtn->setFixedSize(20, 20);
                 delBtn->setCursor(Qt::PointingHandCursor);
-                delBtn->setStyleSheet("QPushButton { border: none; background: transparent; } QPushButton:hover { background: rgba(255,255,255,0.2); border-radius: 4px; }");
+                delBtn->setStyleSheet("QPushButton { border: none; background: transparent; }");
 
                 rowLayout->addWidget(delBtn);
                 versionsList->setItemWidget(item, rowWidget);
@@ -431,7 +428,7 @@ QWidget *TrinitoWindow::createPackTab(const QString &targetSubdir,
 
     // Title
     QLabel *titleLabel = new QLabel(labelText);
-    titleLabel->setStyleSheet("font-weight: bold; font-size: 16px;");
+    titleLabel->setObjectName("Title");
     layout->addWidget(titleLabel);
 
     // Installation section
@@ -537,7 +534,7 @@ QWidget *TrinitoWindow::createDevTab() {
 
     // Title
     QLabel *titleLabel = new QLabel(tr("Development Packs"));
-    titleLabel->setStyleSheet("font-weight: bold; font-size: 16px;");
+    titleLabel->setObjectName("Title");
     layout->addWidget(titleLabel);
 
     // Horizontal container for the two installation buttons
@@ -577,7 +574,7 @@ QWidget *TrinitoWindow::createDevTab() {
 
     // Management section
     QLabel *manageLabel = new QLabel(tr("Manage Development Packs:"));
-    manageLabel->setStyleSheet("font-weight: bold; font-size: 14px;");
+    // Uses default label color
     layout->addWidget(manageLabel);
 
     // Create a container for the two lists
@@ -724,7 +721,7 @@ QWidget *TrinitoWindow::createWorldTab() {
 
     // Title
     QLabel *titleLabel = new QLabel(tr("Saved Worlds"));
-    titleLabel->setStyleSheet("font-weight: bold; font-size: 16px;");
+    titleLabel->setObjectName("Title");
     layout->addWidget(titleLabel);
 
     // Button to select world folder
@@ -743,7 +740,7 @@ QWidget *TrinitoWindow::createWorldTab() {
 
     // Management section
     QLabel *manageLabel = new QLabel(tr("Manage Worlds:"));
-    manageLabel->setStyleSheet("font-weight: bold; font-size: 14px;");
+    // Uses default label color
     layout->addWidget(manageLabel);
 
     QListWidget *listWidget = new QListWidget();
@@ -871,12 +868,12 @@ QWidget *TrinitoWindow::createShadersModsTab() {
     shadersLayout->setSpacing(8);
 
     auto *shadersTitle = new QLabel(tr("Installed Shaders"));
-    shadersTitle->setStyleSheet("font-weight: bold; font-size: 14px; color: #8b5cf6; background: transparent;");
+    shadersTitle->setObjectName("Title");
     shadersLayout->addWidget(shadersTitle);
 
     auto *shadersSep = new QFrame();
     shadersSep->setFrameShape(QFrame::HLine);
-    shadersSep->setStyleSheet("color: #1e293b;");
+    shadersSep->setObjectName("Divider");
     shadersLayout->addWidget(shadersSep);
 
     shadersList = new QListWidget();
@@ -910,17 +907,17 @@ QWidget *TrinitoWindow::createShadersModsTab() {
     libsLayout->setSpacing(8);
 
     auto *libsTitle = new QLabel(tr("Manage Libs"));
-    libsTitle->setStyleSheet("font-weight: bold; font-size: 14px; color: #8b5cf6; background: transparent;");
+    libsTitle->setObjectName("Title");
     libsLayout->addWidget(libsTitle);
 
     auto *libsSep = new QFrame();
     libsSep->setFrameShape(QFrame::HLine);
-    libsSep->setStyleSheet("color: #1e293b;");
+    libsSep->setObjectName("Divider");
     libsLayout->addWidget(libsSep);
 
     // Available Libs
     auto *availableLibsLabel = new QLabel(tr("Available libs:"));
-    availableLibsLabel->setStyleSheet("font-size: 12px; color: #94a3b8; background: transparent;");
+    availableLibsLabel->setStyleSheet("font-size: 16px; background: transparent;");
     libsLayout->addWidget(availableLibsLabel);
 
     availableModsList = new QListWidget();
@@ -936,7 +933,7 @@ QWidget *TrinitoWindow::createShadersModsTab() {
 
     // Installed Libs
     auto *installedLibsLabel = new QLabel(tr("Installed libs (✓ = active):"));
-    installedLibsLabel->setStyleSheet("font-size: 12px; color: #94a3b8; background: transparent;");
+    installedLibsLabel->setStyleSheet("font-size: 16px; background: transparent;");
     libsLayout->addWidget(installedLibsLabel);
 
     installedModsList = new QListWidget();
@@ -1289,13 +1286,13 @@ QWidget *TrinitoWindow::createDirectoryTab() {
 
     // Título
     auto *titleLabel = new QLabel(tr("Data Directory"));
-    titleLabel->setStyleSheet("font-weight: bold; font-size: 20px; color: #8b5cf6;");
+    titleLabel->setObjectName("Title");
     layout->addWidget(titleLabel);
 
     auto *descLabel = new QLabel(
         tr("This is where Minecraft Bedrock stores your worlds, packs, and other user data."));
     descLabel->setWordWrap(true);
-    descLabel->setStyleSheet("font-size: 13px; color: #94a3b8;");
+    descLabel->setStyleSheet("font-size: 16px; background: transparent;");
     layout->addWidget(descLabel);
 
     // Detectar la ruta de datos (mismo patrón que getShadersDir())
@@ -1320,16 +1317,13 @@ QWidget *TrinitoWindow::createDirectoryTab() {
 
     // Card de ruta
     auto *card = new QWidget();
-    card->setStyleSheet(
-        "QWidget { background-color: #090f20; border: 1px solid #1e293b; "
-        "border-radius: 10px; }"
-    );
+    card->setObjectName("ContextPanel");
     auto *cardLayout = new QVBoxLayout(card);
     cardLayout->setContentsMargins(20, 16, 20, 16);
     cardLayout->setSpacing(8);
 
     auto *typeLbl = new QLabel(typeLabel);
-    typeLbl->setStyleSheet("font-size: 12px; color: #64748b; font-weight: bold; "
+    typeLbl->setStyleSheet("font-size: 16px; font-weight: bold; "
                            "letter-spacing: 1px; text-transform: uppercase; background: transparent;");
     cardLayout->addWidget(typeLbl);
 
@@ -1338,7 +1332,7 @@ QWidget *TrinitoWindow::createDirectoryTab() {
     pathLbl->setTextInteractionFlags(Qt::TextSelectableByMouse);
     pathLbl->setCursor(Qt::IBeamCursor);
     pathLbl->setStyleSheet(
-        "font-size: 14px; color: #e2e8f0; font-family: monospace; background: transparent;");
+        "font-size: 16px; font-family: monospace; background: transparent;");
     cardLayout->addWidget(pathLbl);
 
     layout->addWidget(card);
@@ -1349,10 +1343,7 @@ QWidget *TrinitoWindow::createDirectoryTab() {
     auto *openBtn = new QPushButton(tr("Open Location"));
     openBtn->setFixedHeight(38);
     openBtn->setCursor(Qt::PointingHandCursor);
-    openBtn->setStyleSheet(
-        "QPushButton { background-color: #8b5cf6; color: #ffffff; "
-        "border-radius: 6px; font-weight: bold; padding: 0 20px; }"
-        "QPushButton:hover { background-color: #a78bfa; }");
+    openBtn->setObjectName("ActionButton");
     connect(openBtn, &QPushButton::clicked, this, [dataPath]() {
         QDesktopServices::openUrl(QUrl::fromLocalFile(dataPath));
     });
