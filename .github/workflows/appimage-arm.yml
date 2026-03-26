@@ -80,10 +80,16 @@ jobs:
 
       - name: Compilar Trinity Launcher
         run: |
+          # Crear usuario sin privilegios de root para evitar el bloqueo del script
+          useradd -m builder
+          echo "builder ALL=(ALL) NOPASSWD:ALL" >> /etc/sudoers
+          chown -R builder:builder .
+          
           cd trinity
           chmod +x build.sh
-          ./build.sh --deps
-          ./build.sh --release
+          # Ejecutar la compilación asumiendo la identidad del nuevo usuario
+          su builder -c "./build.sh --deps"
+          su builder -c "./build.sh --release"
 
       - name: Preparar estructura AppDir
         run: |
@@ -130,27 +136,38 @@ jobs:
           ln -s usr/share/applications/com.trench.trinity.launcher.desktop APPIMAGE-TRINITY/com.trench.trinity.launcher.desktop
           ln -s usr/share/icons/hicolor/scalable/apps/com.trench.trinity.launcher.svg APPIMAGE-TRINITY/com.trench.trinity.launcher.svg
 
-      - name: Descargar linuxdeploy y plugin Qt (ARM64)
+      - name: Descargar y preparar linuxdeploy y plugin Qt (ARM64)
         run: |
           wget https://github.com/linuxdeploy/linuxdeploy/releases/download/continuous/linuxdeploy-aarch64.AppImage
           wget https://github.com/linuxdeploy/linuxdeploy-plugin-qt/releases/download/continuous/linuxdeploy-plugin-qt-aarch64.AppImage
           chmod +x linuxdeploy*.AppImage
 
+          # Extraer ambos AppImages para evadir completamente el uso de FUSE
+          ./linuxdeploy-aarch64.AppImage --appimage-extract
+          mv squashfs-root linuxdeploy-bin
+          
+          ./linuxdeploy-plugin-qt-aarch64.AppImage --appimage-extract
+          mv squashfs-root linuxdeploy-qt-bin
+          
+          # Enlazar el AppRun del plugin como un ejecutable estándar en la raíz del entorno
+          ln -s $PWD/linuxdeploy-qt-bin/AppRun $PWD/linuxdeploy-plugin-qt
+
       - name: Ejecutar empaquetado
         run: |
+          # Añadir el directorio actual al PATH para que linuxdeploy encuentre el enlace del plugin
+          export PATH=$PWD:$PATH
           export QMAKE=/usr/lib/qt6/bin/qmake
           export LD_LIBRARY_PATH=$PWD/APPIMAGE-TRINITY/usr/lib:/usr/lib/aarch64-linux-gnu:$LD_LIBRARY_PATH
           
-          # En contenedores Docker, FUSE a menudo falla. Extraemos el AppImage de linuxdeploy para ejecutarlo directamente.
-          ./linuxdeploy-aarch64.AppImage --appimage-extract
-          
-          ARCH=aarch64 ./squashfs-root/AppRun \
+          # Ejecutar los binarios crudos extraídos
+          ARCH=aarch64 ./linuxdeploy-bin/AppRun \
             --appdir APPIMAGE-TRINITY \
             --desktop-file APPIMAGE-TRINITY/usr/share/applications/com.trench.trinity.launcher.desktop \
             --icon-file APPIMAGE-TRINITY/usr/share/icons/hicolor/scalable/apps/com.trench.trinity.launcher.svg \
             --plugin qt \
             --output appimage
 
+      
       - name: Subir AppImage resultante
         uses: actions/upload-artifact@v4
         with:
