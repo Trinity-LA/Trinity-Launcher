@@ -270,27 +270,34 @@ if [ "$UNINSTALL" = true ]; then uninstall_app; exit 0; fi
 
 # 2. Update Translations (If requested)
 if [ "$UPDATE_TRANSLATIONS" = true ]; then
-    echo -e "${YELLOW}🌍 Updating translation files (.ts)...${NC}"
+    echo -e "${YELLOW}🌍 Updating and compiling translation files...${NC}"
     
-    # 1. Try to find lupdate in normal PATH
     if command -v lupdate &> /dev/null; then
         LUPDATE_CMD="lupdate"
-    # 2. If it fails, try to find it in specific Arch Linux / Qt6 path
     elif [ -f "/usr/lib/qt6/bin/lupdate" ]; then
         LUPDATE_CMD="/usr/lib/qt6/bin/lupdate"
     else
-        echo -e "${RED}Error: 'lupdate' not found. Install 'qt6-tools' (Arch) or 'qt6-tools-dev' (Debian).${NC}"
+        echo -e "${RED}Error: 'lupdate' not found.${NC}"
         exit 1
     fi
 
-    echo -e "${BLUE}   Using: $LUPDATE_CMD${NC}"
+    if command -v lrelease &> /dev/null; then
+        LRELEASE_CMD="lrelease"
+    elif [ -f "/usr/lib/qt6/bin/lrelease" ]; then
+        LRELEASE_CMD="/usr/lib/qt6/bin/lrelease"
+    else
+        echo -e "${RED}Error: 'lrelease' not found. Install 'qt6-tools'.${NC}"
+        exit 1
+    fi
 
-    # Run lupdate using the variable we found
+    echo -e "${BLUE}   Updating .ts files...${NC}"
     $LUPDATE_CMD src/ include/ -recursive -ts resources/i18n/*.ts
-    
-    echo -e "${GREEN}✅ .ts files updated.${NC}"
-  # It ends here because it will only update .ts files
-  exit 0
+
+    echo -e "${BLUE}   Compiling to binary .qm files...${NC}"
+    $LRELEASE_CMD resources/i18n/*.ts
+
+    echo -e "${GREEN}✅ Binary localization files (.qm) generated.${NC}"
+    exit 0
 fi
 
 # 3. Verify environment
