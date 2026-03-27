@@ -522,7 +522,7 @@ No: Sólo exporta mods, mundos, texturas.</translation>
     <message>
         <location filename="../../src/TrinityLib/ui/windows/launcher_window.cpp" line="522"/>
         <source>&lt;b&gt;BrokenByteOfCode&lt;/b&gt;: Ukrainian Translation</source>
-        <translation type="unfinished"></translation>
+        <translation>&lt;b&gt;BrokenByteOfCode&lt;/b&gt;: Traducción al ucraniano</translation>
     </message>
     <message>
         <location filename="../../src/TrinityLib/ui/windows/launcher_window.cpp" line="523"/>
