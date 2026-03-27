@@ -2,6 +2,7 @@ name: Compilar y Empaquetar AppImage
 
 on:
   workflow_dispatch:
+
 jobs:
   build-32bit:
     runs-on: ubuntu-22.04
@@ -19,16 +20,27 @@ jobs:
           sudo apt-get update
           sudo apt-get install -y --no-install-recommends \
             ca-certificates build-essential git curl cmake clang ninja-build \
-            gcc-multilib g++-multilib \
+            gcc-multilib g++-multilib patchelf meson python3-pip python3-setuptools \
             zlib1g-dev:i386 libpng-dev:i386 libcurl4-openssl-dev:i386 libssl-dev:i386 \
             libasound2-dev:i386 libpulse-dev:i386 libjack-jackd2-dev:i386 \
             libx11-dev:i386 libxi-dev:i386 libxext-dev:i386 libxfixes-dev:i386 \
             libxcursor-dev:i386 libxrandr-dev:i386 libxss-dev:i386 libxtst-dev:i386 \
             libgl1-mesa-dev:i386 libegl1-mesa-dev:i386 libgles2-mesa-dev:i386 \
             libvulkan-dev:i386 libdrm-dev:i386 libgbm-dev:i386 libudev-dev:i386 \
-            libevdev-dev:i386 libusb-1.0-0-dev:i386 \
-            libxkbcommon-dev:i386 libcups2-dev:i386 \
+            libusb-1.0-0-dev:i386 libxkbcommon-dev:i386 libcups2-dev:i386 \
             libwayland-dev:i386 libunwind-dev:i386
+
+      - name: Compilar libevdev 32 bits
+        run: |
+          wget https://www.freedesktop.org/software/libevdev/libevdev-1.13.6.tar.xz
+          tar -xf libevdev-1.13.6.tar.xz
+          cd libevdev-1.13.6
+          export CC="clang -m32"
+          export CXX="clang++ -m32"
+          export PKG_CONFIG_PATH="/usr/lib/i386-linux-gnu/pkgconfig"
+          meson setup build --prefix=/usr --libdir=lib
+          ninja -C build
+          DESTDIR=$PWD/install ninja -C build install
 
       - name: Compilar mcpelauncher 32bit (Modo sin GUI)
         run: |
@@ -45,7 +57,7 @@ jobs:
             -DCMAKE_BUILD_TYPE=RelWithDebInfo \
             -DCMAKE_C_FLAGS='-m32' \
             -DCMAKE_CXX_FLAGS='-m32' \
-            -DCMAKE_EXE_LINKER_FLAGS='-m32 -Wl,-rpath=\$ORIGIN' \
+            -DCMAKE_EXE_LINKER_FLAGS='-m32' \
             -DCMAKE_FIND_ROOT_PATH='/usr/lib/i386-linux-gnu;/usr/include/i386-linux-gnu;/usr/lib;/usr/include' \
             -DCMAKE_FIND_ROOT_PATH_MODE_LIBRARY=BOTH \
             -DCMAKE_FIND_ROOT_PATH_MODE_INCLUDE=BOTH \
@@ -56,14 +68,18 @@ jobs:
 
       - name: Recopilar binario y dependencias 32 bits
         run: |
-          mkdir -p artifact-32
+          mkdir -p artifact-32/lib32
           cp build/mcpelauncher-client/mcpelauncher-client artifact-32/mcpelauncher-client86
           
-          # Aislar librerías 32 bits usando ldd (excluyendo libs base del sistema que el host ya provee)
-          ldd build/mcpelauncher-client/mcpelauncher-client | grep "=> /" | awk '{print $3}' | grep -E "libcrypto|libssl|libpng|libatomic|libz|libevdev|libudev|libcurl" | xargs -I '{}' cp -v '{}' artifact-32/
+          # Parchear el binario para que busque librerías en lib32
+          patchelf --set-rpath '$ORIGIN/../lib32' artifact-32/mcpelauncher-client86
           
-          # Borrar libc.so.6 si se copió accidentalmente
-          rm -f artifact-32/libc.so.6
+          # Aislar librerías 32 bits usando ldd
+          ldd build/mcpelauncher-client/mcpelauncher-client | grep "=> /" | awk '{print $3}' | grep -E "libcrypto|libssl|libpng|libatomic|libz" | xargs -I '{}' cp -v '{}' artifact-32/lib32/
+          rm -f artifact-32/lib32/libc.so.6
+          
+          # Copiar libevdev de 32 bits compilado manualmente
+          cp -P libevdev-1.13.6/install/usr/lib/libevdev.so* artifact-32/lib32/
 
       - name: Subir binario de 32 bits
         uses: actions/upload-artifact@v4
@@ -108,16 +124,27 @@ jobs:
         run: |
           sudo apt-get update
           sudo apt-get install -y --no-install-recommends \
-            ca-certificates build-essential git curl cmake clang ninja-build patchelf \
+            ca-certificates build-essential git curl cmake clang ninja-build \
             qt6-base-dev qt6-base-dev-tools qt6-declarative-dev qt6-webengine-dev qt6-svg-dev qt6-tools-dev \
-            qtbase5-dev qtwebengine5-dev \
+            qtbase5-dev qtwebengine5-dev meson python3-pip python3-setuptools \
             libcurl4-openssl-dev libssl-dev libasound2-dev libpulse-dev libjack-jackd2-dev \
             libpipewire-0.3-dev libsndio-dev libx11-dev libxi-dev libxext-dev libxfixes-dev \
             libxcursor-dev libxrandr-dev libxss-dev libxtst-dev libgl1-mesa-dev libegl1-mesa-dev \
             libgles2-mesa-dev libvulkan-dev vulkan-validationlayers libdrm-dev libgbm-dev \
-            libudev-dev libevdev-dev libusb-1.0-0-dev libdbus-1-dev libbluetooth-dev bluez \
+            libudev-dev libusb-1.0-0-dev libdbus-1-dev libbluetooth-dev bluez \
             libibus-1.0-dev libxkbcommon-dev libpng-dev libzip-dev libcups2-dev \
             libwayland-dev libunwind-dev libdecor-0-dev libfuse2 wget file python3
+
+      - name: Compilar libevdev 64 bits
+        run: |
+          wget https://www.freedesktop.org/software/libevdev/libevdev-1.13.6.tar.xz
+          tar -xf libevdev-1.13.6.tar.xz
+          cd libevdev-1.13.6
+          export CC="clang"
+          export CXX="clang++"
+          meson setup build --prefix=/usr --libdir=lib
+          ninja -C build
+          DESTDIR=$PWD/install ninja -C build install
 
       - name: Compilar MSA (64 bits)
         run: |
@@ -178,6 +205,9 @@ jobs:
           cp trinity/resources/branding/com.trench.trinity.launcher.svg APPIMAGE-TRINITY/usr/share/icons/hicolor/scalable/apps/
           
           cp -r linux-bin/* APPIMAGE-TRINITY/usr/share/mcpelauncher/
+          
+          # Inyectar libevdev 64 bits compilado manualmente antes de linuxdeploy
+          cp -P libevdev-1.13.6/install/usr/lib/libevdev.so* APPIMAGE-TRINITY/usr/lib/
 
       - name: Integrar Librería libzip (Portabilidad Total)
         run: |
@@ -220,32 +250,11 @@ jobs:
             --icon-file APPIMAGE-TRINITY/usr/share/icons/hicolor/scalable/apps/com.trench.trinity.launcher.svg \
             --plugin qt
 
-      - name: Inyectar 32 bits, Parchear y Generar AppImage Final
+      - name: Inyectar 32 bits y Generar AppImage Final
         run: |
-          # 1. Crear directorio aislado para todo lo de 32 bits
-          mkdir -p APPIMAGE-TRINITY/usr/lib32
+          cp temp-32bit/mcpelauncher-client86 APPIMAGE-TRINITY/usr/bin/
+          cp -r temp-32bit/lib32 APPIMAGE-TRINITY/usr/
           
-          # 2. Mover el binario y sus librerías al directorio aislado
-          cp -r temp-32bit/* APPIMAGE-TRINITY/usr/lib32/
-          
-          # 3. Parchear el binario para que busque librerías en su propia carpeta
-          patchelf --set-rpath '$ORIGIN' APPIMAGE-TRINITY/usr/lib32/mcpelauncher-client86
-          
-          # 4. Crear el script envoltorio en usr/bin que invoca al binario aislado
-          cat << 'EOF' > APPIMAGE-TRINITY/usr/bin/mcpelauncher-client86
-          #!/bin/sh
-          HERE="$(dirname "$(readlink -f "$0")")"
-          
-          # Purgar estrictamente el directorio lib de 64 bits del AppImage
-          CLEAN_LD=$(echo "$LD_LIBRARY_PATH" | sed -e "s|$HERE/../lib:||g" -e "s|:$HERE/../lib||g" -e "s|$HERE/../lib||g")
-          
-          export LD_LIBRARY_PATH="$HERE/../lib32:$CLEAN_LD"
-          
-          exec "$HERE/../lib32/mcpelauncher-client86" "$@"
-          EOF
-          chmod +x APPIMAGE-TRINITY/usr/bin/mcpelauncher-client86
-          
-          # 5. Generar AppImage Final
           wget https://github.com/AppImage/AppImageKit/releases/download/continuous/appimagetool-x86_64.AppImage
           chmod +x appimagetool-x86_64.AppImage
           ARCH=x86_64 ./appimagetool-x86_64.AppImage APPIMAGE-TRINITY Trinity-Launcher-x86_64.AppImage
