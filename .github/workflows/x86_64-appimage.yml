@@ -1,4 +1,4 @@
-name: FULL Compilar y Empaquetar AppImage
+name: Compilar y Empaquetar AppImage
 
 on:
   workflow_dispatch:
@@ -45,7 +45,7 @@ jobs:
             -DCMAKE_BUILD_TYPE=RelWithDebInfo \
             -DCMAKE_C_FLAGS='-m32' \
             -DCMAKE_CXX_FLAGS='-m32' \
-            -DCMAKE_EXE_LINKER_FLAGS='-m32' \
+            -DCMAKE_EXE_LINKER_FLAGS='-m32 -Wl,-rpath=\$ORIGIN/../lib32' \
             -DCMAKE_FIND_ROOT_PATH='/usr/lib/i386-linux-gnu;/usr/include/i386-linux-gnu;/usr/lib;/usr/include' \
             -DCMAKE_FIND_ROOT_PATH_MODE_LIBRARY=BOTH \
             -DCMAKE_FIND_ROOT_PATH_MODE_INCLUDE=BOTH \
@@ -54,11 +54,20 @@ jobs:
             -Wno-dev
           ninja -v
 
+      - name: Recopilar binario y dependencias 32 bits
+        run: |
+          mkdir -p artifact-32/lib32
+          cp build/mcpelauncher-client/mcpelauncher-client artifact-32/mcpelauncher-client86
+          # Aislar librerías 32 bits usando ldd (excluyendo libs base del sistema que el host ya provee)
+          ldd build/mcpelauncher-client/mcpelauncher-client | grep "=> /" | awk '{print $3}' | grep -E "libcrypto|libssl|libpng|libatomic|libz" | xargs -I '{}' cp -v '{}' artifact-32/lib32/
+          # Borrar libc.so.6 si se copió accidentalmente
+          rm -f artifact-32/lib32/libc.so.6
+
       - name: Subir binario de 32 bits
         uses: actions/upload-artifact@v4
         with:
           name: binario-32bits
-          path: build/mcpelauncher-client/mcpelauncher-client
+          path: artifact-32
 
   build-and-package:
     needs: build-32bit
@@ -156,7 +165,6 @@ jobs:
           mkdir -p APPIMAGE-TRINITY/usr/share/mcpelauncher
 
           cp mcpelauncher/build/mcpelauncher-client/mcpelauncher-client APPIMAGE-TRINITY/usr/bin/
-          cp temp-32bit/mcpelauncher-client APPIMAGE-TRINITY/usr/bin/mcpelauncher-client86
           cp mcpe-extract/build/mcpelauncher-extract APPIMAGE-TRINITY/usr/bin/
           cp trinity/build/app/trinity APPIMAGE-TRINITY/usr/bin/
           
@@ -193,13 +201,13 @@ jobs:
           ln -s usr/share/applications/com.trench.trinity.launcher.desktop APPIMAGE-TRINITY/com.trench.trinity.launcher.desktop
           ln -s usr/share/icons/hicolor/scalable/apps/com.trench.trinity.launcher.svg APPIMAGE-TRINITY/com.trench.trinity.launcher.svg
 
-      - name: Descargar linuxdeploy y plugin Qt
+      - name: Descargar linuxdeploy
         run: |
           wget https://github.com/linuxdeploy/linuxdeploy/releases/download/continuous/linuxdeploy-x86_64.AppImage
           wget https://github.com/linuxdeploy/linuxdeploy-plugin-qt/releases/download/continuous/linuxdeploy-plugin-qt-x86_64.AppImage
           chmod +x linuxdeploy*.AppImage
 
-      - name: Ejecutar empaquetado
+      - name: Ejecutar linuxdeploy (Sin generar AppImage aún)
         run: |
           export QMAKE=/usr/lib/qt6/bin/qmake
           export LD_LIBRARY_PATH=$PWD/APPIMAGE-TRINITY/usr/lib:/usr/lib/x86_64-linux-gnu:$LD_LIBRARY_PATH
@@ -208,8 +216,17 @@ jobs:
             --appdir APPIMAGE-TRINITY \
             --desktop-file APPIMAGE-TRINITY/usr/share/applications/com.trench.trinity.launcher.desktop \
             --icon-file APPIMAGE-TRINITY/usr/share/icons/hicolor/scalable/apps/com.trench.trinity.launcher.svg \
-            --plugin qt \
-            --output appimage
+            --plugin qt
+
+      - name: Inyectar 32 bits y Generar AppImage Final
+        run: |
+          # Se inyectan después de linuxdeploy para que no las escanee
+          cp temp-32bit/mcpelauncher-client86 APPIMAGE-TRINITY/usr/bin/
+          cp -r temp-32bit/lib32 APPIMAGE-TRINITY/usr/
+          
+          wget https://github.com/AppImage/AppImageKit/releases/download/continuous/appimagetool-x86_64.AppImage
+          chmod +x appimagetool-x86_64.AppImage
+          ARCH=x86_64 ./appimagetool-x86_64.AppImage APPIMAGE-TRINITY Trinity-Launcher-x86_64.AppImage
 
       - name: Subir AppImage resultante
         uses: actions/upload-artifact@v4
