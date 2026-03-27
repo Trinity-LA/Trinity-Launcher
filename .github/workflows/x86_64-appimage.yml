@@ -26,7 +26,7 @@ jobs:
           sudo apt-get install -y --no-install-recommends \
             ca-certificates build-essential git curl cmake clang ninja-build \
             qt6-base-dev qt6-base-dev-tools qt6-declarative-dev qt6-svg-dev qt6-tools-dev \
-            qtbase5-dev qtdeclarative5-dev qtsvg5-dev \
+            qtbase5-dev qtdeclarative5-dev libqtsvg5-dev \
             libcurl4-openssl-dev libssl-dev libasound2-dev libpulse-dev \
             libx11-dev libxi-dev libxcursor-dev libxrandr-dev libgl1-mesa-dev \
             libevdev-dev libusb-1.0-0-dev libdbus-1-dev libpng-dev libzip-dev \
