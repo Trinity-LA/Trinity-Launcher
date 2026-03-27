@@ -44,13 +44,12 @@ jobs:
           submodules: 'recursive'
           path: 'msa'
 
-      - name: Configurar arquitectura i386 e Instalar dependencias del sistema
+      - name: Habilitar i386 e instalar dependencias base y de 64 bits
         run: |
           sudo dpkg --add-architecture i386
           sudo apt-get update
           sudo apt-get install -y --no-install-recommends \
             ca-certificates build-essential git curl cmake clang ninja-build \
-            gcc-multilib g++-multilib \
             qt6-base-dev qt6-base-dev-tools qt6-declarative-dev qt6-webengine-dev qt6-svg-dev qt6-tools-dev \
             qtbase5-dev qtwebengine5-dev \
             libcurl4-openssl-dev libssl-dev libasound2-dev libpulse-dev libjack-jackd2-dev \
@@ -59,7 +58,52 @@ jobs:
             libgles2-mesa-dev libvulkan-dev vulkan-validationlayers libdrm-dev libgbm-dev \
             libudev-dev libevdev-dev libusb-1.0-0-dev libdbus-1-dev libbluetooth-dev bluez \
             libibus-1.0-dev libxkbcommon-dev libpng-dev libzip-dev libcups2-dev \
-            libwayland-dev libunwind-dev libdecor-0-dev libfuse2 wget file python3 \
+            libwayland-dev libunwind-dev libdecor-0-dev libfuse2 wget file python3
+
+      - name: Compilar MSA (64 bits)
+        run: |
+          export CC=clang
+          export CXX=clang++
+          cd msa
+          mkdir -p build && cd build
+          cmake .. -DCMAKE_BUILD_TYPE=Release -G Ninja -DENABLE_MSA_QT_UI=ON
+          ninja -v
+
+      - name: Compilar mcpelauncher 64bit (Modo sin GUI)
+        run: |
+          export CC=clang
+          export CXX=clang++
+          cd mcpelauncher
+          mkdir -p build && cd build
+          cmake .. -DCMAKE_BUILD_TYPE=Release -G Ninja -DBUILD_WEBVIEW=OFF -DBUILD_UI=OFF -Wno-dev
+          ninja -v
+
+      - name: Compilar mcpe-extract (64 bits)
+        run: |
+          cd mcpe-extract
+          mkdir -p build && cd build
+          cmake .. -DCMAKE_BUILD_TYPE=Release -G Ninja -Wno-dev
+          ninja
+
+      - name: Compilar Trinity Launcher (64 bits)
+        run: |
+          cd trinity
+          chmod +x build.sh
+          ./build.sh --deps
+          ./build.sh --release
+
+      - name: Intercambiar dependencias a 32 bits (i386)
+        run: |
+          sudo apt-get remove -y \
+            libcurl4-openssl-dev libssl-dev libasound2-dev libpulse-dev libjack-jackd2-dev \
+            libx11-dev libxi-dev libxext-dev libxfixes-dev libxcursor-dev libxrandr-dev \
+            libxss-dev libxtst-dev libgl1-mesa-dev libegl1-mesa-dev libgles2-mesa-dev \
+            libvulkan-dev libdrm-dev libgbm-dev libudev-dev libevdev-dev libusb-1.0-0-dev \
+            libxkbcommon-dev libpng-dev libcups2-dev libwayland-dev libunwind-dev zlib1g-dev
+          sudo apt-get autoremove -y
+          
+          sudo apt-get install -y --no-install-recommends \
+            gcc-multilib g++-multilib \
             zlib1g-dev:i386 libpng-dev:i386 libcurl4-openssl-dev:i386 libssl-dev:i386 \
             libasound2-dev:i386 libpulse-dev:i386 libjack-jackd2-dev:i386 \
             libx11-dev:i386 libxi-dev:i386 libxext-dev:i386 libxfixes-dev:i386 \
@@ -69,32 +113,6 @@ jobs:
             libevdev-dev:i386 libusb-1.0-0-dev:i386 \
             libxkbcommon-dev:i386 libcups2-dev:i386 \
             libwayland-dev:i386 libunwind-dev:i386
-
-      - name: Compilar MSA
-        run: |
-          export CC=clang
-          export CXX=clang++
-          cd msa
-          mkdir -p build && cd build
-          cmake .. \
-            -DCMAKE_BUILD_TYPE=Release \
-            -G Ninja \
-            -DENABLE_MSA_QT_UI=ON
-          ninja -v
-
-      - name: Compilar mcpelauncher 64bit (Modo sin GUI)
-        run: |
-          export CC=clang
-          export CXX=clang++
-          cd mcpelauncher
-          mkdir -p build && cd build
-          cmake .. \
-            -DCMAKE_BUILD_TYPE=Release \
-            -G Ninja \
-            -DBUILD_WEBVIEW=OFF \
-            -DBUILD_UI=OFF \
-            -Wno-dev
-          ninja -v
 
       - name: Compilar mcpelauncher 32bit (Modo sin GUI)
         run: |
@@ -120,23 +138,6 @@ jobs:
             -DCMAKE_POLICY_VERSION_MINIMUM=3.5 \
             -Wno-dev
           ninja -v
-
-      - name: Compilar mcpe-extract
-        run: |
-          cd mcpe-extract
-          mkdir -p build && cd build
-          cmake .. \
-            -DCMAKE_BUILD_TYPE=Release \
-            -G Ninja \
-            -Wno-dev
-          ninja
-
-      - name: Compilar Trinity Launcher
-        run: |
-          cd trinity
-          chmod +x build.sh
-          ./build.sh --deps
-          ./build.sh --release
 
       - name: Preparar estructura AppDir
         run: |
