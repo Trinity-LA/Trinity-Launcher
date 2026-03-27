@@ -1,12 +1,7 @@
 name: Compilar y Empaquetar AppImage
 
 on:
-  push:
-    branches: [ main, master, appimage-rebase ]
   workflow_dispatch:
-  pull_request:
-    branches: [ main, master, appimage-rebase ]
-
 jobs:
   build-and-package:
     runs-on: ubuntu-latest
