@@ -299,6 +299,11 @@ No: Sólo exporta mods, mundos, texturas.</translation>
         <translation>No se encontro el mcpelauncher-client.</translation>
     </message>
     <message>
+        <location filename="../../src/TrinityLib/core/game_launcher.cpp" line="105"/>
+        <source>mcpelauncher-client86 not found.</source>
+        <translation>No se encontro el mcpelauncher-client86.</translation>
+    </message>
+    <message>
         <location filename="../../src/TrinityLib/core/game_launcher.cpp" line="122"/>
         <source>Playing Minecraft Bedrock</source>
         <translation>Jugando Minecraft Bedrock</translation>

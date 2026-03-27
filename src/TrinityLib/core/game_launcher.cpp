@@ -85,15 +85,24 @@ bool GameLauncher::launchGame(const QString &versionName, QString &errorMsg) {
     VersionManager vm;
     QString dataDir = vm.getVersionPath(versionName);
     QString appDir = QCoreApplication::applicationDirPath();
-    QString clientPath = appDir + "/mcpelauncher-client";
+    
+    // Check if the version has /lib/x86 folder (32-bit version)
+    QString libX86Path = dataDir + "/lib/x86";
+    bool isX86Version = QFileInfo::exists(libX86Path);
+    
+    // Select the appropriate client based on architecture
+    QString clientBaseName = isX86Version ? "mcpelauncher-client86" : "mcpelauncher-client";
+    QString clientPath = appDir + "/" + clientBaseName;
 
     if (!QFileInfo::exists(clientPath)) {
-        clientPath = QStandardPaths::findExecutable("mcpelauncher-client");
+        clientPath = QStandardPaths::findExecutable(clientBaseName);
     }
 
 
     if (clientPath.isEmpty()) {
-        errorMsg = tr("mcpelauncher-client not found.");
+        errorMsg = isX86Version 
+            ? tr("mcpelauncher-client86 not found.") 
+            : tr("mcpelauncher-client not found.");
         return false;
     }
 
