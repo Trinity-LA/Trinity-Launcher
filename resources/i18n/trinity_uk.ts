@@ -241,6 +241,11 @@ No: Only exports mods, maps, etc.</source>
         <translation>mcpelauncher-client не знайдено.</translation>
     </message>
     <message>
+        <location filename="../../src/TrinityLib/core/game_launcher.cpp" line="105"/>
+        <source>mcpelauncher-client86 not found.</source>
+        <translation>mcpelauncher-client86 не знайдено.</translation>
+    </message>
+    <message>
         <location filename="../../src/TrinityLib/core/game_launcher.cpp" line="122"/>
         <source>Playing Minecraft Bedrock</source>
         <translation>Грає в Minecraft Bedrock</translation>
