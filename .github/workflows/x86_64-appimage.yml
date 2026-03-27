@@ -12,13 +12,21 @@ jobs:
         with:
           path: 'trinity'
 
-      - name: Clonar Manifiesto de mcpelauncher
+      - name: Clonar Manifiesto de mcpelauncher (64 bits)
         uses: actions/checkout@v4
         with:
           repository: 'minecraft-linux/mcpelauncher-manifest'
           ref: 'ng'
           submodules: 'recursive'
           path: 'mcpelauncher'
+
+      - name: Clonar Manifiesto de mcpelauncher (32 bits)
+        uses: actions/checkout@v4
+        with:
+          repository: 'minecraft-linux/mcpelauncher-manifest'
+          ref: 'ng'
+          submodules: 'recursive'
+          path: 'mcpelauncher32'
 
       - name: Clonar mcpe-extract
         run: git clone https://codeberg.org/javiercplus/mcpe-extract.git
@@ -29,21 +37,52 @@ jobs:
           repository: 'minecraft-linux/mcpelauncher-linux-bin'
           path: 'linux-bin'
 
-      - name: Instalar dependencias del sistema
+      - name: Clonar msa-manifest
+        uses: actions/checkout@v4
+        with:
+          repository: 'minecraft-linux/msa-manifest'
+          submodules: 'recursive'
+          path: 'msa'
+
+      - name: Configurar arquitectura i386 e Instalar dependencias del sistema
         run: |
+          sudo dpkg --add-architecture i386
           sudo apt-get update
           sudo apt-get install -y --no-install-recommends \
             ca-certificates build-essential git curl cmake clang ninja-build \
+            gcc-multilib g++-multilib \
             qt6-base-dev qt6-base-dev-tools qt6-declarative-dev qt6-webengine-dev qt6-svg-dev qt6-tools-dev \
+            qtbase5-dev qtwebengine5-dev \
             libcurl4-openssl-dev libssl-dev libasound2-dev libpulse-dev libjack-jackd2-dev \
             libpipewire-0.3-dev libsndio-dev libx11-dev libxi-dev libxext-dev libxfixes-dev \
             libxcursor-dev libxrandr-dev libxss-dev libxtst-dev libgl1-mesa-dev libegl1-mesa-dev \
             libgles2-mesa-dev libvulkan-dev vulkan-validationlayers libdrm-dev libgbm-dev \
             libudev-dev libevdev-dev libusb-1.0-0-dev libdbus-1-dev libbluetooth-dev bluez \
             libibus-1.0-dev libxkbcommon-dev libpng-dev libzip-dev libcups2-dev \
-            libwayland-dev libunwind-dev libdecor-0-dev libfuse2 wget file python3
+            libwayland-dev libunwind-dev libdecor-0-dev libfuse2 wget file python3 \
+            zlib1g-dev:i386 libpng-dev:i386 libcurl4-openssl-dev:i386 libssl-dev:i386 \
+            libasound2-dev:i386 libpulse-dev:i386 libjack-jackd2-dev:i386 \
+            libx11-dev:i386 libxi-dev:i386 libxext-dev:i386 libxfixes-dev:i386 \
+            libxcursor-dev:i386 libxrandr-dev:i386 libxss-dev:i386 libxtst-dev:i386 \
+            libgl1-mesa-dev:i386 libegl1-mesa-dev:i386 libgles2-mesa-dev:i386 \
+            libvulkan-dev:i386 libdrm-dev:i386 libgbm-dev:i386 libudev-dev:i386 \
+            libevdev-dev:i386 libusb-1.0-0-dev:i386 \
+            libxkbcommon-dev:i386 libcups2-dev:i386 \
+            libwayland-dev:i386 libunwind-dev:i386
 
-      - name: Compilar mcpelauncher (Modo sin GUI)
+      - name: Compilar MSA
+        run: |
+          export CC=clang
+          export CXX=clang++
+          cd msa
+          mkdir -p build && cd build
+          cmake .. \
+            -DCMAKE_BUILD_TYPE=Release \
+            -G Ninja \
+            -DENABLE_MSA_QT_UI=ON
+          ninja -v
+
+      - name: Compilar mcpelauncher 64bit (Modo sin GUI)
         run: |
           export CC=clang
           export CXX=clang++
@@ -56,6 +95,32 @@ jobs:
             -DBUILD_UI=OFF \
             -Wno-dev
           ninja -v
+
+      - name: Compilar mcpelauncher 32bit (Modo sin GUI)
+        run: |
+          export CC=clang
+          export CXX=clang++
+          cd mcpelauncher32
+          mkdir -p build && cd build
+          cmake .. \
+            -G Ninja \
+            -DENABLE_DEV_PATHS=OFF \
+            -DBUILD_UI=OFF \
+            -DBUILD_WEBVIEW=OFF \
+            -DBUILD_CLIENT=ON \
+            -DCURL_EXT_EXTRA_OPTIONS=-DCURL_USE_LIBPSL=OFF \
+            -DCMAKE_BUILD_TYPE=RelWithDebInfo \
+            -DCMAKE_C_FLAGS='-m32' \
+            -DCMAKE_CXX_FLAGS='-m32' \
+            -DCMAKE_EXE_LINKER_FLAGS='-m32' \
+            -DCMAKE_FIND_ROOT_PATH='/usr/lib/i386-linux-gnu;/usr/include/i386-linux-gnu;/usr/lib;/usr/include' \
+            -DCMAKE_FIND_ROOT_PATH_MODE_LIBRARY=BOTH \
+            -DCMAKE_FIND_ROOT_PATH_MODE_INCLUDE=BOTH \
+            -DCMAKE_FIND_ROOT_PATH_MODE_PROGRAM=NEVER \
+            -DCMAKE_POLICY_VERSION_MINIMUM=3.5 \
+            -Wno-dev
+          ninja -v
+
       - name: Compilar mcpe-extract
         run: |
           cd mcpe-extract
@@ -83,16 +148,19 @@ jobs:
           mkdir -p APPIMAGE-TRINITY/usr/share/mcpelauncher
 
           cp mcpelauncher/build/mcpelauncher-client/mcpelauncher-client APPIMAGE-TRINITY/usr/bin/
+          cp mcpelauncher32/build/mcpelauncher-client/mcpelauncher-client APPIMAGE-TRINITY/usr/bin/mcpelauncher-client86
           cp mcpe-extract/build/mcpelauncher-extract APPIMAGE-TRINITY/usr/bin/
           cp trinity/build/app/trinity APPIMAGE-TRINITY/usr/bin/
           
-          find mcpelauncher/build -type f -name "msa-daemon" -exec cp {} APPIMAGE-TRINITY/usr/bin/ \;
+          cp msa/build/daemon/msa-daemon APPIMAGE-TRINITY/usr/bin/
+          cp msa/build/ui/msa-ui APPIMAGE-TRINITY/usr/bin/
           find mcpelauncher/build -type f -name "mcpelauncher-error" -exec cp {} APPIMAGE-TRINITY/usr/bin/ \;
 
           cp trinity/resources/shortcuts/com.trench.trinity.launcher.desktop APPIMAGE-TRINITY/usr/share/applications/
           cp trinity/resources/branding/com.trench.trinity.launcher.svg APPIMAGE-TRINITY/usr/share/icons/hicolor/scalable/apps/
           
           cp -r linux-bin/* APPIMAGE-TRINITY/usr/share/mcpelauncher/
+
       - name: Integrar Librería libzip (Portabilidad Total)
         run: |
           LIBZIP_REAL=$(find /usr/lib/x86_64-linux-gnu -name "libzip.so*" -type f | head -n 1)
