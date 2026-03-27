@@ -1,11 +1,68 @@
-name: Compilar y Empaquetar AppImage
+name: FULL Compilar y Empaquetar AppImage
 
 on:
   workflow_dispatch:
 jobs:
-  build-and-package:
-    runs-on: ubuntu-latest
+  build-32bit:
+    runs-on: ubuntu-22.04
+    steps:
+      - name: Clonar Manifiesto de mcpelauncher
+        uses: actions/checkout@v4
+        with:
+          repository: 'minecraft-linux/mcpelauncher-manifest'
+          ref: 'ng'
+          submodules: 'recursive'
 
+      - name: Instalar dependencias 32 bits
+        run: |
+          sudo dpkg --add-architecture i386
+          sudo apt-get update
+          sudo apt-get install -y --no-install-recommends \
+            ca-certificates build-essential git curl cmake clang ninja-build \
+            gcc-multilib g++-multilib \
+            zlib1g-dev:i386 libpng-dev:i386 libcurl4-openssl-dev:i386 libssl-dev:i386 \
+            libasound2-dev:i386 libpulse-dev:i386 libjack-jackd2-dev:i386 \
+            libx11-dev:i386 libxi-dev:i386 libxext-dev:i386 libxfixes-dev:i386 \
+            libxcursor-dev:i386 libxrandr-dev:i386 libxss-dev:i386 libxtst-dev:i386 \
+            libgl1-mesa-dev:i386 libegl1-mesa-dev:i386 libgles2-mesa-dev:i386 \
+            libvulkan-dev:i386 libdrm-dev:i386 libgbm-dev:i386 libudev-dev:i386 \
+            libevdev-dev:i386 libusb-1.0-0-dev:i386 \
+            libxkbcommon-dev:i386 libcups2-dev:i386 \
+            libwayland-dev:i386 libunwind-dev:i386
+
+      - name: Compilar mcpelauncher 32bit (Modo sin GUI)
+        run: |
+          export CC=clang
+          export CXX=clang++
+          mkdir -p build && cd build
+          cmake .. \
+            -G Ninja \
+            -DENABLE_DEV_PATHS=OFF \
+            -DBUILD_UI=OFF \
+            -DBUILD_WEBVIEW=OFF \
+            -DBUILD_CLIENT=ON \
+            -DCURL_EXT_EXTRA_OPTIONS=-DCURL_USE_LIBPSL=OFF \
+            -DCMAKE_BUILD_TYPE=RelWithDebInfo \
+            -DCMAKE_C_FLAGS='-m32' \
+            -DCMAKE_CXX_FLAGS='-m32' \
+            -DCMAKE_EXE_LINKER_FLAGS='-m32' \
+            -DCMAKE_FIND_ROOT_PATH='/usr/lib/i386-linux-gnu;/usr/include/i386-linux-gnu;/usr/lib;/usr/include' \
+            -DCMAKE_FIND_ROOT_PATH_MODE_LIBRARY=BOTH \
+            -DCMAKE_FIND_ROOT_PATH_MODE_INCLUDE=BOTH \
+            -DCMAKE_FIND_ROOT_PATH_MODE_PROGRAM=NEVER \
+            -DCMAKE_POLICY_VERSION_MINIMUM=3.5 \
+            -Wno-dev
+          ninja -v
+
+      - name: Subir binario de 32 bits
+        uses: actions/upload-artifact@v4
+        with:
+          name: binario-32bits
+          path: build/mcpelauncher-client/mcpelauncher-client
+
+  build-and-package:
+    needs: build-32bit
+    runs-on: ubuntu-latest
     steps:
       - name: Clonar repositorio Trinity
         uses: actions/checkout@v4
@@ -19,14 +76,6 @@ jobs:
           ref: 'ng'
           submodules: 'recursive'
           path: 'mcpelauncher'
-
-      - name: Clonar Manifiesto de mcpelauncher (32 bits)
-        uses: actions/checkout@v4
-        with:
-          repository: 'minecraft-linux/mcpelauncher-manifest'
-          ref: 'ng'
-          submodules: 'recursive'
-          path: 'mcpelauncher32'
 
       - name: Clonar mcpe-extract
         run: git clone https://codeberg.org/javiercplus/mcpe-extract.git
@@ -44,9 +93,8 @@ jobs:
           submodules: 'recursive'
           path: 'msa'
 
-      - name: Habilitar i386 e instalar dependencias base y de 64 bits
+      - name: Instalar dependencias del sistema (64 bits)
         run: |
-          sudo dpkg --add-architecture i386
           sudo apt-get update
           sudo apt-get install -y --no-install-recommends \
             ca-certificates build-essential git curl cmake clang ninja-build \
@@ -78,66 +126,25 @@ jobs:
           cmake .. -DCMAKE_BUILD_TYPE=Release -G Ninja -DBUILD_WEBVIEW=OFF -DBUILD_UI=OFF -Wno-dev
           ninja -v
 
-      - name: Compilar mcpe-extract (64 bits)
+      - name: Compilar mcpe-extract
         run: |
           cd mcpe-extract
           mkdir -p build && cd build
           cmake .. -DCMAKE_BUILD_TYPE=Release -G Ninja -Wno-dev
           ninja
 
-      - name: Compilar Trinity Launcher (64 bits)
+      - name: Compilar Trinity Launcher
         run: |
           cd trinity
           chmod +x build.sh
           ./build.sh --deps
           ./build.sh --release
 
-      - name: Intercambiar dependencias a 32 bits (i386)
-        run: |
-          sudo apt-get remove -y \
-            libcurl4-openssl-dev libssl-dev libasound2-dev libpulse-dev libjack-jackd2-dev \
-            libx11-dev libxi-dev libxext-dev libxfixes-dev libxcursor-dev libxrandr-dev \
-            libxss-dev libxtst-dev libgl1-mesa-dev libegl1-mesa-dev libgles2-mesa-dev \
-            libvulkan-dev libdrm-dev libgbm-dev libudev-dev libevdev-dev libusb-1.0-0-dev \
-            libxkbcommon-dev libpng-dev libcups2-dev libwayland-dev libunwind-dev zlib1g-dev
-          sudo apt-get autoremove -y
-          
-          sudo apt-get install -y --no-install-recommends \
-            gcc-multilib g++-multilib \
-            zlib1g-dev:i386 libpng-dev:i386 libcurl4-openssl-dev:i386 libssl-dev:i386 \
-            libasound2-dev:i386 libpulse-dev:i386 libjack-jackd2-dev:i386 \
-            libx11-dev:i386 libxi-dev:i386 libxext-dev:i386 libxfixes-dev:i386 \
-            libxcursor-dev:i386 libxrandr-dev:i386 libxss-dev:i386 libxtst-dev:i386 \
-            libgl1-mesa-dev:i386 libegl1-mesa-dev:i386 libgles2-mesa-dev:i386 \
-            libvulkan-dev:i386 libdrm-dev:i386 libgbm-dev:i386 libudev-dev:i386 \
-            libevdev-dev:i386 libusb-1.0-0-dev:i386 \
-            libxkbcommon-dev:i386 libcups2-dev:i386 \
-            libwayland-dev:i386 libunwind-dev:i386
-
-      - name: Compilar mcpelauncher 32bit (Modo sin GUI)
-        run: |
-          export CC=clang
-          export CXX=clang++
-          cd mcpelauncher32
-          mkdir -p build && cd build
-          cmake .. \
-            -G Ninja \
-            -DENABLE_DEV_PATHS=OFF \
-            -DBUILD_UI=OFF \
-            -DBUILD_WEBVIEW=OFF \
-            -DBUILD_CLIENT=ON \
-            -DCURL_EXT_EXTRA_OPTIONS=-DCURL_USE_LIBPSL=OFF \
-            -DCMAKE_BUILD_TYPE=RelWithDebInfo \
-            -DCMAKE_C_FLAGS='-m32' \
-            -DCMAKE_CXX_FLAGS='-m32' \
-            -DCMAKE_EXE_LINKER_FLAGS='-m32' \
-            -DCMAKE_FIND_ROOT_PATH='/usr/lib/i386-linux-gnu;/usr/include/i386-linux-gnu;/usr/lib;/usr/include' \
-            -DCMAKE_FIND_ROOT_PATH_MODE_LIBRARY=BOTH \
-            -DCMAKE_FIND_ROOT_PATH_MODE_INCLUDE=BOTH \
-            -DCMAKE_FIND_ROOT_PATH_MODE_PROGRAM=NEVER \
-            -DCMAKE_POLICY_VERSION_MINIMUM=3.5 \
-            -Wno-dev
-          ninja -v
+      - name: Descargar binario de 32 bits
+        uses: actions/download-artifact@v4
+        with:
+          name: binario-32bits
+          path: temp-32bit
 
       - name: Preparar estructura AppDir
         run: |
@@ -149,7 +156,7 @@ jobs:
           mkdir -p APPIMAGE-TRINITY/usr/share/mcpelauncher
 
           cp mcpelauncher/build/mcpelauncher-client/mcpelauncher-client APPIMAGE-TRINITY/usr/bin/
-          cp mcpelauncher32/build/mcpelauncher-client/mcpelauncher-client APPIMAGE-TRINITY/usr/bin/mcpelauncher-client86
+          cp temp-32bit/mcpelauncher-client APPIMAGE-TRINITY/usr/bin/mcpelauncher-client86
           cp mcpe-extract/build/mcpelauncher-extract APPIMAGE-TRINITY/usr/bin/
           cp trinity/build/app/trinity APPIMAGE-TRINITY/usr/bin/
           
