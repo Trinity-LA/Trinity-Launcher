@@ -7,86 +7,85 @@ jobs:
   build-and-package:
     runs-on: ubuntu-latest
     steps:
-      - name: Clonar Repositorios
+      - name: Checkout Trinity (Repositorio Principal)
+        uses: actions/checkout@v4
+        with:
+          path: 'trinity'
+
+      - name: Clonar Dependencias Externas
         run: |
-          git clone --recursive https://github.com/minecraft-linux/mcpelauncher-manifest.git mcpelauncher
+          # Clonar con submodulos recursivos usando git directamente
+          git clone --recursive -b ng https://github.com/minecraft-linux/mcpelauncher-manifest.git mcpelauncher
           git clone --recursive https://github.com/minecraft-linux/msa-manifest.git msa
           git clone https://codeberg.org/javiercplus/mcpe-extract.git
           git clone https://github.com/minecraft-linux/mcpelauncher-linux-bin.git linux-bin
-          uses: actions/checkout@v4
-          with:
-            path: 'trinity'
 
-      - name: Instalar Dependencias
+      - name: Instalar Dependencias del Sistema
         run: |
           sudo apt-get update
           sudo apt-get install -y --no-install-recommends \
-            build-essential cmake clang ninja-build qt6-base-dev qt6-svg-dev \
+            ca-certificates build-essential git curl cmake clang ninja-build \
+            qt6-base-dev qt6-base-dev-tools qt6-declarative-dev qt6-svg-dev qt6-tools-dev \
             libcurl4-openssl-dev libssl-dev libasound2-dev libpulse-dev \
             libx11-dev libxi-dev libxcursor-dev libxrandr-dev libgl1-mesa-dev \
             libevdev-dev libusb-1.0-0-dev libdbus-1-dev libpng-dev libzip-dev \
             libfuse2 wget file python3
 
-      - name: Compilar Componentes
+      - name: Compilar MSA (64 bits)
         run: |
           export CC=clang CXX=clang++
-          
-          # MSA
           cmake -S msa -B msa/build -G Ninja -DCMAKE_BUILD_TYPE=Release -DENABLE_MSA_QT_UI=ON
           ninja -C msa/build
-          
-          # MCPELauncher
+
+      - name: Compilar MCPELauncher (No GUI)
+        run: |
+          export CC=clang CXX=clang++
           cmake -S mcpelauncher -B mcpelauncher/build -G Ninja -DCMAKE_BUILD_TYPE=Release -DBUILD_WEBVIEW=OFF -DBUILD_UI=OFF
           ninja -C mcpelauncher/build
-          
-          # MCPE-Extract
+
+      - name: Compilar MCPE-Extract
+        run: |
           cmake -S mcpe-extract -B mcpe-extract/build -G Ninja -DCMAKE_BUILD_TYPE=Release
           ninja -C mcpe-extract/build
-          
-          # Trinity
-          cd trinity && chmod +x build.sh && ./build.sh --deps && ./build.sh --release
 
-      - name: Preparar AppDir con linuxdeploy
+      - name: Compilar Trinity Launcher
         run: |
-          # Descargar linuxdeploy y plugins
+          cd trinity
+          chmod +x build.sh
+          ./build.sh --deps
+          ./build.sh --release
+
+      - name: Preparar AppDir y Empaquetar con LinuxDeploy
+        env:
+          ARCH: x86_64
+        run: |
+          # 1. Descargar herramientas
           wget https://github.com/linuxdeploy/linuxdeploy/releases/download/continuous/linuxdeploy-x86_64.AppImage
           wget https://github.com/linuxdeploy/linuxdeploy-plugin-qt/releases/download/continuous/linuxdeploy-plugin-qt-x86_64.AppImage
           chmod +x linuxdeploy*.AppImage
 
-          # Crear estructura base
+          # 2. Crear estructura inicial
           mkdir -p AppDir/usr/bin
           mkdir -p AppDir/usr/share/mcpelauncher
 
-          # Copiar binarios compilados
+          # 3. Copiar binarios y recursos
           cp mcpelauncher/build/mcpelauncher-client/mcpelauncher-client AppDir/usr/bin/
           cp mcpe-extract/build/mcpelauncher-extract AppDir/usr/bin/
           cp trinity/build/app/trinity AppDir/usr/bin/
           find msa/build -type f -name "msa-daemon" -exec cp {} AppDir/usr/bin/ \;
           find msa/build -type f -name "msa-ui-qt" -exec cp {} AppDir/usr/bin/ \;
-          
-          # Recursos adicionales
           cp -r linux-bin/* AppDir/usr/share/mcpelauncher/
 
-          # Descargar e integrar binarios externos
+          # 4. Inyectar dependencias externas (32-bit y librerías críticas)
           wget https://github.com/javiercplus/my-dockers-setup/releases/download/unstable/mcpelauncher-cli-32bit.AppImage -O AppDir/usr/bin/mcpelauncher-cli-32bit.AppImage
           ln -rs AppDir/usr/bin/mcpelauncher-cli-32bit.AppImage AppDir/usr/bin/mcpelauncher-client86
           
-          # Forzar librerías específicas (libevdev y libzip)
-          LIBZIP_PATH=$(find /usr/lib/x86_64-linux-gnu -name "libzip.so*" -type f | head -n 1)
-          mkdir -p AppDir/usr/lib && cp "$LIBZIP_PATH" AppDir/usr/lib/libzip.so.5
+          mkdir -p AppDir/usr/lib
           wget https://huggingface.co/datasets/ccoffee20/PEPE/resolve/main/libevdev.so.2 -O AppDir/usr/lib/libevdev.so.2
+          cp $(find /usr/lib/x86_64-linux-gnu -name "libzip.so*" -type f | head -n 1) AppDir/usr/lib/libzip.so.5
 
-      - name: Empaquetar AppImage (linuxdeploy puro)
-        env:
-          OUTPUT: Trinity-Launcher-x86_64.AppImage
-          LD_LIBRARY_PATH: /usr/lib/qt6/lib:$LD_LIBRARY_PATH
-        run: |
-          # linuxdeploy se encarga de:
-          # 1. Analizar dependencias de los binarios en AppDir/usr/bin
-          # 2. Desplegar el plugin de Qt
-          # 3. Crear el AppRun automáticamente
-          # 4. Generar el AppImage final (--appimage-extract-and-run es necesario en GitHub Actions)
-          
+          # 5. Ejecutar linuxdeploy puro
+          # Esto generará el AppRun, gestionará Qt y creará el AppImage final
           ./linuxdeploy-x86_64.AppImage --appimage-extract-and-run \
             --appdir AppDir \
             -e AppDir/usr/bin/trinity \
@@ -95,14 +94,8 @@ jobs:
             --plugin qt \
             --output appimage
 
-      - name: Limpieza de seguridad
-        run: |
-          # Eliminar libc si linuxdeploy la incluyó por error (común en versiones viejas)
-          # Aunque linuxdeploy moderno suele ignorarla, este paso asegura compatibilidad.
-          find AppDir -name "libc.so.6" -delete
-
-      - name: Subir Artifact
+      - name: Subir AppImage
         uses: actions/upload-artifact@v4
         with:
-          name: Trinity-Launcher
+          name: Trinity-Launcher-Final
           path: "*.AppImage"
