@@ -153,8 +153,8 @@ jobs:
           cp mcpe-extract/build/mcpelauncher-extract APPIMAGE-TRINITY/usr/bin/
           cp trinity/build/app/trinity APPIMAGE-TRINITY/usr/bin/
           
-          cp msa/build/daemon/msa-daemon APPIMAGE-TRINITY/usr/bin/
-          cp msa/build/ui/msa-ui APPIMAGE-TRINITY/usr/bin/
+          find msa/build -type f -name "msa-daemon" -exec cp {} APPIMAGE-TRINITY/usr/bin/ \;
+          find msa/build -type f -name "msa-ui-qt" -exec cp {} APPIMAGE-TRINITY/usr/bin/ \;
           find mcpelauncher/build -type f -name "mcpelauncher-error" -exec cp {} APPIMAGE-TRINITY/usr/bin/ \;
 
           cp trinity/resources/shortcuts/com.trench.trinity.launcher.desktop APPIMAGE-TRINITY/usr/share/applications/
