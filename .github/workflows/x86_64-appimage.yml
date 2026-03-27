@@ -45,7 +45,7 @@ jobs:
             -DCMAKE_BUILD_TYPE=RelWithDebInfo \
             -DCMAKE_C_FLAGS='-m32' \
             -DCMAKE_CXX_FLAGS='-m32' \
-            -DCMAKE_EXE_LINKER_FLAGS='-m32 -Wl,-rpath=\$ORIGIN/../lib32' \
+            -DCMAKE_EXE_LINKER_FLAGS='-m32 -Wl,-rpath=\$ORIGIN' \
             -DCMAKE_FIND_ROOT_PATH='/usr/lib/i386-linux-gnu;/usr/include/i386-linux-gnu;/usr/lib;/usr/include' \
             -DCMAKE_FIND_ROOT_PATH_MODE_LIBRARY=BOTH \
             -DCMAKE_FIND_ROOT_PATH_MODE_INCLUDE=BOTH \
@@ -56,12 +56,14 @@ jobs:
 
       - name: Recopilar binario y dependencias 32 bits
         run: |
-          mkdir -p artifact-32/lib32
+          mkdir -p artifact-32
           cp build/mcpelauncher-client/mcpelauncher-client artifact-32/mcpelauncher-client86
+          
           # Aislar librerías 32 bits usando ldd (excluyendo libs base del sistema que el host ya provee)
-          ldd build/mcpelauncher-client/mcpelauncher-client | grep "=> /" | awk '{print $3}' | grep -E "libcrypto|libssl|libpng|libatomic|libz" | xargs -I '{}' cp -v '{}' artifact-32/lib32/
+          ldd build/mcpelauncher-client/mcpelauncher-client | grep "=> /" | awk '{print $3}' | grep -E "libcrypto|libssl|libpng|libatomic|libz|libevdev|libudev|libcurl" | xargs -I '{}' cp -v '{}' artifact-32/
+          
           # Borrar libc.so.6 si se copió accidentalmente
-          rm -f artifact-32/lib32/libc.so.6
+          rm -f artifact-32/libc.so.6
 
       - name: Subir binario de 32 bits
         uses: actions/upload-artifact@v4
@@ -106,7 +108,7 @@ jobs:
         run: |
           sudo apt-get update
           sudo apt-get install -y --no-install-recommends \
-            ca-certificates build-essential git curl cmake clang ninja-build \
+            ca-certificates build-essential git curl cmake clang ninja-build patchelf \
             qt6-base-dev qt6-base-dev-tools qt6-declarative-dev qt6-webengine-dev qt6-svg-dev qt6-tools-dev \
             qtbase5-dev qtwebengine5-dev \
             libcurl4-openssl-dev libssl-dev libasound2-dev libpulse-dev libjack-jackd2-dev \
@@ -218,12 +220,32 @@ jobs:
             --icon-file APPIMAGE-TRINITY/usr/share/icons/hicolor/scalable/apps/com.trench.trinity.launcher.svg \
             --plugin qt
 
-      - name: Inyectar 32 bits y Generar AppImage Final
+      - name: Inyectar 32 bits, Parchear y Generar AppImage Final
         run: |
-          # Se inyectan después de linuxdeploy para que no las escanee
-          cp temp-32bit/mcpelauncher-client86 APPIMAGE-TRINITY/usr/bin/
-          cp -r temp-32bit/lib32 APPIMAGE-TRINITY/usr/
+          # 1. Crear directorio aislado para todo lo de 32 bits
+          mkdir -p APPIMAGE-TRINITY/usr/lib32
           
+          # 2. Mover el binario y sus librerías al directorio aislado
+          cp -r temp-32bit/* APPIMAGE-TRINITY/usr/lib32/
+          
+          # 3. Parchear el binario para que busque librerías en su propia carpeta
+          patchelf --set-rpath '$ORIGIN' APPIMAGE-TRINITY/usr/lib32/mcpelauncher-client86
+          
+          # 4. Crear el script envoltorio en usr/bin que invoca al binario aislado
+          cat << 'EOF' > APPIMAGE-TRINITY/usr/bin/mcpelauncher-client86
+          #!/bin/sh
+          HERE="$(dirname "$(readlink -f "$0")")"
+          
+          # Purgar estrictamente el directorio lib de 64 bits del AppImage
+          CLEAN_LD=$(echo "$LD_LIBRARY_PATH" | sed -e "s|$HERE/../lib:||g" -e "s|:$HERE/../lib||g" -e "s|$HERE/../lib||g")
+          
+          export LD_LIBRARY_PATH="$HERE/../lib32:$CLEAN_LD"
+          
+          exec "$HERE/../lib32/mcpelauncher-client86" "$@"
+          EOF
+          chmod +x APPIMAGE-TRINITY/usr/bin/mcpelauncher-client86
+          
+          # 5. Generar AppImage Final
           wget https://github.com/AppImage/AppImageKit/releases/download/continuous/appimagetool-x86_64.AppImage
           chmod +x appimagetool-x86_64.AppImage
           ARCH=x86_64 ./appimagetool-x86_64.AppImage APPIMAGE-TRINITY Trinity-Launcher-x86_64.AppImage
