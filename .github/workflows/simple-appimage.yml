@@ -1,0 +1,142 @@
+name: X86-64 simple Compilar y Empaquetar AppImage
+
+on:
+  workflow_dispatch:
+jobs:
+  build-and-package:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Clonar repositorio Trinity
+        uses: actions/checkout@v4
+        with:
+          path: 'trinity'
+
+      - name: Clonar Manifiesto de mcpelauncher
+        uses: actions/checkout@v4
+        with:
+          repository: 'minecraft-linux/mcpelauncher-manifest'
+          ref: 'ng'
+          submodules: 'recursive'
+          path: 'mcpelauncher'
+
+      - name: Clonar mcpe-extract
+        run: git clone https://codeberg.org/javiercplus/mcpe-extract.git
+
+      - name: Clonar mcpelauncher-linux-bin
+        uses: actions/checkout@v4
+        with:
+          repository: 'minecraft-linux/mcpelauncher-linux-bin'
+          path: 'linux-bin'
+
+      - name: Instalar dependencias del sistema
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y --no-install-recommends \
+            ca-certificates build-essential git curl cmake clang ninja-build \
+            qt6-base-dev qt6-base-dev-tools qt6-declarative-dev qt6-webengine-dev qt6-svg-dev qt6-tools-dev \
+            libcurl4-openssl-dev libssl-dev libasound2-dev libpulse-dev libjack-jackd2-dev \
+            libpipewire-0.3-dev libsndio-dev libx11-dev libxi-dev libxext-dev libxfixes-dev \
+            libxcursor-dev libxrandr-dev libxss-dev libxtst-dev libgl1-mesa-dev libegl1-mesa-dev \
+            libgles2-mesa-dev libvulkan-dev vulkan-validationlayers libdrm-dev libgbm-dev \
+            libudev-dev libevdev-dev libusb-1.0-0-dev libdbus-1-dev libbluetooth-dev bluez \
+            libibus-1.0-dev libxkbcommon-dev libpng-dev libzip-dev libcups2-dev \
+            libwayland-dev libunwind-dev libdecor-0-dev libfuse2 wget file python3
+
+      - name: Compilar mcpelauncher (Modo sin GUI)
+        run: |
+          export CC=clang
+          export CXX=clang++
+          cd mcpelauncher
+          mkdir -p build && cd build
+          cmake .. \
+            -DCMAKE_BUILD_TYPE=Release \
+            -G Ninja \
+            -DBUILD_WEBVIEW=OFF \
+            -DBUILD_UI=OFF \
+            -Wno-dev
+          ninja -v
+      - name: Compilar mcpe-extract
+        run: |
+          cd mcpe-extract
+          mkdir -p build && cd build
+          cmake .. \
+            -DCMAKE_BUILD_TYPE=Release \
+            -G Ninja \
+            -Wno-dev
+          ninja
+
+      - name: Compilar Trinity Launcher
+        run: |
+          cd trinity
+          chmod +x build.sh
+          ./build.sh --deps
+          ./build.sh --release
+
+      - name: Preparar estructura AppDir
+        run: |
+          mkdir -p APPIMAGE-TRINITY/usr/bin
+          mkdir -p APPIMAGE-TRINITY/usr/lib
+          mkdir -p APPIMAGE-TRINITY/usr/share/applications
+          mkdir -p APPIMAGE-TRINITY/usr/share/icons/hicolor/scalable/apps
+          mkdir -p APPIMAGE-TRINITY/usr/share/metainfo
+          mkdir -p APPIMAGE-TRINITY/usr/share/mcpelauncher
+
+          cp mcpelauncher/build/mcpelauncher-client/mcpelauncher-client APPIMAGE-TRINITY/usr/bin/
+          cp mcpe-extract/build/mcpelauncher-extract APPIMAGE-TRINITY/usr/bin/
+          cp trinity/build/app/trinity APPIMAGE-TRINITY/usr/bin/
+          
+          find mcpelauncher/build -type f -name "msa-daemon" -exec cp {} APPIMAGE-TRINITY/usr/bin/ \;
+          find mcpelauncher/build -type f -name "mcpelauncher-error" -exec cp {} APPIMAGE-TRINITY/usr/bin/ \;
+
+          cp trinity/resources/shortcuts/com.trench.trinity.launcher.desktop APPIMAGE-TRINITY/usr/share/applications/
+          cp trinity/resources/branding/com.trench.trinity.launcher.svg APPIMAGE-TRINITY/usr/share/icons/hicolor/scalable/apps/
+          
+          cp -r linux-bin/* APPIMAGE-TRINITY/usr/share/mcpelauncher/
+      - name: Integrar Librería libzip (Portabilidad Total)
+        run: |
+          LIBZIP_REAL=$(find /usr/lib/x86_64-linux-gnu -name "libzip.so*" -type f | head -n 1)
+          cp -v "$LIBZIP_REAL" APPIMAGE-TRINITY/usr/lib/libzip.so.5
+          chmod +w APPIMAGE-TRINITY/usr/lib/libzip.so.5
+
+      - name: Crear script AppRun y enlaces en raíz
+        run: |
+          cat << 'EOF' > APPIMAGE-TRINITY/AppRun
+          #!/bin/sh
+          HERE="$(dirname "$(readlink -f "$0")")"
+          export LD_LIBRARY_PATH="$HERE/usr/lib:$LD_LIBRARY_PATH"
+          export QT_QPA_PLATFORM="xcb"
+          export GDK_BACKEND="x11"
+          export DISABLE_WAYLAND=1
+          export MCPELAUNCHER_DATA_DIR="$HERE/usr/share/mcpelauncher"
+          export PATH="$HERE/usr/bin:$PATH"
+          exec "$HERE/usr/bin/trinity" "$@"
+          EOF
+          chmod +x APPIMAGE-TRINITY/AppRun
+          
+          ln -s usr/share/applications/com.trench.trinity.launcher.desktop APPIMAGE-TRINITY/com.trench.trinity.launcher.desktop
+          ln -s usr/share/icons/hicolor/scalable/apps/com.trench.trinity.launcher.svg APPIMAGE-TRINITY/com.trench.trinity.launcher.svg
+
+      - name: Descargar linuxdeploy y plugin Qt
+        run: |
+          wget https://github.com/linuxdeploy/linuxdeploy/releases/download/continuous/linuxdeploy-x86_64.AppImage
+          wget https://github.com/linuxdeploy/linuxdeploy-plugin-qt/releases/download/continuous/linuxdeploy-plugin-qt-x86_64.AppImage
+          chmod +x linuxdeploy*.AppImage
+
+      - name: Ejecutar empaquetado
+        run: |
+          export QMAKE=/usr/lib/qt6/bin/qmake
+          export LD_LIBRARY_PATH=$PWD/APPIMAGE-TRINITY/usr/lib:/usr/lib/x86_64-linux-gnu:$LD_LIBRARY_PATH
+          
+          ARCH=x86_64 ./linuxdeploy-x86_64.AppImage \
+            --appdir APPIMAGE-TRINITY \
+            --desktop-file APPIMAGE-TRINITY/usr/share/applications/com.trench.trinity.launcher.desktop \
+            --icon-file APPIMAGE-TRINITY/usr/share/icons/hicolor/scalable/apps/com.trench.trinity.launcher.svg \
+            --plugin qt \
+            --output appimage
+
+      - name: Subir AppImage resultante
+        uses: actions/upload-artifact@v4
+        with:
+          name: Trinity-Launcher-AppImage
+          path: "*.AppImage"
