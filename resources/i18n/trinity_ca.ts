@@ -234,32 +234,32 @@ No: Només exporta mods, mapes, etc.</translation>
         <translation>El joc ja s&apos;està executant.</translation>
     </message>
     <message>
-        <location filename="../../src/TrinityLib/core/game_launcher.cpp" line="96"/>
+        <location filename="../../src/TrinityLib/core/game_launcher.cpp" line="105"/>
         <source>mcpelauncher-client not found.</source>
         <translation>mcpelauncher-client no trobat.</translation>
     </message>
     <message>
-        <location filename="../../src/TrinityLib/core/game_launcher.cpp" line="105"/>
+        <location filename="../../src/TrinityLib/core/game_launcher.cpp" line="104"/>
         <source>mcpelauncher-client86 not found.</source>
         <translation>mcpelauncher-client86 no trobat.</translation>
     </message>
     <message>
-        <location filename="../../src/TrinityLib/core/game_launcher.cpp" line="122"/>
+        <location filename="../../src/TrinityLib/core/game_launcher.cpp" line="131"/>
         <source>Playing Minecraft Bedrock</source>
         <translation>Jugant Minecraft Bedrock</translation>
     </message>
     <message>
-        <location filename="../../src/TrinityLib/core/game_launcher.cpp" line="134"/>
+        <location filename="../../src/TrinityLib/core/game_launcher.cpp" line="143"/>
         <source>Could not start the game process.</source>
         <translation>No s&apos;ha pogut iniciar el procés del joc.</translation>
     </message>
     <message>
-        <location filename="../../src/TrinityLib/core/game_launcher.cpp" line="136"/>
+        <location filename="../../src/TrinityLib/core/game_launcher.cpp" line="145"/>
         <source>Trinity Launcher Menu</source>
         <translation>Menú de Trinity Launcher</translation>
     </message>
     <message>
-        <location filename="../../src/TrinityLib/core/game_launcher.cpp" line="136"/>
+        <location filename="../../src/TrinityLib/core/game_launcher.cpp" line="145"/>
         <source>Waiting...</source>
         <translation>Esperant...</translation>
     </message>
