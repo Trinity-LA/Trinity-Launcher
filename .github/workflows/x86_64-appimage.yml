@@ -30,7 +30,7 @@ jobs:
             libcurl4-openssl-dev libssl-dev libasound2-dev libpulse-dev \
             libx11-dev libxi-dev libxcursor-dev libxrandr-dev libgl1-mesa-dev \
             libevdev-dev libusb-1.0-0-dev libdbus-1-dev libpng-dev libzip-dev \
-            libfuse2 wget file python3
+            libfuse2 wget file python3 libudev-dev
 
       - name: Compilar MSA (64 bits)
         run: |
