@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # ==========================================
-# 🛠️ Trinity Launcher Build Script
+# [#] Trinity Launcher Build Script
 # ==========================================
 
 # Security setting: stop on errors
@@ -32,12 +32,12 @@ show_banner() {
     echo -e "${CYAN}"
     echo "  _______   _       _ _            "
     echo " |__   __| (_)     (_) |           "
-    echo "    | |_ __ _ _ __  _| |_ _   _    "
+    echo "    | | _ __ _ _ __  _| |_ _   _   "
     echo "    | | '__| | '_ \| | __| | | |   "
     echo "    | | |  | | | | | | |_| |_| |   "
     echo "    |_|_|  |_|_| |_|_|\__|\__, |   "
-    echo "                           __/ |   "
-    echo "                          |___/    "
+    echo "                       __/ |   "
+    echo "                      |___/    "
     echo -e "${NC}"
     echo -e "${BLUE}=== Trinity Launcher Build System ===${NC}"
     echo ""
@@ -47,7 +47,7 @@ ensure_sudo() {
  if [ -n "$CI" ]; then
         return 0
     fi
-    echo -e "${YELLOW}🔐 Administrator permissions are required for this action...${NC}"
+    echo -e "${YELLOW}[#] Administrator permissions are required for this action...${NC}"
     if ! sudo -v; then
         echo -e "${RED}continue...${NC}"
     fi
@@ -92,8 +92,8 @@ detect_distro() {
 
 install_dependencies() {
     detect_distro
-    echo -e "${CYAN}🔍 Detected system: $OS_ID ($DISTRO_FAMILY)${NC}"
-    echo -e "${YELLOW}📦 Installing dependencies... (sudo will be required)${NC}"
+    echo -e "${CYAN}o_o Detected system: $OS_ID ($DISTRO_FAMILY)${NC}"
+    echo -e "${YELLOW}[+] Installing dependencies... (sudo will be required)${NC}"
 
     ensure_sudo
 
@@ -137,12 +137,12 @@ install_dependencies() {
             exit 1
             ;;
     esac
-    echo -e "${GREEN}Dependencies installed.${NC}"
+    echo -e "${GREEN}:-) Dependencies installed.${NC}"
 }
 
 uninstall_app() {
-    echo -e "${YELLOW}🗑️  Starting uninstallation process...${NC}"
-    echo -e "${YELLOW}🔐 Permissions are required to remove system files (/usr/local/bin, etc)${NC}"
+    echo -e "${YELLOW}[x]  Starting uninstallation process...${NC}"
+    echo -e "${YELLOW}[#] Permissions are required to remove system files (/usr/local/bin, etc)${NC}"
 
     ensure_sudo
 
@@ -159,11 +159,11 @@ uninstall_app() {
     sudo rm -f /usr/share/icons/com.trench.trinity.launcher.svg
     sudo rm -f /usr/share/applications/com.trench.trinity.launcher.desktop
 
-    echo -e "${GREEN}✅ Trinity Launcher has been removed from the system.${NC}"
+    echo -e "${GREEN}:-) Trinity Launcher has been removed from the system.${NC}"
 
     # We don't automatically delete the data folder (~/.local/share/mcpelauncher)
     # because user's worlds and saved games are there.
-    echo -e "${BLUE}ℹ️  Note: Game data (worlds, skins) is kept in:${NC}"
+    echo -e "${BLUE}[i]  Note: Game data (worlds, skins) is kept in:${NC}"
     echo -e "   ~/.local/share/mcpelauncher/"
     echo -e "   If you wish to delete them too, run: rm -rf ~/.local/share/mcpelauncher/"
 }
@@ -245,15 +245,15 @@ if [ -d "$BUILD_DIR" ]; then
     ROOT_FILES=$(find "$BUILD_DIR" -user 0 -print -quit 2>/dev/null)
 
     if [ ! -w "$BUILD_DIR" ] || [ -n "$ROOT_FILES" ]; then
-        echo -e "${YELLOW}⚠️  Files created by root detected in '$BUILD_DIR'.${NC}"
-        echo -e "${YELLOW}🔓 Requesting permissions to regain ownership...${NC}"
+        echo -e "${YELLOW}O_o  Files created by root detected in '$BUILD_DIR'.${NC}"
+        echo -e "${YELLOW}[o] Requesting permissions to regain ownership...${NC}"
 
         ensure_sudo
 
         if sudo chown -R $USER:$USER "$BUILD_DIR"; then
-            echo -e "${GREEN}✅ Permissions corrected.${NC}"
+            echo -e "${GREEN}:-) Permissions corrected.${NC}"
         else
-            echo -e "${RED}❌ Permission correction failed.${NC}"; exit 1
+            echo -e "${RED}X_X Permission correction failed.${NC}"; exit 1
         fi
     fi
 fi
@@ -262,7 +262,7 @@ fi
 if [ "$INSTALL_DEPS" = true ]; then
     install_dependencies
     if [ "$ONLY_DEPS" = true ]; then
-        echo -e "${GREEN}✅ Dependencies ready.${NC}"
+        echo -e "${GREEN}:-) Dependencies ready.${NC}"
         exit 0
     fi
 fi
@@ -270,7 +270,7 @@ if [ "$UNINSTALL" = true ]; then uninstall_app; exit 0; fi
 
 # 2. Update Translations (If requested)
 if [ "$UPDATE_TRANSLATIONS" = true ]; then
-    echo -e "${YELLOW}🌍 Updating translation files (.ts)...${NC}"
+    echo -e "${YELLOW}(@) Updating translation files (.ts)...${NC}"
 
     # 1. Try to find lupdate in normal PATH
     if command -v lupdate &> /dev/null; then
@@ -288,7 +288,7 @@ if [ "$UPDATE_TRANSLATIONS" = true ]; then
     # Run lupdate using the variable we found
     $LUPDATE_CMD src/ include/ -recursive -ts resources/i18n/*.ts
 
-    echo -e "${GREEN}✅ .ts files updated.${NC}"
+    echo -e "${GREEN}:-) .ts files updated.${NC}"
   # It ends here because it will only update .ts files
   exit 0
 fi
@@ -303,10 +303,10 @@ echo -e "${BLUE}=== Starting build process ($BUILD_TYPE) ===${NC}"
 
 # 4. Cleaning (if requested)
 if [ "$CLEAN_BUILD" = true ]; then
-    echo -e "${YELLOW}🧹 Cleaning previous builds (--clean)...${NC}"
+    echo -e "${YELLOW}[x] Cleaning previous builds (--clean)...${NC}"
     rm -rf "$BUILD_DIR"
     if [ "$ONLY_CLEAN" = true ]; then
-        echo -e "${GREEN}✅ Cleaning completed. Exiting.${NC}"
+        echo -e "${GREEN}:-) Cleaning completed. Exiting.${NC}"
         exit 0
     fi
 fi
@@ -317,25 +317,25 @@ if [ ! -d "$BUILD_DIR" ]; then
 fi
 
 # 6. Configure CMake
-echo -e "${BLUE}🔧 Configuring project...${NC}"
-# Force Clang++ and use Ninja if available
-CMAKE_EXTRA_ARGS="-DCMAKE_CXX_COMPILER=clang++"
+echo -e "${BLUE}[+] Configuring project...${NC}"
+# Force Clang++, enable SSE3, and use Ninja if available
+CMAKE_EXTRA_ARGS="-DCMAKE_CXX_COMPILER=clang++ -DCMAKE_CXX_FLAGS=-msse3 -DCMAKE_C_FLAGS=-msse3"
 if command -v ninja &> /dev/null; then
     CMAKE_EXTRA_ARGS="$CMAKE_EXTRA_ARGS -G Ninja"
 fi
 cmake -S . -B "$BUILD_DIR" -DCMAKE_BUILD_TYPE=$BUILD_TYPE $CMAKE_EXTRA_ARGS -Wno-dev
 
 # 7. Compile
-echo -e "${BLUE}🔨 Compiling...${NC}"
+echo -e "${BLUE}[-] Compiling...${NC}"
 if cmake --build "$BUILD_DIR" --parallel $(nproc); then
-    echo -e "${GREEN}✅ Build successful.${NC}"
+    echo -e "${GREEN}:-) Build successful.${NC}"
 else
-    echo -e "${RED}❌ Error during compilation.${NC}"
+    echo -e "${RED}X_X Error during compilation.${NC}"
     exit 1
 fi
 
 if [ "$INSTALL_SYSTEM" = true ]; then
-    echo -e "${BLUE}📦 Starting system installation...${NC}"
+    echo -e "${BLUE}[+] Starting system installation...${NC}"
 
     ensure_sudo
 
@@ -344,7 +344,7 @@ if [ "$INSTALL_SYSTEM" = true ]; then
         sudo cp -rf "$BUILD_DIR/app/trinity" /usr/local/bin
         echo -e "   -> trinity installed in /usr/local/bin"
     else
-        echo -e "${RED}❌ Error: Binary 'trinity' not found. Compile first.${NC}"
+        echo -e "${RED}X_X Error: Binary 'trinity' not found. Compile first.${NC}"
         exit 1
     fi
 
@@ -352,25 +352,25 @@ if [ "$INSTALL_SYSTEM" = true ]; then
     if [ -f "resources/branding/com.trench.trinity.launcher.svg" ]; then
         sudo cp -rf resources/branding/com.trench.trinity.launcher.svg /usr/share/icons/
     else
-        echo -e "${YELLOW}⚠️  Icon (.svg) not found, copy skipped.${NC}"
+        echo -e "${YELLOW}O_o  Icon (.svg) not found, copy skipped.${NC}"
     fi
 
     # Install Shortcut
     if [ -f "resources/shortcuts/com.trench.trinity.launcher.desktop" ]; then
         sudo cp -rf resources/shortcuts/com.trench.trinity.launcher.desktop /usr/share/applications/
     else
-        echo -e "${YELLOW}⚠️  Shortcut (.desktop) not found, copy skipped.${NC}"
+        echo -e "${YELLOW}O_o  Shortcut (.desktop) not found, copy skipped.${NC}"
     fi
 
-    echo -e "${GREEN}✅ Installation completed.${NC}"
+    echo -e "${GREEN}:-) Installation completed.${NC}"
 
     if [ "$RUN_APP" = false ]; then
         echo ""
-        echo -e "${CYAN}❓ Do you want to start Trinity Launcher now? (y/n)${NC}"
+        echo -e "${CYAN}?_? Do you want to start Trinity Launcher now? (y/n)${NC}"
         read -p "" -n 1 -r REPLY
         echo ""
         if [[ $REPLY =~ ^[SsYy]$ ]]; then
-            echo -e "${GREEN}🚀 Launching in background...${NC}"
+            echo -e "${GREEN}>> Launching in background...${NC}"
             RUN_APP=true
             DETACHED=true
         fi
@@ -386,26 +386,26 @@ if [ "$RUN_APP" = true ]; then
     elif command -v trinity &> /dev/null; then
         APP_PATH=$(command -v trinity)
     else
-        echo -e "${RED}❌ Could not find the executable.${NC}"
+        echo -e "${RED}X_X Could not find the executable.${NC}"
         exit 1
     fi
 
     # --- CASE A: USER MODE (No logs, releases terminal) ---
     if [ "$DETACHED" = true ]; then
-        echo -e "${CYAN}🎮 Launching Trinity...${NC}"
+        echo -e "${CYAN}+_+ Launching Trinity...${NC}"
         "$APP_PATH" & > /dev/null 2>&1
-        echo -e "${GREEN}✅ Application started in background.${NC}"
+        echo -e "${GREEN}:-) Application started in background.${NC}"
 
     # --- CASE B: DEV MODE (Logs, Ctrl+C, Waits) ---
     else
-        echo -e "${CYAN}🎮 Launching Trinity (Development Mode)...${NC}"
-        echo -e "${YELLOW}⚡ Executing: $APP_PATH${NC}"
-        echo -e "${YELLOW}ℹ️  Live logs. Press Ctrl+C to stop.${NC}"
+        echo -e "${CYAN}+_+ Launching Trinity (Development Mode)...${NC}"
+        echo -e "${YELLOW}~_~ Executing: $APP_PATH${NC}"
+        echo -e "${YELLOW}[i]  Live logs. Press Ctrl+C to stop.${NC}"
         echo ""
 
         cleanup() {
             echo ""
-            echo -e "${RED}🛑 Stopping application...${NC}"
+            echo -e "${RED}X_X Stopping application...${NC}"
             if [ -n "$APP_PID" ]; then kill "$APP_PID" 2>/dev/null; fi
             exit 0
         }
@@ -418,19 +418,19 @@ if [ "$RUN_APP" = true ]; then
         EXIT_CODE=$?
         echo ""
         if [ $EXIT_CODE -eq 0 ]; then
-            echo -e "${GREEN}✅ Application closed correctly.${NC}"
+            echo -e "${GREEN}:-) Application closed correctly.${NC}"
         else
-            echo -e "${RED}⚠️  Exit with code: $EXIT_CODE${NC}"
+            echo -e "${RED}O_o  Exit with code: $EXIT_CODE${NC}"
         fi
     fi
 fi
 
 echo ""
 if [ "$DETACHED" = true ]; then
-    echo -e "${GREEN}🎉 All set!${NC}"
+    echo -e "${GREEN}\o/ All set!${NC}"
 else
-    echo -e "${GREEN}🎉 Session finished.${NC}"
+    echo -e "${GREEN}\o/ Session finished.${NC}"
 fi
 
 echo ""
-echo -e "${GREEN}🎉 All set!${NC}"
+echo -e "${GREEN}\o/ All set!${NC}"
