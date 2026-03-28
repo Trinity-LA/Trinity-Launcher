@@ -1,4 +1,4 @@
-name: Compilar y Empaquetar AppImage
+name: QT5 - SSE3 Compilar y Empaquetar AppImage
 
 on:
   workflow_dispatch:
