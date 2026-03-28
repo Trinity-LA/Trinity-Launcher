@@ -67,10 +67,11 @@ jobs:
 
       - name: Compilar Trinity Launcher
         run: |
-          cd trinity
-          chmod +x build.sh
-          ./build.sh --deps
-          ./build.sh --release
+          export CC=clang CXX=clang++
+          cmake -S trinity -B trinity/build -G Ninja \
+            -DCMAKE_BUILD_TYPE=Release \
+            -Wno-dev
+          ninja -C trinity/build
 
       - name: Preparar AppDir y Empaquetar con LinuxDeploy
         env:
@@ -86,7 +87,10 @@ jobs:
 
           cp mcpelauncher/build/mcpelauncher-client/mcpelauncher-client AppDir/usr/bin/
           cp mcpe-extract/build/mcpelauncher-extract AppDir/usr/bin/
-          cp trinity/build/app/trinity AppDir/usr/bin/
+          
+          # Copia del binario de Trinity Launcher
+          cp trinity/build/app/trinity AppDir/usr/bin/ || cp trinity/build/trinity AppDir/usr/bin/
+          
           find msa/build -type f -name "msa-daemon" -exec cp {} AppDir/usr/bin/ \;
           find msa/build -type f -name "msa-ui-qt" -exec cp {} AppDir/usr/bin/ \;
           cp -r linux-bin/* AppDir/usr/share/mcpelauncher/
