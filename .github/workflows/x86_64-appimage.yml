@@ -95,8 +95,12 @@ jobs:
           find msa/build -type f -name "msa-ui-qt" -exec cp {} AppDir/usr/bin/ \;
           cp -r linux-bin/* AppDir/usr/share/mcpelauncher/
 
-          wget https://github.com/javiercplus/my-dockers-setup/releases/download/unstable/mcpelauncher-cli-32bit.AppImage -O AppDir/usr/bin/mcpelauncher-cli-32bit.AppImage
-          ln -rs AppDir/usr/bin/mcpelauncher-cli-32bit.AppImage AppDir/usr/bin/mcpelauncher-client86
+          # Descarga, extracción y ubicación del entorno de 32 bits
+          wget https://huggingface.co/datasets/ccoffee20/PEPE/resolve/main/mcpe32bit.tar
+          tar -xf mcpe32bit.tar
+          cp 32bitmcpe/bin/mcpelauncher-client86 AppDir/usr/bin/
+          mkdir -p AppDir/usr/lib32
+          cp -a 32bitmcpe/lib32/* AppDir/usr/lib32/
           
           mkdir -p AppDir/usr/lib
           wget https://huggingface.co/datasets/ccoffee20/PEPE/resolve/main/libevdev.so.2 -O AppDir/usr/lib/libevdev.so.2
