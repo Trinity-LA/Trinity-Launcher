@@ -32,7 +32,7 @@ show_banner() {
     echo -e "${CYAN}"
     echo "  _______   _       _ _            "
     echo " |__   __| (_)     (_) |           "
-    echo "    | |_ __ _ _ __  _| |_ _   _    "
+    echo "    | | _ __ _ _ __  _| |_ _   _   "
     echo "    | | '__| | '_ \| | __| | | |   "
     echo "    | | |  | | | | | | |_| |_| |   "
     echo "    |_|_|  |_|_| |_|_|\__|\__, |   "
@@ -173,9 +173,9 @@ show_help() {
     echo -e "${BLUE}Usage: ./build.sh [OPTIONS]${NC}"
     echo ""
     echo "Options:"
-    echo "  --debug      Compile in Debug mode (with symbols for debugging)"
-    echo "  --release    Compile in Release mode (optimized, default)"
-    echo "  --clean      Delete build/ and RECOMPILE"
+    echo "  --debug    Compile in Debug mode (with symbols for debugging)"
+    echo "  --release  Compile in Release mode (optimized, default)"
+    echo "  --clean    Delete build/ and RECOMPILE"
     echo "  --clean-only Delete build/ and EXIT (Without compiling)"
     echo "  --update-ts  Scan code and update translation .ts files"
     echo "  --deps       Install system dependencies (detects distro automatically) and COMPILE"
@@ -325,8 +325,8 @@ fi
 
 # 6. Configure CMake
 echo -e "${BLUE}🔧 Configuring project...${NC}"
-# Force Clang++ and use Ninja if available
-CMAKE_EXTRA_ARGS="-DCMAKE_CXX_COMPILER=clang++"
+# Force Clang++, add SSE3 flags, and use Ninja if available
+CMAKE_EXTRA_ARGS="-DCMAKE_CXX_COMPILER=clang++ -DCMAKE_CXX_FLAGS=-msse3 -DCMAKE_C_FLAGS=-msse3"
 if command -v ninja &> /dev/null; then
     CMAKE_EXTRA_ARGS="$CMAKE_EXTRA_ARGS -G Ninja"
 fi
