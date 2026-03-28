@@ -10,6 +10,7 @@ jobs:
       - name: Checkout Trinity (Repositorio Principal)
         uses: actions/checkout@v4
         with:
+          ref: 'qt5-up'
           path: 'trinity'
 
       - name: Clonar Dependencias Externas
@@ -23,13 +24,14 @@ jobs:
         run: |
           sudo apt-get update
           sudo apt-get install -y --no-install-recommends \
-            ca-certificates build-essential git curl cmake clang ninja-build \
-            qt6-base-dev qt6-base-dev-tools qt6-declarative-dev qt6-svg-dev qt6-tools-dev \
-            qtbase5-dev qtdeclarative5-dev libqt5svg5-dev qtwebengine5-dev \
-            libcurl4-openssl-dev libssl-dev libasound2-dev libpulse-dev \
-            libx11-dev libxi-dev libxcursor-dev libxrandr-dev libgl1-mesa-dev \
-            libevdev-dev libusb-1.0-0-dev libdbus-1-dev libpng-dev libzip-dev \
-            libfuse2 wget file python3 libudev-dev
+            build-essential git curl cmake clang ninja-build \
+            qtbase5-dev qtbase5-dev-tools qtdeclarative5-dev qtwebengine5-dev libqt5svg5-dev qttools5-dev qttools5-dev-tools \
+            libcurl4-openssl-dev libssl-dev libasound2-dev libpulse-dev libjack-jackd2-dev libpipewire-0.3-dev \
+            libx11-dev libxi-dev libxext-dev libxfixes-dev libxcursor-dev libxrandr-dev libxss-dev libxtst-dev \
+            libgl1-mesa-dev libegl1-mesa-dev libgles2-mesa-dev libvulkan-dev vulkan-validationlayers \
+            libdrm-dev libgbm-dev libudev-dev libevdev-dev libusb-1.0-0-dev libdbus-1-dev bluez \
+            libibus-1.0-dev libxkbcommon-dev libpng-dev libzip-dev libcups2-dev libwayland-dev libunwind-dev libdecor-0-dev \
+            file python3
 
       - name: Verificar libzip instalado
         run: |
@@ -73,17 +75,15 @@ jobs:
       - name: Preparar AppDir y Empaquetar con LinuxDeploy
         env:
           ARCH: x86_64
+          QMAKE: /usr/lib/qt5/bin/qmake
         run: |
-          # 1. Descargar herramientas
           wget https://github.com/linuxdeploy/linuxdeploy/releases/download/continuous/linuxdeploy-x86_64.AppImage
           wget https://github.com/linuxdeploy/linuxdeploy-plugin-qt/releases/download/continuous/linuxdeploy-plugin-qt-x86_64.AppImage
           chmod +x linuxdeploy*.AppImage
 
-          # 2. Crear estructura inicial
           mkdir -p AppDir/usr/bin
           mkdir -p AppDir/usr/share/mcpelauncher
 
-          # 3. Copiar binarios y recursos
           cp mcpelauncher/build/mcpelauncher-client/mcpelauncher-client AppDir/usr/bin/
           cp mcpe-extract/build/mcpelauncher-extract AppDir/usr/bin/
           cp trinity/build/app/trinity AppDir/usr/bin/
@@ -91,22 +91,18 @@ jobs:
           find msa/build -type f -name "msa-ui-qt" -exec cp {} AppDir/usr/bin/ \;
           cp -r linux-bin/* AppDir/usr/share/mcpelauncher/
 
-          # 4. Inyectar dependencias externas (32-bit y librerías críticas)
           wget https://github.com/javiercplus/my-dockers-setup/releases/download/unstable/mcpelauncher-cli-32bit.AppImage -O AppDir/usr/bin/mcpelauncher-cli-32bit.AppImage
           ln -rs AppDir/usr/bin/mcpelauncher-cli-32bit.AppImage AppDir/usr/bin/mcpelauncher-client86
           
           mkdir -p AppDir/usr/lib
           wget https://huggingface.co/datasets/ccoffee20/PEPE/resolve/main/libevdev.so.2 -O AppDir/usr/lib/libevdev.so.2
           
-          # Copiar libzip SO REAL (con versión detectada)
           LIBZIP_SRC=$(ls /usr/lib/x86_64-linux-gnu/libzip.so.* | head -n 1)
           echo "Copiando libzip desde: $LIBZIP_SRC"
           cp "$LIBZIP_SRC" AppDir/usr/lib/libzip.so.5
           
-          # También copiar cualquier dependencia relacionada
           cp /usr/lib/x86_64-linux-gnu/libminizip.so.* AppDir/usr/lib/ 2>/dev/null || true
 
-          # 5. Ejecutar linuxdeploy puro
           ./linuxdeploy-x86_64.AppImage --appimage-extract-and-run \
             --appdir AppDir \
             -e AppDir/usr/bin/trinity \
