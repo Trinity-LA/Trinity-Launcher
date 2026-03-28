@@ -236,32 +236,32 @@ No: Only exports mods, maps, etc.</source>
         <translation>Гра вже запущена.</translation>
     </message>
     <message>
-        <location filename="../../src/TrinityLib/core/game_launcher.cpp" line="105"/>
+        <location filename="../../src/TrinityLib/core/game_launcher.cpp" line="96"/>
         <source>mcpelauncher-client not found.</source>
         <translation>mcpelauncher-client не знайдено.</translation>
     </message>
     <message>
-        <location filename="../../src/TrinityLib/core/game_launcher.cpp" line="104"/>
+        <location filename="../../src/TrinityLib/core/game_launcher.cpp" line="105"/>
         <source>mcpelauncher-client86 not found.</source>
         <translation>mcpelauncher-client86 не знайдено.</translation>
     </message>
     <message>
-        <location filename="../../src/TrinityLib/core/game_launcher.cpp" line="131"/>
+        <location filename="../../src/TrinityLib/core/game_launcher.cpp" line="122"/>
         <source>Playing Minecraft Bedrock</source>
         <translation>Грає в Minecraft Bedrock</translation>
     </message>
     <message>
-        <location filename="../../src/TrinityLib/core/game_launcher.cpp" line="143"/>
+        <location filename="../../src/TrinityLib/core/game_launcher.cpp" line="134"/>
         <source>Could not start the game process.</source>
         <translation>Не вдалося запустити процес гри.</translation>
     </message>
     <message>
-        <location filename="../../src/TrinityLib/core/game_launcher.cpp" line="145"/>
+        <location filename="../../src/TrinityLib/core/game_launcher.cpp" line="136"/>
         <source>Trinity Launcher Menu</source>
         <translation>Меню Trinity Launcher</translation>
     </message>
     <message>
-        <location filename="../../src/TrinityLib/core/game_launcher.cpp" line="145"/>
+        <location filename="../../src/TrinityLib/core/game_launcher.cpp" line="136"/>
         <source>Waiting...</source>
         <translation>Очікування...</translation>
     </message>

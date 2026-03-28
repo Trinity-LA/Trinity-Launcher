@@ -294,32 +294,32 @@ No: Sólo exporta mods, mundos, texturas.</translation>
         <translation type="vanished">mcpelauncher - client no encontrado.</translation>
     </message>
     <message>
-        <location filename="../../src/TrinityLib/core/game_launcher.cpp" line="105"/>
+        <location filename="../../src/TrinityLib/core/game_launcher.cpp" line="96"/>
         <source>mcpelauncher-client not found.</source>
         <translation>No se encontro el mcpelauncher-client.</translation>
     </message>
     <message>
-        <location filename="../../src/TrinityLib/core/game_launcher.cpp" line="104"/>
+        <location filename="../../src/TrinityLib/core/game_launcher.cpp" line="105"/>
         <source>mcpelauncher-client86 not found.</source>
         <translation>No se encontro el mcpelauncher-client86.</translation>
     </message>
     <message>
-        <location filename="../../src/TrinityLib/core/game_launcher.cpp" line="131"/>
+        <location filename="../../src/TrinityLib/core/game_launcher.cpp" line="122"/>
         <source>Playing Minecraft Bedrock</source>
         <translation>Jugando Minecraft Bedrock</translation>
     </message>
     <message>
-        <location filename="../../src/TrinityLib/core/game_launcher.cpp" line="143"/>
+        <location filename="../../src/TrinityLib/core/game_launcher.cpp" line="134"/>
         <source>Could not start the game process.</source>
         <translation>No se pudo iniciar el proceso del juego.</translation>
     </message>
     <message>
-        <location filename="../../src/TrinityLib/core/game_launcher.cpp" line="145"/>
+        <location filename="../../src/TrinityLib/core/game_launcher.cpp" line="136"/>
         <source>Trinity Launcher Menu</source>
         <translation>Menú de Trinity Launcher</translation>
     </message>
     <message>
-        <location filename="../../src/TrinityLib/core/game_launcher.cpp" line="145"/>
+        <location filename="../../src/TrinityLib/core/game_launcher.cpp" line="136"/>
         <source>Waiting...</source>
         <translation>Esperando...</translation>
     </message>
@@ -527,7 +527,7 @@ No: Sólo exporta mods, mundos, texturas.</translation>
     <message>
         <location filename="../../src/TrinityLib/ui/windows/launcher_window.cpp" line="522"/>
         <source>&lt;b&gt;BrokenByteOfCode&lt;/b&gt;: Ukrainian Translation</source>
-        <translation>&lt;b&gt;BrokenByteOfCode&lt;/b&gt;: Traducción al ucraniano</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="../../src/TrinityLib/ui/windows/launcher_window.cpp" line="523"/>

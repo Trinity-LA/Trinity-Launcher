@@ -9,7 +9,7 @@ ENV DEBIAN_FRONTEND=noninteractive \
 
 RUN apt-get update && apt-get install -y --no-install-recommends \
   build-essential git curl cmake clang ninja-build \
-  qt6-base-dev qt6-base-dev-tools qt6-declarative-dev qt6-webengine-dev qt6-svg-dev qt6-tools-dev \
+  qtbase5-dev qtbase5-dev-tools qtdeclarative5-dev qtwebengine5-dev qtsvg5-dev qttools5-dev \
   libcurl4-openssl-dev libssl-dev \
   libasound2-dev libpulse-dev libjack-jackd2-dev libpipewire-0.3-dev libsndio-dev \
   libx11-dev libxi-dev libxext-dev libxfixes-dev libxcursor-dev libxrandr-dev libxss-dev libxtst-dev \

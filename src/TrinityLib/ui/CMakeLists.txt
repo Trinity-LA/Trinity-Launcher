@@ -1,4 +1,3 @@
-
 set(UI_HEADERS
     "${TRINITY_INCLUDE_DIR}/TrinityLib/ui/windows/launcher_window.hpp"
     "${TRINITY_INCLUDE_DIR}/TrinityLib/ui/windows/trinito_window.hpp"
@@ -16,5 +15,5 @@ target_include_directories(TrinityUI
 
 target_link_libraries(
   TrinityUI
-  PUBLIC Qt6::Core Qt6::Widgets Qt6::Concurrent
+  PUBLIC Qt5::Core Qt5::Widgets Qt5::Concurrent
   PRIVATE TrinityCore)

@@ -1,3 +1,3 @@
 add_executable(test_color_extractor test_color_extractor.cpp)
 
-target_link_libraries(test_color_extractor PRIVATE TrinityCore Qt6::Core Qt6::Gui)
+target_link_libraries(test_color_extractor PRIVATE TrinityCore Qt5::Core Qt5::Gui)

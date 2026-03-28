@@ -236,32 +236,32 @@ No: Only exports mods, maps, etc.</translation>
         <translation>The game is already running.</translation>
     </message>
     <message>
-        <location filename="../../src/TrinityLib/core/game_launcher.cpp" line="105"/>
+        <location filename="../../src/TrinityLib/core/game_launcher.cpp" line="96"/>
         <source>mcpelauncher-client not found.</source>
         <translation>mcpelauncher-client not found.</translation>
     </message>
     <message>
-        <location filename="../../src/TrinityLib/core/game_launcher.cpp" line="104"/>
+        <location filename="../../src/TrinityLib/core/game_launcher.cpp" line="105"/>
         <source>mcpelauncher-client86 not found.</source>
         <translation>mcpelauncher-client86 not found.</translation>
     </message>
     <message>
-        <location filename="../../src/TrinityLib/core/game_launcher.cpp" line="131"/>
+        <location filename="../../src/TrinityLib/core/game_launcher.cpp" line="122"/>
         <source>Playing Minecraft Bedrock</source>
         <translation>Playing Minecraft Bedrock</translation>
     </message>
     <message>
-        <location filename="../../src/TrinityLib/core/game_launcher.cpp" line="143"/>
+        <location filename="../../src/TrinityLib/core/game_launcher.cpp" line="134"/>
         <source>Could not start the game process.</source>
         <translation>Could not start the game process.</translation>
     </message>
     <message>
-        <location filename="../../src/TrinityLib/core/game_launcher.cpp" line="145"/>
+        <location filename="../../src/TrinityLib/core/game_launcher.cpp" line="136"/>
         <source>Trinity Launcher Menu</source>
         <translation>Trinity Launcher Menu</translation>
     </message>
     <message>
-        <location filename="../../src/TrinityLib/core/game_launcher.cpp" line="145"/>
+        <location filename="../../src/TrinityLib/core/game_launcher.cpp" line="136"/>
         <source>Waiting...</source>
         <translation>Waiting...</translation>
     </message>
