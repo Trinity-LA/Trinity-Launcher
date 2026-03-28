@@ -14,7 +14,6 @@ jobs:
 
       - name: Clonar Dependencias Externas
         run: |
-          # Clonar con submodulos recursivos usando git directamente
           git clone --recursive -b ng https://github.com/minecraft-linux/mcpelauncher-manifest.git mcpelauncher
           git clone --recursive https://github.com/minecraft-linux/msa-manifest.git msa
           git clone https://codeberg.org/javiercplus/mcpe-extract.git
@@ -32,10 +31,22 @@ jobs:
             libevdev-dev libusb-1.0-0-dev libdbus-1-dev libpng-dev libzip-dev \
             libfuse2 wget file python3 libudev-dev
 
+      - name: Verificar libzip instalado
+        run: |
+          dpkg -l | grep libzip
+          ls -la /usr/lib/x86_64-linux-gnu/libzip.so*
+
+      - name: Compilar MCPE-Extract
+        run: |
+          cd mcpe-extract
+          mkdir -p build
+          cd build
+          cmake .. -DCMAKE_C_COMPILER=clang -DCMAKE_CXX_COMPILER=clang++ -DCMAKE_POLICY_VERSION_MINIMUM=3.5
+          make -j$(nproc)
+
       - name: Compilar MSA (64 bits)
         run: |
           export CC=clang CXX=clang++
-          # Forzamos a que encuentre Qt5 y desactivamos errores de desarrollo de CMake
           cmake -S msa -B msa/build -G Ninja \
             -DCMAKE_BUILD_TYPE=Release \
             -DENABLE_MSA_QT_UI=ON \
@@ -45,7 +56,7 @@ jobs:
       - name: Compilar MCPELauncher (No GUI)
         run: |
           export CC=clang CXX=clang++
-          cmake -S mcpelauncher -B mcpelauncher/build -G Ninja \
+          cmake -S mcpelaauncher -B mcpelauncher/build -G Ninja \
             -DCMAKE_BUILD_TYPE=Release \
             -DBUILD_WEBVIEW=OFF \
             -DBUILD_UI=OFF \
@@ -86,10 +97,16 @@ jobs:
           
           mkdir -p AppDir/usr/lib
           wget https://huggingface.co/datasets/ccoffee20/PEPE/resolve/main/libevdev.so.2 -O AppDir/usr/lib/libevdev.so.2
-          cp $(find /usr/lib/x86_64-linux-gnu -name "libzip.so*" -type f | head -n 1) AppDir/usr/lib/libzip.so.5
+          
+          # Copiar libzip SO REAL (con versión detectada)
+          LIBZIP_SRC=$(ls /usr/lib/x86_64-linux-gnu/libzip.so.* | head -n 1)
+          echo "Copiando libzip desde: $LIBZIP_SRC"
+          cp "$LIBZIP_SRC" AppDir/usr/lib/libzip.so.5
+          
+          # También copiar cualquier dependencia relacionada
+          cp /usr/lib/x86_64-linux-gnu/libminizip.so.* AppDir/usr/lib/ 2>/dev/null || true
 
           # 5. Ejecutar linuxdeploy puro
-          # Esto generará el AppRun, gestionará Qt y creará el AppImage final
           ./linuxdeploy-x86_64.AppImage --appimage-extract-and-run \
             --appdir AppDir \
             -e AppDir/usr/bin/trinity \
