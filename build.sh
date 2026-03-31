@@ -109,7 +109,7 @@ install_dependencies() {
                 libibus-1.0-dev libxkbcommon-dev libpng-dev libzip-dev libcups2-dev libwayland-dev libunwind-dev libdecor-0-dev
             ;;
         "fedora_based")
-            sudo dnf groupinstall -y "Development Tools"
+            sudo dnf install -y @development-tools
             sudo dnf install -y git curl cmake clang ninja-build \
                 qt6-qtbase-devel qt6-qtdeclarative-devel qt6-qtwebengine-devel qt6-qtsvg-devel qt6-qttools-devel \
                 libcurl-devel openssl-devel alsa-lib-devel pulseaudio-libs-devel pipewire-devel \
