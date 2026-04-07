@@ -22,8 +22,8 @@ Trinity depends on these binaries to perform data extraction (`mcpelauncher-extr
 **Engine Installation (Fork compatible with 1.21.131+):**
 ```bash
 # Clone and prepare
-git clone https://github.com/franckey02/mcpelauncher-patch.git
-cd mcpelauncher-patch
+git clone https://github.com/minecraft-linux/mcpelauncher-manifest.git
+cd mcpelauncher-manifest
 git checkout qt6
 git submodule update --init --recursive
 
