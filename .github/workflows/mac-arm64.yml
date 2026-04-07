@@ -118,12 +118,15 @@ jobs:
           # Script wrapper modificado para inyectar rutas gráficas a SDL
           cat << 'EOF' > dist/Trinity.app/Contents/MacOS/trinity
           #!/bin/bash
-          DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
+          # la ruta completa de la app
+          TRINITY_APP="/Applications/Trinity.app"
+          NATIVE_LIBS="$TRINITY_APP/Contents/Resources/mcpelauncher/lib/arm64-v8a"
+          QT_FRAMEWORKS="$TRINITY_APP/Contents/Frameworks"
           export ANGLE_DEFAULT_PLATFORM=metal
           export QT_MAC_WANTS_LAYER=1
-          export DYLD_LIBRARY_PATH="$DIR/../Frameworks:$DYLD_LIBRARY_PATH"
-          export DYLD_FRAMEWORK_PATH="$DIR/../Frameworks:$DYLD_FRAMEWORK_PATH"
-          exec "$DIR/trinity-bin" "$@"
+          export DYLD_LIBRARY_PATH="$NATIVE_LIBS:$QT_FRAMEWORKS:$DYLD_LIBRARY_PATH"
+          export DYLD_FRAMEWORK_PATH="$QT_FRAMEWORKS:$DYLD_FRAMEWORK_PATH"
+          "$TRINITY_APP/Contents/MacOS/trinity-bin" "$@"
           EOF
           chmod +x dist/Trinity.app/Contents/MacOS/trinity
           
