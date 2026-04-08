@@ -1,7 +1,9 @@
 # Trinity Launcher 
 
 [Official Website](https://trinity-la.github.io/)
+
 [Official  Reddit](https://www.reddit.com/r/TrinityUnix/comments/1s3p2ot/errores_comunes_de_trinity_launcher/)
+
 [![Version](https://img.shields.io/badge/version-1.0.0-blue)]()
 [![Platform](https://img.shields.io/badge/platform-Linux-lightgrey)]()
 [![License](https://img.shields.io/badge/license-BSD--3--Clause-green)]()
