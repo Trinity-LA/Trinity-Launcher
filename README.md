@@ -1,5 +1,5 @@
 # Trinity Launcher 
-### Important note: On x86_64, the maximum supported version is 26.3  
+### Important note: On x86_64, the maximum supported version of bedrock is 26.3  
 [Official Website](https://trinity-la.github.io/)
 
 [Official  Reddit](https://www.reddit.com/r/TrinityUnix/comments/1s3p2ot/errores_comunes_de_trinity_launcher/)
