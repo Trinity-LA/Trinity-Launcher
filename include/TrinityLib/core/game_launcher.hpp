@@ -18,6 +18,7 @@ class GameLauncher : public QObject {
     signals:
         void gameFinished(int exitCode, QProcess::ExitStatus exitStatus);
         void gameError(QProcess::ProcessError error);
+        void gameOutput(const QString &text);
 
     private slots:
         void onGameOutput();

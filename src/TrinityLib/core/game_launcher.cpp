@@ -52,6 +52,8 @@ void GameLauncher::onGameOutput() {
     QByteArray data = m_process->readAllStandardOutput();
     QString output = QString::fromLocal8Bit(data);
 
+    emit gameOutput(output);
+
     std::cout << data.toStdString();
 
     // Messages logs of bedrock close

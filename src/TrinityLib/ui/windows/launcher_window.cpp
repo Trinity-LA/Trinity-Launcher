@@ -36,6 +36,7 @@
 #include <QSettings>
 #include <QStandardPaths>
 #include <QStackedWidget>
+#include <QSysInfo>
 #include <QTimer>
 #include <QUrl>
 #include <QVBoxLayout>
@@ -52,12 +53,36 @@ LauncherWindow::LauncherWindow(QWidget *parent)
 
     m_gameLauncher = new GameLauncher(this);
 
+    // Show one-time x86_64 architecture warning
+#ifdef SHOW_X86_64_WARNING
+    {
+        QSettings settings;
+        if (!settings.value("x86_64_warned", false).toBool()) {
+            if (QSysInfo::currentCpuArchitecture() == "x86_64") {
+                QMessageBox::warning(this, tr("Architecture Notice"),
+                    tr("On x86_64, the maximum supported version of Minecraft Bedrock is 1.26.3."));
+                settings.setValue("x86_64_warned", true);
+            }
+        }
+    }
+#endif
+
     connect(m_gameLauncher, &GameLauncher::gameFinished, this,
             [this](int code, QProcess::ExitStatus status) {
                 // 1. Volver a mostrar el launcher
                 this->show();
                 this->raise(); // Traer al frente
                 this->activateWindow();
+            });
+
+    // Connect game output to log widget
+    connect(m_gameLauncher, &GameLauncher::gameOutput, this,
+            [this](const QString &text) {
+                if (logTextEdit) {
+                    logTextEdit->moveCursor(QTextCursor::End);
+                    logTextEdit->insertPlainText(text);
+                    logTextEdit->moveCursor(QTextCursor::End);
+                }
             });
     // Conectar señales de exporter
 
@@ -90,6 +115,7 @@ LauncherWindow::LauncherWindow(QWidget *parent)
             { "icon/content", sidebarContentBtn },
             { "icon/discord", sidebarDiscordBtn },
             { "icon/about",   sidebarAboutBtn   },
+            { "icon/log",     sidebarLogBtn     },
             { "icon/settings",sidebarSettingsBtn },
         };
         for (auto &e : iconMap) {
@@ -211,6 +237,13 @@ void LauncherWindow::setupUi() {
     sidebarAboutBtn->setCursor(Qt::PointingHandCursor);
     sidebarAboutBtn->setToolTip(tr("About Trinity Launcher"));
 
+    sidebarLogBtn = new QPushButton(QIcon(":/icons/warns"), "");
+    sidebarLogBtn->setObjectName("SidebarBtn");
+    sidebarLogBtn->setIconSize(QSize(26, 26));
+    sidebarLogBtn->setFixedSize(52, 48);
+    sidebarLogBtn->setCursor(Qt::PointingHandCursor);
+    sidebarLogBtn->setToolTip(tr("Log"));
+
     sidebarSettingsBtn = new QPushButton(QIcon(":/icons/settings"), "");
     sidebarSettingsBtn->setObjectName("SidebarBtn");
     sidebarSettingsBtn->setIconSize(QSize(26, 26));
@@ -222,6 +255,7 @@ void LauncherWindow::setupUi() {
     sidebarLayout->addWidget(sidebarContentBtn);
     sidebarLayout->addWidget(sidebarDiscordBtn);
     sidebarLayout->addWidget(sidebarAboutBtn);
+    sidebarLayout->addWidget(sidebarLogBtn);
     sidebarLayout->addStretch();
     sidebarLayout->addWidget(sidebarSettingsBtn); // Settings al fondo
     windowLayout->addWidget(sidebar);
@@ -551,7 +585,11 @@ void LauncherWindow::setupUi() {
 
     contentStack->addWidget(aboutPage);
 
-    // === Page 4: Settings ===
+    // === Page 4: Log ===
+    QWidget *logPage = createLogPage();
+    contentStack->addWidget(logPage);
+
+    // === Page 5: Settings ===
     contentStack->addWidget(createSettingsPage());
 
     contentStack->setCurrentIndex(0);
@@ -561,8 +599,8 @@ void LauncherWindow::setupUi() {
         contentStack->setCurrentIndex(activeIndex);
         QPushButton *btns[] = {sidebarTrinityBtn, sidebarContentBtn,
                                sidebarDiscordBtn, sidebarAboutBtn,
-                               sidebarSettingsBtn};
-        for (int i = 0; i < 5; ++i) {
+                               sidebarLogBtn, sidebarSettingsBtn};
+        for (int i = 0; i < 6; ++i) {
             btns[i]->setObjectName(i == activeIndex ? "SidebarBtnActive" : "SidebarBtn");
             btns[i]->style()->unpolish(btns[i]);
             btns[i]->style()->polish(btns[i]);
@@ -582,8 +620,11 @@ void LauncherWindow::setupUi() {
     connect(sidebarAboutBtn, &QPushButton::clicked, this, [updateSidebar]() {
         updateSidebar(3);
     });
-    connect(sidebarSettingsBtn, &QPushButton::clicked, this, [updateSidebar]() {
+    connect(sidebarLogBtn, &QPushButton::clicked, this, [updateSidebar]() {
         updateSidebar(4);
+    });
+    connect(sidebarSettingsBtn, &QPushButton::clicked, this, [updateSidebar]() {
+        updateSidebar(5);
     });
 
     // Center the window
@@ -1615,6 +1656,7 @@ QWidget *LauncherWindow::createSettingsPage() {
         { tr("Content Manager"),  "icon/content",  ":/icons/config",  sidebarContentBtn },
         { tr("Discord"),          "icon/discord",  ":/icons/discord", sidebarDiscordBtn },
         { tr("About"),            "icon/about",    ":/icons/heart",   sidebarAboutBtn   },
+        { tr("Log"),              "icon/log",      ":/icons/warns",   sidebarLogBtn     },
         { tr("Settings"),         "icon/settings", ":/icons/settings",sidebarSettingsBtn},
     };
 
@@ -1702,6 +1744,30 @@ QWidget *LauncherWindow::createSettingsPage() {
     layout->addStretch();
     scrollArea->setWidget(content);
     outerLayout->addWidget(scrollArea);
+
+    return page;
+}
+
+QWidget *LauncherWindow::createLogPage() {
+    QWidget *page = new QWidget();
+    QVBoxLayout *outerLayout = new QVBoxLayout(page);
+    outerLayout->setContentsMargins(0, 0, 0, 0);
+
+    // Title
+    QLabel *titleLabel = new QLabel(tr("Log Output"));
+    titleLabel->setObjectName("VersionName");
+    titleLabel->setAlignment(Qt::AlignCenter);
+    titleLabel->setStyleSheet("padding: 16px;");
+    outerLayout->addWidget(titleLabel);
+
+    // Log text edit — read-only, selectable, monospace
+    logTextEdit = new QTextEdit();
+    logTextEdit->setReadOnly(true);
+    logTextEdit->setTextInteractionFlags(Qt::TextSelectableByMouse | Qt::TextSelectableByKeyboard);
+    logTextEdit->setLineWrapMode(QTextEdit::NoWrap);
+    logTextEdit->setFont(QFont("Monospace", 11));
+    logTextEdit->setObjectName("LogTextEdit");
+    outerLayout->addWidget(logTextEdit);
 
     return page;
 }

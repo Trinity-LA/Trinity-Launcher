@@ -14,6 +14,7 @@
         <file alias="heart">icons/heart.png</file>
         <file alias="settings">icons/settings.png</file>
         <file alias="trash">icons/trash.png</file>
+        <file alias="warns">icons/warns.png</file>
     </qresource>
     <qresource prefix="/branding">
         <file alias="logo">branding/logo_full.png</file>

@@ -10,15 +10,15 @@ jobs:
       - name: Clonar repositorio Trinity
         uses: actions/checkout@v4
         with:
-          path: 'trinity'
+          path: "trinity"
 
       - name: Clonar Manifiesto de mcpelauncher
         uses: actions/checkout@v4
         with:
-          repository: 'minecraft-linux/mcpelauncher-manifest'
-          ref: 'ng' # <-- RAMA ACTUALIZADA A NG
-          submodules: 'recursive'
-          path: 'mcpelauncher'
+          repository: "minecraft-linux/mcpelauncher-manifest"
+          ref: "ng" # <-- RAMA ACTUALIZADA A NG
+          submodules: "recursive"
+          path: "mcpelauncher"
 
       - name: Clonar mcpe-extract (Codeberg)
         run: git clone https://codeberg.org/javiercplus/mcpe-extract.git
@@ -26,14 +26,14 @@ jobs:
       - name: Clonar mcpelauncher-mac-bin (Librerías puente)
         uses: actions/checkout@v4
         with:
-          repository: 'minecraft-linux/mcpelauncher-mac-bin'
-          path: 'mac-bin'
+          repository: "minecraft-linux/mcpelauncher-mac-bin"
+          path: "mac-bin"
 
       - name: Instalar Homebrew (Intel) y dependencias
         run: |
           arch -x86_64 /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
           eval "$(/usr/local/bin/brew shellenv)"
-          
+
           brew update
           brew install cmake ninja qt@6 libzip libpng pkg-config openssl rustup-init
           brew link --force qt@6
@@ -44,7 +44,7 @@ jobs:
           eval "$(/usr/local/bin/brew shellenv)"
           cd trinity
           mkdir -p build && cd build
-          arch -x86_64 cmake .. -DCMAKE_BUILD_TYPE=Release -G Ninja -DCMAKE_PREFIX_PATH="$(brew --prefix qt@6)" -DCMAKE_OSX_DEPLOYMENT_TARGET=10.15 -DCMAKE_OSX_ARCHITECTURES=x86_64 -Wno-dev
+          arch -x86_64 cmake .. -DCMAKE_BUILD_TYPE=Release -DDISABLE_X86_64_WARNING=ON -G Ninja -DCMAKE_PREFIX_PATH="$(brew --prefix qt@6)" -DCMAKE_OSX_DEPLOYMENT_TARGET=10.15 -DCMAKE_OSX_ARCHITECTURES=x86_64 -Wno-dev
           arch -x86_64 cmake --build . --parallel $(sysctl -n hw.ncpu)
 
       - name: Compilar mcpelauncher
@@ -86,51 +86,51 @@ jobs:
       - name: Crear Application Bundle y Empaquetar
         run: |
           eval "$(/usr/local/bin/brew shellenv)"
-          
+
           mkdir -p dist/Trinity.app/Contents/MacOS
           mkdir -p dist/Trinity.app/Contents/Frameworks
           mkdir -p dist/Trinity.app/Contents/Resources/mcpelauncher
           mkdir -p dist/lib
-          
+
           # Copiar los binarios recién compilados
           cp mcpelauncher/build/mcpelauncher-client/mcpelauncher-client dist/Trinity.app/Contents/MacOS/
           cp mcpe-extract/build/mcpelauncher-extract dist/Trinity.app/Contents/MacOS/
           cp trinity/build/app/trinity dist/Trinity.app/Contents/MacOS/trinity-bin
-          
+
           # Buscar y copiar el msa-daemon compilado
           find mcpelauncher/build -type f -name "msa-daemon" -exec cp {} dist/Trinity.app/Contents/MacOS/ \; || true
-          
+
           # SCRIPT WRAPPER BLINDADO (Modificado para Intel x86_64)
           cat << 'EOF' > dist/Trinity.app/Contents/MacOS/trinity
           #!/bin/bash
           DIR="$( cd "$( dirname "${BASH_SOURCE}" )" && pwd )"
-          
+
           # Aceleración gráfica forzada
           export QT_MAC_WANTS_LAYER=1
           export QT_QPA_PLATFORM=cocoa
           export SDL_HINT_RENDER_DRIVER=metal
           export ANGLE_DEFAULT_PLATFORM=metal
-          
+
           # Ruta absoluta para MSA Daemon
           export MSA_DAEMON_PATH="$DIR/msa-daemon"
-          
+
           # Inyección de dependencias apuntando a la carpeta nativa de Intel (x86_64)
           export DYLD_LIBRARY_PATH="$DIR/../Frameworks:$DIR/../Resources/mcpelauncher/lib/native/x86_64:$DYLD_LIBRARY_PATH"
           export DYLD_FRAMEWORK_PATH="$DIR/../Frameworks:$DYLD_FRAMEWORK_PATH"
-          
+
           # Salvavidas para SQLite/PlayFab: Mover el directorio de ejecución a una zona de lectura/escritura nativa
           DATA_DIR="$HOME/Library/Application Support/mcpelauncher"
           mkdir -p "$DATA_DIR"
           cd "$DATA_DIR"
-          
+
           exec "$DIR/trinity-bin" "$@"
           EOF
           chmod +x dist/Trinity.app/Contents/MacOS/trinity
-          
+
           ln -s /usr/local/opt/qtsvg/lib/QtSvg.framework dist/lib/
           ln -s /usr/local/opt/qtvirtualkeyboard/lib/QtVirtualKeyboard.framework dist/lib/
           ln -s /usr/local/opt/qtvirtualkeyboard/lib/QtVirtualKeyboardQml.framework dist/lib/
-          
+
           cd dist
           # Usar macdeployqt sin WebView
           arch -x86_64 $(brew --prefix qt@6)/bin/macdeployqt Trinity.app \
@@ -138,14 +138,14 @@ jobs:
             -executable=Trinity.app/Contents/MacOS/mcpelauncher-client \
             -executable=Trinity.app/Contents/MacOS/mcpelauncher-extract
           cd ..
-          
+
           # 1. Copiar estructura de librerías puente (audio y android) a Resources
           cp -R mac-bin/lib dist/Trinity.app/Contents/Resources/mcpelauncher/
-          
+
           # 2. Descargar ANGLE desde Hugging Face directamente a Frameworks
           curl -L "https://huggingface.co/datasets/ccoffee20/macos/resolve/main/libEGL.dylib" -o dist/Trinity.app/Contents/Frameworks/libEGL.dylib
           curl -L "https://huggingface.co/datasets/ccoffee20/macos/resolve/main/libGLESv2.dylib" -o dist/Trinity.app/Contents/Frameworks/libGLESv2.dylib
-          
+
           # 3. Enseñar a los ejecutables dónde buscar las librerías de ANGLE y dependencias
           install_name_tool -add_rpath @loader_path/../Frameworks dist/Trinity.app/Contents/MacOS/trinity-bin || true
           install_name_tool -add_rpath @loader_path/../Frameworks dist/Trinity.app/Contents/MacOS/mcpelauncher-client || true
@@ -174,13 +174,13 @@ jobs:
           </dict>
           </plist>
           EOF
-          
+
           cp trinity/resources/branding/com.trench.trinity.launcher.icns dist/Trinity.app/Contents/Resources/AppIcon.icns
-          
+
           cd dist
           arch -x86_64 codesign --force --deep --sign - Trinity.app
           arch -x86_64 hdiutil create -volname "Trinity Launcher" -srcfolder Trinity.app -ov -format UDZO Trinity.dmg
-          
+
       - name: Subir instalador DMG
         uses: actions/upload-artifact@v4
         with:

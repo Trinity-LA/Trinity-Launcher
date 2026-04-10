@@ -2,3 +2,5 @@ build/
 .cache/
 
 apks/
+
+.qwen

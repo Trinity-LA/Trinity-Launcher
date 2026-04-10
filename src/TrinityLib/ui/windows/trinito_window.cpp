@@ -1345,6 +1345,18 @@ QWidget *TrinitoWindow::createDirectoryTab() {
     openBtn->setCursor(Qt::PointingHandCursor);
     openBtn->setObjectName("ActionButton");
     connect(openBtn, &QPushButton::clicked, this, [dataPath]() {
+        QDir dir(dataPath);
+        if (!dir.exists()) {
+            dir.mkpath(".");
+        }
+        // Inside Flatpak, QDesktopServices cannot open file managers directly.
+        // Use flatpak-spawn --host to invoke xdg-open on the host.
+        #ifdef Q_OS_LINUX
+            if (QFile::exists("/.flatpak-info")) {
+                QProcess::startDetached("flatpak-spawn", {"--host", "xdg-open", dataPath});
+                return;
+            }
+        #endif
         QDesktopServices::openUrl(QUrl::fromLocalFile(dataPath));
     });
 
