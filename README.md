@@ -11,7 +11,7 @@ If you have an ARM-based device, you won't have any problems with the new versio
 [![License](https://img.shields.io/badge/license-BSD--3--Clause-green)]()
 
 **Trinity Launcher** is a modular graphical environment designed to manage and run Minecraft: Bedrock Edition natively on Linux environments.
-<img width="960" height="560" alt="image" src="https://github.com/user-attachments/assets/f7b14066-0a31-4eae-ac82-6b989d5ae786" />
+<img width="960" height="560" alt="image" src="https://github.com/user-attachments/assets/d4abb204-6c4e-4108-872e-33401fd936ab" />
 
 ---
 
