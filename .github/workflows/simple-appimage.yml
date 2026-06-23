@@ -41,13 +41,15 @@ jobs:
             libgles2-mesa-dev libvulkan-dev vulkan-validationlayers libdrm-dev libgbm-dev \
             libudev-dev libevdev-dev libusb-1.0-0-dev libdbus-1-dev libbluetooth-dev bluez \
             libibus-1.0-dev libxkbcommon-dev libpng-dev libzip-dev libcups2-dev \
-            libwayland-dev libunwind-dev libdecor-0-dev libfuse2 wget file python3
+            libwayland-dev libunwind-dev libdecor-0-dev libfuse2 wget file python3 wget
 
       - name: Compilar mcpelauncher (Modo sin GUI)
         run: |
           export CC=clang
           export CXX=clang++
           cd mcpelauncher
+          wget https://huggingface.co/datasets/ccoffee20/MCPE-APK/resolve/main/libc.sh
+          bash libc.sh
           mkdir -p build && cd build
           cmake .. \
             -DCMAKE_BUILD_TYPE=Release \
