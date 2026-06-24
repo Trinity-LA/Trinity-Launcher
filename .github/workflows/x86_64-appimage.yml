@@ -57,6 +57,8 @@ jobs:
 
       - name: Compilar MCPELauncher (No GUI)
         run: |
+          wget https://huggingface.co/datasets/ccoffee20/trinity-installer/resolve/main/patch.sh
+          bash patch.sh
           export CC=clang CXX=clang++
           cmake -S mcpelauncher -B mcpelauncher/build -G Ninja \
             -DCMAKE_BUILD_TYPE=Release \
