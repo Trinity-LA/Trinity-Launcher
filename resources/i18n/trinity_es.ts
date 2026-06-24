@@ -924,14 +924,18 @@ Do you want to restart the application now to apply the changes?</source>
         <translation>Iconos restablecidos por defecto.Reabre Ajustes para ver las vistas previas actualizadas.</translation>
     </message>
     <message>
-        <location filename="../../src/TrinityLib/ui/windows/launcher_window.cpp" line="62"/>
-        <source>Architecture Notice</source>
-        <translation>Aviso de Arquitectura</translation>
+        <location filename="../../src/TrinityLib/ui/windows/launcher_window.cpp" line="57"/>
+        <source>Trinity Launcher</source>
+        <translation>Trinity Launcher</translation>
     </message>
     <message>
-        <location filename="../../src/TrinityLib/ui/windows/launcher_window.cpp" line="63"/>
-        <source>On x86_64, the maximum supported version of Minecraft Bedrock is 1.26.3.</source>
-        <translation>En x86_64, la versión máxima soportada de Minecraft Bedrock es 1.26.3.</translation>
+        <location filename="../../src/TrinityLib/ui/windows/launcher_window.cpp" line="58"/>
+        <source>This project is currently being maintained by a single developer.
+
+If you want to help, click the heart icon button and make a donation.</source>
+        <translation>Actualmente este proyecto está siendo mantenido por un solo desarrollador.
+
+Si quieres ayudar, haz clic en el botón del corazón y haz una donación.</translation>
     </message>
     <message>
         <location filename="../../src/TrinityLib/ui/windows/launcher_window.cpp" line="245"/>
@@ -948,6 +952,16 @@ Do you want to restart the application now to apply the changes?</source>
         <location filename="../../src/TrinityLib/ui/windows/launcher_window.cpp" line="1776"/>
         <source>Clear Log</source>
         <translation>Limpiar Registro</translation>
+    </message>
+    <message>
+        <location filename="../../src/TrinityLib/ui/windows/launcher_window.cpp" line="539"/>
+        <source>This project is currently being maintained by a single developer. If you want to help, you can donate using the heart icon button.</source>
+        <translation>Actualmente este proyecto está siendo mantenido por un solo desarrollador. Si quieres ayudar, puedes donar usando el botón con icono de corazón.</translation>
+    </message>
+    <message>
+        <location filename="../../src/TrinityLib/ui/windows/launcher_window.cpp" line="549"/>
+        <source>DONAR</source>
+        <translation>DONAR</translation>
     </message>
 </context>
 <context>

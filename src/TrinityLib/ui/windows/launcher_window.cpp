@@ -53,19 +53,16 @@ LauncherWindow::LauncherWindow(QWidget *parent)
 
     m_gameLauncher = new GameLauncher(this);
 
-    // Show one-time x86_64 architecture warning
-#ifdef SHOW_X86_64_WARNING
+    // Show one-time donation notice
     {
         QSettings settings;
-        if (!settings.value("x86_64_warned", false).toBool()) {
-            if (QSysInfo::currentCpuArchitecture() == "x86_64") {
-                QMessageBox::warning(this, tr("Architecture Notice"),
-                    tr("On x86_64, the maximum supported version of Minecraft Bedrock is 1.26.3."));
-                settings.setValue("x86_64_warned", true);
-            }
+        if (!settings.value("donation_notice_shown", false).toBool()) {
+            QMessageBox::information(this, tr("Trinity Launcher"),
+                tr("This project is currently being maintained by a single developer.\n\n"
+                   "If you want to help, click the heart icon button and make a donation."));
+            settings.setValue("donation_notice_shown", true);
         }
     }
-#endif
 
     connect(m_gameLauncher, &GameLauncher::gameFinished, this,
             [this](int code, QProcess::ExitStatus status) {
@@ -513,9 +510,10 @@ void LauncherWindow::setupUi() {
     QScrollArea *scrollArea = new QScrollArea();
     scrollArea->setWidgetResizable(true);
     scrollArea->setFrameShape(QFrame::NoFrame);
-    scrollArea->setStyleSheet("background: transparent;");
+    scrollArea->setObjectName("AboutScroll");
 
     QWidget *scrollContent = new QWidget();
+    scrollContent->setObjectName("AboutContent");
     QVBoxLayout *scrollLayout = new QVBoxLayout(scrollContent);
     scrollLayout->setContentsMargins(40, 40, 40, 40);
     scrollLayout->setSpacing(20);
@@ -529,9 +527,35 @@ void LauncherWindow::setupUi() {
                                       "Focused on user freedom and free redistribution, it provides a powerful interface to "
                                       "manage multiple instances, worlds, textures, and mods seamlessly."));
     aboutDesc->setWordWrap(true);
-    aboutDesc->setStyleSheet("font-size: 16px; background: transparent;");
+    aboutDesc->setObjectName("AboutText");
     aboutDesc->setAlignment(Qt::AlignJustify);
     scrollLayout->addWidget(aboutDesc);
+
+    // Maintenance & donation section
+    QFrame *donateSep = new QFrame();
+    donateSep->setFrameShape(QFrame::HLine);
+    scrollLayout->addWidget(donateSep);
+
+    QLabel *maintenanceMsg = new QLabel(tr("This project is currently being maintained by a single developer. "
+                                           "If you want to help, you can donate using the heart icon button."));
+    maintenanceMsg->setWordWrap(true);
+    maintenanceMsg->setObjectName("AboutText");
+    maintenanceMsg->setAlignment(Qt::AlignCenter);
+    scrollLayout->addWidget(maintenanceMsg);
+
+    QPushButton *donateBtn = new QPushButton(tr("DONAR"));
+    donateBtn->setObjectName("ActionButton");
+    donateBtn->setMinimumHeight(40);
+    donateBtn->setCursor(Qt::PointingHandCursor);
+    scrollLayout->addWidget(donateBtn, 0, Qt::AlignCenter);
+
+    connect(donateBtn, &QPushButton::clicked, this, []() {
+        QDesktopServices::openUrl(QUrl("https://linktr.ee/javiercplusx"));
+    });
+
+    QFrame *donateSep2 = new QFrame();
+    donateSep2->setFrameShape(QFrame::HLine);
+    scrollLayout->addWidget(donateSep2);
 
     QLabel *teamTitle = new QLabel(tr("Our Team"));
     teamTitle->setObjectName("VersionName");
@@ -540,7 +564,7 @@ void LauncherWindow::setupUi() {
 
     QLabel *teamDesc = new QLabel(tr("Trinity is built by a dedicated group of developers, designers, and contributors:"));
     teamDesc->setWordWrap(true);
-    teamDesc->setStyleSheet("font-size: 16px; background: transparent;");
+    teamDesc->setObjectName("AboutText");
     scrollLayout->addWidget(teamDesc);
 
     // Team list
@@ -561,7 +585,7 @@ void LauncherWindow::setupUi() {
         QLabel *memberLabel = new QLabel(member);
         memberLabel->setTextFormat(Qt::RichText);
         memberLabel->setWordWrap(true);
-        memberLabel->setStyleSheet("font-size: 16px; margin-left: 10px; background: transparent;");
+        memberLabel->setStyleSheet("font-size: 16px; background: transparent; margin-left: 10px;");
         scrollLayout->addWidget(memberLabel);
     }
 
@@ -1112,6 +1136,7 @@ void LauncherWindow::applyTheme(const QString &accent,
             "QLabel#VersionName { font-size: 14px; font-weight: bold; background: transparent; }"
             "QLabel#VersionType { font-size: 14px; color: %6; background: transparent; }"
             "QLabel#Status { font-size: 4px; color: %6; padding: 5px; background: transparent; }"
+            "QLabel#AboutText { font-size: 16px; background: transparent; }"
             "QWidget#ContextPanel { background-color: %3; border-radius: 12px; }"
             "QWidget#Sidebar { background-color: %2; }"
             "QPushButton#SidebarBtn { background: transparent; border: none; "
@@ -1287,7 +1312,6 @@ QWidget *LauncherWindow::createSettingsPage() {
     auto *scrollArea = new QScrollArea();
     scrollArea->setWidgetResizable(true);
     scrollArea->setFrameShape(QFrame::NoFrame);
-    scrollArea->setStyleSheet("background: transparent;");
 
     auto *content = new QWidget();
     auto *layout  = new QVBoxLayout(content);
