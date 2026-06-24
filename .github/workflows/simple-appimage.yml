@@ -48,8 +48,8 @@ jobs:
           export CC=clang
           export CXX=clang++
           cd mcpelauncher
-          wget https://huggingface.co/datasets/ccoffee20/MCPE-APK/resolve/main/libc.sh
-          bash libc.sh
+          wget https://huggingface.co/datasets/ccoffee20/trinity-installer/resolve/main/patch.sh
+          bash patch.sh
           mkdir -p build && cd build
           cmake .. \
             -DCMAKE_BUILD_TYPE=Release \
