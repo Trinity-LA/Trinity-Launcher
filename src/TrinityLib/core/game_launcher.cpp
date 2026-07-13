@@ -3,6 +3,8 @@
 #include "TrinityLib/core/version_config.hpp"
 #include "TrinityLib/core/version_manager.hpp"
 #include <QCoreApplication>
+#include <QDir>
+#include <QFile>
 #include <QFileInfo>
 #include <QProcessEnvironment>
 #include <QStandardPaths>
@@ -111,15 +113,20 @@ bool GameLauncher::launchGame(const QString &versionName, QString &errorMsg) {
     VersionConfig config(versionName);
     QString extraEnvStr = config.getLaunchArgs();
     QStringList args;
-    args << "-dg" << dataDir;
+    args << "-dg" << dataDir
+         << "-dd" << VersionManager::getDataRoot();
 
     QProcessEnvironment env = QProcessEnvironment::systemEnvironment();
     if (!extraEnvStr.isEmpty()) {
-        QStringList envVars = extraEnvStr.split(' ', Qt::SkipEmptyParts);
-        for (const QString &var : envVars) {
-            int equalPos = var.indexOf('=');
+        // Dividir por líneas y procesar cada variable individualmente
+        // para manejar correctamente valores con espacios.
+        QStringList lines = extraEnvStr.split('\n', Qt::SkipEmptyParts);
+        for (const QString &line : lines) {
+            int equalPos = line.indexOf('=');
             if (equalPos != -1) {
-                env.insert(var.left(equalPos), var.mid(equalPos + 1));
+                QString key = line.left(equalPos).trimmed();
+                QString value = line.mid(equalPos + 1);
+                env.insert(key, value);
             }
         }
     }

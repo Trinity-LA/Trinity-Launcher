@@ -2,17 +2,36 @@
 #include "TrinityLib/core/version_config.hpp"
 #include <QStandardPaths>
 #include <QDir>
+#include <QFile>
 #include <QProcess>
 #include <QFileInfo>
-#include <QDebug>
 #include <QCoreApplication>
 #include <QThread> // Para QThread::msleep (si es necesario)
 
 VersionManager::VersionManager(QObject *parent) : QObject(parent) {}
 
+bool VersionManager::isFlatpak() {
+    static bool flatpak = QCoreApplication::applicationDirPath().startsWith("/app")
+                          || !qEnvironmentVariableIsEmpty("FLATPAK_ID");
+    return flatpak;
+}
+
+QString VersionManager::getDataRoot() {
+    if (isFlatpak()) {
+        return QDir::homePath()
+            + "/.var/app/com.trench.trinity.launcher/data/mcpelauncher";
+    }
+#ifdef Q_OS_MAC
+    return QStandardPaths::writableLocation(QStandardPaths::AppDataLocation)
+        + "/mcpelauncher";
+#else
+    return QStandardPaths::writableLocation(QStandardPaths::GenericDataLocation)
+        + "/mcpelauncher";
+#endif
+}
+
 QStringList VersionManager::getInstalledVersions() const {
-    QString versionsDir = QStandardPaths::writableLocation(QStandardPaths::GenericDataLocation)
-    + "/mcpelauncher/versions";
+    QString versionsDir = getDataRoot() + "/versions";
     QDir dir(versionsDir);
     if (dir.exists()) {
         return dir.entryList(QDir::Dirs | QDir::NoDotAndDotDot);
@@ -21,8 +40,7 @@ QStringList VersionManager::getInstalledVersions() const {
 }
 
 QString VersionManager::getVersionPath(const QString &versionName) const {
-    return QStandardPaths::writableLocation(QStandardPaths::GenericDataLocation)
-    + "/mcpelauncher/versions/" + versionName;
+    return getDataRoot() + "/versions/" + versionName;
 }
 
 // Check for the main runtime library (libminecraftpe.so).

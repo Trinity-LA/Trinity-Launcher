@@ -11,6 +11,9 @@ class VersionManager : public QObject {
 public:
     explicit VersionManager(QObject *parent = nullptr);
 
+    static QString getDataRoot();
+    static bool isFlatpak();
+
     QStringList getInstalledVersions() const;
     QString getVersionPath(const QString &versionName) const;
     bool isVersionValid(const QString &versionName) const;

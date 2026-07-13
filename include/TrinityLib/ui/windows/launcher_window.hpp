@@ -56,7 +56,6 @@ class LauncherWindow : public QWidget {
 
     private:
         // Title Bar Variables
-        QPoint m_dragPos;
         QWidget *m_titleBar;
 
         // Layouts

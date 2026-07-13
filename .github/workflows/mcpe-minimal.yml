@@ -1,0 +1,89 @@
+name: Compilar mcpelauncher WAYLAND minimal
+
+on:
+  workflow_dispatch:
+  workflow_call:
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Clonar Manifiesto
+        uses: actions/checkout@v4
+        with:
+          repository: 'minecraft-linux/mcpelauncher-manifest'
+          ref: 'qt6'
+          submodules: 'recursive'
+
+      - name: Instalar dependencias del sistema
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y --no-install-recommends \
+            ca-certificates build-essential git curl cmake clang ninja-build \
+            qt6-base-dev qt6-base-dev-tools qt6-declarative-dev qt6-webengine-dev qt6-svg-dev qt6-tools-dev \
+            libcurl4-openssl-dev libssl-dev libasound2-dev libpulse-dev libjack-jackd2-dev \
+            libpipewire-0.3-dev libsndio-dev libx11-dev libxi-dev libxext-dev libxfixes-dev \
+            libxcursor-dev libxrandr-dev libxss-dev libxtst-dev libgl1-mesa-dev libegl1-mesa-dev \
+            libgles2-mesa-dev libvulkan-dev vulkan-validationlayers libdrm-dev libgbm-dev \
+            libudev-dev libevdev-dev libusb-1.0-0-dev libdbus-1-dev libbluetooth-dev bluez \
+            libibus-1.0-dev libxkbcommon-dev libpng-dev libzip-dev libcups2-dev \
+            libwayland-dev libunwind-dev libdecor-0-dev libfuse2 wget file python3
+
+      - name: Aplicar parche y Configurar git
+        run: |
+          wget https://huggingface.co/datasets/ccoffee20/trinity-installer/resolve/main/patch.sh
+          git config --global --add safe.directory $GITHUB_WORKSPACE/libc-shim
+          git config --global --add safe.directory $GITHUB_WORKSPACE/mcpelauncher-client
+          bash patch.sh
+
+      - name: Compilación con Clang y Optimizaciones
+        run: |
+          export CC=clang
+          export CXX=clang++
+          mkdir -p build && cd build
+          
+          cmake .. \
+            -G Ninja \
+            -DGAMEWINDOW_SYSTEM=SDL3 \
+            -DENABLE_DEV_PATHS=OFF \
+            -DJNI_USE_JNIVM=ON \
+            -DBUILD_UI=ON \
+            -DBUILD_CLIENT=ON \
+            -DBUILD_WEBVIEW=ON \
+            -DUSE_OWN_CURL=OFF \
+            -DCMAKE_BUILD_TYPE=Release \
+            -DCMAKE_C_FLAGS="-DNDEBUG" \
+            -DCMAKE_CXX_FLAGS="-DNDEBUG" \
+            -DCMAKE_POLICY_VERSION_MINIMUM=3.5 
+            
+          ninja
+
+      - name: Empaquetar Binarios
+        run: |
+          cd build
+          mkdir -p upload
+          cp mcpelauncher-client/mcpelauncher-client upload/
+          cp mcpelauncher-webview/mcpelauncher-webview upload/
+          cd upload
+          tar -cvf binarios.tar mcpelauncher-client mcpelauncher-webview 
+
+      - name: upload to hf
+        env:
+          HF_TOKEN: ${{ secrets.HF_TOKEN }}
+        run: |
+          python3 -m pip install -U "huggingface_hub[cli]" --break-system-packages
+          FILE=build/upload/binarios.tar
+          FILE_NAME=$(basename "$FILE")
+          hf upload ccoffee20/trinity-installer "$FILE" "$FILE_NAME" --repo-type dataset --token $HF_TOKEN
+
+      - name: Subir Binarios
+        uses: actions/upload-artifact@v4
+        with:
+          name: mcpelauncher-ng-debian13
+          path: build/upload/binarios.tar
+          if-no-files-found: warn

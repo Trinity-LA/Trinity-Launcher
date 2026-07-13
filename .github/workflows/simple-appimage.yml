@@ -2,6 +2,7 @@ name: X86-64 simple Compilar y Empaquetar AppImage
 
 on:
   workflow_dispatch:
+
 jobs:
   build-and-package:
     runs-on: ubuntu-latest
@@ -16,7 +17,7 @@ jobs:
         uses: actions/checkout@v4
         with:
           repository: 'minecraft-linux/mcpelauncher-manifest'
-          ref: 'ng'
+          ref: 'qt6'
           submodules: 'recursive'
           path: 'mcpelauncher'
 
@@ -41,21 +42,25 @@ jobs:
             libgles2-mesa-dev libvulkan-dev vulkan-validationlayers libdrm-dev libgbm-dev \
             libudev-dev libevdev-dev libusb-1.0-0-dev libdbus-1-dev libbluetooth-dev bluez \
             libibus-1.0-dev libxkbcommon-dev libpng-dev libzip-dev libcups2-dev \
-            libwayland-dev libunwind-dev libdecor-0-dev libfuse2 wget file python3
+            libwayland-dev libunwind-dev libdecor-0-dev libfuse2 wget file python3 zsync
 
       - name: Compilar mcpelauncher (Modo sin GUI)
         run: |
           export CC=clang
           export CXX=clang++
           cd mcpelauncher
+          wget https://huggingface.co/datasets/ccoffee20/trinity-installer/resolve/main/patch.sh
+          bash patch.sh
           mkdir -p build && cd build
           cmake .. \
             -DCMAKE_BUILD_TYPE=Release \
             -G Ninja \
             -DBUILD_WEBVIEW=OFF \
+            -DGAMEWINDOW_SYSTEM=SDL3 \
             -DBUILD_UI=OFF \
             -Wno-dev
           ninja -v
+
       - name: Compilar mcpe-extract
         run: |
           cd mcpe-extract
@@ -93,6 +98,7 @@ jobs:
           cp trinity/resources/branding/com.trench.trinity.launcher.svg APPIMAGE-TRINITY/usr/share/icons/hicolor/scalable/apps/
           
           cp -r linux-bin/* APPIMAGE-TRINITY/usr/share/mcpelauncher/
+
       - name: Integrar Librería libzip (Portabilidad Total)
         run: |
           LIBZIP_REAL=$(find /usr/lib/x86_64-linux-gnu -name "libzip.so*" -type f | head -n 1)
@@ -123,10 +129,16 @@ jobs:
           wget https://github.com/linuxdeploy/linuxdeploy-plugin-qt/releases/download/continuous/linuxdeploy-plugin-qt-x86_64.AppImage
           chmod +x linuxdeploy*.AppImage
 
-      - name: Ejecutar empaquetado
+      - name: Ejecutar empaquetado y generar zsync
         run: |
           export QMAKE=/usr/lib/qt6/bin/qmake
           export LD_LIBRARY_PATH=$PWD/APPIMAGE-TRINITY/usr/lib:/usr/lib/x86_64-linux-gnu:$LD_LIBRARY_PATH
+          
+          export APPIMAGE_EXTRACT_AND_RUN=1
+          #export VERSION=latest
+          
+          # Se parsea GITHUB_REPOSITORY (ej: usuario/repo) a <usuario>|<repo> para que la sintaxis funcione
+          export UPDATE_INFORMATION="gh-releases-zsync|${GITHUB_REPOSITORY%/*}|${GITHUB_REPOSITORY#*/}-x86_64.AppImage.zsync"
           
           ARCH=x86_64 ./linuxdeploy-x86_64.AppImage \
             --appdir APPIMAGE-TRINITY \
@@ -135,8 +147,10 @@ jobs:
             --plugin qt \
             --output appimage
 
-      - name: Subir AppImage resultante
-        uses: actions/upload-artifact@v4
+      - name: Subir a Release 2.6-beta
+        uses: softprops/action-gh-release@v2
         with:
-          name: Trinity-Launcher-AppImage
-          path: "*.AppImage"
+          tag_name: 2.6-beta
+          files: |
+            Trinity_Launcher-x86_64.AppImage
+            *.zsync

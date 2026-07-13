@@ -264,9 +264,7 @@ void TrinitoWindow::loadPacks(const QString &packType,
                               QListWidget *listWidget) {
     listWidget->clear(); // Clear current list
 
-    QString baseDataDir =
-        QStandardPaths::writableLocation(QStandardPaths::GenericDataLocation) +
-        "/mcpelauncher/games/com.mojang";
+    QString baseDataDir = VersionManager::getDataRoot() + "/games/com.mojang";
     QString packDirPath = baseDataDir + "/" + packType;
 
     QDir packDir(packDirPath);
@@ -332,9 +330,7 @@ void TrinitoWindow::loadPacks(const QString &packType,
 
 void TrinitoWindow::togglePack(const QString &packType, const QString &packName,
                                bool enable) {
-    QString baseDataDir =
-        QStandardPaths::writableLocation(QStandardPaths::GenericDataLocation) +
-        "/mcpelauncher/games/com.mojang";
+    QString baseDataDir = VersionManager::getDataRoot() + "/games/com.mojang";
     QString packDirPath = baseDataDir + "/" + packType;
 
     QString oldPath = packDirPath + "/" + packName;
@@ -496,9 +492,7 @@ QWidget *TrinitoWindow::createPackTab(const QString &targetSubdir,
             return;
 
         // Delete the file/folder
-        QString baseDataDir = QStandardPaths::writableLocation(
-                                  QStandardPaths::GenericDataLocation) +
-                              "/mcpelauncher/games/com.mojang";
+        QString baseDataDir = VersionManager::getDataRoot() + "/games/com.mojang";
         QString fullPath =
             baseDataDir + "/" + targetSubdir + "/" + selectedEntry;
 
@@ -631,9 +625,7 @@ QWidget *TrinitoWindow::createDevTab() {
             return;
 
         // Eliminar el archivo/carpeta
-        QString baseDataDir = QStandardPaths::writableLocation(
-                                  QStandardPaths::GenericDataLocation) +
-                              "/mcpelauncher/games/com.mojang";
+        QString baseDataDir = VersionManager::getDataRoot() + "/games/com.mojang";
         QString fullPath =
             baseDataDir + "/development_behavior_packs/" + selectedEntry;
 
@@ -681,9 +673,7 @@ QWidget *TrinitoWindow::createDevTab() {
             return;
 
         // Eliminar el archivo/carpeta
-        QString baseDataDir = QStandardPaths::writableLocation(
-                                  QStandardPaths::GenericDataLocation) +
-                              "/mcpelauncher/games/com.mojang";
+        QString baseDataDir = VersionManager::getDataRoot() + "/games/com.mojang";
         QString fullPath =
             baseDataDir + "/development_resource_packs/" + selectedEntry;
 
@@ -779,9 +769,7 @@ QWidget *TrinitoWindow::createWorldTab() {
             return;
 
         // Delete the world
-        QString baseDataDir = QStandardPaths::writableLocation(
-                                  QStandardPaths::GenericDataLocation) +
-                              "/mcpelauncher/games/com.mojang";
+        QString baseDataDir = VersionManager::getDataRoot() + "/games/com.mojang";
         QString worldPath = baseDataDir + "/minecraftWorlds/" + selectedWorld;
 
         if (QDir(worldPath).removeRecursively()) {
@@ -836,18 +824,7 @@ void TrinitoWindow::installItem(const QString &sourcePath,
 
 // Helper function to get shaders directory
 QString TrinitoWindow::getShadersDir() {
-    QString flatpakDir =
-        QDir::homePath() +
-        "/.var/app/com.trench.trinity.launcher/data/mcpelauncher";
-    QString shadersDir = flatpakDir + "/shaders";
-
-    // If the base Trinity Flatpak folder exists, we use shaders inside it
-    if (QDir(flatpakDir).exists()) {
-        return shadersDir;
-    } else {
-        // If not, we use the local folder
-        return QDir::homePath() + "/.local/share/mcpelauncher/shaders";
-    }
+    return VersionManager::getDataRoot() + "/shaders";
 }
 
 QWidget *TrinitoWindow::createShadersModsTab() {
@@ -1007,9 +984,7 @@ void TrinitoWindow::populateAvailableMods() {
 }
 
 void TrinitoWindow::populateInstalledMods() {
-    QString modsDir =
-        QDir::homePath() +
-        "/.var/app/com.trench.trinity.launcher/data/mcpelauncher/mods";
+    QString modsDir = VersionManager::getDataRoot() + "/mods";
     QDir dir(modsDir);
 
     // Disconnect to avoid triggering while we fill the list
@@ -1207,12 +1182,10 @@ void TrinitoWindow::onDownloadModClicked() {
     QString selected = availableModsList->selectedItems().first()->text();
     // Asegúrate de que la URL sea correcta
     QString url =
-        "https://huggingface.co/datasets/JaviercPLUS/mods-mcpe/resolve/main/" +
+        "https://huggingface.co/datasets/coffeesweet/mods-mcpe/resolve/main/" +
         selected;
 
-    QString modsDir =
-        QDir::homePath() +
-        "/.var/app/com.trench.trinity.launcher/data/mcpelauncher/mods";
+    QString modsDir = VersionManager::getDataRoot() + "/mods";
     QDir().mkpath(modsDir);
 
     QString destination = modsDir + "/" + selected;
@@ -1258,9 +1231,7 @@ void TrinitoWindow::onRemoveInstalledModClicked() {
     }
 
     QString selected = installedModsList->selectedItems().first()->text();
-    QString modsDir =
-        QDir::homePath() +
-        "/.var/app/com.trench.trinity.launcher/data/mcpelauncher/mods";
+    QString modsDir = VersionManager::getDataRoot() + "/mods";
     QString filePath = modsDir + "/" + selected;
 
     QFile file(filePath);
@@ -1295,25 +1266,24 @@ QWidget *TrinitoWindow::createDirectoryTab() {
     descLabel->setStyleSheet("font-size: 16px; background: transparent;");
     layout->addWidget(descLabel);
 
-    // Detectar la ruta de datos (mismo patrón que getShadersDir())
-    QString flatpakBase = QDir::homePath()
-        + "/.var/app/com.trench.trinity.launcher/data/mcpelauncher";
-    QString nativeBase  = QDir::homePath() + "/.local/share/mcpelauncher";
-
-    // La ruta que mostraremos
-    QString dataPath;
+    // Detectar la ruta de datos según el tipo de instalación
+    QString dataPath = VersionManager::getDataRoot();
     QString typeLabel;
 
-    if (QDir(flatpakBase).exists()) {
-        dataPath  = flatpakBase;
+    if (VersionManager::isFlatpak()) {
         typeLabel = tr("Flatpak installation");
-    } else if (QDir(nativeBase).exists()) {
-        dataPath  = nativeBase;
-        typeLabel = tr("Native installation");
-    } else {
-        dataPath  = nativeBase; // Ruta esperada aunque no exista aún
-        typeLabel = tr("Not found — the launcher may not have run yet");
+    } else if (!qEnvironmentVariableIsEmpty("APPIMAGE")) {
+        typeLabel = tr("AppImage installation");
     }
+#ifdef Q_OS_MAC
+    else {
+        typeLabel = tr("macOS installation");
+    }
+#else
+    else {
+        typeLabel = tr("Native installation");
+    }
+#endif
 
     // Card de ruta
     auto *card = new QWidget();
@@ -1352,7 +1322,7 @@ QWidget *TrinitoWindow::createDirectoryTab() {
         // Inside Flatpak, QDesktopServices cannot open file managers directly.
         // Use flatpak-spawn --host to invoke xdg-open on the host.
         #ifdef Q_OS_LINUX
-            if (QFile::exists("/.flatpak-info")) {
+    if (VersionManager::isFlatpak()) {
                 QProcess::startDetached("flatpak-spawn", {"--host", "xdg-open", dataPath});
                 return;
             }

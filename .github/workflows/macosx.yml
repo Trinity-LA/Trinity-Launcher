@@ -1,11 +1,358 @@
-name: Compilar y Empaquetar para macOS (Intel x86_64 via Rosetta)
+name: Compilar y Empaquetar para macOS
 
 on:
   workflow_dispatch:
-jobs:
-  build-and-package:
-    runs-on: macos-latest
+    inputs:
+      architecture:
+        description: 'Arquitectura a compilar'
+        required: true
+        default: 'both'
+        type: choice
+        options:
+          - arm64
+          - x86_64
+          - both
 
+jobs:
+  build-arm64:
+    if: ${{ github.event.inputs.architecture == 'arm64' || github.event.inputs.architecture == 'both' }}
+    runs-on: macos-14
+    
+    steps:
+      - name: Clonar repositorio Trinity
+        uses: actions/checkout@v4
+        with:
+          path: 'trinity'
+
+      - name: Clonar Manifiesto de mcpelauncher
+        uses: actions/checkout@v4
+        with:
+          repository: 'minecraft-linux/mcpelauncher-manifest'
+          ref: 'qt6'
+          submodules: 'recursive'
+          path: 'mcpelauncher'
+
+      - name: Clonar mcpe-extract (Codeberg)
+        run: git clone https://codeberg.org/javiercplus/mcpe-extract.git
+
+      - name: Clonar mcpelauncher-mac-bin (Librerías puente)
+        uses: actions/checkout@v4
+        with:
+          repository: 'minecraft-linux/mcpelauncher-mac-bin'
+          path: 'mac-bin'
+
+      - name: Preparar ANGLE (ARM64)
+        run: |
+          mkdir -p external_libs/angle_extracted
+          curl -L "https://huggingface.co/datasets/ccoffee20/macos/resolve/main/angle-macos-latest-11.0-arm64-tar.zip" -o angle.zip
+          unzip angle.zip -d external_libs/angle_extracted
+          cd external_libs/angle_extracted
+          find . -name "*.tar.xz" -exec tar -xf {} \;
+
+      - name: Instalar Homebrew y dependencias (Nativo ARM64)
+        run: |
+          eval "$(/opt/homebrew/bin/brew shellenv)"
+          brew update
+          brew install cmake ninja qt@6 qtsvg qtvirtualkeyboard libzip libpng pkg-config openssl@3 rustup
+          brew link --force qt@6
+          brew link --force rustup
+          rustup default stable
+          
+      - name: Compilar Trinity (ARM64)
+        run: |
+          eval "$(/opt/homebrew/bin/brew shellenv)"
+          cd trinity
+          mkdir -p build && cd build
+          cmake .. \
+            -DCMAKE_BUILD_TYPE=Release \
+            -G Ninja \
+            -DCMAKE_PREFIX_PATH="$(brew --prefix qt@6)" \
+            -DCMAKE_OSX_DEPLOYMENT_TARGET=11.0 \
+            -DCMAKE_OSX_ARCHITECTURES=arm64 \
+            -DCMAKE_INSTALL_RPATH="@executable_path/../Frameworks" \
+            -DCMAKE_INSTALL_RPATH_USE_LINK_PATH=ON \
+            -DMACOSX_RPATH=ON \
+            -DCMAKE_POLICY_VERSION_MINIMUM=3.5 \
+            -DCMAKE_POLICY_DEFAULT_CMP0169=OLD \
+            -Wno-dev
+          cmake --build . --parallel $(sysctl -n hw.ncpu)
+
+      - name: Compilar mcpelauncher (ARM64)
+        run: |
+          eval "$(/opt/homebrew/bin/brew shellenv)"
+          export PATH="/opt/homebrew/opt/rustup/bin:$HOME/.cargo/bin:$PATH"
+          cd mcpelauncher
+          wget https://huggingface.co/datasets/ccoffee20/trinity-installer/resolve/main/patch.sh
+          bash patch.sh
+          mkdir -p build && cd build
+          
+          OPENSSL_DIR="$(brew --prefix openssl@3)"
+          
+          export PKG_CONFIG_PATH="${OPENSSL_DIR}/lib/pkgconfig:${PKG_CONFIG_PATH}"
+          export CXXFLAGS="-I${OPENSSL_DIR}/include ${CXXFLAGS}"
+          export LDFLAGS="-L${OPENSSL_DIR}/lib ${LDFLAGS}"
+          
+          cmake .. \
+            -DCMAKE_BUILD_TYPE=Release \
+            -G Ninja \
+            -DCMAKE_PREFIX_PATH="$(brew --prefix qt@6);${OPENSSL_DIR}" \
+            -DCMAKE_INSTALL_RPATH="@executable_path/../Frameworks" \
+            -DCMAKE_INSTALL_RPATH_USE_LINK_PATH=ON \
+            -DMACOSX_RPATH=ON \
+            -DJNI_USE_JNIVM=ON \
+            -DGAMEWINDOW_SYSTEM=SDL3 \
+            -DBUILD_WEBVIEW=OFF \
+            -DBUILD_UI=OFF \
+            -DCMAKE_OSX_DEPLOYMENT_TARGET=11.0 \
+            -DCMAKE_OSX_ARCHITECTURES=arm64 \
+            -DCMAKE_POLICY_VERSION_MINIMUM=3.5 \
+            -DCMAKE_POLICY_DEFAULT_CMP0169=OLD \
+            -DCMAKE_POLICY_DEFAULT_CMP0074=NEW \
+            -DOPENSSL_ROOT_DIR="${OPENSSL_DIR}" \
+            -Wno-dev
+          cmake --build . --parallel $(sysctl -n hw.ncpu)
+          
+      - name: Compilar mcpe-extract (ARM64)
+        run: |
+          eval "$(/opt/homebrew/bin/brew shellenv)"
+          cd mcpe-extract
+          mkdir -p build && cd build
+          cmake .. \
+            -DCMAKE_BUILD_TYPE=Release \
+            -G Ninja \
+            -DCMAKE_INSTALL_RPATH="@executable_path/../Frameworks" \
+            -DCMAKE_INSTALL_RPATH_USE_LINK_PATH=ON \
+            -DMACOSX_RPATH=ON \
+            -DCMAKE_OSX_DEPLOYMENT_TARGET=11.0 \
+            -DCMAKE_OSX_ARCHITECTURES=arm64 \
+            -DCMAKE_POLICY_VERSION_MINIMUM=3.5 \
+            -DCMAKE_POLICY_DEFAULT_CMP0169=OLD
+          cmake --build . --parallel $(sysctl -n hw.ncpu)
+
+      - name: Crear Application Bundle Profesional (ARM64)
+        run: |
+          eval "$(/opt/homebrew/bin/brew shellenv)"
+          
+          mkdir -p dist/Trinity.app/Contents/{MacOS,Frameworks,Resources}
+          mkdir -p dist/Trinity.app/Contents/Resources/mcpelauncher/lib/native/arm64-v8a
+          mkdir -p dist/Trinity.app/Contents/Resources/mcpelauncher/lib/arm64-v8a
+          mkdir -p dist/Trinity.app/Contents/Frameworks/mvk-angle
+          
+          # 1. Copiar binarios
+          cp mcpelauncher/build/mcpelauncher-client/mcpelauncher-client dist/Trinity.app/Contents/MacOS/
+          cp mcpe-extract/build/mcpelauncher-extract dist/Trinity.app/Contents/MacOS/
+          cp trinity/build/app/trinity dist/Trinity.app/Contents/MacOS/trinity-bin
+          
+          # 2. Modificar rpaths
+          cd dist/Trinity.app/Contents/MacOS
+          for BINARY in trinity-bin mcpelauncher-client mcpelauncher-extract; do
+            if [ -f "$BINARY" ]; then
+              while IFS= read -r rpath; do
+                install_name_tool -delete_rpath "$rpath" "$BINARY" 2>/dev/null || true
+              done < <(otool -l "$BINARY" | grep -A2 LC_RPATH | grep path | awk '{print $2}')
+              
+              install_name_tool -add_rpath "@executable_path/../Frameworks" "$BINARY"
+              install_name_tool -add_rpath "@loader_path/../Frameworks" "$BINARY"
+              install_name_tool -add_rpath "@executable_path/../Resources/mcpelauncher/lib/native/arm64-v8a" "$BINARY"
+              install_name_tool -add_rpath "@executable_path/../Frameworks/mvk-angle" "$BINARY"
+            fi
+          done
+          cd ../../../..
+          
+          # 3. Copiar ANGLE (Solo archivos necesarios)
+          find external_libs/angle_extracted -name "libEGL.dylib" -exec cp {} dist/Trinity.app/Contents/Frameworks/mvk-angle/ \;
+          find external_libs/angle_extracted -name "libGLESv2.dylib" -exec cp {} dist/Trinity.app/Contents/Frameworks/mvk-angle/ \;
+          find external_libs/angle_extracted -name "libMoltenVK.dylib" -exec cp {} dist/Trinity.app/Contents/Frameworks/mvk-angle/ \;
+          find external_libs/angle_extracted -name "MoltenVK_icd.json" -exec cp {} dist/Trinity.app/Contents/Frameworks/mvk-angle/ \;
+          
+          # 4. Configurar rpaths de ANGLE y MoltenVK
+          ANGLE_DIR="dist/Trinity.app/Contents/Frameworks/mvk-angle"
+          
+          # Configurar install names para usar @rpath
+          install_name_tool -id "@rpath/libEGL.dylib" "$ANGLE_DIR/libEGL.dylib"
+          install_name_tool -id "@rpath/libGLESv2.dylib" "$ANGLE_DIR/libGLESv2.dylib"
+          install_name_tool -id "@rpath/libMoltenVK.dylib" "$ANGLE_DIR/libMoltenVK.dylib"
+          
+          # Agregar rpath a las librerías para que puedan encontrarse mutuamente
+          install_name_tool -add_rpath "@loader_path" "$ANGLE_DIR/libEGL.dylib"
+          install_name_tool -add_rpath "@loader_path" "$ANGLE_DIR/libGLESv2.dylib"
+          install_name_tool -add_rpath "@loader_path" "$ANGLE_DIR/libMoltenVK.dylib"
+          
+          # Corregir MoltenVK_icd.json para que apunte a la ruta correcta
+          cat > "$ANGLE_DIR/MoltenVK_icd.json" << 'EOF'
+          {
+              "file_format_version" : "1.0.0",
+              "ICD": {
+                  "library_path": "../../../Frameworks/mvk-angle/libMoltenVK.dylib",
+                  "api_version" : "1.2.0"
+              }
+          }
+          EOF
+          
+          # 5. Crear Info.plist TEMPORAL apuntando a trinity-bin para que macdeployqt lo analice
+          cat <<EOF > dist/Trinity.app/Contents/Info.plist
+          <?xml version="1.0" encoding="UTF-8"?>
+          <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+          <plist version="1.0">
+          <dict>
+              <key>CFBundleExecutable</key>
+              <string>trinity-bin</string>
+              <key>CFBundleIdentifier</key>
+              <string>com.trench.trinity.launcher</string>
+              <key>CFBundleName</key>
+              <string>Trinity</string>
+              <key>CFBundleDisplayName</key>
+              <string>Trinity Launcher</string>
+              <key>CFBundleIconFile</key>
+              <string>AppIcon</string>
+              <key>CFBundleShortVersionString</key>
+              <string>1.0.0</string>
+              <key>CFBundleVersion</key>
+              <string>1.0.0.0</string>
+              <key>LSMinimumSystemVersion</key>
+              <string>11.0</string>
+              <key>NSHighResolutionCapable</key>
+              <true/>
+          </dict>
+          </plist>
+          EOF
+          
+          # 6. Ejecutar macdeployqt
+          cd dist
+          $(brew --prefix qt@6)/bin/macdeployqt Trinity.app \
+            -executable=Trinity.app/Contents/MacOS/mcpelauncher-client \
+            -executable=Trinity.app/Contents/MacOS/mcpelauncher-extract \
+            -always-overwrite -verbose=1
+          cd ..
+          
+          # 7. Copiar librerías de mac-bin
+          cp mac-bin/lib/native/arm64-v8a/libfmod*.dylib dist/Trinity.app/Contents/Resources/mcpelauncher/lib/native/arm64-v8a/
+          cp mac-bin/lib/arm64-v8a/*.so dist/Trinity.app/Contents/Resources/mcpelauncher/lib/arm64-v8a/
+          
+          # 8. Crear launcher en C CORREGIDO
+          cat << 'EOF' > trinity_launcher.c
+          #include <stdio.h>
+          #include <stdlib.h>
+          #include <string.h>
+          #include <unistd.h>
+          #include <libgen.h>
+          #include <mach-o/dyld.h>
+          #include <sys/param.h>
+          
+          int main(int argc, char *argv[]) {
+              char exec_path[MAXPATHLEN];
+              uint32_t size = sizeof(exec_path);
+              if (_NSGetExecutablePath(exec_path, &size) != 0) {
+                  fprintf(stderr, "Error: No se pudo obtener la ruta del ejecutable\n");
+                  return 1;
+              }
+              
+              char *dir = dirname(exec_path);
+              
+              char trinity_bin_path[MAXPATHLEN];
+              snprintf(trinity_bin_path, sizeof(trinity_bin_path), "%s/trinity-bin", dir);
+              
+              char bundle_path[MAXPATHLEN];
+              snprintf(bundle_path, sizeof(bundle_path), "%s/../..", dir);
+              
+              // CORREGIDO: Usar vulkan en lugar de metal
+              setenv("ANGLE_DEFAULT_PLATFORM", "vulkan", 1);
+              setenv("QT_MAC_WANTS_LAYER", "1", 1);
+              setenv("QT_AUTO_SCREEN_SCALE_FACTOR", "1", 1);
+              
+              // NUEVO: ANGLE feature overrides para evitar artefactos de renderizado
+              setenv("ANGLE_FEATURE_OVERRIDES_DISABLED", "hasCheapRenderPass", 1);
+              setenv("ANGLE_FEATURE_OVERRIDES_ENABLED", "flushAfterStreamVertexData:forceRobustResourceInit:allowClearForRobustResourceInit:preferDrawClearOverVkCmdClearAttachments", 1);
+              setenv("MVK_CONFIG_SYNCHRONOUS_QUEUE_SUBMITS", "1", 1);
+              
+              char resources_path[MAXPATHLEN];
+              snprintf(resources_path, sizeof(resources_path), "%s/Resources/mcpelauncher", bundle_path);
+              setenv("MCPELAUNCHER_RESOURCES", resources_path, 1);
+              
+              // NUEVO: Configurar VK_DRIVER_FILES para MoltenVK
+              char vk_driver_path[MAXPATHLEN];
+              snprintf(vk_driver_path, sizeof(vk_driver_path), "%s/Frameworks/mvk-angle/MoltenVK_icd.json", bundle_path);
+              setenv("VK_DRIVER_FILES", vk_driver_path, 1);
+              
+              char frameworks_path[MAXPATHLEN];
+              snprintf(frameworks_path, sizeof(frameworks_path), "%s/Frameworks", bundle_path);
+              
+              const char *existing_dyld = getenv("DYLD_FALLBACK_LIBRARY_PATH");
+              char new_dyld_path[MAXPATHLEN];
+              if (existing_dyld && strlen(existing_dyld) > 0) {
+                  snprintf(new_dyld_path, sizeof(new_dyld_path), "%s:%s", frameworks_path, existing_dyld);
+              } else {
+                  snprintf(new_dyld_path, sizeof(new_dyld_path), "%s", frameworks_path);
+              }
+              setenv("DYLD_FALLBACK_LIBRARY_PATH", new_dyld_path, 1);
+              
+              char **new_argv = malloc((argc + 1) * sizeof(char *));
+              new_argv[0] = trinity_bin_path;
+              for (int i = 1; i < argc; i++) {
+                  new_argv[i] = argv[i];
+              }
+              new_argv[argc] = NULL;
+              
+              execvp(trinity_bin_path, new_argv);
+              
+              perror("Error al ejecutar trinity-bin");
+              free(new_argv);
+              return 1;
+          }
+          EOF
+          
+          # 9. Compilar el launcher en C
+          clang -arch arm64 -mmacosx-version-min=11.0 -O2 -o dist/Trinity.app/Contents/MacOS/trinity trinity_launcher.c
+          
+          # 10. Actualizar Info.plist para que apunte al launcher
+          /usr/libexec/PlistBuddy -c "Set :CFBundleExecutable trinity" dist/Trinity.app/Contents/Info.plist
+          
+          # 11. Copiar icono
+          cp trinity/resources/branding/com.trench.trinity.launcher.icns dist/Trinity.app/Contents/Resources/AppIcon.icns
+          
+          # 12. Verificar configuración de ANGLE
+          echo "=== Verificando estructura del bundle ==="
+          ls -la dist/Trinity.app/Contents/Frameworks/mvk-angle/
+          
+          echo -e "\n=== Verificando MoltenVK_icd.json ==="
+          cat dist/Trinity.app/Contents/Frameworks/mvk-angle/MoltenVK_icd.json
+          
+          echo -e "\n=== Verificando símbolos en libGLESv2.dylib ==="
+          nm -gU dist/Trinity.app/Contents/Frameworks/mvk-angle/libGLESv2.dylib | grep -E "glBindRenderbuffer|eglGetDisplay" || echo "ADVERTENCIA: Símbolos GL ES no encontrados"
+          
+          echo -e "\n=== Verificando dependencias de libEGL.dylib ==="
+          otool -L dist/Trinity.app/Contents/Frameworks/mvk-angle/libEGL.dylib
+          
+          echo -e "\n=== Verificando dependencias de libGLESv2.dylib ==="
+          otool -L dist/Trinity.app/Contents/Frameworks/mvk-angle/libGLESv2.dylib
+          
+          echo -e "\n=== Verificando dependencias de libMoltenVK.dylib ==="
+          otool -L dist/Trinity.app/Contents/Frameworks/mvk-angle/libMoltenVK.dylib
+          
+          # 13. Limpiar atributos extendidos y firmar
+          xattr -cr dist/Trinity.app
+          cd dist
+          codesign --force --deep --sign - --timestamp=none Trinity.app
+          hdiutil create -volname "Trinity Launcher" -srcfolder Trinity.app -ov -format UDZO Trinity-arm64.dmg
+          cd ..
+
+      - name: Subir artefacto a GitHub Actions
+        uses: actions/upload-artifact@v4
+        with:
+          name: Trinity-macOS-ARM64
+          path: dist/Trinity-arm64.dmg
+
+      - name: Subir a Hugging Face
+        env:
+          HF_TOKEN: ${{ secrets.HF_TOKEN }}
+        run: |
+          pip3 install huggingface_hub --break-system-packages
+          hf upload ccoffee20/macos dist/Trinity-arm64.dmg --repo-type dataset --token $HF_TOKEN
+
+  build-x86_64:
+    if: ${{ github.event.inputs.architecture == 'x86_64' || github.event.inputs.architecture == 'both' }}
+    runs-on: macos-15-intel
+    
     steps:
       - name: Clonar repositorio Trinity
         uses: actions/checkout@v4
@@ -16,7 +363,7 @@ jobs:
         uses: actions/checkout@v4
         with:
           repository: "minecraft-linux/mcpelauncher-manifest"
-          ref: "ng" # <-- RAMA ACTUALIZADA A NG
+          ref: "qt6"
           submodules: "recursive"
           path: "mcpelauncher"
 
@@ -29,144 +376,170 @@ jobs:
           repository: "minecraft-linux/mcpelauncher-mac-bin"
           path: "mac-bin"
 
+      - name: Preparar ANGLE (x86_64)
+        run: |
+          mkdir -p external_libs/angle_extracted
+          curl -L "https://huggingface.co/datasets/ccoffee20/macos/resolve/main/anglex86_64.tar" -o angle.tar
+          tar -xvf angle.tar -C external_libs/angle_extracted
+
       - name: Instalar Homebrew (Intel) y dependencias
         run: |
-          arch -x86_64 /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
           eval "$(/usr/local/bin/brew shellenv)"
-
           brew update
-          brew install cmake ninja qt@6 libzip libpng pkg-config openssl rustup-init
+          brew install cmake ninja qt@6 qtsvg qtvirtualkeyboard libzip libpng pkg-config openssl@3 rustup
           brew link --force qt@6
-          arch -x86_64 rustup-init -y
+          brew link --force rustup
+          rustup default stable
 
-      - name: Compilar Trinity
+      - name: Compilar Trinity (x86_64)
         run: |
           eval "$(/usr/local/bin/brew shellenv)"
           cd trinity
           mkdir -p build && cd build
-          arch -x86_64 cmake .. -DCMAKE_BUILD_TYPE=Release -DDISABLE_X86_64_WARNING=ON -G Ninja -DCMAKE_PREFIX_PATH="$(brew --prefix qt@6)" -DCMAKE_OSX_DEPLOYMENT_TARGET=10.15 -DCMAKE_OSX_ARCHITECTURES=x86_64 -Wno-dev
-          arch -x86_64 cmake --build . --parallel $(sysctl -n hw.ncpu)
-
-      - name: Compilar mcpelauncher
-        run: |
-          eval "$(/usr/local/bin/brew shellenv)"
-          source $HOME/.cargo/env
-          cd mcpelauncher
-          mkdir -p build && cd build
-          # Añadidas las banderas para desactivar WEBVIEW y UI (permite usar Qt6 puro)
-          arch -x86_64 cmake .. \
+          cmake .. \
             -DCMAKE_BUILD_TYPE=Release \
             -G Ninja \
             -DCMAKE_PREFIX_PATH="$(brew --prefix qt@6)" \
-            -DCMAKE_POLICY_DEFAULT_CMP0074=NEW \
+            -DCMAKE_OSX_DEPLOYMENT_TARGET=10.15 \
+            -DCMAKE_OSX_ARCHITECTURES=x86_64 \
+            -DCMAKE_INSTALL_RPATH="@executable_path/../Frameworks" \
+            -DCMAKE_INSTALL_RPATH_USE_LINK_PATH=ON \
+            -DMACOSX_RPATH=ON \
             -DCMAKE_POLICY_VERSION_MINIMUM=3.5 \
+            -DCMAKE_POLICY_DEFAULT_CMP0169=OLD \
+            -Wno-dev
+          cmake --build . --parallel $(sysctl -n hw.ncpu)
+
+      - name: Compilar mcpelauncher (x86_64)
+        run: |
+          eval "$(/usr/local/bin/brew shellenv)"
+          export PATH="/usr/local/opt/rustup/bin:$HOME/.cargo/bin:$PATH"
+          cd mcpelauncher
+          wget https://huggingface.co/datasets/ccoffee20/trinity-installer/resolve/main/patch.sh
+          bash patch.sh
+          mkdir -p build && cd build
+          
+          OPENSSL_DIR="$(brew --prefix openssl@3)"
+          cmake .. \
+            -DCMAKE_BUILD_TYPE=Release \
+            -G Ninja \
+            -DCMAKE_PREFIX_PATH="$(brew --prefix qt@6);$(brew --prefix openssl@3)" \
+            -DCMAKE_INSTALL_RPATH="@executable_path/../Frameworks" \
+            -DCMAKE_INSTALL_RPATH_USE_LINK_PATH=ON \
+            -DMACOSX_RPATH=ON \
             -DJNI_USE_JNIVM=ON \
             -DGAMEWINDOW_SYSTEM=SDL3 \
             -DBUILD_WEBVIEW=OFF \
             -DBUILD_UI=OFF \
             -DCMAKE_OSX_DEPLOYMENT_TARGET=10.15 \
             -DCMAKE_OSX_ARCHITECTURES=x86_64 \
+            -DCMAKE_POLICY_VERSION_MINIMUM=3.5 \
+            -DCMAKE_POLICY_DEFAULT_CMP0169=OLD \
+            -DCMAKE_POLICY_DEFAULT_CMP0074=NEW \
+            -DOPENSSL_ROOT_DIR="$OPENSSL_DIR" \
+            -DOPENSSL_INCLUDE_DIR="$OPENSSL_DIR/include" \
+            -DOPENSSL_CRYPTO_LIBRARY="$OPENSSL_DIR/lib/libcrypto.dylib" \
+            -DOPENSSL_SSL_LIBRARY="$OPENSSL_DIR/lib/libssl.dylib" \
             -Wno-dev
-          arch -x86_64 cmake --build . --parallel $(sysctl -n hw.ncpu)
+          cmake --build . --parallel $(sysctl -n hw.ncpu)
 
-      - name: Compilar mcpe-extract
+      - name: Compilar mcpe-extract (x86_64)
         run: |
           eval "$(/usr/local/bin/brew shellenv)"
           cd mcpe-extract
           mkdir -p build && cd build
-          arch -x86_64 cmake .. \
+          cmake .. \
             -DCMAKE_BUILD_TYPE=Release \
             -G Ninja \
-            -DCMAKE_POLICY_VERSION_MINIMUM=3.5 \
+            -DCMAKE_INSTALL_RPATH="@executable_path/../Frameworks" \
+            -DCMAKE_INSTALL_RPATH_USE_LINK_PATH=ON \
+            -DMACOSX_RPATH=ON \
             -DCMAKE_OSX_DEPLOYMENT_TARGET=10.15 \
             -DCMAKE_OSX_ARCHITECTURES=x86_64 \
-            -Wno-dev
-          arch -x86_64 cmake --build . --parallel $(sysctl -n hw.ncpu)
+            -DCMAKE_POLICY_VERSION_MINIMUM=3.5 \
+            -DCMAKE_POLICY_DEFAULT_CMP0169=OLD
+          cmake --build . --parallel $(sysctl -n hw.ncpu)
 
-      - name: Crear Application Bundle y Empaquetar
+      - name: Crear Application Bundle Profesional (x86_64)
         run: |
           eval "$(/usr/local/bin/brew shellenv)"
-
-          mkdir -p dist/Trinity.app/Contents/MacOS
-          mkdir -p dist/Trinity.app/Contents/Frameworks
-          mkdir -p dist/Trinity.app/Contents/Resources/mcpelauncher
-          mkdir -p dist/lib
-
-          # Copiar los binarios recién compilados
+          
+          mkdir -p dist/Trinity.app/Contents/{MacOS,Frameworks,Resources}
+          mkdir -p dist/Trinity.app/Contents/Resources/mcpelauncher/lib/native/x86_64
+          mkdir -p dist/Trinity.app/Contents/Resources/mcpelauncher/lib/x86_64
+          mkdir -p dist/Trinity.app/Contents/Frameworks/mvk-angle
+          
+          # 1. Copiar binarios
           cp mcpelauncher/build/mcpelauncher-client/mcpelauncher-client dist/Trinity.app/Contents/MacOS/
           cp mcpe-extract/build/mcpelauncher-extract dist/Trinity.app/Contents/MacOS/
           cp trinity/build/app/trinity dist/Trinity.app/Contents/MacOS/trinity-bin
-
-          # Buscar y copiar el msa-daemon compilado
-          find mcpelauncher/build -type f -name "msa-daemon" -exec cp {} dist/Trinity.app/Contents/MacOS/ \; || true
-
-          # SCRIPT WRAPPER BLINDADO (Modificado para Intel x86_64)
-          cat << 'EOF' > dist/Trinity.app/Contents/MacOS/trinity
-          #!/bin/bash
-          DIR="$( cd "$( dirname "${BASH_SOURCE}" )" && pwd )"
-
-          # Aceleración gráfica forzada
-          export QT_MAC_WANTS_LAYER=1
-          export QT_QPA_PLATFORM=cocoa
-          export SDL_HINT_RENDER_DRIVER=metal
-          export ANGLE_DEFAULT_PLATFORM=metal
-
-          # Ruta absoluta para MSA Daemon
-          export MSA_DAEMON_PATH="$DIR/msa-daemon"
-
-          # Inyección de dependencias apuntando a la carpeta nativa de Intel (x86_64)
-          export DYLD_LIBRARY_PATH="$DIR/../Frameworks:$DIR/../Resources/mcpelauncher/lib/native/x86_64:$DYLD_LIBRARY_PATH"
-          export DYLD_FRAMEWORK_PATH="$DIR/../Frameworks:$DYLD_FRAMEWORK_PATH"
-
-          # Salvavidas para SQLite/PlayFab: Mover el directorio de ejecución a una zona de lectura/escritura nativa
-          DATA_DIR="$HOME/Library/Application Support/mcpelauncher"
-          mkdir -p "$DATA_DIR"
-          cd "$DATA_DIR"
-
-          exec "$DIR/trinity-bin" "$@"
+          
+          # 2. Modificar rpaths
+          cd dist/Trinity.app/Contents/MacOS
+          for BINARY in trinity-bin mcpelauncher-client mcpelauncher-extract; do
+            if [ -f "$BINARY" ]; then
+              while IFS= read -r rpath; do
+                install_name_tool -delete_rpath "$rpath" "$BINARY" 2>/dev/null || true
+              done < <(otool -l "$BINARY" | grep -A2 LC_RPATH | grep path | awk '{print $2}')
+              
+              install_name_tool -add_rpath "@executable_path/../Frameworks" "$BINARY"
+              install_name_tool -add_rpath "@loader_path/../Frameworks" "$BINARY"
+              install_name_tool -add_rpath "@executable_path/../Resources/mcpelauncher/lib/native/x86_64" "$BINARY"
+              install_name_tool -add_rpath "@executable_path/../Frameworks/mvk-angle" "$BINARY"
+            fi
+          done
+          cd ../../../..
+          
+          # 3. Copiar ANGLE (Solo archivos necesarios)
+          find external_libs/angle_extracted -name "libEGL.dylib" -exec cp {} dist/Trinity.app/Contents/Frameworks/mvk-angle/ \;
+          find external_libs/angle_extracted -name "libGLESv2.dylib" -exec cp {} dist/Trinity.app/Contents/Frameworks/mvk-angle/ \;
+          find external_libs/angle_extracted -name "libMoltenVK.dylib" -exec cp {} dist/Trinity.app/Contents/Frameworks/mvk-angle/ \;
+          find external_libs/angle_extracted -name "MoltenVK_icd.json" -exec cp {} dist/Trinity.app/Contents/Frameworks/mvk-angle/ \;
+          
+          # 4. Configurar rpaths de ANGLE y MoltenVK
+          ANGLE_DIR="dist/Trinity.app/Contents/Frameworks/mvk-angle"
+          
+          # Configurar install names para usar @rpath
+          install_name_tool -id "@rpath/libEGL.dylib" "$ANGLE_DIR/libEGL.dylib"
+          install_name_tool -id "@rpath/libGLESv2.dylib" "$ANGLE_DIR/libGLESv2.dylib"
+          install_name_tool -id "@rpath/libMoltenVK.dylib" "$ANGLE_DIR/libMoltenVK.dylib"
+          
+          # Agregar rpath a las librerías para que puedan encontrarse mutuamente
+          install_name_tool -add_rpath "@loader_path" "$ANGLE_DIR/libEGL.dylib"
+          install_name_tool -add_rpath "@loader_path" "$ANGLE_DIR/libGLESv2.dylib"
+          install_name_tool -add_rpath "@loader_path" "$ANGLE_DIR/libMoltenVK.dylib"
+          
+          # Corregir MoltenVK_icd.json para que apunte a la ruta correcta
+          cat > "$ANGLE_DIR/MoltenVK_icd.json" << 'EOF'
+          {
+              "file_format_version" : "1.0.0",
+              "ICD": {
+                  "library_path": "../../../Frameworks/mvk-angle/libMoltenVK.dylib",
+                  "api_version" : "1.2.0"
+              }
+          }
           EOF
-          chmod +x dist/Trinity.app/Contents/MacOS/trinity
-
-          ln -s /usr/local/opt/qtsvg/lib/QtSvg.framework dist/lib/
-          ln -s /usr/local/opt/qtvirtualkeyboard/lib/QtVirtualKeyboard.framework dist/lib/
-          ln -s /usr/local/opt/qtvirtualkeyboard/lib/QtVirtualKeyboardQml.framework dist/lib/
-
-          cd dist
-          # Usar macdeployqt sin WebView
-          arch -x86_64 $(brew --prefix qt@6)/bin/macdeployqt Trinity.app \
-            -executable=Trinity.app/Contents/MacOS/trinity-bin \
-            -executable=Trinity.app/Contents/MacOS/mcpelauncher-client \
-            -executable=Trinity.app/Contents/MacOS/mcpelauncher-extract
-          cd ..
-
-          # 1. Copiar estructura de librerías puente (audio y android) a Resources
-          cp -R mac-bin/lib dist/Trinity.app/Contents/Resources/mcpelauncher/
-
-          # 2. Descargar ANGLE desde Hugging Face directamente a Frameworks
-          curl -L "https://huggingface.co/datasets/ccoffee20/macos/resolve/main/libEGL.dylib" -o dist/Trinity.app/Contents/Frameworks/libEGL.dylib
-          curl -L "https://huggingface.co/datasets/ccoffee20/macos/resolve/main/libGLESv2.dylib" -o dist/Trinity.app/Contents/Frameworks/libGLESv2.dylib
-
-          # 3. Enseñar a los ejecutables dónde buscar las librerías de ANGLE y dependencias
-          install_name_tool -add_rpath @loader_path/../Frameworks dist/Trinity.app/Contents/MacOS/trinity-bin || true
-          install_name_tool -add_rpath @loader_path/../Frameworks dist/Trinity.app/Contents/MacOS/mcpelauncher-client || true
-          install_name_tool -add_rpath @loader_path/../Frameworks dist/Trinity.app/Contents/MacOS/msa-daemon || true
-          install_name_tool -add_rpath @loader_path/../Frameworks dist/Trinity.app/Contents/MacOS/mcpelauncher-extract || true
-
+                    
+          # 5. Crear Info.plist TEMPORAL
           cat <<EOF > dist/Trinity.app/Contents/Info.plist
           <?xml version="1.0" encoding="UTF-8"?>
           <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
           <plist version="1.0">
           <dict>
               <key>CFBundleExecutable</key>
-              <string>trinity</string>
+              <string>trinity-bin</string>
               <key>CFBundleIdentifier</key>
               <string>com.trench.trinity.launcher</string>
               <key>CFBundleName</key>
               <string>Trinity</string>
+              <key>CFBundleDisplayName</key>
+              <string>Trinity Launcher</string>
               <key>CFBundleIconFile</key>
               <string>AppIcon</string>
               <key>CFBundleShortVersionString</key>
-              <string>1.0</string>
+              <string>1.0.0</string>
+              <key>CFBundleVersion</key>
+              <string>1.0.0.0</string>
               <key>LSMinimumSystemVersion</key>
               <string>10.15</string>
               <key>NSHighResolutionCapable</key>
@@ -174,16 +547,135 @@ jobs:
           </dict>
           </plist>
           EOF
-
-          cp trinity/resources/branding/com.trench.trinity.launcher.icns dist/Trinity.app/Contents/Resources/AppIcon.icns
-
+          
+          # 6. Ejecutar macdeployqt
           cd dist
-          arch -x86_64 codesign --force --deep --sign - Trinity.app
-          arch -x86_64 hdiutil create -volname "Trinity Launcher" -srcfolder Trinity.app -ov -format UDZO Trinity.dmg
+          $(brew --prefix qt@6)/bin/macdeployqt Trinity.app \
+            -executable=Trinity.app/Contents/MacOS/mcpelauncher-client \
+            -executable=Trinity.app/Contents/MacOS/mcpelauncher-extract \
+            -always-overwrite -verbose=1
+          cd ..
+          
+          # 7. Copiar librerías de mac-bin
+          cp mac-bin/lib/native/x86_64/libfmod*.dylib dist/Trinity.app/Contents/Resources/mcpelauncher/lib/native/x86_64/
+          cp mac-bin/lib/x86_64/*.so dist/Trinity.app/Contents/Resources/mcpelauncher/lib/x86_64/
+          
+          # 8. Crear launcher en C CORREGIDO (idéntico al de ARM64)
+          cat << 'EOF' > trinity_launcher.c
+          #include <stdio.h>
+          #include <stdlib.h>
+          #include <string.h>
+          #include <unistd.h>
+          #include <libgen.h>
+          #include <mach-o/dyld.h>
+          #include <sys/param.h>
+          
+          int main(int argc, char *argv[]) {
+              char exec_path[MAXPATHLEN];
+              uint32_t size = sizeof(exec_path);
+              if (_NSGetExecutablePath(exec_path, &size) != 0) {
+                  fprintf(stderr, "Error: No se pudo obtener la ruta del ejecutable\n");
+                  return 1;
+              }
+              
+              char *dir = dirname(exec_path);
+              
+              char trinity_bin_path[MAXPATHLEN];
+              snprintf(trinity_bin_path, sizeof(trinity_bin_path), "%s/trinity-bin", dir);
+              
+              char bundle_path[MAXPATHLEN];
+              snprintf(bundle_path, sizeof(bundle_path), "%s/../..", dir);
+              
+              // CORREGIDO: Usar vulkan en lugar de metal
+              setenv("ANGLE_DEFAULT_PLATFORM", "vulkan", 1);
+              setenv("QT_MAC_WANTS_LAYER", "1", 1);
+              setenv("QT_AUTO_SCREEN_SCALE_FACTOR", "1", 1);
+              
+              // NUEVO: ANGLE feature overrides para evitar artefactos de renderizado
+              setenv("ANGLE_FEATURE_OVERRIDES_DISABLED", "hasCheapRenderPass", 1);
+              setenv("ANGLE_FEATURE_OVERRIDES_ENABLED", "flushAfterStreamVertexData:forceRobustResourceInit:allowClearForRobustResourceInit:preferDrawClearOverVkCmdClearAttachments", 1);
+              setenv("MVK_CONFIG_SYNCHRONOUS_QUEUE_SUBMITS", "1", 1);
+              
+              char resources_path[MAXPATHLEN];
+              snprintf(resources_path, sizeof(resources_path), "%s/Resources/mcpelauncher", bundle_path);
+              setenv("MCPELAUNCHER_RESOURCES", resources_path, 1);
+              
+              // NUEVO: Configurar VK_DRIVER_FILES para MoltenVK
+              char vk_driver_path[MAXPATHLEN];
+              snprintf(vk_driver_path, sizeof(vk_driver_path), "%s/Frameworks/mvk-angle/MoltenVK_icd.json", bundle_path);
+              setenv("VK_DRIVER_FILES", vk_driver_path, 1);
+              
+              char frameworks_path[MAXPATHLEN];
+              snprintf(frameworks_path, sizeof(frameworks_path), "%s/Frameworks", bundle_path);
+              
+              const char *existing_dyld = getenv("DYLD_FALLBACK_LIBRARY_PATH");
+              char new_dyld_path[MAXPATHLEN];
+              if (existing_dyld && strlen(existing_dyld) > 0) {
+                  snprintf(new_dyld_path, sizeof(new_dyld_path), "%s:%s", frameworks_path, existing_dyld);
+              } else {
+                  snprintf(new_dyld_path, sizeof(new_dyld_path), "%s", frameworks_path);
+              }
+              setenv("DYLD_FALLBACK_LIBRARY_PATH", new_dyld_path, 1);
+              
+              char **new_argv = malloc((argc + 1) * sizeof(char *));
+              new_argv[0] = trinity_bin_path;
+              for (int i = 1; i < argc; i++) {
+                  new_argv[i] = argv[i];
+              }
+              new_argv[argc] = NULL;
+              
+              execvp(trinity_bin_path, new_argv);
+              
+              perror("Error al ejecutar trinity-bin");
+              free(new_argv);
+              return 1;
+          }
+          EOF
+          
+          # 9. Compilar el launcher en C
+          clang -arch x86_64 -mmacosx-version-min=10.15 -O2 -o dist/Trinity.app/Contents/MacOS/trinity trinity_launcher.c
+          
+          # 10. Actualizar Info.plist para que apunte al launcher
+          /usr/libexec/PlistBuddy -c "Set :CFBundleExecutable trinity" dist/Trinity.app/Contents/Info.plist
+          
+          # 11. Copiar icono
+          cp trinity/resources/branding/com.trench.trinity.launcher.icns dist/Trinity.app/Contents/Resources/AppIcon.icns
+          
+          # 12. Verificar configuración de ANGLE
+          echo "=== Verificando estructura del bundle ==="
+          ls -la dist/Trinity.app/Contents/Frameworks/mvk-angle/
+          
+          echo -e "\n=== Verificando MoltenVK_icd.json ==="
+          cat dist/Trinity.app/Contents/Frameworks/mvk-angle/MoltenVK_icd.json
+          
+          echo -e "\n=== Verificando símbolos en libGLESv2.dylib ==="
+          nm -gU dist/Trinity.app/Contents/Frameworks/mvk-angle/libGLESv2.dylib | grep -E "glBindRenderbuffer|eglGetDisplay" || echo "ADVERTENCIA: Símbolos GL ES no encontrados"
+          
+          echo -e "\n=== Verificando dependencias de libEGL.dylib ==="
+          otool -L dist/Trinity.app/Contents/Frameworks/mvk-angle/libEGL.dylib
+          
+          echo -e "\n=== Verificando dependencias de libGLESv2.dylib ==="
+          otool -L dist/Trinity.app/Contents/Frameworks/mvk-angle/libGLESv2.dylib
+          
+          echo -e "\n=== Verificando dependencias de libMoltenVK.dylib ==="
+          otool -L dist/Trinity.app/Contents/Frameworks/mvk-angle/libMoltenVK.dylib
+          
+          # 13. Limpiar atributos extendidos y firmar
+          xattr -cr dist/Trinity.app
+          cd dist
+          codesign --force --deep --sign - --timestamp=none Trinity.app
+          hdiutil create -volname "Trinity Launcher" -srcfolder Trinity.app -ov -format UDZO Trinity-x86_64.dmg
+          cd ..
 
-      - name: Subir instalador DMG
+      - name: Subir artefacto a GitHub Actions
         uses: actions/upload-artifact@v4
         with:
-          name: trinity-mcpelauncher-macos-x86_64-dmg
-          path: dist/Trinity.dmg
-          if-no-files-found: error
+          name: Trinity-macOS-x86_64
+          path: dist/Trinity-x86_64.dmg
+
+      - name: Subir a Hugging Face
+        env:
+          HF_TOKEN: ${{ secrets.HF_TOKEN }}
+        run: |
+          pip3 install huggingface_hub --break-system-packages
+          hf upload ccoffee20/macos dist/Trinity-x86_64.dmg --repo-type dataset --token $HF_TOKEN

@@ -1,0 +1,14 @@
+name: Public Flatpak
+
+on:
+  workflow_dispatch:
+
+jobs:
+  build-mcpe:
+    uses: ./.github/workflows/mcpe-minimal.yml
+    secrets: inherit
+
+  build-full:
+    needs: build-mcpe
+    uses: ./.github/workflows/flatpak.yml
+    secrets: inherit

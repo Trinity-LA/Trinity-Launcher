@@ -746,14 +746,18 @@ Do you want to restart the application now to apply the changes?</translation>
         <translation>Icons reset to default. Reopen Settings to see the updated previews.</translation>
     </message>
     <message>
-        <location filename="../../src/TrinityLib/ui/windows/launcher_window.cpp" line="62"/>
-        <source>Architecture Notice</source>
-        <translation>Architecture Notice</translation>
+        <location filename="../../src/TrinityLib/ui/windows/launcher_window.cpp" line="57"/>
+        <source>Trinity Launcher</source>
+        <translation>Trinity Launcher</translation>
     </message>
     <message>
-        <location filename="../../src/TrinityLib/ui/windows/launcher_window.cpp" line="63"/>
-        <source>On x86_64, the maximum supported version of Minecraft Bedrock is 1.26.3.</source>
-        <translation>On x86_64, the maximum supported version of Minecraft Bedrock is 1.26.3.</translation>
+        <location filename="../../src/TrinityLib/ui/windows/launcher_window.cpp" line="58"/>
+        <source>This project is currently being maintained by a single developer.
+
+If you want to help or support, you can donate!</source>
+        <translation>This project is currently being maintained by a single developer.
+
+If you want to help or support, you can donate!</translation>
     </message>
     <message>
         <location filename="../../src/TrinityLib/ui/windows/launcher_window.cpp" line="245"/>
@@ -770,6 +774,16 @@ Do you want to restart the application now to apply the changes?</translation>
         <location filename="../../src/TrinityLib/ui/windows/launcher_window.cpp" line="1776"/>
         <source>Clear Log</source>
         <translation>Clear Log</translation>
+    </message>
+    <message>
+        <location filename="../../src/TrinityLib/ui/windows/launcher_window.cpp" line="539"/>
+        <source>This project is currently being maintained by a single developer. If you want to help or support, you can donate!</source>
+        <translation>This project is currently being maintained by a single developer. If you want to help or support, you can donate!</translation>
+    </message>
+    <message>
+        <location filename="../../src/TrinityLib/ui/windows/launcher_window.cpp" line="549"/>
+        <source>DONAR</source>
+        <translation>DONATE</translation>
     </message>
 </context>
 <context>

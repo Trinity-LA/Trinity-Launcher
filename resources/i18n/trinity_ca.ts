@@ -746,9 +746,18 @@ Vols reiniciar l&apos;aplicació ara per aplicar els canvis?</translation>
         <translation>Avís d&apos;Arquitectura</translation>
     </message>
     <message>
-        <location filename="../../src/TrinityLib/ui/windows/launcher_window.cpp" line="63"/>
-        <source>On x86_64, the maximum supported version of Minecraft Bedrock is 1.26.3.</source>
-        <translation>A x86_64, la versió màxima suportada de Minecraft Bedrock és 1.26.3.</translation>
+        <location filename="../../src/TrinityLib/ui/windows/launcher_window.cpp" line="57"/>
+        <source>Trinity Launcher</source>
+        <translation>Trinity Launcher</translation>
+    </message>
+    <message>
+        <location filename="../../src/TrinityLib/ui/windows/launcher_window.cpp" line="58"/>
+        <source>This project is currently being maintained by a single developer.
+
+If you want to help or support, you can donate!</source>
+        <translation>Actualment aquest projecte és mantingut per un sol desenvolupador.
+
+Si vols ajudar o donar suport, pots donar!</translation>
     </message>
     <message>
         <location filename="../../src/TrinityLib/ui/windows/launcher_window.cpp" line="245"/>
@@ -765,6 +774,16 @@ Vols reiniciar l&apos;aplicació ara per aplicar els canvis?</translation>
         <location filename="../../src/TrinityLib/ui/windows/launcher_window.cpp" line="1776"/>
         <source>Clear Log</source>
         <translation>Netejar Registre</translation>
+    </message>
+    <message>
+        <location filename="../../src/TrinityLib/ui/windows/launcher_window.cpp" line="539"/>
+        <source>This project is currently being maintained by a single developer. If you want to help or support, you can donate!</source>
+        <translation>Actualment aquest projecte és mantingut per un sol desenvolupador. Si vols ajudar o donar suport, pots donar!</translation>
+    </message>
+    <message>
+        <location filename="../../src/TrinityLib/ui/windows/launcher_window.cpp" line="549"/>
+        <source>DONAR</source>
+        <translation>DONAR</translation>
     </message>
 </context>
 <context>
