@@ -1,0 +1,8 @@
+[Flatpak Ref]
+Name=com.trench.trinity.launcher
+Title=Trinity Launcher
+Description=A FULLY Minecraft Bedrock Edition launcher for Linux
+Url=https://trinity-la.github.io/
+Branch=2.0.2-TESTING
+IsRuntime=false
+SuggestRemoteName=trinity

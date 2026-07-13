@@ -1,0 +1,77 @@
+ {
+  "app-id": "com.trench.trinity.launcher",
+  "branch": "2.3",
+  "runtime": "org.kde.Platform",
+  "runtime-version": "6.9",
+  "sdk": "org.kde.Sdk",
+  "base": "io.qt.qtwebengine.BaseApp",
+  "base-version": "6.9",
+  "command": "trinchete",
+  "env": {
+    "GTK_USE_PORTAL": "1"
+  },
+  "finish-args": [
+    "--socket=wayland",
+    "--socket=x11",
+    "--socket=pulseaudio",
+    "--share=network",
+    "--device=dri",
+    "--device=all",
+    "--device=input",
+    "--device=usb",
+    "--filesystem=xdg-documents",
+    "--filesystem=xdg-pictures",
+    "--filesystem=xdg-desktop",
+    "--filesystem=xdg-download",
+    "--filesystem=xdg-data:rw",
+    "--filesystem=xdg-data/mcpelauncher:rw",
+    "--talk-name=org.freedesktop.portal.Desktop",
+    "--talk-name=org.freedesktop.Notifications"
+  ],
+  "modules": [
+    {
+      "name": "libevdev",
+      "buildsystem": "autotools",
+      "sources": [
+        {
+          "type": "archive",
+          "url": "https://www.freedesktop.org/software/libevdev/libevdev-1.13.1.tar.xz",
+          "sha256": "06a77bf2ac5c993305882bc1641017f5bec1592d6d1b64787bad492ab34f2f36"
+        }
+      ]
+    },
+    {
+      "name": "libzip",
+      "buildsystem": "cmake-ninja",
+      "config-opts": [
+        "-DCMAKE_BUILD_TYPE=RelWithDebInfo",
+        "-DBUILD_SHARED_LIBS=ON",
+        "-DBUILD_TOOLS=OFF",
+        "-DBUILD_REGRESS=OFF",
+        "-DENABLE_GNUTLS=OFF",
+        "-DENABLE_MBEDTLS=OFF",
+        "-DENABLE_OPENSSL=ON"
+      ],
+      "sources": [
+        {
+          "type": "archive",
+          "url": "https://github.com/nih-at/libzip/releases/download/v1.10.1/libzip-1.10.1.tar.gz",
+          "sha256": "9669ae5dfe3ac5b3897536dc8466a874c8cf2c0e3b1fdd08d75b273884299363"
+        }
+      ]
+    },
+    {
+      "name": "trinitylauncher-app",
+      "buildsystem": "simple",
+      "build-commands": [
+        "cp -r . /app"
+      ],
+      "sources": [
+        {
+          "type": "dir",
+          "path": "files"
+        }
+      ]
+    }
+  ]
+}

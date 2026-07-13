@@ -1,0 +1,133 @@
+{
+  "id": "com.trench.trinity.launcher",
+  "branch": "main",
+  "runtime": "org.kde.Platform",
+  "runtime-version": "6.10",
+  "runtime-commit": "a0fd8b396dc57700e0f805b2114d3925aa4aa72b10aa7b53cce4ab23c5bc68ac",
+  "sdk": "org.kde.Sdk",
+  "sdk-commit": "60f08b6eb98851e85030a5d69566eecba7964e528e2128ea786bba59c415fb85",
+  "base" : "io.qt.qtwebengine.BaseApp",
+  "base-version" : "6.10",
+  "base-commit" : "dd4e9c5120bc85d02d5f68864dc838e3a17b73523bfe4e83b192f260b5d5133f",
+  "command": "trinity",
+  "sdk-extensions": [
+    "org.freedesktop.Sdk.Extension.llvm21"
+  ],
+  "modules": [
+    {
+      "name": "libevdev",
+      "buildsystem": "autotools",
+      "sources": [
+        {
+          "url": "https://www.freedesktop.org/software/libevdev/libevdev-1.13.1.tar.xz",
+          "sha256": "06a77bf2ac5c993305882bc1641017f5bec1592d6d1b64787bad492ab34f2f36",
+          "type": "archive"
+        }
+      ]
+    },
+    {
+      "name": "libzip",
+      "buildsystem": "cmake-ninja",
+      "sources": [
+        {
+          "url": "https://github.com/nih-at/libzip.git",
+          "commit": "dcd9a0bfe1ac2893d7f62bafb19f0a4d7b08c0f7",
+          "type": "git"
+        }
+      ],
+      "build-options": {
+        "config-opts": [
+          "-DCMAKE_POLICY_VERSION_MINIMUM=3.5"
+        ]
+      }
+    },
+    {
+      "name": "mcpe-extract",
+      "buildsystem": "cmake-ninja",
+      "build-options": {
+        "env": {
+          "CC": "clang",
+          "CXX": "clang++"
+        },
+        "prepend-path": "/usr/lib/sdk/llvm21/bin",
+        "prepend-ld-library-path": "/usr/lib/sdk/llvm21/lib"
+      },
+      "config-opts": [
+        "-DCMAKE_BUILD_TYPE=Release",
+        "-DCMAKE_POLICY_VERSION_MINIMUM=3.5",
+        "-Wno-dev"
+      ],
+      "post-install": [
+        "install -Dm755 mcpelauncher-extract /app/bin/mcpelauncher-extract"
+      ],
+      "sources": [
+        {
+          "type": "git",
+          "url": "https://codeberg.org/javiercplus/mcpe-extract.git",
+          "branch": "main"
+        }
+      ]
+    },
+    {
+      "name": "cpdirs",
+      "buildsystem": "simple",
+      "sources": [
+        {
+          "path": "files",
+          "type": "dir"
+        }
+      ],
+      "build-commands": [
+        "cp -r . /app",
+        "chmod +x /app/bin/mcpelauncher-client /app/bin/msa-daemon /app/bin/mcpelauncher-error || true"
+      ]
+    },
+    {
+      "name": "trinitylauncher-app",
+      "buildsystem": "simple",
+      "build-options": {
+        "env": {
+          "CFLAGS": "-msse3",
+          "CXXFLAGS": "-msse3"
+        }
+      },
+      "sources": [
+        {
+          "url": "https://github.com/Trinity-LA/Trinity-Launcher.git",
+          "branch": "main",
+          "type": "git"
+        }
+      ],
+      "build-commands": [
+        "cmake -G Ninja -DCMAKE_BUILD_TYPE=Release .",
+        "ninja",
+        "install -Dm755 app/trinity /app/bin/trinity"
+      ]
+    }
+  ],
+  "finish-args": [
+    "--socket=fallback-x11",
+    "--socket=wayland",
+    "--share=network",
+    "--socket=pulseaudio",
+    "--device=all",
+    "--device=dri",
+    "--share=ipc",
+    "--env=ALSA_CONFIG_PATH=",
+    "--env=QT_QUICK_CONTROLS_STYLE=",
+    "--env=QT_QUICK_CONTROLS_HOVER_ENABLED=1",
+    "--env=QML_IMPORT_PATH=/app/qml/",
+    "--env=QML_DISABLE_DISK_CACHE=1",
+    "--env=QT_QPA_PLATFORMTHEME=gtk3",
+    "--filesystem=xdg-documents",
+    "--filesystem=xdg-pictures",
+    "--filesystem=xdg-desktop",
+    "--filesystem=xdg-download",
+    "--filesystem=xdg-run/discord-ipc-0",
+    "--talk-name=org.freedesktop.portal.Desktop",
+    "--talk-name=org.freedesktop.portal.OpenURI",
+    "--talk-name=org.freedesktop.Notifications",
+    "--talk-name=org.freedesktop.Flatpak"
+  ],
+  "source-date-epoch": 1775831785
+}
