@@ -119,6 +119,7 @@
     "--env=QML_IMPORT_PATH=/app/qml/",
     "--env=QML_DISABLE_DISK_CACHE=1",
     "--env=QT_QPA_PLATFORMTHEME=gtk3",
+    "--env=force_gl_renderer=\"Adreno (TM) 740\"",
     "--filesystem=xdg-documents",
     "--filesystem=xdg-pictures",
     "--filesystem=xdg-desktop",
