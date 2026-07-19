@@ -36,7 +36,7 @@
     <launchable type="desktop-id">com.trench.trinity.launcher.desktop</launchable>
 
     <releases>
-        <release version="9.0.15" date="2026-07-17">
+        <release version="9.0.17" date="2026-07-19">
             <description>
                 <p>26.33 is READY!!</p>
             </description>
