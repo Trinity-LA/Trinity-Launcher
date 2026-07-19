@@ -37,6 +37,7 @@
 #include <QStandardPaths>
 #include <QStackedWidget>
 #include <QSysInfo>
+#include <QTextEdit>
 #include <QTimer>
 #include <QUrl>
 #include <QVBoxLayout>
@@ -831,6 +832,7 @@ void LauncherWindow::launchGame() {
 
 
 
+
 void LauncherWindow::onEditConfigClicked() {
     QString selectedVersion = versionCombo->currentText();
     if (selectedVersion.isEmpty()) {
@@ -839,53 +841,131 @@ void LauncherWindow::onEditConfigClicked() {
         return;
     }
 
-    // Diálogo simple de edición
+    // Read active theme colors (same defaults used at startup)
+    QSettings cfg;
+    const QString accent    = cfg.value("theme/accent",    "#e429ef").toString();
+    const QString bg        = cfg.value("theme/bg",        "#070308").toString();
+    const QString panel     = cfg.value("theme/panel",     "#150915").toString();
+    const QString hover     = cfg.value("theme/hover",     "#2e1d2f").toString();
+    const QString btnHover  = cfg.value("theme/btnHover",  "#49364a").toString();
+    const QString textMuted = cfg.value("theme/textMuted", "#af9bb0").toString();
+    const QString text      = cfg.value("theme/text",      "#ffffff").toString();
+
     QDialog dialog(this);
-    dialog.setWindowTitle(tr("Edit configuration of ") + selectedVersion);
-    dialog.resize(500, 300);
+    dialog.setWindowTitle(tr("Environment Parameters — ") + selectedVersion);
+    dialog.setFixedWidth(500);
+
+    // Dialog background matches app bg
+    dialog.setStyleSheet(QString(
+        "QDialog { background-color: %1; }"
+        "QLabel  { background: transparent; color: %2; font-size: 13px; }"
+        "QPushButton { background-color: %3; border: none; border-radius: 6px; "
+        "              padding: 8px 20px; color: %2; font-weight: bold; font-size: 13px; }"
+        "QPushButton:hover  { background-color: %4; }"
+        "QPushButton:pressed{ background-color: %1; }"
+        "QPushButton#OkBtn  { background-color: %5; color: %2; }"
+        "QPushButton#OkBtn:hover { background-color: %5; opacity: 0.85; }"
+    ).arg(bg, text, hover, btnHover, accent));
 
     auto *layout = new QVBoxLayout(&dialog);
-    QLabel *label = new QLabel(
-        tr("Launch parameters (before mcpelauncher-client):"));
-    layout->addWidget(label);
+    layout->setContentsMargins(20, 20, 20, 20);
+    layout->setSpacing(10);
 
-    // Obtener argumentos actuales
+    // Title label
+    QLabel *titleLabel = new QLabel(tr("Environment Variables"));
+    titleLabel->setStyleSheet(QString(
+        "font-size: 15px; font-weight: bold; color: %1; background: transparent;")
+        .arg(text));
+    layout->addWidget(titleLabel);
+
+    // Hint label
+    QLabel *hintLabel = new QLabel(
+        tr("One variable per line, or space-separated. Example:"));
+    hintLabel->setStyleSheet(QString(
+        "font-size: 12px; color: %1; background: transparent;").arg(textMuted));
+    layout->addWidget(hintLabel);
+
+    // Example label (monospace, accent colored)
+    QLabel *exampleLabel = new QLabel("DRI_PRIME=1   vblank_mode=0   MESA_LOADER_DRIVER_OVERRIDE=zink");
+    exampleLabel->setStyleSheet(QString(
+        "font-family: 'Monospace', monospace; font-size: 11px; "
+        "color: %1; background: transparent; padding: 2px 0;").arg(accent));
+    exampleLabel->setWordWrap(true);
+    layout->addWidget(exampleLabel);
+
+    layout->addSpacing(4);
+
+    // Obtain current args
     VersionConfig config(selectedVersion);
     QString currentArgs = config.getLaunchArgs();
 
-    QLineEdit *argsEdit = new QLineEdit(currentArgs);
-    argsEdit->setPlaceholderText(
-        "Ej: DRI_PRIME=1 vblank_mode=0 MESA_LOADER_DRIVER_OVERRIDE=zink");
+    // Styled QTextEdit — visually distinct from the dialog background
+    QTextEdit *argsEdit = new QTextEdit();
+    argsEdit->setPlainText(currentArgs);
+    argsEdit->setPlaceholderText("DRI_PRIME=1\nvblank_mode=0\nMESA_LOADER_DRIVER_OVERRIDE=zink");
+    argsEdit->setAcceptRichText(false);
+    argsEdit->setFixedHeight(130);
+    argsEdit->setStyleSheet(QString(
+        "QTextEdit {"
+        "  background-color: %1;"
+        "  color: %2;"
+        "  border: 1px solid %3;"
+        "  border-radius: 8px;"
+        "  padding: 10px;"
+        "  font-family: 'Monospace', monospace;"
+        "  font-size: 13px;"
+        "  selection-background-color: %4;"
+        "}"
+        "QTextEdit:focus {"
+        "  border: 1.5px solid %4;"
+        "}"
+        "QScrollBar:vertical {"
+        "  background: %1; width: 6px; border-radius: 3px;"
+        "}"
+        "QScrollBar::handle:vertical {"
+        "  background: %3; border-radius: 3px;"
+        "}"
+    ).arg(panel, text, hover, accent));
     layout->addWidget(argsEdit);
 
-    auto *buttonBox =
-        new QDialogButtonBox(QDialogButtonBox::Ok | QDialogButtonBox::Cancel);
-    layout->addWidget(buttonBox);
+    layout->addSpacing(6);
 
-    connect(buttonBox, &QDialogButtonBox::accepted, &dialog, [&]() {
-        QString newArgs = argsEdit->text().trimmed();
+    // Button row
+    auto *btnRow = new QHBoxLayout();
+    btnRow->setSpacing(10);
+    auto *cancelBtn = new QPushButton(tr("Cancel"));
+    auto *okBtn     = new QPushButton(tr("Save"));
+    okBtn->setObjectName("OkBtn");
+    okBtn->setCursor(Qt::PointingHandCursor);
+    cancelBtn->setCursor(Qt::PointingHandCursor);
+    btnRow->addStretch();
+    btnRow->addWidget(cancelBtn);
+    btnRow->addWidget(okBtn);
+    layout->addLayout(btnRow);
+
+    dialog.adjustSize();
+
+    connect(okBtn, &QPushButton::clicked, &dialog, [&]() {
+        QString newArgs = argsEdit->toPlainText().trimmed();
         config.setLaunchArgs(newArgs);
 
-        // Editar versión
         VersionManager vm;
         QString errorMsg;
         if (!vm.editVersion(selectedVersion, newArgs, errorMsg)) {
             QMessageBox::critical(&dialog, "Error",
-                                  tr("Could not save configuration:\n") +
-                                      errorMsg);
+                                  tr("Could not save configuration:\n") + errorMsg);
         } else {
-            QMessageBox::information(&dialog, tr("Success"),
-                                     tr("Configuration saved."));
             dialog.accept();
         }
     });
-    connect(buttonBox, &QDialogButtonBox::rejected, &dialog, &QDialog::reject);
+    connect(cancelBtn, &QPushButton::clicked, &dialog, &QDialog::reject);
 
     if (dialog.exec() == QDialog::Accepted) {
         statusLabel->setText(QString(tr("Configuration of %1 updated."))
                                  .arg(selectedVersion));
     }
 }
+
 
 void LauncherWindow::onExportClicked() {
     QString selectedVersion = versionCombo->currentText();

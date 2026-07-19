@@ -7,6 +7,7 @@
 #include <QFile>
 #include <QFileInfo>
 #include <QProcessEnvironment>
+#include <QRegularExpression>
 #include <QStandardPaths>
 #include <iostream>
 
@@ -118,15 +119,37 @@ bool GameLauncher::launchGame(const QString &versionName, QString &errorMsg) {
 
     QProcessEnvironment env = QProcessEnvironment::systemEnvironment();
     if (!extraEnvStr.isEmpty()) {
-        // Dividir por líneas y procesar cada variable individualmente
-        // para manejar correctamente valores con espacios.
+        // Parse KEY=VALUE entries separated by newlines and/or spaces.
+        // Uses KEY= occurrences as delimiters so values that contain spaces
+        // are handled correctly (e.g. "MY_PATH=/usr/local/my dir" stays intact).
+        //
+        // Examples that all work:
+        //   "DRI_PRIME=1\nvblank_mode=0"          -> two variables (newline-separated)
+        //   "DRI_PRIME=1 vblank_mode=0"            -> two variables (space-separated)
+        //   "MY_PATH=/usr/local/mi carpeta"        -> one variable, value has a space
+        //   "MY_PATH=/usr/local/mi carpeta LIBVA_DRIVER_NAME=radeonsi" -> two variables,
+        //                                             first value has a space
+        static const QRegularExpression keyRe(
+            R"((?:^|(?<=\s))([A-Za-z_][A-Za-z0-9_]*)=)");
+
         QStringList lines = extraEnvStr.split('\n', Qt::SkipEmptyParts);
         for (const QString &line : lines) {
-            int equalPos = line.indexOf('=');
-            if (equalPos != -1) {
-                QString key = line.left(equalPos).trimmed();
-                QString value = line.mid(equalPos + 1);
-                env.insert(key, value);
+            QList<QRegularExpressionMatch> matches;
+            auto it = keyRe.globalMatch(line);
+            while (it.hasNext())
+                matches.append(it.next());
+
+            for (int i = 0; i < matches.size(); i++) {
+                const QString &key = matches[i].captured(1);
+                int valueStart     = matches[i].capturedEnd(0); // right after '='
+                // Value extends until where the next key name starts,
+                // or to the end of the line if this is the last variable.
+                int valueEnd = (i + 1 < matches.size())
+                               ? matches[i + 1].capturedStart(1) // start of next key name
+                               : line.size();
+                QString value = line.mid(valueStart, valueEnd - valueStart).trimmed();
+                if (!key.isEmpty())
+                    env.insert(key, value);
             }
         }
     }
