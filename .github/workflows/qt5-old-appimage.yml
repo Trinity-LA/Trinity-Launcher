@@ -120,7 +120,7 @@ jobs:
             -i trinity/resources/branding/com.trench.trinity.launcher.svg \
             --plugin qt \
             --output appimage
-
+          mv  Trinity_Launcher-x86_64.AppImage  Trinity_Launcher-x86_64-LEGACY.AppImage
       - name: Subir AppImage
         uses: actions/upload-artifact@v4
         with:
@@ -131,5 +131,5 @@ jobs:
         with:
           tag_name: 2.6-beta
           files: |
-            Trinity*.AppImage
+            Trinity_Launcher-x86_64-LEGACY.AppImage
             *.zsync
