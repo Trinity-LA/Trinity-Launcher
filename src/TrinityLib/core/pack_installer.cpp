@@ -1,4 +1,5 @@
 #include "TrinityLib/core/pack_installer.hpp"
+#include "TrinityLib/core/version_manager.hpp"
 #include <QStandardPaths>
 #include <QDir>
 #include <QFile>
@@ -6,8 +7,7 @@
 #include <QDebug>
 
 PackInstaller::PackInstaller(QObject *parent) : QObject(parent) {
-    baseGameDir = QStandardPaths::writableLocation(QStandardPaths::GenericDataLocation)
-                  + "/mcpelauncher/games/com.mojang";
+    baseGameDir = VersionManager::getDataRoot() + "/games/com.mojang";
 }
 
 QString PackInstaller::getTargetName(const QString &sourcePath) {

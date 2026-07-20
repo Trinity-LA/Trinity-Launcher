@@ -85,9 +85,7 @@ void Exporter::exportVersion(const QString &versionName) {
     }
 
     // Copiar games/com.mojang (sin enlaces)
-    QString baseDataDir =
-        QStandardPaths::writableLocation(QStandardPaths::GenericDataLocation) +
-        "/mcpelauncher";
+    QString baseDataDir = VersionManager::getDataRoot();
     QString gamesPath = baseDataDir + "/games/com.mojang";
     QString gamesDest = exportDir + "/games";
 
@@ -142,9 +140,7 @@ void Exporter::importVersion() {
         QFileInfo(zipPath).baseName(); // Ej: "1.21.121" de "1.21.121.tar.gz"
 
     // Verificar si ya existen versiones o recursos
-    QString baseDataDir =
-        QStandardPaths::writableLocation(QStandardPaths::GenericDataLocation) +
-        "/mcpelauncher";
+    QString baseDataDir = VersionManager::getDataRoot();
     QString destVersionDir = baseDataDir + "/versions/" + fileName;
     QString destGamesDir = baseDataDir + "/games/com.mojang";
 
@@ -220,9 +216,7 @@ void Exporter::importVersion() {
             }
 
             // Ruta base de datos de la app
-            QString baseDataDir = QStandardPaths::writableLocation(
-                                      QStandardPaths::GenericDataLocation) +
-                                  "/mcpelauncher";
+            QString baseDataDir = VersionManager::getDataRoot();
 
             // Rutas de destino
             QString destVersionDir = baseDataDir + "/versions/" + fileName;

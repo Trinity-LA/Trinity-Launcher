@@ -10,6 +10,7 @@
 #include <QListWidget>
 #include <QPushButton>
 #include <QStackedWidget>
+#include <QTextEdit>
 #include <QVBoxLayout>
 #include <QWidget>
 #include <QMouseEvent>
@@ -82,6 +83,7 @@ class LauncherWindow : public QWidget {
         QPushButton *sidebarContentBtn;
         QPushButton *sidebarDiscordBtn;
         QPushButton *sidebarAboutBtn;
+        QPushButton *sidebarLogBtn;
         QPushButton *sidebarSettingsBtn;
         Exporter *exporter;
         // Status Bar
@@ -89,6 +91,8 @@ class LauncherWindow : public QWidget {
         QLabel *launcherTitle; // Title label for glow effect
         QPushButton *shortcutButton;
         QComboBox *settingsLanguageCombo; // Language selector shown in Settings
+
+        QTextEdit *logTextEdit;            // Log output display
 
         GameLauncher *m_gameLauncher;
 
@@ -98,6 +102,7 @@ class LauncherWindow : public QWidget {
         bool copyDirectory(const QString &srcPath, const QString &dstPath);
         bool extractZip(const QString &zipPath, const QString &destDir);
         QWidget *createSettingsPage();
+        QWidget *createLogPage();
         void applyTheme(const QString &accent, const QString &bg,
                         const QString &panel,  const QString &hover,
                         const QString &btnHover  = "#334155",

@@ -3,8 +3,11 @@
 #include "TrinityLib/core/version_config.hpp"
 #include "TrinityLib/core/version_manager.hpp"
 #include <QCoreApplication>
+#include <QDir>
+#include <QFile>
 #include <QFileInfo>
 #include <QProcessEnvironment>
+#include <QRegularExpression>
 #include <QStandardPaths>
 #include <iostream>
 
@@ -51,6 +54,8 @@ void GameLauncher::onGameOutput() {
     // Read all the terminal logs
     QByteArray data = m_process->readAllStandardOutput();
     QString output = QString::fromLocal8Bit(data);
+
+    emit gameOutput(output);
 
     std::cout << data.toStdString();
 
@@ -109,15 +114,33 @@ bool GameLauncher::launchGame(const QString &versionName, QString &errorMsg) {
     VersionConfig config(versionName);
     QString extraEnvStr = config.getLaunchArgs();
     QStringList args;
-    args << "-dg" << dataDir;
+    args << "-dg" << dataDir
+         << "-dd" << VersionManager::getDataRoot();
 
     QProcessEnvironment env = QProcessEnvironment::systemEnvironment();
     if (!extraEnvStr.isEmpty()) {
-        QStringList envVars = extraEnvStr.split(' ', Qt::SkipEmptyParts);
-        for (const QString &var : envVars) {
-            int equalPos = var.indexOf('=');
-            if (equalPos != -1) {
-                env.insert(var.left(equalPos), var.mid(equalPos + 1));
+        // Parse KEY=VALUE entries separated by newlines and/or spaces.
+        // Uses KEY= occurrences as delimiters so values that contain spaces
+        // are handled correctly (e.g. "MY_PATH=/usr/local/my dir" stays intact).
+        static const QRegularExpression keyRe(
+            R"((?:^|(?<=\s))([A-Za-z_][A-Za-z0-9_]*)=)");
+
+        QStringList lines = extraEnvStr.split('\n', Qt::SkipEmptyParts);
+        for (const QString &line : lines) {
+            QList<QRegularExpressionMatch> matches;
+            auto it = keyRe.globalMatch(line);
+            while (it.hasNext())
+                matches.append(it.next());
+
+            for (int i = 0; i < matches.size(); i++) {
+                const QString &key = matches[i].captured(1);
+                int valueStart     = matches[i].capturedEnd(0);
+                int valueEnd = (i + 1 < matches.size())
+                               ? matches[i + 1].capturedStart(1)
+                               : line.size();
+                QString value = line.mid(valueStart, valueEnd - valueStart).trimmed();
+                if (!key.isEmpty())
+                    env.insert(key, value);
             }
         }
     }

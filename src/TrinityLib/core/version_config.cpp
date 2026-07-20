@@ -1,4 +1,5 @@
 #include "TrinityLib/core/version_config.hpp"
+#include "TrinityLib/core/version_manager.hpp"
 #include <QFile>
 #include <QTextStream>
 #include <QDir>
@@ -43,6 +44,6 @@ bool VersionConfig::load() {
 }
 
 QString VersionConfig::configPath() const {
-    return QStandardPaths::writableLocation(QStandardPaths::GenericDataLocation)
-           + "/mcpelauncher/versions/" + versionName + "/trinity-config.txt";
+    return VersionManager::getDataRoot()
+           + "/versions/" + versionName + "/trinity-config.txt";
 }

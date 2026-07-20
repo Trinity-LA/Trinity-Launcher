@@ -36,6 +36,9 @@
 #include <QSettings>
 #include <QStandardPaths>
 #include <QStackedWidget>
+#include <QSysInfo>
+#include <QTextEdit>
+#include <QTextCursor>
 #include <QTimer>
 #include <QUrl>
 #include <QVBoxLayout>
@@ -52,12 +55,33 @@ LauncherWindow::LauncherWindow(QWidget *parent)
 
     m_gameLauncher = new GameLauncher(this);
 
+    // Show one-time donation notice
+    {
+        QSettings settings;
+        if (!settings.value("donation_notice_shown", false).toBool()) {
+            QMessageBox::information(this, tr("Trinity Launcher"),
+                tr("This project is currently being maintained by a single developer.\n\n"
+                   "If you want to help or support, you can donate!"));
+            settings.setValue("donation_notice_shown", true);
+        }
+    }
+
     connect(m_gameLauncher, &GameLauncher::gameFinished, this,
             [this](int code, QProcess::ExitStatus status) {
                 // 1. Volver a mostrar el launcher
                 this->show();
                 this->raise(); // Traer al frente
                 this->activateWindow();
+            });
+
+    // Connect game output to log widget
+    connect(m_gameLauncher, &GameLauncher::gameOutput, this,
+            [this](const QString &text) {
+                if (logTextEdit) {
+                    logTextEdit->moveCursor(QTextCursor::End);
+                    logTextEdit->insertPlainText(text);
+                    logTextEdit->moveCursor(QTextCursor::End);
+                }
             });
     // Conectar señales de exporter
 
@@ -90,6 +114,7 @@ LauncherWindow::LauncherWindow(QWidget *parent)
             { "icon/content", sidebarContentBtn },
             { "icon/discord", sidebarDiscordBtn },
             { "icon/about",   sidebarAboutBtn   },
+            { "icon/log",     sidebarLogBtn     },
             { "icon/settings",sidebarSettingsBtn },
         };
         for (auto &e : iconMap) {
@@ -211,6 +236,13 @@ void LauncherWindow::setupUi() {
     sidebarAboutBtn->setCursor(Qt::PointingHandCursor);
     sidebarAboutBtn->setToolTip(tr("About Trinity Launcher"));
 
+    sidebarLogBtn = new QPushButton(QIcon(":/icons/warns"), "");
+    sidebarLogBtn->setObjectName("SidebarBtn");
+    sidebarLogBtn->setIconSize(QSize(26, 26));
+    sidebarLogBtn->setFixedSize(52, 48);
+    sidebarLogBtn->setCursor(Qt::PointingHandCursor);
+    sidebarLogBtn->setToolTip(tr("Log"));
+
     sidebarSettingsBtn = new QPushButton(QIcon(":/icons/settings"), "");
     sidebarSettingsBtn->setObjectName("SidebarBtn");
     sidebarSettingsBtn->setIconSize(QSize(26, 26));
@@ -222,6 +254,7 @@ void LauncherWindow::setupUi() {
     sidebarLayout->addWidget(sidebarContentBtn);
     sidebarLayout->addWidget(sidebarDiscordBtn);
     sidebarLayout->addWidget(sidebarAboutBtn);
+    sidebarLayout->addWidget(sidebarLogBtn);
     sidebarLayout->addStretch();
     sidebarLayout->addWidget(sidebarSettingsBtn); // Settings al fondo
     windowLayout->addWidget(sidebar);
@@ -423,7 +456,7 @@ void LauncherWindow::setupUi() {
     discordLayout->addSpacing(10);
 
     // Discord URL Box (Clickable via QPushButton)
-    QPushButton *discordUrlBox = new QPushButton("https://discord.gg/xTdmDHfgZT");
+    QPushButton *discordUrlBox = new QPushButton("https://discord.gg/8HvMHypRrP");
     discordUrlBox->setFlat(true);
     discordUrlBox->setObjectName("DiscordUrlBox");
     discordUrlBox->setMinimumHeight(40);
@@ -433,13 +466,13 @@ void LauncherWindow::setupUi() {
     discordLayout->addWidget(discordUrlBox, 0, Qt::AlignCenter);
 
     connect(discordUrlBox, &QPushButton::clicked, this, [discordUrlBox]() {
-        QApplication::clipboard()->setText("https://discord.gg/xTdmDHfgZT");
+        QApplication::clipboard()->setText("https://discord.gg/8HvMHypRrP");
 
         discordUrlBox->setText(tr("✓ Copied!"));
         discordUrlBox->setStyleSheet("color: #4ade80; border-color: #4ade80;");
 
         QTimer::singleShot(1500, discordUrlBox, [discordUrlBox]() {
-            discordUrlBox->setText("https://discord.gg/xTdmDHfgZT");
+            discordUrlBox->setText("https://discord.gg/8HvMHypRrP");
             discordUrlBox->setStyleSheet(""); // revert to theme default
         });
     });
@@ -482,6 +515,7 @@ void LauncherWindow::setupUi() {
     scrollArea->setStyleSheet("background: transparent;");
 
     QWidget *scrollContent = new QWidget();
+    scrollContent->setObjectName("AboutContent");
     QVBoxLayout *scrollLayout = new QVBoxLayout(scrollContent);
     scrollLayout->setContentsMargins(40, 40, 40, 40);
     scrollLayout->setSpacing(20);
@@ -495,9 +529,35 @@ void LauncherWindow::setupUi() {
                                       "Focused on user freedom and free redistribution, it provides a powerful interface to "
                                       "manage multiple instances, worlds, textures, and mods seamlessly."));
     aboutDesc->setWordWrap(true);
-    aboutDesc->setStyleSheet("font-size: 16px; background: transparent;");
+    aboutDesc->setObjectName("AboutText");
     aboutDesc->setAlignment(Qt::AlignJustify);
     scrollLayout->addWidget(aboutDesc);
+
+    // Maintenance & donation section
+    QFrame *donateSep = new QFrame();
+    donateSep->setFrameShape(QFrame::HLine);
+    scrollLayout->addWidget(donateSep);
+
+    QLabel *maintenanceMsg = new QLabel(tr("This project is currently being maintained by a single developer. "
+                                           "If you want to help or support, you can donate!"));
+    maintenanceMsg->setWordWrap(true);
+    maintenanceMsg->setObjectName("AboutText");
+    maintenanceMsg->setAlignment(Qt::AlignCenter);
+    scrollLayout->addWidget(maintenanceMsg);
+
+    QPushButton *donateBtn = new QPushButton(tr("DONAR"));
+    donateBtn->setObjectName("ActionButton");
+    donateBtn->setMinimumHeight(40);
+    donateBtn->setCursor(Qt::PointingHandCursor);
+    scrollLayout->addWidget(donateBtn, 0, Qt::AlignCenter);
+
+    connect(donateBtn, &QPushButton::clicked, this, []() {
+        QDesktopServices::openUrl(QUrl("https://linktr.ee/javiercplusx"));
+    });
+
+    QFrame *donateSep2 = new QFrame();
+    donateSep2->setFrameShape(QFrame::HLine);
+    scrollLayout->addWidget(donateSep2);
 
     QLabel *teamTitle = new QLabel(tr("Our Team"));
     teamTitle->setObjectName("VersionName");
@@ -506,7 +566,7 @@ void LauncherWindow::setupUi() {
 
     QLabel *teamDesc = new QLabel(tr("Trinity is built by a dedicated group of developers, designers, and contributors:"));
     teamDesc->setWordWrap(true);
-    teamDesc->setStyleSheet("font-size: 16px; background: transparent;");
+    teamDesc->setObjectName("AboutText");
     scrollLayout->addWidget(teamDesc);
 
     // Team list
@@ -527,7 +587,7 @@ void LauncherWindow::setupUi() {
         QLabel *memberLabel = new QLabel(member);
         memberLabel->setTextFormat(Qt::RichText);
         memberLabel->setWordWrap(true);
-        memberLabel->setStyleSheet("font-size: 16px; margin-left: 10px; background: transparent;");
+        memberLabel->setStyleSheet("font-size: 16px; background: transparent; margin-left: 10px;");
         scrollLayout->addWidget(memberLabel);
     }
 
@@ -551,7 +611,11 @@ void LauncherWindow::setupUi() {
 
     contentStack->addWidget(aboutPage);
 
-    // === Page 4: Settings ===
+    // === Page 4: Log ===
+    QWidget *logPage = createLogPage();
+    contentStack->addWidget(logPage);
+
+    // === Page 5: Settings ===
     contentStack->addWidget(createSettingsPage());
 
     contentStack->setCurrentIndex(0);
@@ -561,8 +625,8 @@ void LauncherWindow::setupUi() {
         contentStack->setCurrentIndex(activeIndex);
         QPushButton *btns[] = {sidebarTrinityBtn, sidebarContentBtn,
                                sidebarDiscordBtn, sidebarAboutBtn,
-                               sidebarSettingsBtn};
-        for (int i = 0; i < 5; ++i) {
+                               sidebarLogBtn, sidebarSettingsBtn};
+        for (int i = 0; i < 6; ++i) {
             btns[i]->setObjectName(i == activeIndex ? "SidebarBtnActive" : "SidebarBtn");
             btns[i]->style()->unpolish(btns[i]);
             btns[i]->style()->polish(btns[i]);
@@ -582,8 +646,11 @@ void LauncherWindow::setupUi() {
     connect(sidebarAboutBtn, &QPushButton::clicked, this, [updateSidebar]() {
         updateSidebar(3);
     });
-    connect(sidebarSettingsBtn, &QPushButton::clicked, this, [updateSidebar]() {
+    connect(sidebarLogBtn, &QPushButton::clicked, this, [updateSidebar]() {
         updateSidebar(4);
+    });
+    connect(sidebarSettingsBtn, &QPushButton::clicked, this, [updateSidebar]() {
+        updateSidebar(5);
     });
 
     // Center the window
@@ -773,47 +840,123 @@ void LauncherWindow::onEditConfigClicked() {
         return;
     }
 
-    // Diálogo simple de edición
+    // Read active theme colors
+    QSettings cfg;
+    const QString accent    = cfg.value("theme/accent",    "#e429ef").toString();
+    const QString bg        = cfg.value("theme/bg",        "#070308").toString();
+    const QString panel     = cfg.value("theme/panel",     "#150915").toString();
+    const QString hover     = cfg.value("theme/hover",     "#2e1d2f").toString();
+    const QString btnHover  = cfg.value("theme/btnHover",  "#49364a").toString();
+    const QString textMuted = cfg.value("theme/textMuted", "#af9bb0").toString();
+    const QString text      = cfg.value("theme/text",      "#ffffff").toString();
+
     QDialog dialog(this);
-    dialog.setWindowTitle(tr("Edit configuration of ") + selectedVersion);
-    dialog.resize(500, 300);
+    dialog.setWindowTitle(tr("Environment Parameters — ") + selectedVersion);
+    dialog.setFixedWidth(500);
+
+    dialog.setStyleSheet(QString(
+        "QDialog { background-color: %1; }"
+        "QLabel  { background: transparent; color: %2; font-size: 13px; }"
+        "QPushButton { background-color: %3; border: none; border-radius: 6px; "
+        "              padding: 8px 20px; color: %2; font-weight: bold; font-size: 13px; }"
+        "QPushButton:hover  { background-color: %4; }"
+        "QPushButton:pressed{ background-color: %1; }"
+        "QPushButton#OkBtn  { background-color: %5; color: %2; }"
+        "QPushButton#OkBtn:hover { background-color: %5; opacity: 0.85; }"
+    ).arg(bg, text, hover, btnHover, accent));
 
     auto *layout = new QVBoxLayout(&dialog);
-    QLabel *label = new QLabel(
-        tr("Launch parameters (before mcpelauncher-client):"));
-    layout->addWidget(label);
+    layout->setContentsMargins(20, 20, 20, 20);
+    layout->setSpacing(10);
 
-    // Obtener argumentos actuales
+    // Title label
+    QLabel *titleLabel = new QLabel(tr("Environment Variables"));
+    titleLabel->setStyleSheet(QString(
+        "font-size: 15px; font-weight: bold; color: %1; background: transparent;")
+        .arg(text));
+    layout->addWidget(titleLabel);
+
+    // Hint label
+    QLabel *hintLabel = new QLabel(
+        tr("One variable per line, or space-separated. Example:"));
+    hintLabel->setStyleSheet(QString(
+        "font-size: 12px; color: %1; background: transparent;").arg(textMuted));
+    layout->addWidget(hintLabel);
+
+    // Example label (monospace, accent colored)
+    QLabel *exampleLabel = new QLabel("DRI_PRIME=1   vblank_mode=0   MESA_LOADER_DRIVER_OVERRIDE=zink");
+    exampleLabel->setStyleSheet(QString(
+        "font-family: 'Monospace', monospace; font-size: 11px; "
+        "color: %1; background: transparent; padding: 2px 0;").arg(accent));
+    exampleLabel->setWordWrap(true);
+    layout->addWidget(exampleLabel);
+
+    layout->addSpacing(4);
+
+    // Obtain current args
     VersionConfig config(selectedVersion);
     QString currentArgs = config.getLaunchArgs();
 
-    QLineEdit *argsEdit = new QLineEdit(currentArgs);
-    argsEdit->setPlaceholderText(
-        "Ej: DRI_PRIME=1 vblank_mode=0 MESA_LOADER_DRIVER_OVERRIDE=zink");
+    // Styled QTextEdit
+    QTextEdit *argsEdit = new QTextEdit();
+    argsEdit->setPlainText(currentArgs);
+    argsEdit->setPlaceholderText("DRI_PRIME=1\nvblank_mode=0\nMESA_LOADER_DRIVER_OVERRIDE=zink");
+    argsEdit->setAcceptRichText(false);
+    argsEdit->setFixedHeight(130);
+    argsEdit->setStyleSheet(QString(
+        "QTextEdit {"
+        "  background-color: %1;"
+        "  color: %2;"
+        "  border: 1px solid %3;"
+        "  border-radius: 8px;"
+        "  padding: 10px;"
+        "  font-family: 'Monospace', monospace;"
+        "  font-size: 13px;"
+        "  selection-background-color: %4;"
+        "}"
+        "QTextEdit:focus {"
+        "  border: 1.5px solid %4;"
+        "}"
+        "QScrollBar:vertical {"
+        "  background: %1; width: 6px; border-radius: 3px;"
+        "}"
+        "QScrollBar::handle:vertical {"
+        "  background: %3; border-radius: 3px;"
+        "}"
+    ).arg(panel, text, hover, accent));
     layout->addWidget(argsEdit);
 
-    auto *buttonBox =
-        new QDialogButtonBox(QDialogButtonBox::Ok | QDialogButtonBox::Cancel);
-    layout->addWidget(buttonBox);
+    layout->addSpacing(6);
 
-    connect(buttonBox, &QDialogButtonBox::accepted, &dialog, [&]() {
-        QString newArgs = argsEdit->text().trimmed();
+    // Button row
+    auto *btnRow = new QHBoxLayout();
+    btnRow->setSpacing(10);
+    auto *cancelBtn = new QPushButton(tr("Cancel"));
+    auto *okBtn     = new QPushButton(tr("Save"));
+    okBtn->setObjectName("OkBtn");
+    okBtn->setCursor(Qt::PointingHandCursor);
+    cancelBtn->setCursor(Qt::PointingHandCursor);
+    btnRow->addStretch();
+    btnRow->addWidget(cancelBtn);
+    btnRow->addWidget(okBtn);
+    layout->addLayout(btnRow);
+
+    dialog.adjustSize();
+
+    connect(okBtn, &QPushButton::clicked, &dialog, [&]() {
+        QString newArgs = argsEdit->toPlainText().trimmed();
         config.setLaunchArgs(newArgs);
 
-        // Editar versión
         VersionManager vm;
         QString errorMsg;
         if (!vm.editVersion(selectedVersion, newArgs, errorMsg)) {
             QMessageBox::critical(&dialog, "Error",
-                                  tr("Could not save configuration:\n") +
-                                      errorMsg);
+                                  tr("Could not save configuration:\n") + errorMsg);
         } else {
-            QMessageBox::information(&dialog, tr("Success"),
-                                     tr("Configuration saved."));
             dialog.accept();
         }
     });
-    connect(buttonBox, &QDialogButtonBox::rejected, &dialog, &QDialog::reject);
+    connect(cancelBtn, &QPushButton::clicked, &dialog, &QDialog::reject);
 
     if (dialog.exec() == QDialog::Accepted) {
         statusLabel->setText(QString(tr("Configuration of %1 updated."))
@@ -961,10 +1104,24 @@ void LauncherWindow::createDesktopShortcut() {
             return;
     }
 
+    // Determine the mcpelauncher data directory
+    QString mcpelauncherDataDir = VersionManager::getDataRoot();
+
     // Construir el comando para el .desktop
-    QString execCmd = "flatpak run --command=mcpelauncher-client "
-                      "com.trench.trinity.launcher -dg \"" +
-                      versionPath + "\"";
+    QString execCmd;
+#ifdef Q_OS_LINUX
+    if (VersionManager::isFlatpak()) {
+        execCmd = "flatpak run --command=mcpelauncher-client "
+                  "com.trench.trinity.launcher -dg \"" +
+                  versionPath + "\" -dd \"" + mcpelauncherDataDir + "\"";
+    } else {
+        execCmd = "mcpelauncher-client -dg \"" + versionPath
+                  + "\" -dd \"" + mcpelauncherDataDir + "\"";
+    }
+#else
+    execCmd = "mcpelauncher-client -dg \"" + versionPath
+              + "\" -dd \"" + mcpelauncherDataDir + "\"";
+#endif
 
     // Usar un icono genérico de juego
     QString iconIdentifier =
@@ -1071,6 +1228,7 @@ void LauncherWindow::applyTheme(const QString &accent,
             "QLabel#VersionName { font-size: 14px; font-weight: bold; background: transparent; }"
             "QLabel#VersionType { font-size: 14px; color: %6; background: transparent; }"
             "QLabel#Status { font-size: 4px; color: %6; padding: 5px; background: transparent; }"
+            "QLabel#AboutText { font-size: 16px; background: transparent; }"
             "QWidget#ContextPanel { background-color: %3; border-radius: 12px; }"
             "QWidget#Sidebar { background-color: %2; }"
             "QPushButton#SidebarBtn { background: transparent; border: none; "
@@ -1246,7 +1404,6 @@ QWidget *LauncherWindow::createSettingsPage() {
     auto *scrollArea = new QScrollArea();
     scrollArea->setWidgetResizable(true);
     scrollArea->setFrameShape(QFrame::NoFrame);
-    scrollArea->setStyleSheet("background: transparent;");
 
     auto *content = new QWidget();
     auto *layout  = new QVBoxLayout(content);
@@ -1263,12 +1420,12 @@ QWidget *LauncherWindow::createSettingsPage() {
     // SECCIÓN: Idioma / Language
     // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
     auto *langSection = new QLabel(tr("Language"));
-    langSection->setStyleSheet("font-size: 16px; font-weight: bold; color: #94a3b8;");
+    langSection->setStyleSheet(QString("font-size: 16px; font-weight: bold; color: %1;").arg(textMuted));
     layout->addWidget(langSection);
 
     auto *langSeparator = new QFrame();
     langSeparator->setFrameShape(QFrame::HLine);
-    langSeparator->setStyleSheet("color: #1e293b;");
+    langSeparator->setStyleSheet(QString("color: %1;").arg(hover));
     layout->addWidget(langSeparator);
 
     {
@@ -1281,49 +1438,51 @@ QWidget *LauncherWindow::createSettingsPage() {
         settingsLanguageCombo->setFixedWidth(180);
         // Explicit styles for AppImage compatibility
         settingsLanguageCombo->setStyleSheet(
-            "QComboBox {"
-            "    background-color: #1e293b;"
-            "    color: #ffffff;"
-            "    border: 1px solid #334155;"
-            "    border-radius: 4px;"
-            "    padding: 4px 8px;"
-            "    font-size: 14px;"
-            "}"
-            "QComboBox:hover {"
-            "    background-color: #334155;"
-            "    border-color: #475569;"
-            "}"
-            "QComboBox::drop-down {"
-            "    border: none;"
-            "    width: 20px;"
-            "}"
-            "QComboBox::down-arrow {"
-            "    image: none;"
-            "    border-left: 5px solid transparent;"
-            "    border-right: 5px solid transparent;"
-            "    border-top: 6px solid #94a3b8;"
-            "    margin-right: 8px;"
-            "}"
-            "QComboBox QAbstractItemView {"
-            "    background-color: #1e293b;"
-            "    color: #ffffff;"
-            "    border: 1px solid #334155;"
-            "    selection-background-color: #475569;"
-            "    selection-color: #ffffff;"
-            "    outline: none;"
-            "    padding: 4px;"
-            "}"
-            "QComboBox QAbstractItemView::item {"
-            "    min-height: 30px;"
-            "    padding: 4px 8px;"
-            "}"
-            "QComboBox QAbstractItemView::item:hover {"
-            "    background-color: #334155;"
-            "}"
-            "QComboBox QAbstractItemView::item:selected {"
-            "    background-color: #475569;"
-            "    color: #ffffff;"
-            "}"
+            QString(
+                "QComboBox {"
+                "    background-color: %1;"
+                "    color: %2;"
+                "    border: 1px solid %3;"
+                "    border-radius: 4px;"
+                "    padding: 4px 8px;"
+                "    font-size: 14px;"
+                "}"
+                "QComboBox:hover {"
+                "    background-color: %4;"
+                "    border-color: %3;"
+                "}"
+                "QComboBox::drop-down {"
+                "    border: none;"
+                "    width: 20px;"
+                "}"
+                "QComboBox::down-arrow {"
+                "    image: none;"
+                "    border-left: 5px solid transparent;"
+                "    border-right: 5px solid transparent;"
+                "    border-top: 6px solid %5;"
+                "    margin-right: 8px;"
+                "}"
+                "QComboBox QAbstractItemView {"
+                "    background-color: %1;"
+                "    color: %2;"
+                "    border: 1px solid %3;"
+                "    selection-background-color: %4;"
+                "    selection-color: %2;"
+                "    outline: none;"
+                "    padding: 4px;"
+                "}"
+                "QComboBox QAbstractItemView::item {"
+                "    min-height: 30px;"
+                "    padding: 4px 8px;"
+                "}"
+                "QComboBox QAbstractItemView::item:hover {"
+                "    background-color: %4;"
+                "}"
+                "QComboBox QAbstractItemView::item:selected {"
+                "    background-color: %4;"
+                "    color: %2;"
+                "}"
+            ).arg(panel, textColor, hover, btnHover, textMuted)
         );
 
         // Available languages (explicit list for AppImage compatibility)
@@ -1380,12 +1539,12 @@ QWidget *LauncherWindow::createSettingsPage() {
     // SECCIÓN: Colores del tema
     // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
     auto *colorSection = new QLabel(tr("UI Colors"));
-    colorSection->setStyleSheet("font-size: 16px; font-weight: bold; color: #94a3b8;");
+    colorSection->setStyleSheet(QString("font-size: 16px; font-weight: bold; color: %1;").arg(textMuted));
     layout->addWidget(colorSection);
 
     auto *colorsSeparator = new QFrame();
     colorsSeparator->setFrameShape(QFrame::HLine);
-    colorsSeparator->setStyleSheet("color: #1e293b;");
+    colorsSeparator->setStyleSheet(QString("color: %1;").arg(hover));
     layout->addWidget(colorsSeparator);
 
     // Helper to create a color-picker row
@@ -1413,13 +1572,13 @@ QWidget *LauncherWindow::createSettingsPage() {
         auto *preview = new QPushButton();
         preview->setFixedSize(36, 36);
         preview->setStyleSheet(
-            QString("background-color: %1; border-radius: 6px; border: 2px solid #334155;")
-                .arg(*colorRef));
+            QString("background-color: %1; border-radius: 6px; border: 2px solid %2;")
+                .arg(*colorRef, hover));
         preview->setCursor(Qt::PointingHandCursor);
         preview->setToolTip(tr("Click to change color"));
 
         auto *hexLabel = new QLabel(*colorRef);
-        hexLabel->setStyleSheet("font-size: 16px; color: #64748b; font-family: monospace;");
+        hexLabel->setStyleSheet(QString("font-size: 16px; color: %1; font-family: monospace;").arg(textMuted));
         hexLabel->setMinimumWidth(80);
 
         connect(preview, &QPushButton::clicked, this,
@@ -1430,8 +1589,8 @@ QWidget *LauncherWindow::createSettingsPage() {
                     if (!chosen.isValid()) return;
                     *colorRef = chosen.name();
                     preview->setStyleSheet(
-                        QString("background-color: %1; border: 1px solid #334155;")
-                            .arg(*colorRef));
+                        QString("background-color: %1; border: 1px solid %2;")
+                            .arg(*colorRef, *hoverVal));
                     hexLabel->setText(*colorRef);
                     applyTheme(*accentVal, *bgVal, *panelVal, *hoverVal, *btnHoverVal, *textMutedVal, *textVal);
                 });
@@ -1480,12 +1639,12 @@ QWidget *LauncherWindow::createSettingsPage() {
     // Wallpaper / Background
     // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
     auto *wallpaperSection = new QLabel(tr("Wallpaper"));
-    wallpaperSection->setStyleSheet("font-size: 16px; font-weight: bold; color: #94a3b8;");
+    wallpaperSection->setStyleSheet(QString("font-size: 16px; font-weight: bold; color: %1;").arg(textMuted));
     layout->addWidget(wallpaperSection);
 
     auto *wallpaperSep = new QFrame();
     wallpaperSep->setFrameShape(QFrame::HLine);
-    wallpaperSep->setStyleSheet("color: #1e293b;");
+    wallpaperSep->setStyleSheet(QString("color: %1;").arg(hover));
     layout->addWidget(wallpaperSep);
 
     {
@@ -1496,7 +1655,7 @@ QWidget *LauncherWindow::createSettingsPage() {
         wpPreview->setFixedSize(120, 68);
         wpPreview->setAlignment(Qt::AlignCenter);
         wpPreview->setStyleSheet(
-            "border-radius: 8px; border: 2px solid #334155; background: #0f172a;");
+            QString("border-radius: 8px; border: 2px solid %1; background: %2;").arg(hover, panel));
         wpPreview->setScaledContents(true);
 
         // Load currently set background
@@ -1509,7 +1668,7 @@ QWidget *LauncherWindow::createSettingsPage() {
 
         auto *wpInfoLayout = new QVBoxLayout();
         auto *wpPathLabel = new QLabel(savedBg.isEmpty() ? tr("Default background") : QFileInfo(savedBg).fileName());
-        wpPathLabel->setStyleSheet("font-size: 16px; color: #94a3b8;");
+        wpPathLabel->setStyleSheet(QString("font-size: 16px; color: %1;").arg(textMuted));
         wpPathLabel->setWordWrap(true);
         wpInfoLayout->addWidget(wpPathLabel);
 
@@ -1589,17 +1748,17 @@ QWidget *LauncherWindow::createSettingsPage() {
     // SECCIÓN: Iconos del sidebar
     // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
     auto *iconSection = new QLabel(tr("Sidebar Icons"));
-    iconSection->setStyleSheet("font-size: 16px; font-weight: bold; color: #94a3b8;");
+    iconSection->setStyleSheet(QString("font-size: 16px; font-weight: bold; color: %1;").arg(textMuted));
     layout->addWidget(iconSection);
 
     auto *iconSeparator = new QFrame();
     iconSeparator->setFrameShape(QFrame::HLine);
-    iconSeparator->setStyleSheet("color: #1e293b;");
+    iconSeparator->setStyleSheet(QString("color: %1;").arg(hover));
     layout->addWidget(iconSeparator);
 
     auto *iconNote = new QLabel(tr("You can customize the sidebar icons. The app logo is fixed and cannot be changed."));
     iconNote->setWordWrap(true);
-    iconNote->setStyleSheet("font-size: 16px; color: #64748b;");
+    iconNote->setStyleSheet(QString("font-size: 16px; color: %1;").arg(textMuted));
     layout->addWidget(iconNote);
 
     // Datos de iconos cambiables
@@ -1615,6 +1774,7 @@ QWidget *LauncherWindow::createSettingsPage() {
         { tr("Content Manager"),  "icon/content",  ":/icons/config",  sidebarContentBtn },
         { tr("Discord"),          "icon/discord",  ":/icons/discord", sidebarDiscordBtn },
         { tr("About"),            "icon/about",    ":/icons/heart",   sidebarAboutBtn   },
+        { tr("Log"),              "icon/log",      ":/icons/warns",   sidebarLogBtn     },
         { tr("Settings"),         "icon/settings", ":/icons/settings",sidebarSettingsBtn},
     };
 
@@ -1631,7 +1791,7 @@ QWidget *LauncherWindow::createSettingsPage() {
         auto *iconPreview = new QLabel();
         iconPreview->setFixedSize(36, 36);
         iconPreview->setPixmap(currentIcon.pixmap(32, 32));
-        iconPreview->setStyleSheet("background: #1e293b; border-radius: 6px; padding: 2px;");
+        iconPreview->setStyleSheet(QString("background: %1; border-radius: 6px; padding: 2px;").arg(panel));
         iconPreview->setAlignment(Qt::AlignCenter);
 
         auto *nameLbl = new QLabel(entry.name);
@@ -1702,6 +1862,30 @@ QWidget *LauncherWindow::createSettingsPage() {
     layout->addStretch();
     scrollArea->setWidget(content);
     outerLayout->addWidget(scrollArea);
+
+    return page;
+}
+
+QWidget *LauncherWindow::createLogPage() {
+    QWidget *page = new QWidget();
+    QVBoxLayout *outerLayout = new QVBoxLayout(page);
+    outerLayout->setContentsMargins(0, 0, 0, 0);
+
+    // Title
+    QLabel *titleLabel = new QLabel(tr("Log Output"));
+    titleLabel->setObjectName("VersionName");
+    titleLabel->setAlignment(Qt::AlignCenter);
+    titleLabel->setStyleSheet("padding: 16px;");
+    outerLayout->addWidget(titleLabel);
+
+    // Log text edit — read-only, selectable, monospace
+    logTextEdit = new QTextEdit();
+    logTextEdit->setReadOnly(true);
+    logTextEdit->setTextInteractionFlags(Qt::TextSelectableByMouse | Qt::TextSelectableByKeyboard);
+    logTextEdit->setLineWrapMode(QTextEdit::NoWrap);
+    logTextEdit->setFont(QFont("Monospace", 11));
+    logTextEdit->setObjectName("LogTextEdit");
+    outerLayout->addWidget(logTextEdit);
 
     return page;
 }
