@@ -1,8 +1,0 @@
-blank_issues_enabled: false
-contact_links:
-  - name: Trinity Launcher Community Support
-    url: https://discord.gg/8HvMHypRrP
-    about: Please ask questions and get help with the launcher setup here.
-  - name: Security Vulnerabilities
-    url: https://github.com/Trinity-LA/Trinity-Launcher
-    about: Please report any security vulnerabilities, bugs, crash, etc here.

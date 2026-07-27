@@ -18,7 +18,7 @@
 #include <QPushButton>
 #include <QStandardItemModel>
 #include <QStandardPaths>
-#include <QTabWidget>
+#include <QStackedWidget>
 #include <QVBoxLayout>
 
 #include <QProgressDialog>
@@ -29,28 +29,43 @@
 #include <QtConcurrent/QtConcurrent>
 
 TrinitoWindow::TrinitoWindow(QWidget *parent, LauncherWindow *launcher)
-    : QWidget(parent), m_launcher(launcher) {
+    : QDialog(parent), m_launcher(launcher) {
     setWindowTitle(tr("Content Manager for Bedrock"));
-    resize(820, 500);
+    resize(860, 540);
+    setModal(false);
 
-    auto *layout = new QVBoxLayout(this);
-    QTabWidget *tabs = new QTabWidget();
-    layout->addWidget(tabs);
+    auto *layout = new QHBoxLayout(this);
+    layout->setContentsMargins(0, 0, 0, 0);
+    layout->setSpacing(0);
 
-    // First tab: Instances
-    tabs->addTab(createInstancesTab(), tr("Instances"));
+    // Left: category sidebar (PageContainer-style navigation)
+    auto *sidebar = new QListWidget();
+    sidebar->setObjectName("PageSidebar");
+    sidebar->setFixedWidth(190);
 
-    // Installation tabs (as before)
-    tabs->addTab(createPackTab("behavior_packs", tr("Behavior Pack (mods)")),
-                 tr("Mods"));
-    tabs->addTab(createPackTab("resource_packs", tr("Resource Pack")),
-                 tr("Textures"));
-    tabs->addTab(createDevTab(), tr("Development"));
-    tabs->addTab(createWorldTab(), tr("Worlds"));
-    // Add the new Shaders/Libs tab
-    tabs->addTab(createShadersModsTab(), tr("Shaders/Libs"));
-    // Data directory tab
-    tabs->addTab(createDirectoryTab(), tr("Directory"));
+    // Right: stacked pages
+    auto *stack = new QStackedWidget();
+
+    auto addPage = [sidebar, stack](const QString &name, QWidget *page) {
+        auto *item = new QListWidgetItem(name, sidebar);
+        item->setSizeHint(QSize(0, 36));
+        stack->addWidget(page);
+    };
+
+    addPage(tr("Instances"),    createInstancesTab());
+    addPage(tr("Mods"),         createPackTab("behavior_packs", tr("Behavior Pack (mods)")));
+    addPage(tr("Textures"),     createPackTab("resource_packs", tr("Resource Pack")));
+    addPage(tr("Development"),  createDevTab());
+    addPage(tr("Worlds"),       createWorldTab());
+    addPage(tr("Shaders/Libs"), createShadersModsTab());
+    addPage(tr("Directory"),    createDirectoryTab());
+
+    connect(sidebar, &QListWidget::currentRowChanged,
+            stack, &QStackedWidget::setCurrentIndex);
+    sidebar->setCurrentRow(0);
+
+    layout->addWidget(sidebar);
+    layout->addWidget(stack, 1);
 }
 
 
@@ -60,42 +75,13 @@ QWidget *TrinitoWindow::createInstancesTab() {
     outerLayout->setContentsMargins(16, 12, 16, 12);
     outerLayout->setSpacing(8);
 
-    // ── Shared column header row (same height, same visual level) ─────────
-    auto *headerRow = new QHBoxLayout();
-    headerRow->setContentsMargins(0, 0, 0, 0);
-    headerRow->setSpacing(16);
-
-    QLabel *listLabel = new QLabel(tr("Installed versions:"));
-    listLabel->setStyleSheet("font-size: 16px; background: transparent;");
-    headerRow->addWidget(listLabel, 3);
-
-    QLabel *actionsLabel = new QLabel(tr("Actions"));
-    actionsLabel->setStyleSheet("font-size: 16px; background: transparent;");
-    headerRow->addWidget(actionsLabel, 2);
-
-    outerLayout->addLayout(headerRow);
-
-    // ── Thin separator below headers ──────────────────────────────────────
-    auto *sep = new QFrame();
-    sep->setFrameShape(QFrame::HLine);
-    sep->setObjectName("Divider");
-    outerLayout->addWidget(sep);
-
-    // ── Split: [version list] | [action panel] ────────────────────────────
-    auto *splitLayout = new QHBoxLayout();
-    splitLayout->setSpacing(16);
-
-    // LEFT: installed versions
-    auto *leftWidget = new QWidget();
-    auto *leftLayout = new QVBoxLayout(leftWidget);
-    leftLayout->setContentsMargins(0, 0, 0, 0);
-    leftLayout->setSpacing(6);
+    auto *headerLabel = new QLabel(tr("Installed versions:"));
+    headerLabel->setObjectName("PanelTitle");
+    outerLayout->addWidget(headerLabel);
 
     auto *versionsList = new QListWidget();
     versionsList->setIconSize(QSize(20, 20));
-    // ListWidget style handled by applyTheme global stylesheet
 
-    // Refresh function for instances list
     auto refreshInstancesList = [this, versionsList]() {
         versionsList->clear();
         if (m_launcher) {
@@ -128,99 +114,34 @@ QWidget *TrinitoWindow::createInstancesTab() {
                         QMessageBox::critical(this, tr("Error"), tr("Could not delete version:\n") + errorMsg);
                     } else {
                         delete versionsList->takeItem(versionsList->row(item));
-                        if (m_launcher) {
+                        if (m_launcher)
                             m_launcher->loadInstalledVersions();
-                        }
                     }
                 });
             }
         }
     };
 
-    // Populate from VersionManager
     if (m_launcher) {
         refreshInstancesList();
         if (versionsList->count() > 0)
             versionsList->setCurrentRow(0);
     }
-    leftLayout->addWidget(versionsList);
 
-    splitLayout->addWidget(leftWidget, 3); // takes 3/5 of space
+    outerLayout->addWidget(versionsList, 1);
 
-    // RIGHT: action buttons panel
-    auto *rightWidget = new QWidget();
-    rightWidget->setObjectName("ContextPanel");
-    auto *rightLayout = new QVBoxLayout(rightWidget);
-    rightLayout->setContentsMargins(16, 8, 16, 16);
-    rightLayout->setSpacing(10);
-
-    // Helper: makes a full-width button with tooltip
-    auto makeBtn = [&](const QString &label, const QString &tip) -> QPushButton* {
-        auto *btn = new QPushButton(label);
-        btn->setObjectName("ActionButton");
-        btn->setMinimumHeight(40);
-        btn->setCursor(Qt::PointingHandCursor);
-        btn->setToolTip(tip);
-        btn->setEnabled(false); // enabled when a version is selected below
-        rightLayout->addWidget(btn);
-        return btn;
-    };
-
-    auto *shortcutBtn = makeBtn(tr("Create shortcut"),
-        tr("Creates a .desktop shortcut in Downloads for the selected version."));
-    auto *envBtn      = makeBtn(tr("Environment Parameters"),
-        tr("Edit launch arguments and environment variables."));
-    auto *importBtn   = makeBtn(tr("Import"),
-        tr("Import a previously exported version archive."));
-    auto *exportBtn   = makeBtn(tr("Export"),
-        tr("Export the selected version as an archive."));
-
-    rightLayout->addStretch();
-    splitLayout->addWidget(rightWidget, 2); // takes 2/5 of space
-
-    outerLayout->addLayout(splitLayout);
-
-    // ── Wire buttons only when launcher available ──────────────────────────
     if (m_launcher) {
         connect(m_launcher, &LauncherWindow::versionsChanged, this, [versionsList, refreshInstancesList]() {
-    
-refreshInstancesList();
-refreshInstancesList();
-refreshInstancesList();
+            refreshInstancesList();
             if (versionsList->count() > 0)
                 versionsList->setCurrentRow(0);
         });
 
-        connect(shortcutBtn, &QPushButton::clicked, m_launcher, &LauncherWindow::createDesktopShortcut);
-        connect(envBtn,      &QPushButton::clicked, m_launcher, &LauncherWindow::onEditConfigClicked);
-        connect(importBtn,   &QPushButton::clicked, m_launcher, &LauncherWindow::onImportClicked);
-        connect(exportBtn,   &QPushButton::clicked, m_launcher, &LauncherWindow::onExportClicked);
-
-        // Enable/disable action buttons based on list selection,
-        // and sync selection back to the launcher's versionCombo.
         connect(versionsList, &QListWidget::currentTextChanged, m_launcher,
-            [this, shortcutBtn, envBtn, exportBtn](const QString &version) {
-                bool valid = !version.isEmpty();
-                shortcutBtn->setEnabled(valid);
-                envBtn->setEnabled(valid);
-                exportBtn->setEnabled(valid);
-                // Sync the launcher's version combo to match
+            [this](const QString &version) {
                 if (m_launcher)
                     m_launcher->versionCombo->setCurrentText(version);
             });
-
-        // Import doesn't depend on a selected version
-        importBtn->setEnabled(true);
-
-        // Enable buttons for initial selection if any
-refreshInstancesList();
-refreshInstancesList();
-refreshInstancesList();
-        if (versionsList->count() > 0) {
-            shortcutBtn->setEnabled(true);
-            envBtn->setEnabled(true);
-            exportBtn->setEnabled(true);
-        }
     }
 
     return widget;

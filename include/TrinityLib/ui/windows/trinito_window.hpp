@@ -1,13 +1,14 @@
 #ifndef TRINITOWINDOW_H
 #define TRINITOWINDOW_H
 
-#include <QWidget>
+#include <QDialog>
 #include <QListWidget>
 #include <QPushButton>
+#include <QStackedWidget>
 
 class LauncherWindow; // forward declaration
 
-class TrinitoWindow : public QWidget {
+class TrinitoWindow : public QDialog {
     Q_OBJECT
 
 public:
