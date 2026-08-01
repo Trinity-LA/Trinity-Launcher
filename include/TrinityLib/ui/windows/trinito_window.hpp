@@ -19,6 +19,7 @@ private:
     QWidget *createWorldTab();
     QWidget *createShadersModsTab();
     QWidget *createDirectoryTab();
+    QWidget *createSupportTab();
     QWidget *createInstancesTab();
     void installItem(const QString &sourcePath, const QString &targetSubdir);
 

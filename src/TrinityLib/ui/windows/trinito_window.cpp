@@ -23,7 +23,10 @@
 
 #include <QProgressDialog>
 #include <QHBoxLayout>
+#include <QRadioButton>
 #include <QRandomGenerator>
+#include <QScrollArea>
+#include <QSettings>
 #include <QTimer>
 #include <QUrl>
 #include <QtConcurrent/QtConcurrent>
@@ -51,6 +54,8 @@ TrinitoWindow::TrinitoWindow(QWidget *parent, LauncherWindow *launcher)
     tabs->addTab(createShadersModsTab(), tr("Shaders/Libs"));
     // Data directory tab
     tabs->addTab(createDirectoryTab(), tr("Directory"));
+    // Support / compatibility tab
+    tabs->addTab(createSupportTab(), tr("Support"));
 }
 
 
@@ -1347,6 +1352,231 @@ QWidget *TrinitoWindow::createDirectoryTab() {
     layout->addLayout(btnLayout);
 
     layout->addStretch();
+    return widget;
+}
+
+// ──────────────────────────────────────────────
+// Tab: Support
+// ──────────────────────────────────────────────
+
+QWidget *TrinitoWindow::createSupportTab() {
+    auto *widget = new QWidget();
+    auto *outerLayout = new QVBoxLayout(widget);
+    outerLayout->setContentsMargins(0, 0, 0, 0);
+
+    auto *scrollArea = new QScrollArea();
+    scrollArea->setWidgetResizable(true);
+    scrollArea->setFrameShape(QFrame::NoFrame);
+
+    auto *content = new QWidget();
+    auto *layout = new QVBoxLayout(content);
+    layout->setContentsMargins(16, 12, 16, 12);
+    layout->setSpacing(8);
+
+    auto *titleLabel = new QLabel(tr("Support"));
+    titleLabel->setObjectName("Title");
+    layout->addWidget(titleLabel);
+
+    auto *sep = new QFrame();
+    sep->setFrameShape(QFrame::HLine);
+    sep->setObjectName("Divider");
+    layout->addWidget(sep);
+
+    QSettings settings;
+    const QString textMuted =
+        settings.value("theme/textMuted", "#a6a8a4").toString();
+
+    // ── Forzar Vibrants ─────────────────────────────────────────
+    {
+        auto *card = new QWidget();
+        card->setObjectName("ContextPanel");
+        auto *cardLayout = new QVBoxLayout(card);
+        cardLayout->setContentsMargins(20, 16, 20, 16);
+        cardLayout->setSpacing(8);
+
+        auto *radio = new QRadioButton(tr("Vibrants Fix"));
+        radio->setAutoExclusive(false);
+        radio->setChecked(settings.value("renderer/force_vibrants", false).toBool());
+        cardLayout->addWidget(radio);
+
+        auto *varLabel = new QLabel(QStringLiteral(
+            "force_gl_renderer=\"Adreno (TM) 740\""));
+        varLabel->setStyleSheet(
+            QString("font-size: 12px; color: %1; background: transparent;")
+                .arg(textMuted));
+        cardLayout->addWidget(varLabel);
+
+        auto *hint = new QLabel(
+            tr("Report the GPU as an Adreno 740 so vibrant shaders run."));
+        hint->setWordWrap(true);
+        hint->setStyleSheet(
+            QString("font-size: 12px; color: %1; background: transparent;")
+                .arg(textMuted));
+        cardLayout->addWidget(hint);
+
+        layout->addWidget(card);
+
+        connect(radio, &QRadioButton::toggled, this, [](bool checked) {
+            QSettings s;
+            s.setValue("renderer/force_vibrants", checked);
+        });
+    }
+
+    // ── Old Intel ──────────────────────────────────────────────
+    {
+        auto *card = new QWidget();
+        card->setObjectName("ContextPanel");
+        auto *cardLayout = new QVBoxLayout(card);
+        cardLayout->setContentsMargins(20, 16, 20, 16);
+        cardLayout->setSpacing(8);
+
+        auto *radio = new QRadioButton(tr("Old Intel"));
+        radio->setAutoExclusive(false);
+        radio->setChecked(settings.value("renderer/old_intel", false).toBool());
+        cardLayout->addWidget(radio);
+
+        auto *varLabel = new QLabel(QStringLiteral(
+            "MESA_LOADER_DRIVER_OVERRIDE=i965\nMESA_NO_ERROR=1\nvblank_mode=0"));
+        varLabel->setStyleSheet(
+            QString("font-size: 12px; color: %1; background: transparent;")
+                .arg(textMuted));
+        cardLayout->addWidget(varLabel);
+
+        auto *hint = new QLabel(
+            tr("Intel GPUs older than the 4th generation "
+               "(Core i3/i5/i7 up to 3rd gen, Core 2, Pentium 4, etc.)."));
+        hint->setWordWrap(true);
+        hint->setStyleSheet(
+            QString("font-size: 12px; color: %1; background: transparent;")
+                .arg(textMuted));
+        cardLayout->addWidget(hint);
+
+        layout->addWidget(card);
+
+        connect(radio, &QRadioButton::toggled, this, [](bool checked) {
+            QSettings s;
+            s.setValue("renderer/old_intel", checked);
+        });
+    }
+
+    // ── Nvidia ─────────────────────────────────────────────────
+    {
+        auto *card = new QWidget();
+        card->setObjectName("ContextPanel");
+        auto *cardLayout = new QVBoxLayout(card);
+        cardLayout->setContentsMargins(20, 16, 20, 16);
+        cardLayout->setSpacing(8);
+
+        auto *radio = new QRadioButton(tr("Nvidia"));
+        radio->setAutoExclusive(false);
+        radio->setChecked(settings.value("renderer/nvidia", false).toBool());
+        cardLayout->addWidget(radio);
+
+        auto *varLabel = new QLabel(QStringLiteral(
+            "__NV_PRIME_RENDER_OFFLOAD=1\n"
+            "__VK_LAYER_NV_optimus=NVIDIA_only\n"
+            "__GLX_VENDOR_LIBRARY_NAME=nvidia"));
+        varLabel->setStyleSheet(
+            QString("font-size: 12px; color: %1; background: transparent;")
+                .arg(textMuted));
+        cardLayout->addWidget(varLabel);
+
+        auto *hint = new QLabel(
+            tr("Force NVIDIA GPU rendering via PRIME offload."));
+        hint->setWordWrap(true);
+        hint->setStyleSheet(
+            QString("font-size: 12px; color: %1; background: transparent;")
+                .arg(textMuted));
+        cardLayout->addWidget(hint);
+
+        layout->addWidget(card);
+
+        connect(radio, &QRadioButton::toggled, this, [](bool checked) {
+            QSettings s;
+            s.setValue("renderer/nvidia", checked);
+        });
+    }
+
+    // ── Zink Vulkan ────────────────────────────────────────────
+    {
+        auto *card = new QWidget();
+        card->setObjectName("ContextPanel");
+        auto *cardLayout = new QVBoxLayout(card);
+        cardLayout->setContentsMargins(20, 16, 20, 16);
+        cardLayout->setSpacing(8);
+
+        auto *radio = new QRadioButton(tr("Zink Vulkan"));
+        radio->setAutoExclusive(false);
+        radio->setChecked(settings.value("renderer/zink", false).toBool());
+        cardLayout->addWidget(radio);
+
+        auto *varLabel = new QLabel(QStringLiteral(
+            "MESA_LOADER_DRIVER_OVERRIDE=zink\n"
+            "GALLIUM_DRIVER=zink\n"
+            "__GLX_VENDOR_LIBRARY_NAME=mesa"));
+        varLabel->setStyleSheet(
+            QString("font-size: 12px; color: %1; background: transparent;")
+                .arg(textMuted));
+        cardLayout->addWidget(varLabel);
+
+        auto *hint = new QLabel(
+            tr("OpenGL-over-Vulkan driver via Zink (Mesa)."));
+        hint->setWordWrap(true);
+        hint->setStyleSheet(
+            QString("font-size: 12px; color: %1; background: transparent;")
+                .arg(textMuted));
+        cardLayout->addWidget(hint);
+
+        layout->addWidget(card);
+
+        connect(radio, &QRadioButton::toggled, this, [](bool checked) {
+            QSettings s;
+            s.setValue("renderer/zink", checked);
+        });
+    }
+
+    // ── GL/VK +FPS ─────────────────────────────────────────────
+    {
+        auto *card = new QWidget();
+        card->setObjectName("ContextPanel");
+        auto *cardLayout = new QVBoxLayout(card);
+        cardLayout->setContentsMargins(20, 16, 20, 16);
+        cardLayout->setSpacing(8);
+
+        auto *radio = new QRadioButton(tr("GL/VK +FPS"));
+        radio->setAutoExclusive(false);
+        radio->setChecked(settings.value("renderer/glvk_fps", false).toBool());
+        cardLayout->addWidget(radio);
+
+        auto *varLabel = new QLabel(QStringLiteral(
+            "mesa_glthread=true\n"
+            "ANV_SPARSE=1\n"
+            "MESA_NO_ERROR=1"));
+        varLabel->setStyleSheet(
+            QString("font-size: 12px; color: %1; background: transparent;")
+                .arg(textMuted));
+        cardLayout->addWidget(varLabel);
+
+        auto *hint = new QLabel(
+            tr("Enable threaded GL and ANV sparse resources for better FPS."));
+        hint->setWordWrap(true);
+        hint->setStyleSheet(
+            QString("font-size: 12px; color: %1; background: transparent;")
+                .arg(textMuted));
+        cardLayout->addWidget(hint);
+
+        layout->addWidget(card);
+
+        connect(radio, &QRadioButton::toggled, this, [](bool checked) {
+            QSettings s;
+            s.setValue("renderer/glvk_fps", checked);
+        });
+    }
+
+    layout->addStretch();
+    scrollArea->setWidget(content);
+    outerLayout->addWidget(scrollArea);
+
     return widget;
 }
 

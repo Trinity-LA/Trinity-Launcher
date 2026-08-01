@@ -72,6 +72,18 @@ LauncherWindow::LauncherWindow(QWidget *parent)
                 this->show();
                 this->raise(); // Traer al frente
                 this->activateWindow();
+
+                // 2. Saltar a la pestaña de Logs
+                const int logIndex = 4;
+                contentStack->setCurrentIndex(logIndex);
+                QPushButton *btns[] = {sidebarTrinityBtn, sidebarContentBtn,
+                                       sidebarDiscordBtn, sidebarAboutBtn,
+                                       sidebarLogBtn, sidebarSettingsBtn};
+                for (int i = 0; i < 6; ++i) {
+                    btns[i]->setObjectName(i == logIndex ? "SidebarBtnActive" : "SidebarBtn");
+                    btns[i]->style()->unpolish(btns[i]);
+                    btns[i]->style()->polish(btns[i]);
+                }
             });
 
     // Connect game output to log widget
@@ -139,12 +151,12 @@ void LauncherWindow::setupUi() {
     {
         QSettings cfg;
         applyTheme(
-            cfg.value("theme/accent",    "#e429ef").toString(),
-            cfg.value("theme/bg",        "#070308").toString(),
-            cfg.value("theme/panel",     "#150915").toString(),
-            cfg.value("theme/hover",     "#2e1d2f").toString(),
-            cfg.value("theme/btnHover",  "#49364a").toString(),
-            cfg.value("theme/textMuted", "#af9bb0").toString(),
+            cfg.value("theme/accent",    "#8da079").toString(),
+            cfg.value("theme/bg",        "#050605").toString(),
+            cfg.value("theme/panel",     "#0f100e").toString(),
+            cfg.value("theme/hover",     "#262824").toString(),
+            cfg.value("theme/btnHover",  "#40423e").toString(),
+            cfg.value("theme/textMuted", "#a6a8a4").toString(),
             cfg.value("theme/text",      "#ffffff").toString()
         );
     }
@@ -312,7 +324,7 @@ void LauncherWindow::setupUi() {
         logoLabel->setFixedSize(38, 38);
         logoLabel->setStyleSheet(
             "border-image: url(:/branding/logo);"
-            "border-radius: 8px;"
+            "border-radius: 0px;"
             "background: transparent;");
         topLogoRow->addStretch();
         topLogoRow->addWidget(logoLabel);
@@ -764,8 +776,16 @@ void LauncherWindow::showExtractDialog() {
     QString apkPath = dialog.getApkPath();
     QString versionName = dialog.getVersionName();
 
-    // Verificar si ya existe la versión
     VersionManager vm;
+
+    // Verificar compatibilidad de la APK con la arquitectura del procesador
+    QString archError;
+    if (!vm.isApkCompatible(apkPath, archError)) {
+        QMessageBox::warning(this, tr("Incompatible APK"), archError);
+        return;
+    }
+
+    // Verificar si ya existe la versión
     if (vm.getInstalledVersions().contains(versionName)) {
         int r = QMessageBox::warning(
             this, tr("Warning"),
@@ -843,12 +863,12 @@ void LauncherWindow::onEditConfigClicked() {
 
     // Read active theme colors (same defaults used at startup)
     QSettings cfg;
-    const QString accent    = cfg.value("theme/accent",    "#e429ef").toString();
-    const QString bg        = cfg.value("theme/bg",        "#070308").toString();
-    const QString panel     = cfg.value("theme/panel",     "#150915").toString();
-    const QString hover     = cfg.value("theme/hover",     "#2e1d2f").toString();
-    const QString btnHover  = cfg.value("theme/btnHover",  "#49364a").toString();
-    const QString textMuted = cfg.value("theme/textMuted", "#af9bb0").toString();
+    const QString accent    = cfg.value("theme/accent",    "#8da079").toString();
+    const QString bg        = cfg.value("theme/bg",        "#050605").toString();
+    const QString panel     = cfg.value("theme/panel",     "#0f100e").toString();
+    const QString hover     = cfg.value("theme/hover",     "#262824").toString();
+    const QString btnHover  = cfg.value("theme/btnHover",  "#40423e").toString();
+    const QString textMuted = cfg.value("theme/textMuted", "#a6a8a4").toString();
     const QString text      = cfg.value("theme/text",      "#ffffff").toString();
 
     QDialog dialog(this);
@@ -859,7 +879,7 @@ void LauncherWindow::onEditConfigClicked() {
     dialog.setStyleSheet(QString(
         "QDialog { background-color: %1; }"
         "QLabel  { background: transparent; color: %2; font-size: 13px; }"
-        "QPushButton { background-color: %3; border: none; border-radius: 6px; "
+        "QPushButton { background-color: %3; border: none; border-radius: 0px; "
         "              padding: 8px 20px; color: %2; font-weight: bold; font-size: 13px; }"
         "QPushButton:hover  { background-color: %4; }"
         "QPushButton:pressed{ background-color: %1; }"
@@ -910,7 +930,7 @@ void LauncherWindow::onEditConfigClicked() {
         "  background-color: %1;"
         "  color: %2;"
         "  border: 1px solid %3;"
-        "  border-radius: 8px;"
+        "  border-radius: 0px;"
         "  padding: 10px;"
         "  font-family: 'Monospace', monospace;"
         "  font-size: 13px;"
@@ -920,10 +940,10 @@ void LauncherWindow::onEditConfigClicked() {
         "  border: 1.5px solid %4;"
         "}"
         "QScrollBar:vertical {"
-        "  background: %1; width: 6px; border-radius: 3px;"
+        "  background: %1; width: 6px; border-radius: 0px;"
         "}"
         "QScrollBar::handle:vertical {"
-        "  background: %3; border-radius: 3px;"
+        "  background: %3; border-radius: 0px;"
         "}"
     ).arg(panel, text, hover, accent));
     layout->addWidget(argsEdit);
@@ -1207,13 +1227,13 @@ void LauncherWindow::applyTheme(const QString &accent,
             "QWidget { background-color: %2; color: %7; "
             "font-family: 'Roboto', sans-serif; }"
             "QListWidget { background-color: %3; border: 1px solid %4; "
-            "border-radius: 8px; padding: 5px; outline: 0; }"
-            "QListWidget::item { padding: 10px; border-radius: 5px; "
+            "border-radius: 0px; padding: 5px; outline: 0; }"
+            "QListWidget::item { padding: 10px; border-radius: 0px; "
             "margin-bottom: 5px; border: none; }"
             "QListWidget::item:selected { background-color: %1; color: %7; }"
             "QListWidget::item:hover { background-color: %4; }"
             "QPushButton { background-color: %4; border: none; "
-            "border-radius: 6px; padding: 8px 16px; color: %7; "
+            "border-radius: 0px; padding: 8px 16px; color: %7; "
             "font-weight: bold; font-size: 14px; }"
             "QPushButton:hover { background-color: %5; }"
             "QPushButton:pressed { background-color: %2; }"
@@ -1224,7 +1244,7 @@ void LauncherWindow::applyTheme(const QString &accent,
             "QLabel#VersionType { font-size: 14px; color: %6; background: transparent; }"
             "QLabel#Status { font-size: 4px; color: %6; padding: 5px; background: transparent; }"
             "QLabel#AboutText { font-size: 16px; background: transparent; }"
-            "QWidget#ContextPanel { background-color: %3; border-radius: 12px; }"
+            "QWidget#ContextPanel { background-color: %3; border-radius: 0px; }"
             "QWidget#Sidebar { background-color: %2; }"
             "QPushButton#SidebarBtn { background: transparent; border: none; "
             "border-left: 3px solid transparent; border-radius: 0px; padding: 14px; }"
@@ -1237,36 +1257,42 @@ void LauncherWindow::applyTheme(const QString &accent,
             "QPushButton#TitleBarBtn:hover { background-color: %5; color: %7; }"
             "QPushButton#TitleBarCloseBtn { background: transparent; border: none; border-radius: 0px; padding: 0px; color: %6; font-size: 14px; }"
             "QPushButton#TitleBarCloseBtn:hover { background-color: #e81123; color: %7; }"
-            "QTabWidget::pane { border: 1px solid %4; background-color: %3; border-radius: 8px; top: -1px; }"
+            "QTabWidget::pane { border: 1px solid %4; background-color: %3; border-radius: 0px; top: -1px; }"
             "QTabBar::tab { background: %4; color: %6; padding: 10px 20px; "
-            "border-top-left-radius: 6px; border-top-right-radius: 6px; margin-right: 4px; border: none; }"
+            "border-top-left-radius: 0px; border-top-right-radius: 0px; margin-right: 4px; border: none; }"
             "QTabBar::tab:selected { background: %1; color: %7; }"
             "QTabBar::tab:hover { background: %5; }"
             // Divider
             "QFrame#Divider { color: %4; background-color: %4; max-width: 1px; }"
             // Floating dock
             "QWidget#FloatingDock { background-color: rgba(%8, %9, %10, 0.82); "
-            "border-radius: 12px; border: 1px solid rgba(%11, %12, %13, 0.25); }"
+            "border-radius: 0px; border: 1px solid rgba(%11, %12, %13, 0.25); }"
             // Dock combo
-            "QComboBox#DockCombo { background-color: %4; color: %7; border-radius: 8px; "
+            "QComboBox#DockCombo { background-color: %4; color: %7; border-radius: 0px; "
             "border: 1px solid %1; padding: 6px 12px; font-size: 14px; }"
             "QComboBox#DockCombo::drop-down { border: 0px; }"
             "QComboBox#DockCombo QAbstractItemView { background-color: %3; "
-            "selection-background-color: %1; color: %7; border-radius: 6px; }"
+            "selection-background-color: %1; color: %7; border-radius: 0px; }"
             // Generic ComboBox (settings, etc.)
-            "QComboBox { background-color: %4; color: %7; border-radius: 6px; "
+            "QComboBox { background-color: %4; color: %7; border-radius: 0px; "
             "padding: 6px 10px; font-size: 14px; }"
             "QComboBox::drop-down { border: 0px; }"
             "QComboBox QAbstractItemView { background-color: %3; "
             "selection-background-color: %1; color: %7; }"
             // Discord URL box
             "QPushButton#DiscordUrlBox { background-color: %4; color: %1; "
-            "border: 1px dashed %5; border-radius: 6px; padding: 8px; "
+            "border: 1px dashed %5; border-radius: 0px; padding: 8px; "
             "font-size: 14px; font-weight: bold; text-align: center; }"
             // Themed checkbox
-            "QCheckBox#ThemeCheckBox::indicator { width: 22px; height: 22px; border-radius: 11px; "
+            "QCheckBox#ThemeCheckBox::indicator { width: 22px; height: 22px; border-radius: 0px; "
             "background-color: %4; border: 2px solid %5; }"
             "QCheckBox#ThemeCheckBox::indicator:checked { background-color: %1; border-color: %1; }"
+            // Themed radio button
+            "QRadioButton { background: transparent; color: %7; font-size: 13px; spacing: 8px; }"
+            "QRadioButton::indicator { width: 16px; height: 16px; border-radius: 0px; "
+            "background-color: %3; border: 2px solid %5; }"
+            "QRadioButton::indicator:hover { border-color: %1; }"
+            "QRadioButton::indicator:checked { background-color: %1; border-color: %1; }"
             // Scroll area
             "QScrollArea { background: transparent; border: none; }"
             // Separator frames
@@ -1375,12 +1401,12 @@ void LauncherWindow::generateThemeFromWallpaper(const QString &wallpaperPath) {
 
 QWidget *LauncherWindow::createSettingsPage() {
     // Defaults - Vibrant pink/purple theme
-    const QString DEF_ACCENT    = "#e429ef";
-    const QString DEF_BG        = "#070308";
-    const QString DEF_PANEL     = "#150915";
-    const QString DEF_HOVER     = "#2e1d2f";
-    const QString DEF_BTNHOVER  = "#49364a";
-    const QString DEF_TEXTMUTED = "#af9bb0";
+    const QString DEF_ACCENT    = "#8da079";
+    const QString DEF_BG        = "#050605";
+    const QString DEF_PANEL     = "#0f100e";
+    const QString DEF_HOVER     = "#262824";
+    const QString DEF_BTNHOVER  = "#40423e";
+    const QString DEF_TEXTMUTED = "#a6a8a4";
     const QString DEF_TEXT      = "#ffffff";
 
     QSettings cfg;
@@ -1438,7 +1464,7 @@ QWidget *LauncherWindow::createSettingsPage() {
                 "    background-color: %1;"
                 "    color: %2;"
                 "    border: 1px solid %3;"
-                "    border-radius: 4px;"
+                "    border-radius: 0px;"
                 "    padding: 4px 8px;"
                 "    font-size: 14px;"
                 "}"
@@ -1567,7 +1593,7 @@ QWidget *LauncherWindow::createSettingsPage() {
         auto *preview = new QPushButton();
         preview->setFixedSize(36, 36);
         preview->setStyleSheet(
-            QString("background-color: %1; border-radius: 6px; border: 2px solid %2;")
+            QString("background-color: %1; border-radius: 0px; border: 2px solid %2;")
                 .arg(*colorRef, hover));
         preview->setCursor(Qt::PointingHandCursor);
         preview->setToolTip(tr("Click to change color"));
@@ -1650,7 +1676,7 @@ QWidget *LauncherWindow::createSettingsPage() {
         wpPreview->setFixedSize(120, 68);
         wpPreview->setAlignment(Qt::AlignCenter);
         wpPreview->setStyleSheet(
-            QString("border-radius: 8px; border: 2px solid %1; background: %2;").arg(hover, panel));
+            QString("border-radius: 0px; border: 2px solid %1; background: %2;").arg(hover, panel));
         wpPreview->setScaledContents(true);
 
         // Load currently set background
@@ -1786,7 +1812,7 @@ QWidget *LauncherWindow::createSettingsPage() {
         auto *iconPreview = new QLabel();
         iconPreview->setFixedSize(36, 36);
         iconPreview->setPixmap(currentIcon.pixmap(32, 32));
-        iconPreview->setStyleSheet(QString("background: %1; border-radius: 6px; padding: 2px;").arg(panel));
+        iconPreview->setStyleSheet(QString("background: %1; border-radius: 0px; padding: 2px;").arg(panel));
         iconPreview->setAlignment(Qt::AlignCenter);
 
         auto *nameLbl = new QLabel(entry.name);

@@ -8,6 +8,7 @@
 #include <QFileInfo>
 #include <QProcessEnvironment>
 #include <QRegularExpression>
+#include <QSettings>
 #include <QStandardPaths>
 #include <iostream>
 
@@ -152,6 +153,31 @@ bool GameLauncher::launchGame(const QString &versionName, QString &errorMsg) {
                     env.insert(key, value);
             }
         }
+    }
+
+    // Apply compatibility toggles configured in the Content Manager
+    QSettings settings;
+    if (settings.value("renderer/force_vibrants", false).toBool())
+        env.insert("force_gl_renderer", "Adreno (TM) 740");
+    if (settings.value("renderer/old_intel", false).toBool()) {
+        env.insert("MESA_LOADER_DRIVER_OVERRIDE", "i965");
+        env.insert("MESA_NO_ERROR", "1");
+        env.insert("vblank_mode", "0");
+    }
+    if (settings.value("renderer/nvidia", false).toBool()) {
+        env.insert("__NV_PRIME_RENDER_OFFLOAD", "1");
+        env.insert("__VK_LAYER_NV_optimus", "NVIDIA_only");
+        env.insert("__GLX_VENDOR_LIBRARY_NAME", "nvidia");
+    }
+    if (settings.value("renderer/zink", false).toBool()) {
+        env.insert("MESA_LOADER_DRIVER_OVERRIDE", "zink");
+        env.insert("GALLIUM_DRIVER", "zink");
+        env.insert("__GLX_VENDOR_LIBRARY_NAME", "mesa");
+    }
+    if (settings.value("renderer/glvk_fps", false).toBool()) {
+        env.insert("mesa_glthread", "true");
+        env.insert("ANV_SPARSE", "1");
+        env.insert("MESA_NO_ERROR", "1");
     }
     m_process->setProcessEnvironment(env);
 
