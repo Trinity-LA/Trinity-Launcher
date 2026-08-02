@@ -55,7 +55,7 @@ TrinitoWindow::TrinitoWindow(QWidget *parent, LauncherWindow *launcher)
     // Data directory tab
     tabs->addTab(createDirectoryTab(), tr("Directory"));
     // Support / compatibility tab
-    tabs->addTab(createSupportTab(), tr("Support"));
+    tabs->addTab(createSupportTab(), tr("Fixes"));
 }
 
 
