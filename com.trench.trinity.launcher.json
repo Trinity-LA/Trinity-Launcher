@@ -127,6 +127,7 @@
     "--device=all",
     "--device=dri",
     "--share=ipc",
+    "--allow=multiarch",
     "--env=QTWEBENGINE_CHROMIUM_FLAGS=--no-sandbox --ignore-gpu-blocklist",
     "--env=ALSA_CONFIG_PATH=",
     "--env=QT_QUICK_CONTROLS_STYLE=",
