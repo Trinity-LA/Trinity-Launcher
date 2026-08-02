@@ -20,7 +20,7 @@
     },
     "org.freedesktop.Platform.GL32": {
       "directory": "lib/i386-linux-gnu/GL",
-      "version": "1.4",
+      "version": "24.08",
       "subdirectories": true,
       "no-autodownload": true
     }
