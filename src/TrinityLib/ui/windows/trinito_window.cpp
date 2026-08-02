@@ -1373,10 +1373,6 @@ QWidget *TrinitoWindow::createSupportTab() {
     layout->setContentsMargins(16, 12, 16, 12);
     layout->setSpacing(8);
 
-    auto *titleLabel = new QLabel(tr("Support"));
-    titleLabel->setObjectName("Title");
-    layout->addWidget(titleLabel);
-
     auto *sep = new QFrame();
     sep->setFrameShape(QFrame::HLine);
     sep->setObjectName("Divider");
