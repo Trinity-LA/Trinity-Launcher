@@ -38,17 +38,27 @@ jobs:
           echo "Extrayendo en files/bin/..."
           mkdir -p files/bin/
           tar -xf binarios.tar -C files/bin/
+          
           # Descarga, extracción y ubicación del entorno de 32 bits
           wget https://huggingface.co/datasets/ccoffee20/PEPE/resolve/main/mcpe32bit.tar
           tar -xf mcpe32bit.tar
           
-          cp 32bitmcpe/bin/mcpelauncher-client86 files/bin/
+          # Copiar el binario original pero con el sufijo "-bin"
+          cp 32bitmcpe/bin/mcpelauncher-client86 files/bin/mcpelauncher-client86-bin
+          chmod +x files/bin/mcpelauncher-client86-bin
+          
+          # CREAR EL WRAPPER SCRIPT
+          echo '#!/bin/bash' > files/bin/mcpelauncher-client86
+          echo 'export LD_LIBRARY_PATH=/app/lib32:/app/lib/i386-linux-gnu:$LD_LIBRARY_PATH' >> files/bin/mcpelauncher-client86
+          echo 'exec /app/bin/mcpelauncher-client86-bin "$@"' >> files/bin/mcpelauncher-client86
           chmod +x files/bin/mcpelauncher-client86
+          
           mkdir -p files/lib32
           cp -a 32bitmcpe/lib32/* files/lib32/
           rm -f files/lib32/libGLdispatch.so*
           rm -rf files/lib32/libX*.so*
           rm -rf files/lib32/libxcb*.so*
+          
       - name: 4. Importar Clave Privada GPG
         env:
           GPG_PRIVATE_KEY: ${{ secrets.GPG_PRIVATE_KEY }}
