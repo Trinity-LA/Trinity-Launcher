@@ -87,7 +87,7 @@ jobs:
           mkdir -p APPIMAGE-TRINITY/usr/share/icons/hicolor/scalable/apps
           mkdir -p APPIMAGE-TRINITY/usr/share/metainfo
           mkdir -p APPIMAGE-TRINITY/usr/share/mcpelauncher
-          # Descarga, extracción y ubicación del entorno de 32 bits
+          
           wget https://huggingface.co/datasets/ccoffee20/PEPE/resolve/main/mcpe32bit.tar
           tar -xf mcpe32bit.tar
           cp 32bitmcpe/bin/mcpelauncher-client86 APPIMAGE-TRINITY/usr/bin/
@@ -96,9 +96,11 @@ jobs:
           cp mcpe-extract/build/mcpelauncher-extract APPIMAGE-TRINITY/usr/bin/
           cp trinity/build/app/trinity APPIMAGE-TRINITY/usr/bin/
           chmod +x APPIMAGE-TRINITY/usr/bin/mcpelauncher-client86
-          rm -rf AppDir/usr/lib32/libGLdispatch.so*
-          rm -rf AppDir/usr/lib32/libX*.so*
-          rm -rf AppDir/usr/lib32/libxcb*.so*
+          
+          rm -rf APPIMAGE-TRINITY/usr/lib32/libGLdispatch.so*
+          rm -rf APPIMAGE-TRINITY/usr/lib32/libX*.so*
+          rm -rf APPIMAGE-TRINITY/usr/lib32/libxcb*.so*
+          
           find mcpelauncher/build -type f -name "msa-daemon" -exec cp {} APPIMAGE-TRINITY/usr/bin/ \;
           find mcpelauncher/build -type f -name "mcpelauncher-error" -exec cp {} APPIMAGE-TRINITY/usr/bin/ \;
 
@@ -106,7 +108,7 @@ jobs:
           cp trinity/resources/branding/com.trench.trinity.launcher.svg APPIMAGE-TRINITY/usr/share/icons/hicolor/scalable/apps/
           
           cp -r linux-bin/* APPIMAGE-TRINITY/usr/share/mcpelauncher/
-
+          
       - name: Integrar Librería libzip (Portabilidad Total)
         run: |
           LIBZIP_REAL=$(find /usr/lib/x86_64-linux-gnu -name "libzip.so*" -type f | head -n 1)
@@ -143,18 +145,16 @@ jobs:
           export LD_LIBRARY_PATH=$PWD/APPIMAGE-TRINITY/usr/lib:/usr/lib/x86_64-linux-gnu:$LD_LIBRARY_PATH
           
           export APPIMAGE_EXTRACT_AND_RUN=1
-          #export VERSION=latest
           
-          # Se parsea GITHUB_REPOSITORY (ej: usuario/repo) a <usuario>|<repo> para que la sintaxis funcione
           export UPDATE_INFORMATION="gh-releases-zsync|${GITHUB_REPOSITORY%/*}|${GITHUB_REPOSITORY#*/}-x86_64.AppImage.zsync"
           
           ARCH=x86_64 ./linuxdeploy-x86_64.AppImage \
             --appdir APPIMAGE-TRINITY \
+            -e APPIMAGE-TRINITY/usr/bin/trinity \
             --desktop-file APPIMAGE-TRINITY/usr/share/applications/com.trench.trinity.launcher.desktop \
             --icon-file APPIMAGE-TRINITY/usr/share/icons/hicolor/scalable/apps/com.trench.trinity.launcher.svg \
             --plugin qt \
             --output appimage
-
       - name: Subir a Release 2.6-beta
         uses: softprops/action-gh-release@v2
         with:
