@@ -1,6 +1,6 @@
 # Trinity Launcher 
 ### (This project is currently being maintained by a single developer. If you want to help, click the heart icon button and make a donation.)
-### Important note: On x86_64, the maximum supported version of bedrock is 26.31.1
+### Important note: On x86_64, the maximum supported version of bedrock is 26.33
 If you have an ARM-based device, you won't have any problems with the new versions.
 
 [Official Website](https://trinity-la.github.io/)
@@ -12,7 +12,8 @@ If you have an ARM-based device, you won't have any problems with the new versio
 [![License](https://img.shields.io/badge/license-BSD--3--Clause-green)]()
 
 **Trinity Launcher** is a modular graphical environment designed to manage and run Minecraft: Bedrock Edition natively on Linux environments.
-<img width="960" height="560" alt="image" src="https://github.com/user-attachments/assets/d4abb204-6c4e-4108-872e-33401fd936ab" />
+<img width="1024" height="740" alt="image psd" src="https://github.com/user-attachments/assets/b505c732-1d44-426d-a538-4c05d82cee18" />
+
 
 ---
 
