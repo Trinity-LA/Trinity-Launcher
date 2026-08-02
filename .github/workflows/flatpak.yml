@@ -42,16 +42,13 @@ jobs:
           wget https://huggingface.co/datasets/ccoffee20/PEPE/resolve/main/mcpe32bit.tar
           tar -xf mcpe32bit.tar
           
-          # CORRECCIÓN: Crear el directorio de destino antes de copiar
-          mkdir -p files/usr/bin/
-          
-          cp 32bitmcpe/bin/mcpelauncher-client86 files/usr/bin/
-          chmod +x files/usr/bin/mcpelauncher-client86
-          mkdir -p files/usr/lib32
-          cp -a 32bitmcpe/lib32/* files/usr/lib32/
-          rm -f files/usr/lib32/libGLdispatch.so*
-          rm -rf files/usr/lib32/libX*.so*
-          rm -rf files/usr/lib32/libxcb*.so*
+          cp 32bitmcpe/bin/mcpelauncher-client86 files/bin/
+          chmod +x files/bin/mcpelauncher-client86
+          mkdir -p files/lib32
+          cp -a 32bitmcpe/lib32/* files/lib32/
+          rm -f files/lib32/libGLdispatch.so*
+          rm -rf files/lib32/libX*.so*
+          rm -rf files/lib32/libxcb*.so*
       - name: 4. Importar Clave Privada GPG
         env:
           GPG_PRIVATE_KEY: ${{ secrets.GPG_PRIVATE_KEY }}
