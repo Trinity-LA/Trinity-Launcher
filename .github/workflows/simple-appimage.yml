@@ -82,12 +82,16 @@ jobs:
         run: |
           mkdir -p APPIMAGE-TRINITY/usr/bin
           mkdir -p APPIMAGE-TRINITY/usr/lib
+          mkdir -p APPIMAGE-TRINITY/usr/lib32
           mkdir -p APPIMAGE-TRINITY/usr/share/applications
           mkdir -p APPIMAGE-TRINITY/usr/share/icons/hicolor/scalable/apps
           mkdir -p APPIMAGE-TRINITY/usr/share/metainfo
           mkdir -p APPIMAGE-TRINITY/usr/share/mcpelauncher
-          wget -O APPIMAGE-TRINITY/usr/bin/mcpelauncher-client86 https://github.com/javiercplus/my-dockers-setup/releases/download/unstable/mcpelauncher-cli-32bit.AppImage
-          chmod +x APPIMAGE-TRINITY/usr/bin/mcpelauncher-client86
+          # Descarga, extracción y ubicación del entorno de 32 bits
+          wget https://huggingface.co/datasets/ccoffee20/PEPE/resolve/main/mcpe32bit.tar
+          tar -xf mcpe32bit.tar
+          cp 32bitmcpe/bin/mcpelauncher-client86 APPIMAGE-TRINITY/usr/bin/
+          cp -ar 32bitmcpe/lib32/* APPIMAGE-TRINITY/usr/lib32/
           cp mcpelauncher/build/mcpelauncher-client/mcpelauncher-client APPIMAGE-TRINITY/usr/bin/
           cp mcpe-extract/build/mcpelauncher-extract APPIMAGE-TRINITY/usr/bin/
           cp trinity/build/app/trinity APPIMAGE-TRINITY/usr/bin/
