@@ -88,18 +88,13 @@ jobs:
           mkdir -p APPIMAGE-TRINITY/usr/share/metainfo
           mkdir -p APPIMAGE-TRINITY/usr/share/mcpelauncher
           
+          # Descargamos y extraemos, pero AÚN NO lo copiamos al AppDir
           wget https://huggingface.co/datasets/ccoffee20/PEPE/resolve/main/mcpe32bit.tar
           tar -xf mcpe32bit.tar
-          cp 32bitmcpe/bin/mcpelauncher-client86 APPIMAGE-TRINITY/usr/bin/
-          cp -ar 32bitmcpe/lib32/* APPIMAGE-TRINITY/usr/lib32/
+          
           cp mcpelauncher/build/mcpelauncher-client/mcpelauncher-client APPIMAGE-TRINITY/usr/bin/
           cp mcpe-extract/build/mcpelauncher-extract APPIMAGE-TRINITY/usr/bin/
           cp trinity/build/app/trinity APPIMAGE-TRINITY/usr/bin/
-          chmod +x APPIMAGE-TRINITY/usr/bin/mcpelauncher-client86
-          
-          rm -rf APPIMAGE-TRINITY/usr/lib32/libGLdispatch.so*
-          rm -rf APPIMAGE-TRINITY/usr/lib32/libX*.so*
-          rm -rf APPIMAGE-TRINITY/usr/lib32/libxcb*.so*
           
           find mcpelauncher/build -type f -name "msa-daemon" -exec cp {} APPIMAGE-TRINITY/usr/bin/ \;
           find mcpelauncher/build -type f -name "mcpelauncher-error" -exec cp {} APPIMAGE-TRINITY/usr/bin/ \;
@@ -144,17 +139,32 @@ jobs:
           export QMAKE=/usr/lib/qt6/bin/qmake
           export LD_LIBRARY_PATH=$PWD/APPIMAGE-TRINITY/usr/lib:/usr/lib/x86_64-linux-gnu:$LD_LIBRARY_PATH
           
-          export APPIMAGE_EXTRACT_AND_RUN=1
-          
-          export UPDATE_INFORMATION="gh-releases-zsync|${GITHUB_REPOSITORY%/*}|${GITHUB_REPOSITORY#*/}-x86_64.AppImage.zsync"
-          
-          ARCH=x86_64 ./linuxdeploy-x86_64.AppImage \
+          # 1. Ejecutar linuxdeploy SOLO para preparar dependencias (sin --output appimage)
+          ./linuxdeploy-x86_64.AppImage \
             --appdir APPIMAGE-TRINITY \
             -e APPIMAGE-TRINITY/usr/bin/trinity \
             --desktop-file APPIMAGE-TRINITY/usr/share/applications/com.trench.trinity.launcher.desktop \
             --icon-file APPIMAGE-TRINITY/usr/share/icons/hicolor/scalable/apps/com.trench.trinity.launcher.svg \
-            --plugin qt \
-            --output appimage
+            --plugin qt
+          
+          # 2. AHORA copiamos el binario de 32 bits al AppDir (así linuxdeploy no lo escanea)
+          cp 32bitmcpe/bin/mcpelauncher-client86 APPIMAGE-TRINITY/usr/bin/
+          cp -ar 32bitmcpe/lib32/* APPIMAGE-TRINITY/usr/lib32/
+          chmod +x APPIMAGE-TRINITY/usr/bin/mcpelauncher-client86
+          
+          # Limpiar librerías gráficas conflictivas de 32 bits
+          rm -rf APPIMAGE-TRINITY/usr/lib32/libGLdispatch.so*
+          rm -rf APPIMAGE-TRINITY/usr/lib32/libX*.so*
+          rm -rf APPIMAGE-TRINITY/usr/lib32/libxcb*.so*
+          
+          # 3. Empaquetar usando appimagetool directamente
+          wget -q https://github.com/AppImage/AppImageKit/releases/download/continuous/appimagetool-x86_64.AppImage
+          chmod +x appimagetool-x86_64.AppImage
+          
+          export APPIMAGE_EXTRACT_AND_RUN=1
+          export UPDATE_INFORMATION="gh-releases-zsync|${GITHUB_REPOSITORY%/*}|${GITHUB_REPOSITORY#*/}-x86_64.AppImage.zsync"
+          
+          ARCH=x86_64 ./appimagetool-x86_64.AppImage APPIMAGE-TRINITY Trinity_Launcher-x86_64.AppImage
       - name: Subir a Release 2.6-beta
         uses: softprops/action-gh-release@v2
         with:
