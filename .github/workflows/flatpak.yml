@@ -38,9 +38,13 @@ jobs:
           echo "Extrayendo en files/bin/..."
           mkdir -p files/bin/
           tar -xf binarios.tar -C files/bin/
-          wget -O files/bin/mcpelauncher-client86 https://github.com/javiercplus/my-dockers-setup/releases/download/unstable/mcpelauncher-cli-32bit.AppImage
-          chmod +x files/bin/mcpelauncher-client86
-
+          # Descarga, extracción y ubicación del entorno de 32 bits
+          wget https://huggingface.co/datasets/ccoffee20/PEPE/resolve/main/mcpe32bit.tar
+          tar -xf mcpe32bit.tar
+          cp 32bitmcpe/bin/mcpelauncher-client86 AppDir/usr/bin/
+          chmod +x AppDir/usr/bin/mcpelauncher-client86
+          mkdir -p AppDir/usr/lib32
+          cp -a 32bitmcpe/lib32/* AppDir/usr/lib32/
       - name: 4. Importar Clave Privada GPG
         env:
           GPG_PRIVATE_KEY: ${{ secrets.GPG_PRIVATE_KEY }}
