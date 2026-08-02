@@ -13,6 +13,18 @@
   "sdk-extensions": [
     "org.freedesktop.Sdk.Extension.llvm21"
   ],
+  "add-extensions": {
+    "org.freedesktop.Platform.Compat.i386": {
+      "directory": "lib/i386-linux-gnu",
+      "version": "24.08"
+    },
+    "org.freedesktop.Platform.GL32": {
+      "directory": "lib/i386-linux-gnu/GL",
+      "version": "1.4",
+      "subdirectories": true,
+      "no-autodownload": true
+    }
+  },
   "modules": [
     {
       "name": "libevdev",
@@ -79,7 +91,7 @@
       ],
       "build-commands": [
         "cp -r . /app",
-        "chmod +x /app/bin/mcpelauncher-client /app/bin/msa-daemon /app/bin/mcpelauncher-error || true"
+        "chmod +x /app/bin/mcpelauncher-client /app/bin/msa-daemon /app/bin/mcpelauncher-error /app/bin/mcpelauncher-client86 || true"
       ]
     },
     {
@@ -113,6 +125,7 @@
     "--device=all",
     "--device=dri",
     "--share=ipc",
+    "--env=QTWEBENGINE_CHROMIUM_FLAGS=--no-sandbox --ignore-gpu-blocklist",
     "--env=ALSA_CONFIG_PATH=",
     "--env=QT_QUICK_CONTROLS_STYLE=",
     "--env=QT_QUICK_CONTROLS_HOVER_ENABLED=1",
