@@ -124,7 +124,6 @@
     }
   ],
   "finish-args": [
-    "--env=LD_LIBRARY_PATH=/app/lib:/app/lib32:/app/lib/i386-linux-gnu",
     "--socket=fallback-x11",
     "--socket=wayland",
     "--share=network",
