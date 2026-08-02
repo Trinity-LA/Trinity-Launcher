@@ -41,6 +41,10 @@ jobs:
           # Descarga, extracción y ubicación del entorno de 32 bits
           wget https://huggingface.co/datasets/ccoffee20/PEPE/resolve/main/mcpe32bit.tar
           tar -xf mcpe32bit.tar
+          
+          # CORRECCIÓN: Crear el directorio de destino antes de copiar
+          mkdir -p files/usr/bin/
+          
           cp 32bitmcpe/bin/mcpelauncher-client86 files/usr/bin/
           chmod +x files/usr/bin/mcpelauncher-client86
           mkdir -p files/usr/lib32
