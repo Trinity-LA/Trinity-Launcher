@@ -13,23 +13,6 @@
   "sdk-extensions": [
     "org.freedesktop.Sdk.Extension.llvm21"
   ],
-  "add-extensions": {
-    "org.freedesktop.Platform.Compat.i386": {
-      "directory": "lib/i386-linux-gnu",
-      "version": "24.08"
-    },
-    "org.freedesktop.Platform.GL32": {
-      "directory": "lib/i386-linux-gnu/GL",
-      "version": "24.08",
-      "subdirectories": true,
-      "no-autodownload": true,
-      "autodelete": false,
-      "add-ld-path": "lib",
-      "merge-dirs": "vulkan/icd.d;glvnd/egl_vendor.d;OpenCL/vendors;lib/dri;lib/d3d;vulkan/explicit_layer.d;vulkan/implicit_layer.d",
-      "download-if": "active-gl-driver",
-      "enable-if": "active-gl-driver"
-    }
-  },
   "modules": [
     {
       "name": "libevdev",
@@ -97,7 +80,7 @@
       "build-commands": [
         "mkdir -p /app/lib/i386-linux-gnu/GL",
         "cp -r . /app",
-        "chmod +x /app/bin/mcpelauncher-client /app/bin/msa-daemon /app/bin/mcpelauncher-error /app/bin/mcpelauncher-client86 || true"
+        "chmod +x /app/bin/mcpelauncher-client /app/bin/msa-daemon /app/bin/mcpelauncher-error || true"
       ]
     },
     {
