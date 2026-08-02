@@ -1122,19 +1122,24 @@ void LauncherWindow::createDesktopShortcut() {
     // Determine the mcpelauncher data directory
     QString mcpelauncherDataDir = VersionManager::getDataRoot();
 
+    // Check if the version has /lib/x86 folder (32-bit version)
+    QString libX86Path = versionPath + "/lib/x86";
+    bool isX86Version = QFileInfo::exists(libX86Path);
+    QString clientBaseName = isX86Version ? "mcpelauncher-client86" : "mcpelauncher-client";
+
     // Construir el comando para el .desktop
     QString execCmd;
 #ifdef Q_OS_LINUX
     if (VersionManager::isFlatpak()) {
-        execCmd = "flatpak run --command=mcpelauncher-client "
+        execCmd = "flatpak run --command=" + clientBaseName + " "
                   "com.trench.trinity.launcher -dg \"" +
                   versionPath + "\" -dd \"" + mcpelauncherDataDir + "\"";
     } else {
-        execCmd = "mcpelauncher-client -dg \"" + versionPath
+        execCmd = clientBaseName + " -dg \"" + versionPath
                   + "\" -dd \"" + mcpelauncherDataDir + "\"";
     }
 #else
-    execCmd = "mcpelauncher-client -dg \"" + versionPath
+    execCmd = clientBaseName + " -dg \"" + versionPath
               + "\" -dd \"" + mcpelauncherDataDir + "\"";
 #endif
 
