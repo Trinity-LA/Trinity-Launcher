@@ -22,7 +22,12 @@
       "directory": "lib/i386-linux-gnu/GL",
       "version": "24.08",
       "subdirectories": true,
-      "no-autodownload": true
+      "no-autodownload": true,
+      "autodelete": false,
+      "add-ld-path": "lib",
+      "merge-dirs": "vulkan/icd.d;glvnd/egl_vendor.d;OpenCL/vendors;lib/dri;lib/d3d;vulkan/explicit_layer.d;vulkan/implicit_layer.d",
+      "download-if": "active-gl-driver",
+      "enable-if": "active-gl-driver"
     }
   },
   "modules": [
