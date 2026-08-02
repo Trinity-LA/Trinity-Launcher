@@ -95,6 +95,7 @@ jobs:
           cp mcpelauncher/build/mcpelauncher-client/mcpelauncher-client APPIMAGE-TRINITY/usr/bin/
           cp mcpe-extract/build/mcpelauncher-extract APPIMAGE-TRINITY/usr/bin/
           cp trinity/build/app/trinity APPIMAGE-TRINITY/usr/bin/
+          chmod +x APPIMAGE-TRINITY/usr/bin/mcpelauncher-client86
           
           find mcpelauncher/build -type f -name "msa-daemon" -exec cp {} APPIMAGE-TRINITY/usr/bin/ \;
           find mcpelauncher/build -type f -name "mcpelauncher-error" -exec cp {} APPIMAGE-TRINITY/usr/bin/ \;
