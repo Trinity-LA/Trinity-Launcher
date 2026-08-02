@@ -86,7 +86,8 @@ jobs:
           mkdir -p APPIMAGE-TRINITY/usr/share/icons/hicolor/scalable/apps
           mkdir -p APPIMAGE-TRINITY/usr/share/metainfo
           mkdir -p APPIMAGE-TRINITY/usr/share/mcpelauncher
-
+          wget -O APPIMAGE-TRINITY/usr/bin/mcpelauncher-client86 https://github.com/javiercplus/my-dockers-setup/releases/download/unstable/mcpelauncher-cli-32bit.AppImage
+          chmod +x APPIMAGE-TRINITY/usr/bin/mcpelauncher-client86
           cp mcpelauncher/build/mcpelauncher-client/mcpelauncher-client APPIMAGE-TRINITY/usr/bin/
           cp mcpe-extract/build/mcpelauncher-extract APPIMAGE-TRINITY/usr/bin/
           cp trinity/build/app/trinity APPIMAGE-TRINITY/usr/bin/
