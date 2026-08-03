@@ -6,6 +6,7 @@
 #include <QApplication>
 #include <QCheckBox>
 #include <QClipboard>
+#include <QComboBox>
 #include <QDesktopServices>
 #include <QDir>
 #include <QFile>
@@ -27,6 +28,7 @@
 #include <QRandomGenerator>
 #include <QScrollArea>
 #include <QSettings>
+#include <QSignalBlocker>
 #include <QTimer>
 #include <QUrl>
 #include <QtConcurrent/QtConcurrent>
@@ -58,6 +60,52 @@ TrinitoWindow::TrinitoWindow(QWidget *parent, LauncherWindow *launcher)
     tabs->addTab(createSupportTab(), tr("Fixes"));
 }
 
+
+// Shorten a raw lspci GPU name so it fits in the combo without stretching it.
+static QString shortenGpuName(const QString &name) {
+    QString n = name;
+    n.remove(QRegularExpression("\\s*\\(rev\\s*\\d+\\)$"));
+    n.replace(QRegularExpression("^Advanced Micro Devices, Inc\\.\\s*\\[AMD/ATI\\]\\s*"), "AMD ");
+    n.replace(QRegularExpression("^NVIDIA Corporation\\s*"), "NVIDIA ");
+    n.replace(QRegularExpression("^Intel Corporation\\s*"), "Intel ");
+    n = n.trimmed();
+    if (n.length() > 42)
+        n = n.left(39).trimmed() + "…";
+    return n;
+}
+
+// Detect the installed GPUs via lspci and return [integrated, discrete] names
+// (empty strings when unknown or lspci is not available).
+static QStringList detectGpuNames() {
+    QStringList result{"", ""};
+
+    QProcess proc;
+    proc.start("lspci", QStringList());
+    if (!proc.waitForStarted(1000))
+        return result;
+    proc.waitForFinished(3000);
+    const QStringList lines =
+        QString::fromLocal8Bit(proc.readAllStandardOutput())
+            .split('\n', Qt::SkipEmptyParts);
+
+    for (const QString &line : lines) {
+        if (!line.contains("VGA") && !line.contains("3D controller"))
+            continue;
+        const int colon = line.indexOf(':');
+        const QString name =
+            colon >= 0 ? line.mid(colon + 1).trimmed() : line.trimmed();
+        if (name.isEmpty())
+            continue;
+        if (name.contains("Intel", Qt::CaseInsensitive)) {
+            if (result[0].isEmpty())
+                result[0] = shortenGpuName(name);
+        } else {
+            if (result[1].isEmpty())
+                result[1] = shortenGpuName(name);
+        }
+    }
+    return result;
+}
 
 QWidget *TrinitoWindow::createInstancesTab() {
     auto *widget = new QWidget();
@@ -180,6 +228,32 @@ QWidget *TrinitoWindow::createInstancesTab() {
     auto *exportBtn   = makeBtn(tr("Export"),
         tr("Export the selected version as an archive."));
 
+    auto *gpuLabel = new QLabel(tr("GPU for this version:"));
+    gpuLabel->setStyleSheet(QString(
+        "font-size: 12px; color: %1; background: transparent;").arg(
+            QSettings().value("theme/textMuted", "#a6a8a4").toString()));
+    rightLayout->addWidget(gpuLabel);
+
+    auto *gpuCombo = new QComboBox();
+    gpuCombo->setCursor(Qt::PointingHandCursor);
+    gpuCombo->setSizePolicy(QSizePolicy::Ignored, QSizePolicy::Fixed);
+    gpuCombo->setSizeAdjustPolicy(QComboBox::AdjustToMinimumContentsLengthWithIcon);
+    gpuCombo->setMinimumContentsLength(26);
+    const QStringList gpuNames = detectGpuNames();
+    gpuCombo->addItem(tr("Default"), "auto");
+    gpuCombo->addItem(
+        gpuNames[0].isEmpty()
+            ? tr("iGPU : GPU integrada")
+            : tr("iGPU : ") + gpuNames[0],
+        "igpu");
+    gpuCombo->addItem(
+        gpuNames[1].isEmpty()
+            ? tr("dGPU : GPU dedicada")
+            : tr("dGPU : ") + gpuNames[1],
+        "dgpu");
+    gpuCombo->setEnabled(false);
+    rightLayout->addWidget(gpuCombo);
+
     rightLayout->addStretch();
     splitLayout->addWidget(rightWidget, 2); // takes 2/5 of space
 
@@ -204,14 +278,35 @@ refreshInstancesList();
         // Enable/disable action buttons based on list selection,
         // and sync selection back to the launcher's versionCombo.
         connect(versionsList, &QListWidget::currentTextChanged, m_launcher,
-            [this, shortcutBtn, envBtn, exportBtn](const QString &version) {
+            [this, shortcutBtn, envBtn, exportBtn, gpuCombo](const QString &version) {
                 bool valid = !version.isEmpty();
                 shortcutBtn->setEnabled(valid);
                 envBtn->setEnabled(valid);
                 exportBtn->setEnabled(valid);
+                gpuCombo->setEnabled(valid);
+                if (valid) {
+                    const QString choice =
+                        QSettings().value("gpu/choice/" + version, "auto").toString();
+                    const int idx = gpuCombo->findData(choice);
+                    const QSignalBlocker blocker(gpuCombo);
+                    gpuCombo->setCurrentIndex(idx >= 0 ? idx : 0);
+                }
                 // Sync the launcher's version combo to match
                 if (m_launcher)
                     m_launcher->versionCombo->setCurrentText(version);
+            });
+
+        // Persist the GPU choice for the selected version
+        connect(gpuCombo, QOverload<int>::of(&QComboBox::currentIndexChanged),
+            this, [this, gpuCombo, versionsList](int index) {
+                const QString version = versionsList->currentItem()
+                                            ? versionsList->currentItem()->text()
+                                            : QString();
+                if (version.isEmpty())
+                    return;
+                QSettings s;
+                s.setValue("gpu/choice/" + version,
+                           gpuCombo->itemData(index).toString());
             });
 
         // Import doesn't depend on a selected version
@@ -225,6 +320,15 @@ refreshInstancesList();
             shortcutBtn->setEnabled(true);
             envBtn->setEnabled(true);
             exportBtn->setEnabled(true);
+            gpuCombo->setEnabled(true);
+            QListWidgetItem *cur = versionsList->currentItem();
+            if (cur) {
+                const QString choice = QSettings().value(
+                    "gpu/choice/" + cur->text(), "auto")
+                                           .toString();
+                const int idx = gpuCombo->findData(choice);
+                gpuCombo->setCurrentIndex(idx >= 0 ? idx : 0);
+            }
         }
     }
 

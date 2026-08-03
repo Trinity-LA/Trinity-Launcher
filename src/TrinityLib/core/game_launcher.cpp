@@ -183,6 +183,21 @@ bool GameLauncher::launchGame(const QString &versionName, QString &errorMsg) {
         env.insert("MESA_GLES_VERSION_OVERRIDE", "3.1");
         env.insert("allow_glsl_extension_directive_mid_module", "true");
     }
+
+    // Per-version GPU selection (manual: automatic / iGPU / dGPU)
+    const QString gpuChoice =
+        settings.value("gpu/choice/" + versionName, "auto").toString();
+    if (gpuChoice == "igpu") {
+        env.remove("__NV_PRIME_RENDER_OFFLOAD");
+        env.remove("__VK_LAYER_NV_optimus");
+        env.remove("__GLX_VENDOR_LIBRARY_NAME");
+        env.insert("DRI_PRIME", "0");
+    } else if (gpuChoice == "dgpu") {
+        env.insert("DRI_PRIME", "1");
+        env.insert("__NV_PRIME_RENDER_OFFLOAD", "1");
+        env.insert("__VK_LAYER_NV_optimus", "NVIDIA_only");
+        env.insert("__GLX_VENDOR_LIBRARY_NAME", "nvidia");
+    }
     m_process->setProcessEnvironment(env);
 
     QString displayServer =
