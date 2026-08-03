@@ -165,10 +165,10 @@ jobs:
           export UPDATE_INFORMATION="gh-releases-zsync|${GITHUB_REPOSITORY%/*}|${GITHUB_REPOSITORY#*/}-x86_64.AppImage.zsync"
           
           ARCH=x86_64 ./appimagetool-x86_64.AppImage APPIMAGE-TRINITY Trinity_Launcher-x86_64.AppImage
-      - name: Subir a Release 2.6-beta
+      - name: Subir a Release
         uses: softprops/action-gh-release@v2
         with:
-          tag_name: 2.6-beta
+          tag_name: latest
           files: |
             Trinity_Launcher-x86_64.AppImage
             *.zsync
