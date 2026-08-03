@@ -155,10 +155,10 @@ jobs:
             --plugin qt \
             --output appimage
 
-      - name: Subir a Release 2.6-beta
+      - name: Subir a Release 
         uses: softprops/action-gh-release@v2
         with:
-          tag_name: 2.6-beta
+          tag_name: latest
           files: |
             Trinity_Launcher-aarch64.AppImage
             *.zsync
