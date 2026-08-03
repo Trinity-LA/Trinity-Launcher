@@ -162,7 +162,6 @@ bool GameLauncher::launchGame(const QString &versionName, QString &errorMsg) {
     if (settings.value("renderer/old_intel", false).toBool()) {
         env.insert("MESA_LOADER_DRIVER_OVERRIDE", "i965");
         env.insert("MESA_NO_ERROR", "1");
-        env.insert("vblank_mode", "0");
     }
     if (settings.value("renderer/nvidia", false).toBool()) {
         env.insert("__NV_PRIME_RENDER_OFFLOAD", "1");
@@ -178,6 +177,11 @@ bool GameLauncher::launchGame(const QString &versionName, QString &errorMsg) {
         env.insert("mesa_glthread", "true");
         env.insert("ANV_SPARSE", "1");
         env.insert("MESA_NO_ERROR", "1");
+    }
+    if (settings.value("renderer/black_screen", false).toBool()) {
+        env.insert("MESA_GL_VERSION_OVERRIDE", "3.3");
+        env.insert("MESA_GLES_VERSION_OVERRIDE", "3.1");
+        env.insert("allow_glsl_extension_directive_mid_module", "true");
     }
     m_process->setProcessEnvironment(env);
 

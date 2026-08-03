@@ -55,7 +55,7 @@ TrinitoWindow::TrinitoWindow(QWidget *parent, LauncherWindow *launcher)
     // Data directory tab
     tabs->addTab(createDirectoryTab(), tr("Directory"));
     // Support / compatibility tab
-    tabs->addTab(createSupportTab(), tr("Support"));
+    tabs->addTab(createSupportTab(), tr("Fixes"));
 }
 
 
@@ -188,7 +188,7 @@ QWidget *TrinitoWindow::createInstancesTab() {
     // ── Wire buttons only when launcher available ──────────────────────────
     if (m_launcher) {
         connect(m_launcher, &LauncherWindow::versionsChanged, this, [versionsList, refreshInstancesList]() {
-    
+
 refreshInstancesList();
 refreshInstancesList();
 refreshInstancesList();
@@ -1382,6 +1382,45 @@ QWidget *TrinitoWindow::createSupportTab() {
     const QString textMuted =
         settings.value("theme/textMuted", "#a6a8a4").toString();
 
+    // ── Black Screen Fix ───────────────────────────────────────
+    {
+        auto *card = new QWidget();
+        card->setObjectName("ContextPanel");
+        auto *cardLayout = new QVBoxLayout(card);
+        cardLayout->setContentsMargins(20, 16, 20, 16);
+        cardLayout->setSpacing(8);
+
+        auto *radio = new QRadioButton(tr("Black Screen Fix"));
+        radio->setAutoExclusive(false);
+        radio->setChecked(settings.value("renderer/black_screen", false).toBool());
+        cardLayout->addWidget(radio);
+
+        auto *varLabel = new QLabel(QStringLiteral(
+            "MESA_GL_VERSION_OVERRIDE=3.3\n"
+            "MESA_GLES_VERSION_OVERRIDE=3.1\n"
+            "allow_glsl_extension_directive_mid_module=true"));
+        varLabel->setStyleSheet(
+            QString("font-size: 12px; color: %1; background: transparent;")
+                .arg(textMuted));
+        cardLayout->addWidget(varLabel);
+
+        auto *hint = new QLabel(
+            tr("Force newer GL/GLES versions and allow mid-module GLSL "
+               "extensions to fix black screen issues."));
+        hint->setWordWrap(true);
+        hint->setStyleSheet(
+            QString("font-size: 12px; color: %1; background: transparent;")
+                .arg(textMuted));
+        cardLayout->addWidget(hint);
+
+        layout->addWidget(card);
+
+        connect(radio, &QRadioButton::toggled, this, [](bool checked) {
+            QSettings s;
+            s.setValue("renderer/black_screen", checked);
+        });
+    }
+
     // ── Forzar Vibrants ─────────────────────────────────────────
     {
         auto *card = new QWidget();
@@ -1432,7 +1471,7 @@ QWidget *TrinitoWindow::createSupportTab() {
         cardLayout->addWidget(radio);
 
         auto *varLabel = new QLabel(QStringLiteral(
-            "MESA_LOADER_DRIVER_OVERRIDE=i965\nMESA_NO_ERROR=1\nvblank_mode=0"));
+            "MESA_LOADER_DRIVER_OVERRIDE=i965\nMESA_NO_ERROR=1"));
         varLabel->setStyleSheet(
             QString("font-size: 12px; color: %1; background: transparent;")
                 .arg(textMuted));
@@ -1539,7 +1578,7 @@ QWidget *TrinitoWindow::createSupportTab() {
         cardLayout->setContentsMargins(20, 16, 20, 16);
         cardLayout->setSpacing(8);
 
-        auto *radio = new QRadioButton(tr("GL/VK +FPS"));
+        auto *radio = new QRadioButton(tr("GL/VK Multi Thread"));
         radio->setAutoExclusive(false);
         radio->setChecked(settings.value("renderer/glvk_fps", false).toBool());
         cardLayout->addWidget(radio);
@@ -1575,4 +1614,3 @@ QWidget *TrinitoWindow::createSupportTab() {
 
     return widget;
 }
-
