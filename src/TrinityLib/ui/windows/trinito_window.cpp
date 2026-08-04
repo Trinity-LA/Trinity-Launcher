@@ -79,8 +79,14 @@ static QString shortenGpuName(const QString &name) {
 static QStringList detectGpuNames() {
     QStringList result{"", ""};
 
+    // Inside Flatpak, read the PCI devices from the host via flatpak-spawn.
+    const bool inFlatpak = VersionManager::isFlatpak();
+    QStringList args;
+    if (inFlatpak)
+        args << "--host" << "lspci";
+
     QProcess proc;
-    proc.start("lspci", QStringList());
+    proc.start(inFlatpak ? "flatpak-spawn" : "lspci", args);
     if (!proc.waitForStarted(1000))
         return result;
     proc.waitForFinished(3000);
