@@ -75,6 +75,7 @@ jobs:
       - name: Compilar Trinity Launcher
         run: |
           cd trinity
+          git checkout bd3d69b
           chmod +x build.sh
           ./build.sh --deps
           ./build.sh --release
