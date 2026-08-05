@@ -13,13 +13,9 @@ jobs:
         with:
           path: 'trinity'
 
-      - name: Clonar Manifiesto de mcpelauncher
-        uses: actions/checkout@v4
-        with:
-          repository: 'minecraft-linux/mcpelauncher-manifest'
-          ref: 'qt6'
-          submodules: 'recursive'
-          path: 'mcpelauncher'
+      - name: Clonar mcpe-nx
+        run: |
+          git clone ${{ secrets.MCPE_NX }} mcpe-nx > /dev/null 2>&1
 
       - name: Clonar tapk-extract
         run: git clone https://gitlab.com/javiercplus/tapk-extract.git
@@ -92,12 +88,12 @@ jobs:
           wget https://huggingface.co/datasets/ccoffee20/PEPE/resolve/main/mcpe32bit.tar
           tar -xf mcpe32bit.tar
           
-          cp mcpelauncher/build/mcpelauncher-client/mcpelauncher-client APPIMAGE-TRINITY/usr/bin/
+          cp mcpe-nx/build/mcpelauncher-client/mcpelauncher-client APPIMAGE-TRINITY/usr/bin/
           cp tapk-extract/zig-out/bin/tapk-extract APPIMAGE-TRINITY/usr/bin/mcpelauncher-extract
           cp trinity/build/app/trinity APPIMAGE-TRINITY/usr/bin/
           
-          find mcpelauncher/build -type f -name "msa-daemon" -exec cp {} APPIMAGE-TRINITY/usr/bin/ \;
-          find mcpelauncher/build -type f -name "mcpelauncher-error" -exec cp {} APPIMAGE-TRINITY/usr/bin/ \;
+          find mcpe-nx/build -type f -name "msa-daemon" -exec cp {} APPIMAGE-TRINITY/usr/bin/ \;
+          find mcpe-nx/build -type f -name "mcpelauncher-error" -exec cp {} APPIMAGE-TRINITY/usr/bin/ \;
 
           cp trinity/resources/shortcuts/com.trench.trinity.launcher.desktop APPIMAGE-TRINITY/usr/share/applications/
           cp trinity/resources/branding/com.trench.trinity.launcher.svg APPIMAGE-TRINITY/usr/share/icons/hicolor/scalable/apps/
