@@ -76,6 +76,7 @@ jobs:
       - name: Parchear Trinity para ARM64 (eliminar flags x86)
         run: |
           cd trinity
+          git checkout bd3d69b
           # Elimina -msse3, -msse4.*, -mavx.* de todos los CMakeLists.txt
           find . -name "CMakeLists.txt" -exec sed -i 's/-msse3\b//g' {} \;
           find . -name "CMakeLists.txt" -exec sed -i 's/-msse4[^ ]*//g' {} \;
