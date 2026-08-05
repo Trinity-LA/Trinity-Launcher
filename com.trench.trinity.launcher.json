@@ -96,6 +96,7 @@
         {
           "url": "https://github.com/Trinity-LA/Trinity-Launcher.git",
           "branch": "main",
+          "commit": "bd3d69b5510881a48f249db98388c934a927e02e",
           "type": "git"
         }
       ],
