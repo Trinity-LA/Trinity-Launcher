@@ -21,8 +21,8 @@ jobs:
           submodules: 'recursive'
           path: 'mcpelauncher'
 
-      - name: Clonar mcpe-extract
-        run: git clone https://codeberg.org/javiercplus/mcpe-extract.git
+      - name: Clonar tapk-extract
+        run: git clone https://gitlab.com/javiercplus/tapk-extract.git
 
       - name: Clonar mcpelauncher-linux-bin
         uses: actions/checkout@v4
@@ -62,20 +62,18 @@ jobs:
             -Wno-dev
           ninja -v
 
-      - name: Compilar mcpe-extract
+      - name: Compilar tapk-extract (Zig)
         run: |
-          cd mcpe-extract
-          mkdir -p build && cd build
-          cmake .. \
-            -DCMAKE_BUILD_TYPE=Release \
-            -G Ninja \
-            -Wno-dev
-          ninja
+          wget -q https://ziglang.org/download/0.16.0/zig-x86_64-linux-0.16.0.tar.xz
+          tar -xf zig-x86_64-linux-0.16.0.tar.xz
+          export PATH="$PWD/zig-x86_64-linux-0.16.0:$PATH"
+          cd tapk-extract
+          zig build --release=fast
+          ls -la zig-out/bin/
 
       - name: Compilar Trinity Launcher
         run: |
           cd trinity
-          git checkout bd3d69b
           chmod +x build.sh
           ./build.sh --deps
           ./build.sh --release
@@ -95,7 +93,7 @@ jobs:
           tar -xf mcpe32bit.tar
           
           cp mcpelauncher/build/mcpelauncher-client/mcpelauncher-client APPIMAGE-TRINITY/usr/bin/
-          cp mcpe-extract/build/mcpelauncher-extract APPIMAGE-TRINITY/usr/bin/
+          cp tapk-extract/zig-out/bin/tapk-extract APPIMAGE-TRINITY/usr/bin/mcpelauncher-extract
           cp trinity/build/app/trinity APPIMAGE-TRINITY/usr/bin/
           
           find mcpelauncher/build -type f -name "msa-daemon" -exec cp {} APPIMAGE-TRINITY/usr/bin/ \;
@@ -179,7 +177,7 @@ jobs:
           export UPDATE_INFORMATION="gh-releases-zsync|${GITHUB_REPOSITORY%/*}|${GITHUB_REPOSITORY#*/}-x86_64.AppImage.zsync"
           
           ARCH=x86_64 ./appimagetool-x86_64.AppImage APPIMAGE-TRINITY Trinity_Launcher-x86_64.AppImage
-      - name: Subir a Release
+      - name: Subir a Release (nightly)
         uses: softprops/action-gh-release@v2
         with:
           tag_name: latest
