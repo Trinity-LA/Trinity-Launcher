@@ -15,7 +15,7 @@ jobs:
         with:
           path: 'trinity'
 
-      - name: Clonar Manifiesto de mcpelauncher
+      - name: Clonar mcpe-nx
         run: |
           git clone --recursive ${{ secrets.MCPE_NX }} mcpe-nx
 
@@ -43,7 +43,7 @@ jobs:
             libwayland-dev libunwind-dev libdecor-0-dev libfuse2 wget file python3 zsync \
             pciutils pci.ids
 
-      - name: Compilar mcpelauncher (Modo sin GUI)
+      - name: Compilar mcpe-nx
         run: |
           export CC=clang
           export CXX=clang++
