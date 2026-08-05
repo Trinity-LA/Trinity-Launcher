@@ -42,6 +42,17 @@
       }
     },
     {
+      "name": "pciutils",
+      "buildsystem": "simple",
+      "sources": [
+        { "type": "git", "url": "https://github.com/pciutils/pciutils.git", "tag": "v3.14.0" }
+      ],
+      "build-commands": [
+        "make -j$(nproc) ZLIB=no",
+        "make install PREFIX=/app ZLIB=no"
+      ]
+    },
+    {
       "name": "mcpe-extract",
       "buildsystem": "cmake-ninja",
       "build-options": {
@@ -96,7 +107,6 @@
         {
           "url": "https://github.com/Trinity-LA/Trinity-Launcher.git",
           "branch": "main",
-          "commit": "bd3d69b5510881a48f249db98388c934a927e02e",
           "type": "git"
         }
       ],
