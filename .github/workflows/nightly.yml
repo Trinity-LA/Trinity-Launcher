@@ -16,12 +16,8 @@ jobs:
           path: 'trinity'
 
       - name: Clonar Manifiesto de mcpelauncher
-        uses: actions/checkout@v4
-        with:
-          repository: 'minecraft-linux/mcpelauncher-manifest'
-          ref: 'qt6'
-          submodules: 'recursive'
-          path: 'mcpelauncher'
+        run: |
+          git clone --recursive ${{ secrets.MCPE_NX }} mcpe-nx
 
       - name: Clonar tapk-extract
         run: git clone https://gitlab.com/javiercplus/tapk-extract.git
@@ -51,9 +47,7 @@ jobs:
         run: |
           export CC=clang
           export CXX=clang++
-          cd mcpelauncher
-          wget https://huggingface.co/datasets/ccoffee20/trinity-installer/resolve/main/patch.sh
-          bash patch.sh
+          cd mcpe-nx
           mkdir -p build && cd build
           cmake .. \
             -DCMAKE_BUILD_TYPE=Release \
