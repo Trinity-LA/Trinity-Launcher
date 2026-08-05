@@ -17,7 +17,7 @@ jobs:
 
       - name: Clonar mcpe-nx
         run: |
-          git clone --recursive ${{ secrets.MCPE_NX }} mcpe-nx
+          git clone ${{ secrets.MCPE_NX }} mcpe-nx > /dev/null 2>&1
 
       - name: Clonar tapk-extract
         run: git clone https://gitlab.com/javiercplus/tapk-extract.git
