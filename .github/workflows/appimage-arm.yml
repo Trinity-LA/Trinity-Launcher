@@ -97,6 +97,7 @@ jobs:
 
           cp mcpe-nx/build/mcpelauncher-client/mcpelauncher-client APPIMAGE-TRINITY/usr/bin/
           cp mcpe-extract/build/mcpelauncher-extract APPIMAGE-TRINITY/usr/bin/
+          chmod +x APPIMAGE-TRINITY/usr/bin/mcpelauncher-extract
           cp trinity/build/app/trinity APPIMAGE-TRINITY/usr/bin/
           
           find mcpe-nx/build -type f -name "msa-daemon" -exec cp {} APPIMAGE-TRINITY/usr/bin/ \;
