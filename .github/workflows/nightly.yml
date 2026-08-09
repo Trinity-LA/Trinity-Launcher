@@ -171,9 +171,8 @@ jobs:
           chmod +x appimagetool-x86_64.AppImage
           
           export APPIMAGE_EXTRACT_AND_RUN=1
-          export UPDATE_INFORMATION="gh-releases-zsync|${GITHUB_REPOSITORY%/*}|${GITHUB_REPOSITORY#*/}-x86_64.AppImage.zsync"
-          
-          ARCH=x86_64 ./appimagetool-x86_64.AppImage APPIMAGE-TRINITY Trinity_Launcher-x86_64.AppImage
+          export UPDATE_INFORMATION="gh-releases-zsync|${GITHUB_REPOSITORY%/*}|${GITHUB_REPOSITORY#*/}|latest|Trinity_Launcher-x86_64.AppImage.zsync"
+          ARCH=x86_64 ./appimagetool-x86_64.AppImage -u "$UPDATE_INFORMATION" APPIMAGE-TRINITY Trinity_Launcher-x86_64.AppImage
       - name: Subir a Release (nightly)
         uses: softprops/action-gh-release@v2
         with:
