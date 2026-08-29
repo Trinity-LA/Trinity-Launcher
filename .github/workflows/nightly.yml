@@ -66,11 +66,11 @@ jobs:
           
           # Compilar con compatibilidad máxima para cualquier CPU x86_64
           cd tapk-extract
-          zig build -Doptimize=ReleaseFast -Dtarget=x86_64-linux-gnu -Dcpu=baseline
+          zig build -O ReleaseFast -t x86_64-linux-gnu -mcpu=baseline
           cd ..
           
           cd mcpe-nx/lite-webview
-          zig build -Doptimize=ReleaseFast -Dtarget=x86_64-linux-gnu -Dcpu=baseline
+          zig build -O ReleaseFast -t x86_64-linux-gnu -mcpu=baseline
           cd ../..
 
       - name: Compilar Trinity Launcher
