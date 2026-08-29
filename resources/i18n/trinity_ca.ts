@@ -108,7 +108,7 @@ No: Només exporta mods, mapes, etc.</translation>
     <message>
         <location filename="../../src/TrinityLib/core/exporter.cpp" line="151"/>
         <source>Warning</source>
-        <translation>Avís</translation>
+        <translation>Atenció</translation>
     </message>
     <message>
         <location filename="../../src/TrinityLib/core/exporter.cpp" line="152"/>
@@ -161,11 +161,11 @@ No: Només exporta mods, mapes, etc.</translation>
     <name>ExtractDialog</name>
     <message>
         <source>New version from APK</source>
-        <translation type="vanished">Nova versió mitjançant APK</translation>
+        <translation>Nova versió mitjançant APK</translation>
     </message>
     <message>
         <source>Select APK...</source>
-        <translation type="vanished">Seleccionar APK...</translation>
+        <translation>Seleccionar APK...</translation>
     </message>
     <message>
         <location filename="../../src/TrinityLib/ui/dialogs/extract_dialog.cpp" line="12"/>
@@ -210,20 +210,20 @@ No: Només exporta mods, mapes, etc.</translation>
     </message>
     <message>
         <source>Please select an APK file.</source>
-        <translation type="vanished">Has de seleccionar un fitxer APK.</translation>
+        <translation>Si us plau, selecciona un fitxer APK.</translation>
     </message>
     <message>
         <location filename="../../src/TrinityLib/ui/dialogs/extract_dialog.cpp" line="40"/>
         <source>Please enter a version name.</source>
-        <translation>Has d&apos;introduir un nom per a la versió</translation>
+        <translation>Si us plau, introdueix un nom per a la versió</translation>
     </message>
     <message>
         <source>Select Minecraft APK</source>
-        <translation type="vanished">Seleccionar un APK de Minecraft</translation>
+        <translation>Seleccionar un APK de Minecraft</translation>
     </message>
     <message>
         <source>APK files (*.apk)</source>
-        <translation type="vanished">Arxius APK (*.apk)</translation>
+        <translation>Arxius APK (*.apk)</translation>
     </message>
 </context>
 <context>
@@ -311,7 +311,7 @@ No: Només exporta mods, mapes, etc.</translation>
     </message>
     <message>
         <source>▶  PLAY</source>
-        <translation type="vanished">▶  JUGAR</translation>
+        <translation>▶  JUGAR</translation>
     </message>
     <message>
         <location filename="../../src/TrinityLib/ui/windows/launcher_window.cpp" line="390"/>
@@ -337,7 +337,7 @@ No: Només exporta mods, mapes, etc.</translation>
         <location filename="../../src/TrinityLib/ui/windows/launcher_window.cpp" line="485"/>
         <location filename="../../src/TrinityLib/ui/windows/launcher_window.cpp" line="499"/>
         <source>Discord Rich Presence</source>
-        <translation>Activitat de Discord</translation>
+        <translation>Discord Rich Presence</translation>
     </message>
     <message>
         <location filename="../../src/TrinityLib/ui/windows/launcher_window.cpp" line="500"/>
@@ -447,7 +447,7 @@ No: Només exporta mods, mapes, etc.</translation>
         <location filename="../../src/TrinityLib/ui/windows/launcher_window.cpp" line="998"/>
         <location filename="../../src/TrinityLib/ui/windows/launcher_window.cpp" line="1075"/>
         <source>Warning</source>
-        <translation>Avís</translation>
+        <translation>Atenció</translation>
     </message>
     <message>
         <location filename="../../src/TrinityLib/ui/windows/launcher_window.cpp" line="780"/>
@@ -458,7 +458,7 @@ Vols substituir-la?</translation>
     </message>
     <message>
         <source>Extracting APK...</source>
-        <translation type="vanished">Extraient APK...</translation>
+        <translation>Extraient APK...</translation>
     </message>
     <message>
         <location filename="../../src/TrinityLib/ui/windows/launcher_window.cpp" line="358"/>
@@ -468,7 +468,7 @@ Vols substituir-la?</translation>
     <message>
         <location filename="../../src/TrinityLib/ui/windows/launcher_window.cpp" line="582"/>
         <source>&lt;b&gt;BrokenByteOfCode&lt;/b&gt;: Ukrainian Translation</source>
-        <translation type="unfinished"></translation>
+        <translation>&lt;b&gt;BrokenByteOfCode&lt;/b&gt;: traducció a l'ucranïnès</translation>
     </message>
     <message>
         <location filename="../../src/TrinityLib/ui/windows/launcher_window.cpp" line="789"/>
@@ -514,11 +514,11 @@ Vols substituir-la?</translation>
     </message>
     <message>
         <source>Edit configuration of </source>
-        <translation type="vanished">Editar configuració de</translation>
+        <translation>Editar configuració de </translation>
     </message>
     <message>
         <source>Launch parameters (before mcpelauncher-client):</source>
-        <translation type="vanished">Paràmetres de llançament (abans de mcpelauncher-client):</translation>
+        <translation>Paràmetres de llançament (abans de mcpelauncher-client):</translation>
     </message>
     <message>
         <location filename="../../src/TrinityLib/ui/windows/launcher_window.cpp" line="964"/>
@@ -528,7 +528,7 @@ Vols substituir-la?</translation>
     </message>
     <message>
         <source>Configuration saved.</source>
-        <translation type="vanished">Configuració desada.</translation>
+        <translation>Configuració desada.</translation>
     </message>
     <message>
         <location filename="../../src/TrinityLib/ui/windows/launcher_window.cpp" line="972"/>
@@ -657,7 +657,7 @@ Vols reiniciar l&apos;aplicació ara per aplicar els canvis?</translation>
     <message>
         <location filename="../../src/TrinityLib/ui/windows/launcher_window.cpp" line="1614"/>
         <source>Text color</source>
-        <translation type="unfinished"></translation>
+        <translation>Color de text</translation>
     </message>
     <message>
         <location filename="../../src/TrinityLib/ui/windows/launcher_window.cpp" line="1619"/>
@@ -743,7 +743,7 @@ Vols reiniciar l&apos;aplicació ara per aplicar els canvis?</translation>
     </message>
     <message>
         <source>Architecture Notice</source>
-        <translation type="vanished">Avís d&apos;Arquitectura</translation>
+        <translation>Avís d&apos;Arquitectura</translation>
     </message>
     <message>
         <location filename="../../src/TrinityLib/ui/windows/launcher_window.cpp" line="62"/>
@@ -755,7 +755,7 @@ Vols reiniciar l&apos;aplicació ara per aplicar els canvis?</translation>
         <source>This project is currently being maintained by a single developer.
 
 If you want to help or support, you can donate!</source>
-        <translation>Actualment aquest projecte és mantingut per un sol desenvolupador.
+        <translation>Actualment, aquest projecte és mantingut per un sol desenvolupador.
 
 Si vols ajudar o donar suport, pots donar!</translation>
     </message>
@@ -768,27 +768,27 @@ Si vols ajudar o donar suport, pots donar!</translation>
     <message>
         <location filename="../../src/TrinityLib/ui/windows/launcher_window.cpp" line="863"/>
         <source>Environment Parameters — </source>
-        <translation type="unfinished"></translation>
+        <translation>Paràmetres d&apos;entorn — </translation>
     </message>
     <message>
         <location filename="../../src/TrinityLib/ui/windows/launcher_window.cpp" line="883"/>
         <source>Environment Variables</source>
-        <translation type="unfinished"></translation>
+        <translation>Variables d&apos;entorn</translation>
     </message>
     <message>
         <location filename="../../src/TrinityLib/ui/windows/launcher_window.cpp" line="891"/>
         <source>One variable per line, or space-separated. Example:</source>
-        <translation type="unfinished"></translation>
+        <translation>Una variable per línia, o separades per espais. Exemple:</translation>
     </message>
     <message>
         <location filename="../../src/TrinityLib/ui/windows/launcher_window.cpp" line="944"/>
         <source>Cancel</source>
-        <translation type="unfinished">Cancel·lar</translation>
+        <translation>Cancel·lar</translation>
     </message>
     <message>
         <location filename="../../src/TrinityLib/ui/windows/launcher_window.cpp" line="945"/>
         <source>Save</source>
-        <translation type="unfinished"></translation>
+        <translation>Desar</translation>
     </message>
     <message>
         <location filename="../../src/TrinityLib/ui/windows/launcher_window.cpp" line="1878"/>
@@ -797,12 +797,12 @@ Si vols ajudar o donar suport, pots donar!</translation>
     </message>
     <message>
         <source>Clear Log</source>
-        <translation type="vanished">Netejar Registre</translation>
+        <translation>Netejar Registre</translation>
     </message>
     <message>
         <location filename="../../src/TrinityLib/ui/windows/launcher_window.cpp" line="541"/>
         <source>This project is currently being maintained by a single developer. If you want to help or support, you can donate!</source>
-        <translation>Actualment aquest projecte és mantingut per un sol desenvolupador. Si vols ajudar o donar suport, pots donar!</translation>
+        <translation>Actualment, aquest projecte és mantingut per un sol desenvolupador. Si vols ajudar o donar suport, pots donar!</translation>
     </message>
     <message>
         <location filename="../../src/TrinityLib/ui/windows/launcher_window.cpp" line="548"/>
@@ -887,7 +887,7 @@ Si vols ajudar o donar suport, pots donar!</translation>
     <message>
         <location filename="../../src/TrinityLib/ui/windows/trinito_window.cpp" line="170"/>
         <source>Creates a .desktop shortcut in Downloads for the selected version.</source>
-        <translation>Crea un accés directe .desktop a Descàrregues per a la versió seleccionada.</translation>
+        <translation>Crea un accés directe .desktop a Baixades per a la versió seleccionada.</translation>
     </message>
     <message>
         <location filename="../../src/TrinityLib/ui/windows/trinito_window.cpp" line="171"/>
@@ -984,7 +984,7 @@ Si vols ajudar o donar suport, pots donar!</translation>
         <location filename="../../src/TrinityLib/ui/windows/trinito_window.cpp" line="1177"/>
         <location filename="../../src/TrinityLib/ui/windows/trinito_window.cpp" line="1228"/>
         <source>Warning</source>
-        <translation>Avís</translation>
+        <translation>Atenció</translation>
     </message>
     <message>
         <location filename="../../src/TrinityLib/ui/windows/trinito_window.cpp" line="480"/>
@@ -1012,7 +1012,7 @@ Aquesta acció no es pot desfer.</translation>
     </message>
     <message>
         <source>&apos;%1&apos; eliminado correctamente.</source>
-        <translation type="vanished">&apos;%1&apos; s&apos;ha eliminat correctament.</translation>
+        <translation>&apos;%1&apos; s&apos;ha eliminat correctament.</translation>
     </message>
     <message>
         <location filename="../../src/TrinityLib/ui/windows/trinito_window.cpp" line="530"/>
@@ -1032,7 +1032,7 @@ Aquesta acció no es pot desfer.</translation>
     <message>
         <location filename="../../src/TrinityLib/ui/windows/trinito_window.cpp" line="553"/>
         <source>Add Development Resource Pack (file)...</source>
-        <translation>Afegeix Development Resource Pack (arxiu)...</translation>
+        <translation>Afegir Development Resource Pack (arxiu)...</translation>
     </message>
     <message>
         <location filename="../../src/TrinityLib/ui/windows/trinito_window.cpp" line="556"/>
@@ -1063,7 +1063,7 @@ Aquesta acció no es pot desfer.</translation>
         <location filename="../../src/TrinityLib/ui/windows/trinito_window.cpp" line="620"/>
         <source>Are you sure you want to delete Behavior Pack &apos;%1&apos;?
 This action cannot be undone.</source>
-        <translation>N&apos;estàs segur de voler eliminar el Paquet de comportament &apos;%1&apos;?
+        <translation>N&apos;estàs segur de voler eliminar el Behavior Pack &apos;%1&apos;?
 Aquesta acció no es pot desfer.</translation>
     </message>
     <message>
@@ -1091,7 +1091,7 @@ Aquesta acció no es pot desfer.</translation>
         <location filename="../../src/TrinityLib/ui/windows/trinito_window.cpp" line="668"/>
         <source>Are you sure you want to delete Resource Pack &apos;%1&apos;?
 This action cannot be undone.</source>
-        <translation>N&apos;estàs segur de voler eliminar el Paquet de recursos &apos;%1&apos;?
+        <translation>N&apos;estàs segur de voler eliminar el Resource Pack &apos;%1&apos;?
 Aquesta acció no es pot desfer.</translation>
     </message>
     <message>
@@ -1153,7 +1153,7 @@ Vols substituir-lo?</translation>
         <source>%1 installed successfully in:
 %2</source>
         <translation>%1 instal·lat correctament a:
-%2!</translation>
+%2</translation>
     </message>
     <message>
         <location filename="../../src/TrinityLib/ui/windows/trinito_window.cpp" line="819"/>
@@ -1324,22 +1324,22 @@ Aquesta acció no es pot desfer.</translation>
     <message>
         <location filename="../../src/TrinityLib/ui/windows/trinito_window.cpp" line="1264"/>
         <source>This is where Minecraft Bedrock stores your worlds, packs, and other user data.</source>
-        <translation>Així és on Minecraft Bedrock emmagatzema els teus mons, paquets i altres dades d&apos;usuari.</translation>
+        <translation>Aquí és on Minecraft Bedrock emmagatzema els teus mons, paquets i altres dades d&apos;usuari.</translation>
     </message>
     <message>
         <location filename="../../src/TrinityLib/ui/windows/trinito_window.cpp" line="1274"/>
         <source>Flatpak installation</source>
-        <translation>Instal·lació Flatpak</translation>
+        <translation>Instal·lació per Flatpak</translation>
     </message>
     <message>
         <location filename="../../src/TrinityLib/ui/windows/trinito_window.cpp" line="1276"/>
         <source>AppImage installation</source>
-        <translation type="unfinished"></translation>
+        <translation>Instal·lació per AppImage</translation>
     </message>
     <message>
         <location filename="../../src/TrinityLib/ui/windows/trinito_window.cpp" line="1280"/>
         <source>macOS installation</source>
-        <translation type="unfinished"></translation>
+        <translation>Instal·lació per macOS</translation>
     </message>
     <message>
         <location filename="../../src/TrinityLib/ui/windows/trinito_window.cpp" line="1284"/>
@@ -1348,7 +1348,7 @@ Aquesta acció no es pot desfer.</translation>
     </message>
     <message>
         <source>Not found — the launcher may not have run yet</source>
-        <translation type="vanished">No trobat — potser el llançador encara no s&apos;ha executat algun cop</translation>
+        <translation>No trobat — potser el llançador encara no s&apos;ha executat mai</translation>
     </message>
     <message>
         <location filename="../../src/TrinityLib/ui/windows/trinito_window.cpp" line="1313"/>
@@ -1372,7 +1372,7 @@ Aquesta acció no es pot desfer.</translation>
     <message>
         <location filename="../../src/TrinityLib/core/version_manager.cpp" line="223"/>
         <source>This APK cannot be run on your device. Try another one compatible with your processor (architecture).</source>
-        <translation>Aquesta APK no la pots arrencar al teu dispositiu. Prova amb una altra compatible amb el teu processador (arquitectura).</translation>
+        <translation>Aquest APK no el pots arrencar al teu dispositiu. Prova amb un altre compatible amb el teu processador (arquitectura).</translation>
     </message>
     <message>
         <location filename="../../src/TrinityLib/core/version_manager.cpp" line="267"/>
