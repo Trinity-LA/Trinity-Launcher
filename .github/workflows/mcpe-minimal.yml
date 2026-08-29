@@ -47,7 +47,7 @@ jobs:
             -DBUILD_UI=ON \
             -DBUILD_CLIENT=ON \
             -DBUILD_WEBVIEW=ON \
-            -XAL_WEBVIEW_USE_QT=ON \
+            -DXAL_WEBVIEW_USE_QT=ON \
             -DUSE_OWN_CURL=OFF \
             -DCMAKE_BUILD_TYPE=Release \
             -DCMAKE_C_FLAGS="-DNDEBUG" \
