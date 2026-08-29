@@ -64,13 +64,14 @@ jobs:
           tar -xf zig-x86_64-linux-0.16.0.tar.xz
           export PATH="$PWD/zig-x86_64-linux-0.16.0:$PATH"
           
-          # Compilar con compatibilidad máxima para cualquier CPU x86_64
+          # tapk-extract: Compilación máxima compatibilidad
           cd tapk-extract
-          zig build -O ReleaseFast -t x86_64-linux-gnu -mcpu=baseline
+          zig build --release=fast -Dtarget=x86_64-linux-gnu -Dcpu=baseline
           cd ..
           
+          # lite-webview: Compilación máxima compatibilidad
           cd mcpe-nx/lite-webview
-          zig build -O ReleaseFast -t x86_64-linux-gnu -mcpu=baseline
+          zig build --release=fast -Dtarget=x86_64-linux-gnu -Dcpu=baseline
           cd ../..
 
       - name: Compilar Trinity Launcher
