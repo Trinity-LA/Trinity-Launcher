@@ -229,6 +229,20 @@ QWidget *TrinitoWindow::createInstancesTab() {
         tr("Creates a .desktop shortcut in Downloads for the selected version."));
     auto *envBtn      = makeBtn(tr("Environment Parameters"),
         tr("Edit launch arguments and environment variables."));
+
+    // Mini section separator: Backups group
+    auto *backupsSep = new QFrame();
+    backupsSep->setFrameShape(QFrame::HLine);
+    backupsSep->setObjectName("Divider");
+    rightLayout->addWidget(backupsSep);
+
+    auto *backupsTitle = new QLabel(tr("Backups"));
+    backupsTitle->setStyleSheet(
+        QString("font-size: 13px; font-weight: bold; color: %1; "
+                "background: transparent;")
+            .arg(QSettings().value("theme/textMuted", "#a6a8a4").toString()));
+    rightLayout->addWidget(backupsTitle);
+
     auto *importBtn   = makeBtn(tr("Import"),
         tr("Import a previously exported version archive."));
     auto *exportBtn   = makeBtn(tr("Export"),
