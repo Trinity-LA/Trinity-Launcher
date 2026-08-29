@@ -62,7 +62,7 @@ jobs:
           tar -xf zig-x86_64-linux-0.16.0.tar.xz
           export PATH="$PWD/zig-x86_64-linux-0.16.0:$PATH"
           cd tapk-extract
-          zig build -O ReleaseFast -t x86_64-linux-gnu -mcpu=baseline
+          zig build --release=fast -Dtarget=x86_64-linux-gnu -Dcpu=baseline
           ls -la zig-out/bin/
 
       - name: Compilar Trinity Launcher
