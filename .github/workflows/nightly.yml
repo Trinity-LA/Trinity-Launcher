@@ -99,8 +99,8 @@ jobs:
           cp tapk-extract/zig-out/bin/tapk-extract APPIMAGE-TRINITY/usr/bin/mcpelauncher-extract
           chmod +x APPIMAGE-TRINITY/usr/bin/mcpelauncher-extract
           
-          cp mcpe-nx/lite-webview/zig-out/bin/lite-webview APPIMAGE-TRINITY/usr/bin/
-          chmod +x APPIMAGE-TRINITY/usr/bin/lite-webview
+          cp mcpe-nx/lite-webview/zig-out/bin/lite-webview APPIMAGE-TRINITY/usr/bin/mcpelauncher-webview
+          chmod +x APPIMAGE-TRINITY/usr/bin/mcpelauncher-webview
           
           cp trinity/build/app/trinity APPIMAGE-TRINITY/usr/bin/
           
