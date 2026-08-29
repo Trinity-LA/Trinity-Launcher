@@ -41,7 +41,7 @@ jobs:
             libudev-dev libevdev-dev libusb-1.0-0-dev libdbus-1-dev libbluetooth-dev bluez \
             libibus-1.0-dev libxkbcommon-dev libpng-dev libzip-dev libcups2-dev \
             libwayland-dev libunwind-dev libdecor-0-dev libfuse2 wget file python3 zsync \
-            pciutils pci.ids
+            pciutils pci.ids libgtk-3-dev libwebkit2gtk-4.0-dev
 
       - name: Compilar mcpe-nx
         run: |
@@ -58,14 +58,19 @@ jobs:
             -Wno-dev
           ninja -v
 
-      - name: Compilar tapk-extract (Zig)
+      - name: Compilar proyectos en Zig (tapk-extract y lite-webview)
         run: |
           wget -q https://ziglang.org/download/0.16.0/zig-x86_64-linux-0.16.0.tar.xz
           tar -xf zig-x86_64-linux-0.16.0.tar.xz
           export PATH="$PWD/zig-x86_64-linux-0.16.0:$PATH"
+          
           cd tapk-extract
           zig build --release=fast
-          ls -la zig-out/bin/
+          cd ..
+          
+          cd mcpe-nx/lite-webview
+          zig build --release=fast
+          cd ../..
 
       - name: Compilar Trinity Launcher
         run: |
@@ -84,13 +89,17 @@ jobs:
           mkdir -p APPIMAGE-TRINITY/usr/share/metainfo
           mkdir -p APPIMAGE-TRINITY/usr/share/mcpelauncher
           
-          # Descargamos y extraemos, pero AÚN NO lo copiamos al AppDir
           wget https://huggingface.co/datasets/ccoffee20/PEPE/resolve/main/mcpe32bit.tar
           tar -xf mcpe32bit.tar
           
           cp mcpe-nx/build/mcpelauncher-client/mcpelauncher-client APPIMAGE-TRINITY/usr/bin/
+          
           cp tapk-extract/zig-out/bin/tapk-extract APPIMAGE-TRINITY/usr/bin/mcpelauncher-extract
           chmod +x APPIMAGE-TRINITY/usr/bin/mcpelauncher-extract
+          
+          cp mcpe-nx/lite-webview/zig-out/bin/lite-webview APPIMAGE-TRINITY/usr/bin/
+          chmod +x APPIMAGE-TRINITY/usr/bin/lite-webview
+          
           cp trinity/build/app/trinity APPIMAGE-TRINITY/usr/bin/
           
           find mcpe-nx/build -type f -name "msa-daemon" -exec cp {} APPIMAGE-TRINITY/usr/bin/ \;
@@ -109,7 +118,6 @@ jobs:
 
       - name: Integrar lspci (detección de GPU)
         run: |
-          # Empaqueta lspci + pcilib para la detección de GPUs en el gestor de contenido
           mkdir -p APPIMAGE-TRINITY/usr/share/hwdata
           cp -v /usr/bin/lspci APPIMAGE-TRINITY/usr/bin/
           cp -v /usr/bin/setpci APPIMAGE-TRINITY/usr/bin/ 2>/dev/null || true
@@ -148,7 +156,6 @@ jobs:
           export QMAKE=/usr/lib/qt6/bin/qmake
           export LD_LIBRARY_PATH=$PWD/APPIMAGE-TRINITY/usr/lib:/usr/lib/x86_64-linux-gnu:$LD_LIBRARY_PATH
           
-          # 1. Ejecutar linuxdeploy SOLO para preparar dependencias (sin --output appimage)
           ./linuxdeploy-x86_64.AppImage \
             --appdir APPIMAGE-TRINITY \
             -e APPIMAGE-TRINITY/usr/bin/trinity \
@@ -156,17 +163,14 @@ jobs:
             --icon-file APPIMAGE-TRINITY/usr/share/icons/hicolor/scalable/apps/com.trench.trinity.launcher.svg \
             --plugin qt
           
-          # 2. AHORA copiamos el binario de 32 bits al AppDir (así linuxdeploy no lo escanea)
           cp 32bitmcpe/bin/mcpelauncher-client86 APPIMAGE-TRINITY/usr/bin/
           cp -ar 32bitmcpe/lib32/* APPIMAGE-TRINITY/usr/lib32/
           chmod +x APPIMAGE-TRINITY/usr/bin/mcpelauncher-client86
           
-          # Limpiar librerías gráficas conflictivas de 32 bits
           rm -rf APPIMAGE-TRINITY/usr/lib32/libGLdispatch.so*
           rm -rf APPIMAGE-TRINITY/usr/lib32/libX*.so*
           rm -rf APPIMAGE-TRINITY/usr/lib32/libxcb*.so*
           
-          # 3. Empaquetar usando appimagetool directamente
           wget -q https://github.com/AppImage/AppImageKit/releases/download/continuous/appimagetool-x86_64.AppImage
           chmod +x appimagetool-x86_64.AppImage
           
