@@ -91,11 +91,11 @@ bool GameLauncher::launchGame(const QString &versionName, QString &errorMsg) {
     VersionManager vm;
     QString dataDir = vm.getVersionPath(versionName);
     QString appDir = QCoreApplication::applicationDirPath();
-    
+
     // Check if the version has /lib/x86 folder (32-bit version)
     QString libX86Path = dataDir + "/lib/x86";
     bool isX86Version = QFileInfo::exists(libX86Path);
-    
+
     // Select the appropriate client based on architecture
     QString clientBaseName = isX86Version ? "mcpelauncher-client86" : "mcpelauncher-client";
     QString clientPath = appDir + "/" + clientBaseName;
@@ -106,8 +106,8 @@ bool GameLauncher::launchGame(const QString &versionName, QString &errorMsg) {
 
 
     if (clientPath.isEmpty()) {
-        errorMsg = isX86Version 
-            ? tr("mcpelauncher-client86 not found.") 
+        errorMsg = isX86Version
+            ? tr("mcpelauncher-client86 not found.")
             : tr("mcpelauncher-client not found.");
         return false;
     }
@@ -162,6 +162,12 @@ bool GameLauncher::launchGame(const QString &versionName, QString &errorMsg) {
     if (settings.value("renderer/old_intel", false).toBool()) {
         env.insert("MESA_LOADER_DRIVER_OVERRIDE", "i965");
         env.insert("MESA_NO_ERROR", "1");
+        // On Gen7 Intel the iris driver fails to render (black screen). The
+        // classic i965 driver must be forced, and on a pure Wayland session
+        // SDL also needs an explicit backend, otherwise EGL falls back to
+        // llvmpipe. Only force it under Wayland so X11 sessions keep working.
+        if (qgetenv("XDG_SESSION_TYPE") == "wayland")
+            env.insert("SDL_VIDEODRIVER", "wayland");
     }
     if (settings.value("renderer/nvidia", false).toBool()) {
         env.insert("__NV_PRIME_RENDER_OFFLOAD", "1");
@@ -228,5 +234,3 @@ bool GameLauncher::launchGame(const QString &versionName, QString &errorMsg) {
 
 // Implementaremos un método para forzar el cierre si es necesario
 // (Opcional: puedes conectar la señal stateChanged para monitorear)
-
-

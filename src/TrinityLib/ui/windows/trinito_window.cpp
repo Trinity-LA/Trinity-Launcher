@@ -1581,7 +1581,9 @@ QWidget *TrinitoWindow::createSupportTab() {
         cardLayout->addWidget(radio);
 
         auto *varLabel = new QLabel(QStringLiteral(
-            "MESA_LOADER_DRIVER_OVERRIDE=i965\nMESA_NO_ERROR=1"));
+            "MESA_LOADER_DRIVER_OVERRIDE=i965\n"
+            "MESA_NO_ERROR=1\n"
+            "SDL_VIDEODRIVER=wayland (Wayland only)"));
         varLabel->setStyleSheet(
             QString("font-size: 12px; color: %1; background: transparent;")
                 .arg(textMuted));
