@@ -41,7 +41,7 @@ jobs:
             libudev-dev libevdev-dev libusb-1.0-0-dev libdbus-1-dev libbluetooth-dev bluez \
             libibus-1.0-dev libxkbcommon-dev libpng-dev libzip-dev libcups2-dev \
             libwayland-dev libunwind-dev libdecor-0-dev libfuse2 wget file python3 zsync \
-            pciutils pci.ids libgtk-3-dev libwebkit2gtk-4.0-dev
+            pciutils pci.ids libgtk-3-dev libwebkit2gtk-4.1-dev
 
       - name: Compilar mcpe-nx
         run: |
@@ -64,12 +64,13 @@ jobs:
           tar -xf zig-x86_64-linux-0.16.0.tar.xz
           export PATH="$PWD/zig-x86_64-linux-0.16.0:$PATH"
           
+          # Compilar con compatibilidad máxima para cualquier CPU x86_64
           cd tapk-extract
-          zig build --release=fast
+          zig build -Doptimize=ReleaseFast -Dtarget=x86_64-linux-gnu -Dcpu=baseline
           cd ..
           
           cd mcpe-nx/lite-webview
-          zig build --release=fast
+          zig build -Doptimize=ReleaseFast -Dtarget=x86_64-linux-gnu -Dcpu=baseline
           cd ../..
 
       - name: Compilar Trinity Launcher
@@ -177,6 +178,7 @@ jobs:
           export APPIMAGE_EXTRACT_AND_RUN=1
           export UPDATE_INFORMATION="gh-releases-zsync|${GITHUB_REPOSITORY%/*}|${GITHUB_REPOSITORY#*/}|latest|Trinity_Launcher-x86_64.AppImage.zsync"
           ARCH=x86_64 ./appimagetool-x86_64.AppImage -u "$UPDATE_INFORMATION" APPIMAGE-TRINITY Trinity_Launcher-x86_64.AppImage
+      
       - name: Subir a Release (nightly)
         uses: softprops/action-gh-release@v2
         with:
