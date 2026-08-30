@@ -96,7 +96,9 @@ jobs:
           tar -xf mcpe32bit.tar
           
           cp mcpe-nx/build/mcpelauncher-client/mcpelauncher-client APPIMAGE-TRINITY/usr/bin/
-          
+          # WebKitGTK necesita sus procesos auxiliares (WebKitNetworkProcess, WebKitWebProcess, etc.)
+          cp -r /usr/lib/x86_64-linux-gnu/webkit2gtk-4.1 APPIMAGE-TRINITY/usr/lib/
+
           cp tapk-extract/zig-out/bin/tapk-extract APPIMAGE-TRINITY/usr/bin/mcpelauncher-extract
           chmod +x APPIMAGE-TRINITY/usr/bin/mcpelauncher-extract
           
@@ -138,6 +140,7 @@ jobs:
           export QT_QPA_PLATFORM="xcb"
           export GDK_BACKEND="x11"
           export DISABLE_WAYLAND=1
+          export WEBKIT_EXEC_PATH="$HERE/usr/lib/webkit2gtk-4.1"
           export MCPELAUNCHER_DATA_DIR="$HERE/usr/share/mcpelauncher"
           export PCI_IDS="$HERE/usr/share/hwdata/pci.ids"
           export PATH="$HERE/usr/bin:$PATH"
