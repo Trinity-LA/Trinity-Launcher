@@ -54,6 +54,7 @@ jobs:
             -G Ninja \
             -DBUILD_WEBVIEW=OFF \
             -DGAMEWINDOW_SYSTEM=SDL3 \
+            -DXAL_WEBVIEW_USE_QT=ON \
             -DBUILD_UI=OFF \
             -Wno-dev
           ninja -v
