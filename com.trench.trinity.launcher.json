@@ -133,6 +133,8 @@
     "--env=QML_IMPORT_PATH=/app/qml/",
     "--env=QML_DISABLE_DISK_CACHE=1",
     "--env=QT_QPA_PLATFORMTHEME=gtk3",
+    "--env=SSL_CERT_FILE=/etc/ssl/certs/ca-certificates.crt",
+    "--env=SSL_CERT_DIR=/etc/ssl/certs",
     "--filesystem=xdg-documents",
     "--filesystem=xdg-pictures",
     "--filesystem=xdg-desktop",
