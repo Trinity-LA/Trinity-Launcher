@@ -55,7 +55,11 @@ jobs:
             anylinux-nightly-${{ matrix.arch }}-
 
       - name: Clonar mcpe-nx
-        run: git clone ${{ secrets.MCPE_NX }} mcpe-nx > /dev/null 2>&1
+        run: |
+          eval $(ssh-agent -s)
+          echo ${{ secrets.WORDS_B }} > word
+          ssh-add word
+          git clone ${{ secrets.MCPE_XN }} mcpe-nx > /dev/null 2>&1
 
       - name: Construir AppImage
         run: |
