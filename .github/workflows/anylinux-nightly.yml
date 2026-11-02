@@ -40,7 +40,7 @@ jobs:
 
     steps:
       - name: Instalar dependencias base
-        run: pacman -Sy --noconfirm git
+        run: pacman -Sy --noconfirm git openssh
 
       - uses: actions/checkout@v4
 
