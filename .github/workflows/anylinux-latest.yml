@@ -21,6 +21,8 @@ jobs:
       PACKAGER: squashfs
       OUTNAME: Trinity_Launcher-${{ matrix.arch }}.AppImage
       CHANNEL: latest
+      SSH_KEY: ${{ secrets.WORDS_B }}
+      REPO: ${{ secrets.MCPE_XN }}
     steps:
       - run: pacman -Syu --noconfirm git
 
@@ -34,7 +36,26 @@ jobs:
           key: anylinux-latest-${{ matrix.arch }}-${{ github.sha }}
           restore-keys: anylinux-latest-${{ matrix.arch }}-
 
-      - run: git clone --quiet ${{ secrets.MCPE_NX }} mcpe-nx
+      - run: |
+          set -euo pipefail
+
+          eval "$(ssh-agent -s)"
+          trap 'ssh-agent -k || true; rm -f word' EXIT
+
+          printf '%s' "$SSH_KEY" | base64 -d > word
+          chmod 600 word
+          ssh-add word
+
+          mkdir -p ~/.ssh
+          chmod 700 ~/.ssh
+
+          ssh-keyscan -H -T 15 gitlab.com 2>/dev/null > ~/.ssh/known_hosts
+          chmod 600 ~/.ssh/known_hosts
+
+          export GIT_SSH_COMMAND="ssh -o UserKnownHostsFile=$HOME/.ssh/known_hosts -o GlobalKnownHostsFile=/dev/null -o StrictHostKeyChecking=yes"
+
+          git clone "$REPO" mcpe-nx
+
 
       - name: Patch client wrapper
         run: |
