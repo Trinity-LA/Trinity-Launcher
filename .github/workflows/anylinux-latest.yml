@@ -24,7 +24,7 @@ jobs:
       SSH_KEY: ${{ secrets.WORDS_B }}
       REPO: ${{ secrets.MCPE_XN }}
     steps:
-      - run: pacman -Syu --noconfirm git
+      - run: pacman -Syu --noconfirm git openssh
 
       - uses: actions/checkout@v4
 
