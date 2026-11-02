@@ -14,8 +14,29 @@ jobs:
 
     steps:
       - name: Clonar mcpe-nx
+        env:
+          SSH_KEY: ${{ secrets.WORDS_B }}
+          REPO: ${{ secrets.MCPE_XN }}
         run: |
-          git clone ${{ secrets.MCPE_NX }} mcpe-nx > /dev/null 2>&1
+          set -euo pipefail
+
+          eval "$(ssh-agent -s)"
+          trap 'ssh-agent -k || true; rm -f word' EXIT
+
+          printf '%s' "$SSH_KEY" | base64 -d > word
+          chmod 600 word
+          ssh-add word
+
+          mkdir -p ~/.ssh
+          chmod 700 ~/.ssh
+
+          ssh-keyscan -H -T 15 gitlab.com 2>/dev/null > ~/.ssh/known_hosts
+          chmod 600 ~/.ssh/known_hosts
+
+          export GIT_SSH_COMMAND="ssh -o UserKnownHostsFile=$HOME/.ssh/known_hosts -o GlobalKnownHostsFile=/dev/null -o StrictHostKeyChecking=yes"
+
+          git clone -b untested "$REPO" mcpe-nx
+
 
 
       - name: Instalar dependencias del sistema
@@ -24,7 +45,7 @@ jobs:
           sudo apt-get install -y --no-install-recommends \
             ca-certificates build-essential git curl cmake clang ninja-build \
             qt6-base-dev qt6-base-dev-tools qt6-declarative-dev qt6-webengine-dev qt6-svg-dev qt6-tools-dev \
-            libcurl4-openssl-dev libssl-dev libasound2-dev libpulse-dev libjack-jackd2-dev \
+            libcurl4-openssl-dev openssh-client openssh-server libssl-dev libasound2-dev libpulse-dev libjack-jackd2-dev \
             libpipewire-0.3-dev libsndio-dev libx11-dev libxi-dev libxext-dev libxfixes-dev \
             libxcursor-dev libxrandr-dev libxss-dev libxtst-dev libgl1-mesa-dev libegl1-mesa-dev \
             libgles2-mesa-dev libvulkan-dev vulkan-validationlayers libdrm-dev libgbm-dev \
