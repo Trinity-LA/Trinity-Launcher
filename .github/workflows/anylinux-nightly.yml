@@ -57,9 +57,11 @@ jobs:
       - name: Clonar mcpe-nx
         run: |
           eval $(ssh-agent -s)
-          echo ${{ secrets.WORDS_B }} > word
+          echo "${{ secrets.WORDS_B }}" | base64 -d > word
+          chmod 600 word
           ssh-add word
-          git clone ${{ secrets.MCPE_XN }} mcpe-nx > /dev/null 2>&1
+          git clone "${{ secrets.MCPE_XN }}" mcpe-nx > /dev/null 2>&1
+          rm word         
 
       - name: Construir AppImage
         run: |
