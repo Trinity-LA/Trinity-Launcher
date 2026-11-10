@@ -119,7 +119,7 @@ jobs:
           export CXX="zig c++"
           export CMAKE_C_COMPILER_TARGET="${ZIG_TARGET}"
           export CMAKE_CXX_COMPILER_TARGET="${ZIG_TARGET}"
-          sh ./trinity-appimage.sh
+          sh ./appimage-nightly.sh
 
       - name: Subir artefacto
         uses: actions/upload-artifact@v4
