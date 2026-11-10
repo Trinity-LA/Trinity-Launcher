@@ -37,10 +37,22 @@ jobs:
       PACKAGER: squashfs
       OUTNAME: Trinity_Launcher-${{ matrix.arch }}.AppImage
       CHANNEL: nightly
-
+      GLIBC_TARGET: "2.28"
     steps:
       - name: Instalar dependencias base
         run: pacman -Sy --noconfirm git openssh
+      - name: Instalar Zig (toolchain con glibc antigua)
+        run: |
+          pacman -S --noconfirm zig
+          zig version
+
+      - name: Configurar toolchain para glibc antigua + LLVM
+        run: |
+          echo "CC=zig cc -target x86_64-linux-gnu.${GLIBC_TARGET}" >> "$GITHUB_ENV"
+          echo "CXX=zig c++ -target x86_64-linux-gnu.${GLIBC_TARGET}" >> "$GITHUB_ENV"
+          # Si el build usa CMake, Meson o Autotools, estas variables suelen respetarse.
+          echo "CFLAGS=-target x86_64-linux-gnu.${GLIBC_TARGET}" >> "$GITHUB_ENV"
+          echo "CXXFLAGS=-target x86_64-linux-gnu.${GLIBC_TARGET}" >> "$GITHUB_ENV"
 
       - uses: actions/checkout@v4
 
@@ -82,7 +94,10 @@ jobs:
           
       - name: Construir AppImage
         run: |
-          sleep 10 # el runner a veces monta el checkout del commit anterior
+          export CC="zig cc -target x86_64-linux-gnu.${GLIBC_TARGET}"
+          export CXX="zig c++ -target x86_64-linux-gnu.${GLIBC_TARGET}"
+          # Opcional: indicar a CMake que use estos compiladores
+          # cmake -DCMAKE_C_COMPILER="zig cc" -DCMAKE_CXX_COMPILER="zig c++" ...
           sh ./trinity-appimage.sh
 
       - name: Subir artefacto
