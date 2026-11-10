@@ -91,6 +91,24 @@ jobs:
 
           git clone -b untested "$REPO" mcpe-nx
 
+      - name: Parchear script para respetar zig cc
+        run: |
+          # Reemplaza los export incondicionales por asignaciones que solo actúan si CC/CXX no están definidos
+          sed -i 's/^export CC=clang$/export CC="${CC:-clang}"/' trinity-appimage.sh
+          sed -i 's/^export CXX=clang++$/export CXX="${CXX:-clang++}"/' trinity-appimage.sh
+          # Verifica que el parche se aplicó (opcional, para depurar)
+          grep -n 'export CC' trinity-appimage.sh || true
+          grep -n 'export CXX' trinity-appimage.sh || true
+          
+      - name: Configurar toolchain Zig (glibc 2.28 + LLVM)
+        run: |
+          if [ "${{ matrix.arch }}" = "aarch64" ]; then
+            TRIPLE="aarch64-linux-gnu"
+          else
+            TRIPLE="x86_64-linux-gnu"
+          fi
+          echo "CC=zig cc -target ${TRIPLE}.${GLIBC_TARGET}" >> "$GITHUB_ENV"
+          echo "CXX=zig c++ -target ${TRIPLE}.${GLIBC_TARGET}" >> "$GITHUB_ENV"
           
       - name: Construir AppImage
         run: |
