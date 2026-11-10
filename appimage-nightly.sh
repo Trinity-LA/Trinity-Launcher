@@ -37,9 +37,7 @@ if [ -z "${UPINFO:-}" ]; then
 fi
 SHARUN_URL="https://raw.githubusercontent.com/pkgforge-dev/Anylinux-AppImages/refs/heads/main/useful-tools/quick-sharun.sh"
 DEBLOAT_URL="https://raw.githubusercontent.com/pkgforge-dev/Anylinux-AppImages/refs/heads/main/useful-tools/get-debloated-pkgs.sh"
-# Zig 0.17: el enum Optimize usa .debug/.safe/.fast/.small (minusculas).
-# Las constantes .Debug/.ReleaseFast quedan como alias deprecados y NO son
-# campos del enum, por lo que `optimize != .Debug` deja de compilar.
+# Zig 0.17: b.args eliminado -> addPassthruArgs(); optimize modes en minusculas.
 ZIG_VER="0.17.1"
 
 if [ "$(id -u)" -eq 0 ]; then
@@ -179,10 +177,10 @@ export ZIG_LOCAL_CACHE_DIR="$ZIG_CACHE_DIR/tapk-local"
 export ZIG_GLOBAL_CACHE_DIR="$ZIG_CACHE_DIR/global"
 
 # --- 4c. tapk-extract (Zig build, target glibc 2.28) ---
-# Zig 0.17 cambio el enum Optimize a minusculas. Se parchea el build.zig
-# antes de compilar para que `optimize != .Debug` no rompa el build.
+# Zig 0.17: b.args eliminado -> addPassthruArgs(); optimize modes en minusculas.
 if [ -f tapk-extract/build.zig ]; then
 	sed -i 's/optimize != \.Debug/optimize != .debug/g; s/optimize == \.Debug/optimize == .debug/g; s/\.ReleaseFast/.fast/g; s/\.ReleaseSafe/.safe/g; s/\.ReleaseSmall/.small/g' tapk-extract/build.zig
+	sed -i 's/if (b\.args) |args| run_cmd\.addArgs(args);/run_cmd.addPassthruArgs();/g' tapk-extract/build.zig
 fi
 (cd tapk-extract && zig build --release=fast \
 	-Dtarget="$TARGET_TRIPLE" -Dcpu=baseline)
@@ -191,8 +189,9 @@ fi
 LW_DIR="mcpe-nx/lite-webview"
 LW_SKIP=0
 if [ -d "$LW_DIR" ] && [ -f "$LW_DIR/build.zig" ]; then
-	# Aplicar el mismo renombrado de Optimize por si el build.zig lo usa.
+	# Aplicar los mismos parches de Zig 0.17.
 	sed -i 's/optimize != \.Debug/optimize != .debug/g; s/optimize == \.Debug/optimize == .debug/g; s/\.ReleaseFast/.fast/g; s/\.ReleaseSafe/.safe/g; s/\.ReleaseSmall/.small/g' "$LW_DIR/build.zig"
+	sed -i 's/if (b\.args) |args| run_cmd\.addArgs(args);/run_cmd.addPassthruArgs();/g' "$LW_DIR/build.zig"
 
 	# Zig con -target aisla el sysroot: hay que anadir las rutas de librerias.
 	if ! grep -q 'addLibraryPath.*"/usr/lib"' "$LW_DIR/build.zig"; then
