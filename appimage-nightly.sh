@@ -140,10 +140,9 @@ cat > "$ROOT/.toolchain/zig-cc" <<EOF
 exec zig cc -target ${TARGET_TRIPLE} \\
     -idirafter /usr/include \\
     -idirafter /usr/local/include \\
-    -L/usr/lib \\
-    -L/usr/lib/${TARGET_TRIPLE%-linux-gnu*} \\
-    -L/lib \\
-    -L/usr/local/lib \\
+    -L/usr/lib -L/lib -L/usr/local/lib \\
+    -fno-sanitize=all \\
+    -Wl,--allow-shlib-undefined \\
     "\$@"
 EOF
 cat > "$ROOT/.toolchain/zig-cxx" <<EOF
@@ -151,10 +150,9 @@ cat > "$ROOT/.toolchain/zig-cxx" <<EOF
 exec zig c++ -target ${TARGET_TRIPLE} \\
     -idirafter /usr/include \\
     -idirafter /usr/local/include \\
-    -L/usr/lib \\
-    -L/usr/lib/${TARGET_TRIPLE%-linux-gnu*} \\
-    -L/lib \\
-    -L/usr/local/lib \\
+    -L/usr/lib -L/lib -L/usr/local/lib \\
+    -fno-sanitize=all \\
+    -Wl,--allow-shlib-undefined \\
     "\$@"
 EOF
 chmod +x "$ROOT/.toolchain/zig-cc" "$ROOT/.toolchain/zig-cxx"
