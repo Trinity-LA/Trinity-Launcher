@@ -140,6 +140,7 @@ cat > "$ROOT/.toolchain/zig-cc" <<EOF
 exec zig cc -target ${TARGET_TRIPLE} \\
     -idirafter /usr/include \\
     -idirafter /usr/local/include \\
+    -L/usr/lib -L/lib -L/usr/local/lib \\
     "\$@"
 EOF
 cat > "$ROOT/.toolchain/zig-cxx" <<EOF
@@ -147,6 +148,7 @@ cat > "$ROOT/.toolchain/zig-cxx" <<EOF
 exec zig c++ -target ${TARGET_TRIPLE} \\
     -idirafter /usr/include \\
     -idirafter /usr/local/include \\
+    -L/usr/lib -L/lib -L/usr/local/lib \\
     "\$@"
 EOF
 chmod +x "$ROOT/.toolchain/zig-cc" "$ROOT/.toolchain/zig-cxx"
