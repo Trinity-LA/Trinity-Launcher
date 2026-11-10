@@ -129,11 +129,29 @@ if ! command -v zig >/dev/null 2>&1; then
     export PATH="$ROOT/zig-$ARCH-linux-$ZIG_VER:$PATH"
 fi
 
-# zig cc / zig c++ son wrappers de Clang/LLVM que respetan el triple con
-# versión de glibc. No se usa el clang del sistema porque enlaza contra la
-# glibc de Arch (2.4x) y rompe Linux Mint / distros estables.
-export CC="zig cc"
-export CXX="zig c++"
+# Wrappers ejecutables: un path unico sin `;` ni espacios, para que
+# ExternalProject_Add(curl_ext ...) los propague intactos al subproyecto.
+# Sin esto, CMake resuelve "zig;cc" a /usr/sbin/zig + arg "cc", y al pasar
+# el compilador al ExternalProject se pierde el "cc" (shell parte el `;`),
+# dejando a curl_ext invocando `zig -o ...` (unknown command: -o).
+mkdir -p "$ROOT/.toolchain"
+cat > "$ROOT/.toolchain/zig-cc" <<EOF
+#!/bin/sh
+exec zig cc -target ${TARGET_TRIPLE} "\$@"
+EOF
+cat > "$ROOT/.toolchain/zig-cxx" <<EOF
+#!/bin/sh
+exec zig c++ -target ${TARGET_TRIPLE} "\$@"
+EOF
+chmod +x "$ROOT/.toolchain/zig-cc" "$ROOT/.toolchain/zig-cxx"
+
+export CC="$ROOT/.toolchain/zig-cc"
+export CXX="$ROOT/.toolchain/zig-cxx"
+# Refuerzo para CMake y para cualquier subproyecto que lea estas vars.
+export CMAKE_C_COMPILER="$CC"
+export CMAKE_CXX_COMPILER="$CXX"
+# No se exporta CMAKE_C_COMPILER_TARGET: el target ya va dentro del wrapper.
+# Evita el doble -target y que curl_ext (que no hereda esa var) se quede sin el.
 
 CCACHE_LAUNCHER=""
 if command -v ccache >/dev/null 2>&1; then
@@ -146,10 +164,8 @@ fi
 # shellcheck disable=SC2086
 cmake -S mcpe-nx -B mcpe-nx/build -G Ninja \
     -DCMAKE_BUILD_TYPE=Release \
-    -DCMAKE_C_COMPILER="zig;cc" \
-    -DCMAKE_CXX_COMPILER="zig;c++" \
-    -DCMAKE_C_COMPILER_TARGET="$TARGET_TRIPLE" \
-    -DCMAKE_CXX_COMPILER_TARGET="$TARGET_TRIPLE" \
+    -DCMAKE_C_COMPILER="$CC" \
+    -DCMAKE_CXX_COMPILER="$CXX" \
     -DBUILD_WEBVIEW=OFF \
     -DGAMEWINDOW_SYSTEM=SDL3 \
     -DBUILD_UI=OFF \
@@ -160,34 +176,6 @@ cmake -S mcpe-nx -B mcpe-nx/build -G Ninja \
     $CCACHE_LAUNCHER \
     -Wno-dev
 cmake --build mcpe-nx/build --parallel "$(nproc)"
-
-# Cache de Zig dentro del workspace (la persiste actions/cache en CI)
-ZIG_CACHE_DIR="$ROOT/.zig-cache"
-mkdir -p "$ZIG_CACHE_DIR/tapk-local" "$ZIG_CACHE_DIR/webview-local" "$ZIG_CACHE_DIR/global"
-(cd tapk-extract && zig build --release=fast -Dtarget="$TARGET_TRIPLE" -Dcpu=baseline \
-    --cache-dir "$ZIG_CACHE_DIR/tapk-local" --global-cache-dir "$ZIG_CACHE_DIR/global")
-
-if [ -d mcpe-nx/lite-webview ]; then
-    (cd mcpe-nx/lite-webview && zig build --release=fast -Dtarget="$TARGET_TRIPLE" -Dcpu=baseline \
-        --cache-dir "$ZIG_CACHE_DIR/webview-local" --global-cache-dir "$ZIG_CACHE_DIR/global")
-fi
-
-if [ "$ARCH" != "x86_64" ]; then
-    find . -name "CMakeLists.txt" -exec sed -i 's/-msse3\b//g;s/-msse4[^ ]*//g;s/-mavx[^ ]*//g' {} \;
-    sed -i 's/-msse3\b//g;s/-msse4[^ ]*//g;s/-mavx[^ ]*//g' build.sh || true
-fi
-
-# Trinity Launcher (proyecto raíz): también con zig cc + target viejo
-# shellcheck disable=SC2086
-cmake -S . -B build -G Ninja \
-    -DCMAKE_BUILD_TYPE=Release \
-    -DCMAKE_C_COMPILER="zig;cc" \
-    -DCMAKE_CXX_COMPILER="zig;c++" \
-    -DCMAKE_C_COMPILER_TARGET="$TARGET_TRIPLE" \
-    -DCMAKE_CXX_COMPILER_TARGET="$TARGET_TRIPLE" \
-    $CCACHE_LAUNCHER \
-    -Wno-dev
-cmake --build build --parallel "$(nproc)"
 
 echo "=== 5/7 Instalar todo en /usr (requisito de quick-sharun) ==="
 $SUDO install -Dm755 build/app/trinity /usr/bin/trinity
