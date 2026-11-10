@@ -37,7 +37,10 @@ if [ -z "${UPINFO:-}" ]; then
 fi
 SHARUN_URL="https://raw.githubusercontent.com/pkgforge-dev/Anylinux-AppImages/refs/heads/main/useful-tools/quick-sharun.sh"
 DEBLOAT_URL="https://raw.githubusercontent.com/pkgforge-dev/Anylinux-AppImages/refs/heads/main/useful-tools/get-debloated-pkgs.sh"
-ZIG_VER="0.16.0"
+# Zig 0.17: el enum Optimize usa .debug/.safe/.fast/.small (minusculas).
+# Las constantes .Debug/.ReleaseFast quedan como alias deprecados y NO son
+# campos del enum, por lo que `optimize != .Debug` deja de compilar.
+ZIG_VER="0.17.1"
 
 if [ "$(id -u)" -eq 0 ]; then
 	SUDO=""
@@ -169,49 +172,46 @@ cmake -S mcpe-nx -B mcpe-nx/build -G Ninja \
 	-Wno-dev
 cmake --build mcpe-nx/build --parallel "$(nproc)"
 
-# --- 4b. Zig cache layout (una sola vez) ---
+# --- 4b. Zig cache layout (variables de entorno desde 0.17) ---
 ZIG_CACHE_DIR="$ROOT/.zig-cache"
 mkdir -p "$ZIG_CACHE_DIR/tapk-local" "$ZIG_CACHE_DIR/webview-local" "$ZIG_CACHE_DIR/global"
-# Zig 0.16+ movio --global-cache-dir de CLI a variable de entorno.
+export ZIG_LOCAL_CACHE_DIR="$ZIG_CACHE_DIR/tapk-local"
 export ZIG_GLOBAL_CACHE_DIR="$ZIG_CACHE_DIR/global"
 
 # --- 4c. tapk-extract (Zig build, target glibc 2.28) ---
+# Zig 0.17 cambio el enum Optimize a minusculas. Se parchea el build.zig
+# antes de compilar para que `optimize != .Debug` no rompa el build.
+if [ -f tapk-extract/build.zig ]; then
+	sed -i 's/optimize != \.Debug/optimize != .debug/g; s/optimize == \.Debug/optimize == .debug/g; s/\.ReleaseFast/.fast/g; s/\.ReleaseSafe/.safe/g; s/\.ReleaseSmall/.small/g' tapk-extract/build.zig
+fi
 (cd tapk-extract && zig build --release=fast \
-	-Dtarget="$TARGET_TRIPLE" -Dcpu=baseline \
-	--cache-dir "$ZIG_CACHE_DIR/tapk-local")
+	-Dtarget="$TARGET_TRIPLE" -Dcpu=baseline)
 
 # --- 4d. lite-webview (backend de login Xbox, opcional) ---
-# Con -target, zig build-exe aisla el sysroot y no busca librerias en /usr/lib,
-# asi que webkit2gtk/gtk-3/etc no se encuentran aunque pkg-config de sus -I.
-# Se parchea build.zig para que anada addLibraryPath(/usr/lib, /lib) y ademas
-# se pasa --search-prefix como refuerzo. Si aun asi falla, se omite (login cae
-# al backend Qt compilado con XAL_WEBVIEW_USE_QT=ON en el engine).
 LW_DIR="mcpe-nx/lite-webview"
 LW_SKIP=0
 if [ -d "$LW_DIR" ] && [ -f "$LW_DIR/build.zig" ]; then
+	# Aplicar el mismo renombrado de Optimize por si el build.zig lo usa.
+	sed -i 's/optimize != \.Debug/optimize != .debug/g; s/optimize == \.Debug/optimize == .debug/g; s/\.ReleaseFast/.fast/g; s/\.ReleaseSafe/.safe/g; s/\.ReleaseSmall/.small/g' "$LW_DIR/build.zig"
+
+	# Zig con -target aisla el sysroot: hay que anadir las rutas de librerias.
 	if ! grep -q 'addLibraryPath.*"/usr/lib"' "$LW_DIR/build.zig"; then
-		echo "Parcheando $LW_DIR/build.zig con rutas de librerias del sistema..."
 		perl -i -pe 's|^(\s*)(exe\.linkLibC(?:pp)?\(\);)|$1$2\n$1exe.addLibraryPath(.{ .cwd_relative = "/usr/lib" });\n$1exe.addLibraryPath(.{ .cwd_relative = "/lib" });\n$1exe.addLibraryPath(.{ .cwd_relative = "/usr/local/lib" });|g' "$LW_DIR/build.zig"
 	fi
 	if ! grep -q 'addLibraryPath.*"/usr/lib"' "$LW_DIR/build.zig"; then
 		perl -i -pe 's|^(\s*)(exe\.linkSystemLibrary)|\1exe.addLibraryPath(.{ .cwd_relative = "/usr/lib" });\n\1exe.addLibraryPath(.{ .cwd_relative = "/lib" });\n\1\2|' "$LW_DIR/build.zig"
 	fi
-	if grep -q 'addLibraryPath.*"/usr/lib"' "$LW_DIR/build.zig"; then
-		echo "OK: build.zig de lite-webview parcheado"
-	else
-		echo "WARN: no se pudo parchear build.zig de lite-webview; se intentara sin patch"
-	fi
 
-	if ! (cd "$LW_DIR" && zig build --release=fast \
+	if ! (cd "$LW_DIR" && ZIG_LOCAL_CACHE_DIR="$ZIG_CACHE_DIR/webview-local" \
+		zig build --release=fast \
 		-Dtarget="$TARGET_TRIPLE" -Dcpu=baseline \
-		--search-prefix /usr --search-prefix /lib \
-		--cache-dir "$ZIG_CACHE_DIR/webview-local"); then
+		--search-prefix /usr --search-prefix /lib); then
 		echo "WARN: lite-webview fallo al compilar; se omite (login usara Qt fallback)"
 		LW_SKIP=1
 	fi
 fi
 
-# --- 4e. Limpieza de flags x86 SIMD en ARM (SSE/AVX rompen el build aarch64) ---
+# --- 4e. Limpieza de flags x86 SIMD en ARM ---
 if [ "$ARCH" != "x86_64" ]; then
 	find . -maxdepth 3 -name "CMakeLists.txt" -exec \
 		sed -i 's/-msse3\b//g;s/-msse4[^ ]*//g;s/-mavx[^ ]*//g' {} \;
