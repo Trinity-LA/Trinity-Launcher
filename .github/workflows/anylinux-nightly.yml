@@ -46,17 +46,6 @@ jobs:
           pacman -S --noconfirm zig
           zig version
 
-      - name: Configurar toolchain Zig (glibc antigua + LLVM)
-        run: |
-          if [ "${{ matrix.arch }}" = "aarch64" ]; then
-            TRIPLE="aarch64-linux-gnu"
-          else
-            TRIPLE="x86_64-linux-gnu"
-          fi
-          echo "CC=zig cc" >> "$GITHUB_ENV"
-          echo "CXX=zig c++" >> "$GITHUB_ENV"
-          echo "ZIG_TARGET=${TRIPLE}.${GLIBC_TARGET}" >> "$GITHUB_ENV"
-
       - uses: actions/checkout@v4
 
       - name: Cache ccache + zig
@@ -93,25 +82,6 @@ jobs:
           export GIT_SSH_COMMAND="ssh -o UserKnownHostsFile=$HOME/.ssh/known_hosts -o GlobalKnownHostsFile=/dev/null -o StrictHostKeyChecking=yes"
 
           git clone -b untested "$REPO" mcpe-nx
-
-      - name: Parchear script para respetar zig cc
-        run: |
-          # Reemplaza los export incondicionales por asignaciones que solo actúan si CC/CXX no están definidos
-          sed -i 's/^export CC=clang$/export CC="${CC:-clang}"/' trinity-appimage.sh
-          sed -i 's/^export CXX=clang++$/export CXX="${CXX:-clang++}"/' trinity-appimage.sh
-          # Verifica que el parche se aplicó (opcional, para depurar)
-          grep -n 'export CC' trinity-appimage.sh || true
-          grep -n 'export CXX' trinity-appimage.sh || true
-          
-      - name: Configurar toolchain Zig (glibc 2.28 + LLVM)
-        run: |
-          if [ "${{ matrix.arch }}" = "aarch64" ]; then
-            TRIPLE="aarch64-linux-gnu"
-          else
-            TRIPLE="x86_64-linux-gnu"
-          fi
-          echo "CC=zig cc -target ${TRIPLE}.${GLIBC_TARGET}" >> "$GITHUB_ENV"
-          echo "CXX=zig c++ -target ${TRIPLE}.${GLIBC_TARGET}" >> "$GITHUB_ENV"
           
       - name: Construir AppImage
         run: |
@@ -119,7 +89,7 @@ jobs:
           export CXX="zig c++"
           export CMAKE_C_COMPILER_TARGET="${ZIG_TARGET}"
           export CMAKE_CXX_COMPILER_TARGET="${ZIG_TARGET}"
-          sh ./appimage-nightly.sh
+          sh ./trinity-appimage.sh
 
       - name: Subir artefacto
         uses: actions/upload-artifact@v4
