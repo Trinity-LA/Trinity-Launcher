@@ -116,14 +116,6 @@ fi
 
 # Wrappers ejecutables (path unico, sin `;` ni espacios, para que
 # ExternalProject_Add(curl_ext ...) los propague intactos al subproyecto).
-# -idirafter /usr/include: headers no-libc (zlib, openssl, libpng) del host.
-# -L/usr/lib -L/lib:       librerias de sistema que Zig no empaqueta.
-# -fno-sanitize=all:       libcurl se compila con UBSan en ReleaseFast; sin
-#                          esto el linker final pide __ubsan_handle_* que no
-#                          estan enlazados.
-# -Wl,--allow-shlib-undefined: libssl/libpng de Arch piden GLIBC_2.29+;
-#                          el binario se enlaza contra 2.28 y en runtime
-#                          sharun resuelve contra su glibc reciente.
 mkdir -p "$ROOT/.toolchain"
 cat > "$ROOT/.toolchain/zig-cc" <<EOF
 #!/bin/sh
@@ -177,15 +169,18 @@ cmake -S mcpe-nx -B mcpe-nx/build -G Ninja \
 	-Wno-dev
 cmake --build mcpe-nx/build --parallel "$(nproc)"
 
-# --- 4b. tapk-extract (Zig build, target glibc 2.28) ---
+# --- 4b. Zig cache layout (una sola vez) ---
 ZIG_CACHE_DIR="$ROOT/.zig-cache"
 mkdir -p "$ZIG_CACHE_DIR/tapk-local" "$ZIG_CACHE_DIR/webview-local" "$ZIG_CACHE_DIR/global"
+# Zig 0.16+ movio --global-cache-dir de CLI a variable de entorno.
+export ZIG_GLOBAL_CACHE_DIR="$ZIG_CACHE_DIR/global"
+
+# --- 4c. tapk-extract (Zig build, target glibc 2.28) ---
 (cd tapk-extract && zig build --release=fast \
 	-Dtarget="$TARGET_TRIPLE" -Dcpu=baseline \
-	--cache-dir "$ZIG_CACHE_DIR/tapk-local" \
-	--global-cache-dir "$ZIG_CACHE_DIR/global")
+	--cache-dir "$ZIG_CACHE_DIR/tapk-local")
 
-# --- 4c. lite-webview (backend de login Xbox, opcional) ---
+# --- 4d. lite-webview (backend de login Xbox, opcional) ---
 # Con -target, zig build-exe aisla el sysroot y no busca librerias en /usr/lib,
 # asi que webkit2gtk/gtk-3/etc no se encuentran aunque pkg-config de sus -I.
 # Se parchea build.zig para que anada addLibraryPath(/usr/lib, /lib) y ademas
@@ -196,11 +191,9 @@ LW_SKIP=0
 if [ -d "$LW_DIR" ] && [ -f "$LW_DIR/build.zig" ]; then
 	if ! grep -q 'addLibraryPath.*"/usr/lib"' "$LW_DIR/build.zig"; then
 		echo "Parcheando $LW_DIR/build.zig con rutas de librerias del sistema..."
-		# Inserta addLibraryPath justo despues de exe.linkLibC() / linkLibCpp().
 		perl -i -pe 's|^(\s*)(exe\.linkLibC(?:pp)?\(\);)|$1$2\n$1exe.addLibraryPath(.{ .cwd_relative = "/usr/lib" });\n$1exe.addLibraryPath(.{ .cwd_relative = "/lib" });\n$1exe.addLibraryPath(.{ .cwd_relative = "/usr/local/lib" });|g' "$LW_DIR/build.zig"
 	fi
 	if ! grep -q 'addLibraryPath.*"/usr/lib"' "$LW_DIR/build.zig"; then
-		# Fallback: insertar antes del primer linkSystemLibrary
 		perl -i -pe 's|^(\s*)(exe\.linkSystemLibrary)|\1exe.addLibraryPath(.{ .cwd_relative = "/usr/lib" });\n\1exe.addLibraryPath(.{ .cwd_relative = "/lib" });\n\1\2|' "$LW_DIR/build.zig"
 	fi
 	if grep -q 'addLibraryPath.*"/usr/lib"' "$LW_DIR/build.zig"; then
@@ -212,21 +205,20 @@ if [ -d "$LW_DIR" ] && [ -f "$LW_DIR/build.zig" ]; then
 	if ! (cd "$LW_DIR" && zig build --release=fast \
 		-Dtarget="$TARGET_TRIPLE" -Dcpu=baseline \
 		--search-prefix /usr --search-prefix /lib \
-		--cache-dir "$ZIG_CACHE_DIR/webview-local" \
-		--global-cache-dir "$ZIG_CACHE_DIR/global"); then
+		--cache-dir "$ZIG_CACHE_DIR/webview-local"); then
 		echo "WARN: lite-webview fallo al compilar; se omite (login usara Qt fallback)"
 		LW_SKIP=1
 	fi
 fi
 
-# --- 4d. Limpieza de flags x86 SIMD en ARM (SSE/AVX rompen el build aarch64) ---
+# --- 4e. Limpieza de flags x86 SIMD en ARM (SSE/AVX rompen el build aarch64) ---
 if [ "$ARCH" != "x86_64" ]; then
 	find . -maxdepth 3 -name "CMakeLists.txt" -exec \
 		sed -i 's/-msse3\b//g;s/-msse4[^ ]*//g;s/-mavx[^ ]*//g' {} \;
 	sed -i 's/-msse3\b//g;s/-msse4[^ ]*//g;s/-mavx[^ ]*//g' build.sh 2>/dev/null || true
 fi
 
-# --- 4e. Launcher Trinity (proyecto raiz, GUI Qt6) ---
+# --- 4f. Launcher Trinity (proyecto raiz, GUI Qt6) ---
 if [ ! -f CMakeLists.txt ]; then
 	echo "FATAL: no hay CMakeLists.txt en $PWD (¿clone incompleto de Trinity?)" >&2
 	exit 1
@@ -240,9 +232,6 @@ cmake -S . -B build -G Ninja \
 	-Wno-dev
 cmake --build build --parallel "$(nproc)"
 
-# Descubrimiento dinamico del binario (el layout puede cambiar entre
-# versiones de Trinity, y con zig-cc puede no ser exactamente
-# build/app/trinity).
 TRINITY_BIN="$(find build -maxdepth 4 -type f \
 	\( -name 'trinity' -o -name 'Trinity' -o -name 'trinity-launcher' \) \
 	-perm -u+x -print -quit 2>/dev/null || true)"
@@ -374,7 +363,6 @@ fi
 rm -rf "$_QS_REFDIR"
 echo "sharun integro."
 
-# --- Verificacion glibc de los ELF del bundle ---
 echo "=== glibc maxima referenciada por binario ==="
 for b in AppDir/bin/trinity AppDir/bin/mcpelauncher-client AppDir/bin/mcpelauncher-extract AppDir/bin/mcpelauncher-webview; do
 	[ -x "$b" ] || continue
