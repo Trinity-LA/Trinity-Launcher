@@ -46,13 +46,16 @@ jobs:
           pacman -S --noconfirm zig
           zig version
 
-      - name: Configurar toolchain para glibc antigua + LLVM
+      - name: Configurar toolchain Zig (glibc antigua + LLVM)
         run: |
-          echo "CC=zig cc -target x86_64-linux-gnu.${GLIBC_TARGET}" >> "$GITHUB_ENV"
-          echo "CXX=zig c++ -target x86_64-linux-gnu.${GLIBC_TARGET}" >> "$GITHUB_ENV"
-          # Si el build usa CMake, Meson o Autotools, estas variables suelen respetarse.
-          echo "CFLAGS=-target x86_64-linux-gnu.${GLIBC_TARGET}" >> "$GITHUB_ENV"
-          echo "CXXFLAGS=-target x86_64-linux-gnu.${GLIBC_TARGET}" >> "$GITHUB_ENV"
+          if [ "${{ matrix.arch }}" = "aarch64" ]; then
+            TRIPLE="aarch64-linux-gnu"
+          else
+            TRIPLE="x86_64-linux-gnu"
+          fi
+          echo "CC=zig cc" >> "$GITHUB_ENV"
+          echo "CXX=zig c++" >> "$GITHUB_ENV"
+          echo "ZIG_TARGET=${TRIPLE}.${GLIBC_TARGET}" >> "$GITHUB_ENV"
 
       - uses: actions/checkout@v4
 
