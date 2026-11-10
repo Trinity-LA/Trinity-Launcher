@@ -137,11 +137,17 @@ fi
 mkdir -p "$ROOT/.toolchain"
 cat > "$ROOT/.toolchain/zig-cc" <<EOF
 #!/bin/sh
-exec zig cc -target ${TARGET_TRIPLE} "\$@"
+exec zig cc -target ${TARGET_TRIPLE} \\
+    -idirafter /usr/include \\
+    -idirafter /usr/local/include \\
+    "\$@"
 EOF
 cat > "$ROOT/.toolchain/zig-cxx" <<EOF
 #!/bin/sh
-exec zig c++ -target ${TARGET_TRIPLE} "\$@"
+exec zig c++ -target ${TARGET_TRIPLE} \\
+    -idirafter /usr/include \\
+    -idirafter /usr/local/include \\
+    "\$@"
 EOF
 chmod +x "$ROOT/.toolchain/zig-cc" "$ROOT/.toolchain/zig-cxx"
 
