@@ -115,10 +115,10 @@ jobs:
           
       - name: Construir AppImage
         run: |
-          export CC="zig cc -target x86_64-linux-gnu.${GLIBC_TARGET}"
-          export CXX="zig c++ -target x86_64-linux-gnu.${GLIBC_TARGET}"
-          # Opcional: indicar a CMake que use estos compiladores
-          # cmake -DCMAKE_C_COMPILER="zig cc" -DCMAKE_CXX_COMPILER="zig c++" ...
+          export CC="zig cc"
+          export CXX="zig c++"
+          export CMAKE_C_COMPILER_TARGET="${ZIG_TARGET}"
+          export CMAKE_CXX_COMPILER_TARGET="${ZIG_TARGET}"
           sh ./trinity-appimage.sh
 
       - name: Subir artefacto
