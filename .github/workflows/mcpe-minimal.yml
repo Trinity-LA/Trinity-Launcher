@@ -35,7 +35,7 @@ jobs:
 
           export GIT_SSH_COMMAND="ssh -o UserKnownHostsFile=$HOME/.ssh/known_hosts -o GlobalKnownHostsFile=/dev/null -o StrictHostKeyChecking=yes"
 
-          git clone -b untested "$REPO" mcpe-nx
+          git clone "$REPO" mcpe-nx
 
 
 
