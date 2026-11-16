@@ -19,8 +19,9 @@ jobs:
     steps:
       - name: Instalar dependencias del sistema
         run: |
-          sudo apt-get update
-          sudo apt-get install -y --no-install-recommends \
+          export DEBIAN_FRONTEND=noninteractive
+          apt-get update
+          apt-get install -y --no-install-recommends \
             ca-certificates build-essential git curl cmake clang ninja-build \
             qt6-base-dev qt6-base-dev-tools qt6-declarative-dev qt6-webengine-dev qt6-svg-dev qt6-tools-dev \
             libcurl4-openssl-dev openssh-client openssh-server libssl-dev libasound2-dev libpulse-dev libjack-jackd2-dev \
