@@ -212,13 +212,17 @@ if [ ! -f CMakeLists.txt ]; then
     echo "FATAL: no hay CMakeLists.txt en $PWD (¿clone incompleto de Trinity?)" >&2
     exit 1
 fi
+# Trinity enlaza contra Qt6 del sistema (compilado con libstdc++), por lo que
+# debe usar clang++ nativo en lugar de zig-cxx (que usa libc++ y rompe ABI).
 # shellcheck disable=SC2086
-cmake -S . -B build -G Ninja \
-    -DCMAKE_BUILD_TYPE=Release \
-    -DCMAKE_C_COMPILER="$CC" \
-    -DCMAKE_CXX_COMPILER="$CXX" \
-    ${CCACHE_LAUNCHER:-} \
-    -Wno-dev
+env -u CMAKE_C_COMPILER -u CMAKE_CXX_COMPILER \
+    CC=clang CXX=clang++ \
+    cmake -S . -B build -G Ninja \
+        -DCMAKE_BUILD_TYPE=Release \
+        -DCMAKE_C_COMPILER=clang \
+        -DCMAKE_CXX_COMPILER=clang++ \
+        ${CCACHE_LAUNCHER:-} \
+        -Wno-dev
 cmake --build build --parallel "$(nproc)"
 
 TRINITY_BIN="$(find build -maxdepth 4 -type f \
