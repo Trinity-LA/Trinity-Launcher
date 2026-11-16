@@ -85,7 +85,7 @@ jobs:
           
       - name: Construir AppImage
         run: |
-          sh ./trinity-appimage.sh
+          sh ./appimage-nightly.sh
 
       - name: Subir artefacto
         uses: actions/upload-artifact@v4
