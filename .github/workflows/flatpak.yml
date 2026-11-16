@@ -31,7 +31,6 @@ jobs:
           flatpak install --user -y flathub \
             org.kde.Platform//6.11 \
             org.kde.Sdk//6.11 \
-            org.freedesktop.Sdk.Extension.llvm21//26.08 \
             io.qt.qtwebengine.BaseApp/x86_64/6.11
 
       - name: 3. Descargar y Extraer Binarios
