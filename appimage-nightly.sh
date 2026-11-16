@@ -165,7 +165,7 @@ cmake -S mcpe-nx -B mcpe-nx/build -G Ninja \
     -DSDL3_VENDORED=ON \
     -DENABLE_DEV_PATHS=OFF \
     -DCMAKE_POLICY_VERSION_MINIMUM=3.5 \
-    $CCACHE_LAUNCHER \
+    ${CCACHE_LAUNCHER:-} \
     -Wno-dev
 cmake --build mcpe-nx/build --parallel "$(nproc)"
 
@@ -176,10 +176,6 @@ export ZIG_LOCAL_CACHE_DIR="$ZIG_CACHE_DIR/tapk-local"
 export ZIG_GLOBAL_CACHE_DIR="$ZIG_CACHE_DIR/global"
 
 # --- 4c. tapk-extract (Zig build, target glibc 2.28) ---
-if [ -f tapk-extract/build.zig ]; then
-    sed -i 's/optimize != \.Debug/optimize != .debug/g; s/optimize == \.Debug/optimize == .debug/g; s/\.ReleaseFast/.fast/g; s/\.ReleaseSafe/.safe/g; s/\.ReleaseSmall/.small/g' tapk-extract/build.zig
-    sed -i 's/if (b\.args) |args| run_cmd\.addArgs(args);/run_cmd.addPassthruArgs();/g' tapk-extract/build.zig
-fi
 (cd tapk-extract && zig build --release=fast \
     -Dtarget="$TARGET_TRIPLE" -Dcpu=baseline)
 
@@ -187,9 +183,6 @@ fi
 LW_DIR="mcpe-nx/lite-webview"
 LW_SKIP=0
 if [ -d "$LW_DIR" ] && [ -f "$LW_DIR/build.zig" ]; then
-    sed -i 's/optimize != \.Debug/optimize != .debug/g; s/optimize == \.Debug/optimize == .debug/g; s/\.ReleaseFast/.fast/g; s/\.ReleaseSafe/.safe/g; s/\.ReleaseSmall/.small/g' "$LW_DIR/build.zig"
-    sed -i 's/if (b\.args) |args| run_cmd\.addArgs(args);/run_cmd.addPassthruArgs();/g' "$LW_DIR/build.zig"
-
     # Zig con -target aisla el sysroot: hay que anadir las rutas de librerias.
     if ! grep -q 'addLibraryPath.*"/usr/lib"' "$LW_DIR/build.zig"; then
         perl -i -pe 's|^(\s*)(exe\.linkLibC(?:pp)?\(\);)|$1$2\n$1exe.addLibraryPath(.{ .cwd_relative = "/usr/lib" });\n$1exe.addLibraryPath(.{ .cwd_relative = "/lib" });\n$1exe.addLibraryPath(.{ .cwd_relative = "/usr/local/lib" });|g' "$LW_DIR/build.zig"
@@ -224,7 +217,7 @@ cmake -S . -B build -G Ninja \
     -DCMAKE_BUILD_TYPE=Release \
     -DCMAKE_C_COMPILER="$CC" \
     -DCMAKE_CXX_COMPILER="$CXX" \
-    $CCACHE_LAUNCHER \
+    ${CCACHE_LAUNCHER:-} \
     -Wno-dev
 cmake --build build --parallel "$(nproc)"
 
