@@ -124,7 +124,13 @@ export PATH="$ROOT/zig-$ARCH-linux-$ZIG_VER:$PATH"
 ZIG_CACHE_DIR="$ROOT/.zig-cache"
 mkdir -p "$ZIG_CACHE_DIR/tapk-local" "$ZIG_CACHE_DIR/webview-local" "$ZIG_CACHE_DIR/global"
 export ZIG_GLOBAL_CACHE_DIR="$ZIG_CACHE_DIR/global"
-
+CCACHE_LAUNCHER=""
+if command -v ccache >/dev/null 2>&1; then
+    CCACHE_DIR="${CCACHE_DIR:-$ROOT/.ccache}"
+    export CCACHE_DIR
+    mkdir -p "$CCACHE_DIR"
+    CCACHE_LAUNCHER="-DCMAKE_C_COMPILER_LAUNCHER=ccache -DCMAKE_CXX_COMPILER_LAUNCHER=ccache"
+fi
 (
     cd tapk-extract
     ZIG_LOCAL_CACHE_DIR="$ZIG_CACHE_DIR/tapk-local" \
@@ -146,6 +152,7 @@ if [ "$ARCH" != "x86_64" ]; then
 	find . -name "CMakeLists.txt" -exec sed -i 's/-msse3\b//g;s/-msse4[^ ]*//g;s/-mavx[^ ]*//g' {} \;
 	sed -i 's/-msse3\b//g;s/-msse4[^ ]*//g;s/-mavx[^ ]*//g' build.sh || true
 fi
+
 # shellcheck disable=SC2086
 cmake -S . -B build -G Ninja \
 	-DCMAKE_BUILD_TYPE=Release \
