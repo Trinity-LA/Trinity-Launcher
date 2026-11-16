@@ -6,9 +6,9 @@
   "runtime-commit": "a0fd8b396dc57700e0f805b2114d3925aa4aa72b10aa7b53cce4ab23c5bc68ac",
   "sdk": "org.kde.Sdk",
   "sdk-commit": "60f08b6eb98851e85030a5d69566eecba7964e528e2128ea786bba59c415fb85",
-  "base" : "io.qt.qtwebengine.BaseApp",
-  "base-version" : "6.10",
-  "base-commit" : "dd4e9c5120bc85d02d5f68864dc838e3a17b73523bfe4e83b192f260b5d5133f",
+  "base": "io.qt.qtwebengine.BaseApp",
+  "base-version": "6.10",
+  "base-commit": "dd4e9c5120bc85d02d5f68864dc838e3a17b73523bfe4e83b192f260b5d5133f",
   "command": "trinity",
   "sdk-extensions": [
     "org.freedesktop.Sdk.Extension.llvm21"
@@ -45,11 +45,48 @@
       "name": "pciutils",
       "buildsystem": "simple",
       "sources": [
-        { "type": "git", "url": "https://github.com/pciutils/pciutils.git", "tag": "v3.14.0" }
+        {
+          "type": "git",
+          "url": "https://github.com/pciutils/pciutils.git",
+          "tag": "v3.14.0"
+        }
       ],
       "build-commands": [
         "make -j$(nproc) ZLIB=no",
         "make install PREFIX=/app ZLIB=no"
+      ]
+    },
+    {
+      "name": "tapk-extract",
+      "buildsystem": "simple",
+      "sources": [
+        {
+          "type": "git",
+          "url": "https://gitlab.com/javiercplus/tapk-extract.git",
+          "branch": "main"
+        },
+        {
+          "type": "archive",
+          "only-arches": [
+            "x86_64"
+          ],
+          "url": "https://ziglang.org/download/0.16.0/zig-x86_64-linux-0.16.0.tar.xz",
+          "sha256": "70e49664a74374b48b51e6f3fdfbf437f6395d42509050588bd49abe52ba3d00",
+          "dest": "zig"
+        },
+        {
+          "type": "archive",
+          "only-arches": [
+            "aarch64"
+          ],
+          "url": "https://ziglang.org/download/0.16.0/zig-aarch64-linux-0.16.0.tar.xz",
+          "sha256": "ea4b09bfb22ec6f6c6ceac57ab63efb6b46e17ab08d21f69f3a48b38e1534f17",
+          "dest": "zig"
+        }
+      ],
+      "build-commands": [
+        "ZIG_LOCAL_CACHE_DIR=$PWD/.zig-local ZIG_GLOBAL_CACHE_DIR=$PWD/.zig-global ./zig/zig build --release=fast -Dtarget=native -Dcpu=baseline",
+        "install -Dm755 zig-out/bin/tapk-extract /app/bin/mcpelauncher-extract"
       ]
     },
     {
