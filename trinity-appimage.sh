@@ -112,50 +112,33 @@ if [ "$ARCH" = "x86_64" ] && [ ! -d 32bitmcpe ]; then
 	tar -xf mcpe32bit.tar
 fi
 
-echo "=== 4/7 Compilar engine (sin GUI, SDL3) + extractor (Zig) + Trinity ==="
-export CC=clang
-export CXX=clang++
-# ccache: acelera recompilaciones (nightly) sin cambiar ni un byte del
-# resultado (cache content-addressed). Sin ccache instalado se omite solo.
-CCACHE_LAUNCHER=""
-if command -v ccache >/dev/null 2>&1; then
-	CCACHE_DIR="${CCACHE_DIR:-$ROOT/.ccache}"
-	export CCACHE_DIR
-	mkdir -p "$CCACHE_DIR"
-	CCACHE_LAUNCHER="-DCMAKE_C_COMPILER_LAUNCHER=ccache -DCMAKE_CXX_COMPILER_LAUNCHER=ccache"
-fi
-# shellcheck disable=SC2086
-cmake -S mcpe-nx -B mcpe-nx/build -G Ninja \
-	-DCMAKE_BUILD_TYPE=Release \
-	-DBUILD_WEBVIEW=OFF \
-	-DGAMEWINDOW_SYSTEM=SDL3 \
-	-DBUILD_UI=OFF \
-	-DXAL_WEBVIEW_USE_QT=ON \
-	-DSDL3_VENDORED=ON \
-	-DENABLE_DEV_PATHS=OFF \
-	-DCMAKE_POLICY_VERSION_MINIMUM=3.5 \
-	$CCACHE_LAUNCHER \
-	-Wno-dev
-cmake --build mcpe-nx/build --parallel "$(nproc)"
-
 ZIG_TAR="zig-$ARCH-linux-$ZIG_VER.tar.xz"
-if ! command -v zig >/dev/null 2>&1; then
-	wget -q "https://ziglang.org/download/$ZIG_VER/$ZIG_TAR"
-	tar -xf "$ZIG_TAR"
-	export PATH="$ROOT/zig-$ARCH-linux-$ZIG_VER:$PATH"
+if [ ! -x "$ROOT/zig-$ARCH-linux-$ZIG_VER/zig" ]; then
+    wget -q "https://ziglang.org/download/$ZIG_VER/$ZIG_TAR"
+    tar -xf "$ZIG_TAR"
 fi
+export PATH="$ROOT/zig-$ARCH-linux-$ZIG_VER:$PATH"
+
 # Cache de Zig dentro del workspace (la persiste actions/cache en CI):
-# local separada por proyecto, global compartida (content-addressed).
+# En Zig 0.16.0 se configuran por variables de entorno en lugar de flags CLI.
 ZIG_CACHE_DIR="$ROOT/.zig-cache"
 mkdir -p "$ZIG_CACHE_DIR/tapk-local" "$ZIG_CACHE_DIR/webview-local" "$ZIG_CACHE_DIR/global"
-(cd tapk-extract && zig build --release=fast -Dtarget=native -Dcpu=baseline \
-	--cache-dir "$ZIG_CACHE_DIR/tapk-local" --global-cache-dir "$ZIG_CACHE_DIR/global")
+export ZIG_GLOBAL_CACHE_DIR="$ZIG_CACHE_DIR/global"
+
+(
+    cd tapk-extract
+    ZIG_LOCAL_CACHE_DIR="$ZIG_CACHE_DIR/tapk-local" \
+        zig build --release=fast -Dtarget=native -Dcpu=baseline
+)
 # Backend de login Xbox (igual que el workflow nightly): el flujo MSA/OAuth
 # del engine lo sirve lite-webview. Sin esto el login no puede completarse.
 # Solo existe en el engine privado; si no esta, se omite sin romper nada.
 if [ -d mcpe-nx/lite-webview ]; then
-	(cd mcpe-nx/lite-webview && zig build --release=fast -Dtarget=native -Dcpu=baseline \
-		--cache-dir "$ZIG_CACHE_DIR/webview-local" --global-cache-dir "$ZIG_CACHE_DIR/global")
+    (
+        cd mcpe-nx/lite-webview
+        ZIG_LOCAL_CACHE_DIR="$ZIG_CACHE_DIR/webview-local" \
+            zig build --release=fast -Dtarget=native -Dcpu=baseline
+    )
 fi
 
 if [ "$ARCH" != "x86_64" ]; then
