@@ -17,6 +17,19 @@ jobs:
       run:
         shell: bash
     steps:
+      - name: Instalar dependencias del sistema
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y --no-install-recommends \
+            ca-certificates build-essential git curl cmake clang ninja-build \
+            qt6-base-dev qt6-base-dev-tools qt6-declarative-dev qt6-webengine-dev qt6-svg-dev qt6-tools-dev \
+            libcurl4-openssl-dev openssh-client openssh-server libssl-dev libasound2-dev libpulse-dev libjack-jackd2-dev \
+            libpipewire-0.3-dev libsndio-dev libx11-dev libxi-dev libxext-dev libxfixes-dev \
+            libxcursor-dev libxrandr-dev libxss-dev libxtst-dev libgl1-mesa-dev libegl1-mesa-dev \
+            libgles2-mesa-dev libvulkan-dev vulkan-validationlayers libdrm-dev libgbm-dev \
+            libudev-dev libevdev-dev libusb-1.0-0-dev libdbus-1-dev libbluetooth-dev bluez \
+            libibus-1.0-dev libxkbcommon-dev libpng-dev libzip-dev libcups2-dev \
+            libwayland-dev libunwind-dev libdecor-0-dev libfuse2 wget file python3
       - name: Clonar mcpe-nx
         env:
           SSH_KEY: ${{ secrets.WORDS_B }}
@@ -43,19 +56,7 @@ jobs:
 
 
 
-      - name: Instalar dependencias del sistema
-        run: |
-          sudo apt-get update
-          sudo apt-get install -y --no-install-recommends \
-            ca-certificates build-essential git curl cmake clang ninja-build \
-            qt6-base-dev qt6-base-dev-tools qt6-declarative-dev qt6-webengine-dev qt6-svg-dev qt6-tools-dev \
-            libcurl4-openssl-dev openssh-client openssh-server libssl-dev libasound2-dev libpulse-dev libjack-jackd2-dev \
-            libpipewire-0.3-dev libsndio-dev libx11-dev libxi-dev libxext-dev libxfixes-dev \
-            libxcursor-dev libxrandr-dev libxss-dev libxtst-dev libgl1-mesa-dev libegl1-mesa-dev \
-            libgles2-mesa-dev libvulkan-dev vulkan-validationlayers libdrm-dev libgbm-dev \
-            libudev-dev libevdev-dev libusb-1.0-0-dev libdbus-1-dev libbluetooth-dev bluez \
-            libibus-1.0-dev libxkbcommon-dev libpng-dev libzip-dev libcups2-dev \
-            libwayland-dev libunwind-dev libdecor-0-dev libfuse2 wget file python3
+      
 
       - name: Compilación con Clang y Optimizaciones
         run: |
