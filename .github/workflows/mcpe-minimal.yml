@@ -30,7 +30,7 @@ jobs:
             libgles2-mesa-dev libvulkan-dev vulkan-validationlayers libdrm-dev libgbm-dev \
             libudev-dev libevdev-dev libusb-1.0-0-dev libdbus-1-dev libbluetooth-dev bluez \
             libibus-1.0-dev libxkbcommon-dev libpng-dev libzip-dev libcups2-dev \
-            libwayland-dev libunwind-dev libdecor-0-dev libfuse2 wget file python3
+            libwayland-dev libunwind-dev libdecor-0-dev libfuse2 wget file python3 python3-pip
       - name: Clonar mcpe-nx
         env:
           SSH_KEY: ${{ secrets.WORDS_B }}
