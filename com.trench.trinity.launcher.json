@@ -53,33 +53,6 @@
       ]
     },
     {
-      "name": "mcpe-extract",
-      "buildsystem": "cmake-ninja",
-      "build-options": {
-        "env": {
-          "CC": "clang",
-          "CXX": "clang++"
-        },
-        "prepend-path": "/usr/lib/sdk/llvm21/bin",
-        "prepend-ld-library-path": "/usr/lib/sdk/llvm21/lib"
-      },
-      "config-opts": [
-        "-DCMAKE_BUILD_TYPE=Release",
-        "-DCMAKE_POLICY_VERSION_MINIMUM=3.5",
-        "-Wno-dev"
-      ],
-      "post-install": [
-        "install -Dm755 mcpelauncher-extract /app/bin/mcpelauncher-extract"
-      ],
-      "sources": [
-        {
-          "type": "git",
-          "url": "https://codeberg.org/javiercplus/mcpe-extract.git",
-          "branch": "main"
-        }
-      ]
-    },
-    {
       "name": "cpdirs",
       "buildsystem": "simple",
       "sources": [
