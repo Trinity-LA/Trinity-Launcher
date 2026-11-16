@@ -10,9 +10,6 @@
   "base-version": "6.10",
   "base-commit": "dd4e9c5120bc85d02d5f68864dc838e3a17b73523bfe4e83b192f260b5d5133f",
   "command": "trinity",
-  "sdk-extensions": [
-    "org.freedesktop.Sdk.Extension.llvm21"
-  ],
   "modules": [
     {
       "name": "libevdev",
