@@ -70,7 +70,7 @@ jobs:
 
           # Qt 6.5.3 oficial (soporta macOS 11+ en ARM64, a diferencia de brew qt@6 que pide macOS 14/15)
           pip3 install aqtinstall --break-system-packages
-          aqt install-qt mac desktop 6.5.3 clang_64 -m qtsvg qtvirtualkeyboard -O "$GITHUB_WORKSPACE/qt6"
+          aqt install-qt mac desktop 6.5.3 clang_64 -O "$GITHUB_WORKSPACE/qt6"
 
           # Compilar OpenSSL 3 con target 11.0 para que no dependa de macOS 14+
           curl -L "https://www.openssl.org/source/openssl-3.3.2.tar.gz" -o openssl.tar.gz
