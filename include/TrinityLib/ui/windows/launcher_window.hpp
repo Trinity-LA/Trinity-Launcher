@@ -61,7 +61,7 @@ class LauncherWindow : public QWidget {
         // Layouts
         QHBoxLayout *mainLayout;
         QVBoxLayout *rightPanelLayout;
-        void deletePack(const QString &packType, const QString &packName);
+
         // Left Side - Version List
         QListWidget *versionList;
 
@@ -99,7 +99,6 @@ class LauncherWindow : public QWidget {
         void setupConnections();
         void updateContextPanel(const QString &versionName);
         bool copyDirectory(const QString &srcPath, const QString &dstPath);
-        bool extractZip(const QString &zipPath, const QString &destDir);
         QWidget *createSettingsPage();
         QWidget *createLogPage();
         void applyTheme(const QString &accent, const QString &bg,

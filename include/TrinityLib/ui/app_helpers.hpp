@@ -13,9 +13,9 @@ namespace Trinity::UI {
     /**
     * Inicializa los parámetros comunes para todas las aplicaciones Trinity.
     */
-    inline void setupThemeAndLocale(QApplication &app, const QString &appName) {
+    inline void setupThemeAndLocale(QApplication &app, const QString &appName = "") {
         QCoreApplication::setOrganizationName("Trench");
-        QCoreApplication::setApplicationName("Trinity Launcher"); 
+        QCoreApplication::setApplicationName(appName.isEmpty() ? "Trinity Launcher" : appName); 
 
         // Default Spanish language
         QString systemLang = QLocale::system().name().split('_').first();

@@ -46,9 +46,6 @@ private:
 
     // Regla de compatibilidad entre una ABI del APK y la arquitectura del host.
     static bool archCompatible(const QString &apkArch, const QString &hostArch);
-
-    // Función auxiliar para copiar directorios
-    bool copyDirectory(const QString &srcPath, const QString &dstPath);
 };
 
 #endif // VERSION_MANAGER_H

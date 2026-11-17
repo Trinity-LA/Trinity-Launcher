@@ -131,25 +131,30 @@ git commit -m "fixed"
 | **Constants** | `UPPER_SNAKE_CASE` | `MAX_RETRIES`, `DEFAULT_TIMEOUT` |
 | **Classes** | `PascalCase` | `LauncherWindow`, `VersionManager` |
 | **Folders** | `lowercase` | `src/`, `ui/`, `core/` |
-| **Files** | `snake_case` | `launcher_window.cpp`, `version_manager.h` |
+| **Files** | `snake_case` | `launcher_window.cpp`, `version_manager.hpp` |
 
 ### Structure Example
 
 ```
-src/
+include/TrinityLib/
 ├── core/
-│   ├── version_manager.h
+│   ├── version_manager.hpp
+│   └── pack_installer.hpp
+└── ui/
+    ├── windows/
+    │   └── launcher_window.hpp
+    └── dialogs/
+        └── extract_dialog.hpp
+
+src/TrinityLib/
+├── core/
 │   ├── version_manager.cpp
-│   ├── pack_installer.h
 │   └── pack_installer.cpp
-│
-├── ui/
-│   ├── windows/
-│   │   ├── launcher_window.h
-│   │   └── launcher_window.cpp
-│   ├── dialogs/
-│   │   ├── extract_dialog.h
-│   │   └── extract_dialog.cpp
+└── ui/
+    ├── windows/
+    │   └── launcher_window.cpp
+    └── dialogs/
+        └── extract_dialog.cpp
 ```
 
 ### Code Documentation
@@ -194,14 +199,15 @@ git switch -c fix/your-bug
 ### 3. Compile and test locally
 
 ```bash
-# Compile trinity
-qmake -project -o trinity.pro
-echo "QT += widgets" >> trinity.pro
-qmake trinity.pro
-make
+# Build (release mode)
+./build.sh --release
+# or using the Makefile helper:
+# make build
 
-# Execute
-./trinity
+# Run
+./build/app/trinity
+# or:
+# make run
 ```
 
 ### 4. Open a Pull Request

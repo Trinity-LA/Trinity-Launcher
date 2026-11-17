@@ -23,13 +23,13 @@ bool PackInstaller::itemExists(const QString &sourcePath, const QString &targetS
 bool PackInstaller::installItem(const QString &sourcePath, const QString &targetSubdir, bool forceOverwrite, QString &errorMsg) {
     QFileInfo sourceInfo(sourcePath);
     if (!sourceInfo.exists()) {
-        errorMsg = "La ruta seleccionada no existe.";
+        errorMsg = tr("The selected path does not exist.");
         return false;
     }
 
     QString targetDir = baseGameDir + "/" + targetSubdir;
     if (!QDir().mkpath(targetDir)) {
-        errorMsg = "No se pudo crear el directorio de destino.";
+        errorMsg = tr("Could not create destination directory.");
         return false;
     }
 
@@ -37,18 +37,18 @@ bool PackInstaller::installItem(const QString &sourcePath, const QString &target
 
     if (QFileInfo::exists(finalDest)) {
         if (!forceOverwrite) {
-            errorMsg = "El elemento ya existe.";
+            errorMsg = tr("Item already exists.");
             return false;
         }
         // Remove existing
         if (QFileInfo(finalDest).isDir()) {
             if (!QDir(finalDest).removeRecursively()) {
-                errorMsg = "No se pudo eliminar el directorio existente.";
+                errorMsg = tr("Could not delete existing directory.");
                 return false;
             }
         } else {
             if (!QFile::remove(finalDest)) {
-                errorMsg = "No se pudo eliminar el archivo existente.";
+                errorMsg = tr("Could not delete existing file.");
                 return false;
             }
         }
@@ -62,7 +62,7 @@ bool PackInstaller::installItem(const QString &sourcePath, const QString &target
     }
 
     if (!success) {
-        errorMsg = "Falló la copia del archivo o carpeta.";
+        errorMsg = tr("Failed to copy file or directory.");
         return false;
     }
 
