@@ -62,16 +62,26 @@ jobs:
           cd external_libs/angle_extracted
           find . -name "*.tar.xz" -exec tar -xf {} \;
 
-      - name: Instalar Homebrew y dependencias (Nativo ARM64)
+      - name: Instalar dependencias compatibles con macOS 11+ (ARM64)
         run: |
           eval "$(/opt/homebrew/bin/brew shellenv)"
           brew update
-          brew install cmake ninja qt@6 qtsvg qtvirtualkeyboard libzip libpng pkg-config openssl@3
-          brew link --force qt@6
+          brew install cmake ninja pkg-config
 
-          # Rust con rustup-init oficial en vez de la formula brew "rustup":
-          # esa formula arrastra python@3.15/z3 y falla con
-          # "python@3.15 not present or broken" (bug Tier 3 de Homebrew)
+          # Qt 6.5.3 oficial (soporta macOS 11+ en ARM64, a diferencia de brew qt@6 que pide macOS 14/15)
+          pip3 install aqtinstall --break-system-packages
+          aqt install-qt mac desktop 6.5.3 clang_64 -m qtsvg qtvirtualkeyboard -O "$GITHUB_WORKSPACE/qt6"
+
+          # Compilar OpenSSL 3 con target 11.0 para que no dependa de macOS 14+
+          curl -L "https://www.openssl.org/source/openssl-3.3.2.tar.gz" -o openssl.tar.gz
+          tar -xzf openssl.tar.gz
+          cd openssl-3.3.2
+          MACOSX_DEPLOYMENT_TARGET=11.0 ./Configure darwin64-arm64-cc --prefix="$GITHUB_WORKSPACE/openssl-arm64" --openssldir="$GITHUB_WORKSPACE/openssl-arm64/ssl" shared no-tests
+          MACOSX_DEPLOYMENT_TARGET=11.0 make -j$(sysctl -n hw.ncpu)
+          make install_sw
+          cd ..
+
+          # Rust con rustup-init oficial
           curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- -y --profile minimal --default-toolchain stable
           export PATH="$HOME/.cargo/bin:$PATH"
           rustc --version
@@ -80,12 +90,13 @@ jobs:
       - name: Compilar Trinity (ARM64)
         run: |
           eval "$(/opt/homebrew/bin/brew shellenv)"
+          QT_DIR="$GITHUB_WORKSPACE/qt6/6.5.3/macos"
           cd trinity
           mkdir -p build && cd build
           cmake .. \
             -DCMAKE_BUILD_TYPE=Release \
             -G Ninja \
-            -DCMAKE_PREFIX_PATH="$(brew --prefix qt@6)" \
+            -DCMAKE_PREFIX_PATH="${QT_DIR}" \
             -DCMAKE_OSX_DEPLOYMENT_TARGET=11.0 \
             -DCMAKE_OSX_ARCHITECTURES=arm64 \
             -DCMAKE_INSTALL_RPATH="@executable_path/../Frameworks" \
@@ -99,13 +110,13 @@ jobs:
       - name: Compilar mcpelauncher (ARM64)
         run: |
           eval "$(/opt/homebrew/bin/brew shellenv)"
-          export PATH="/opt/homebrew/opt/rustup/bin:$HOME/.cargo/bin:$PATH"
+          export PATH="$HOME/.cargo/bin:$PATH"
+          QT_DIR="$GITHUB_WORKSPACE/qt6/6.5.3/macos"
+          OPENSSL_DIR="$GITHUB_WORKSPACE/openssl-arm64"
           cd mcpelauncher
           wget https://huggingface.co/datasets/ccoffee20/trinity-installer/resolve/main/patch.sh
           bash patch.sh
           mkdir -p build && cd build
-          
-          OPENSSL_DIR="$(brew --prefix openssl@3)"
           
           export PKG_CONFIG_PATH="${OPENSSL_DIR}/lib/pkgconfig:${PKG_CONFIG_PATH}"
           export CXXFLAGS="-I${OPENSSL_DIR}/include ${CXXFLAGS}"
@@ -114,7 +125,7 @@ jobs:
           cmake .. \
             -DCMAKE_BUILD_TYPE=Release \
             -G Ninja \
-            -DCMAKE_PREFIX_PATH="$(brew --prefix qt@6);${OPENSSL_DIR}" \
+            -DCMAKE_PREFIX_PATH="${QT_DIR};${OPENSSL_DIR}" \
             -DCMAKE_INSTALL_RPATH="@executable_path/../Frameworks" \
             -DCMAKE_INSTALL_RPATH_USE_LINK_PATH=ON \
             -DMACOSX_RPATH=ON \
@@ -153,6 +164,8 @@ jobs:
       - name: Crear Application Bundle Profesional (ARM64)
         run: |
           eval "$(/opt/homebrew/bin/brew shellenv)"
+          QT_DIR="$GITHUB_WORKSPACE/qt6/6.5.3/macos"
+          OPENSSL_LIB="$GITHUB_WORKSPACE/openssl-arm64/lib"
           
           mkdir -p dist/Trinity.app/Contents/{MacOS,Frameworks,Resources}
           mkdir -p dist/Trinity.app/Contents/Resources/mcpelauncher/lib/native/arm64-v8a
@@ -180,7 +193,7 @@ jobs:
           done
           cd ../../../..
           
-          # 3. Copiar ANGLE (Solo archivos necesarios)
+          # 3. Copiar ANGLE
           find external_libs/angle_extracted -name "libEGL.dylib" -exec cp {} dist/Trinity.app/Contents/Frameworks/mvk-angle/ \;
           find external_libs/angle_extracted -name "libGLESv2.dylib" -exec cp {} dist/Trinity.app/Contents/Frameworks/mvk-angle/ \;
           find external_libs/angle_extracted -name "libMoltenVK.dylib" -exec cp {} dist/Trinity.app/Contents/Frameworks/mvk-angle/ \;
@@ -188,18 +201,14 @@ jobs:
           
           # 4. Configurar rpaths de ANGLE y MoltenVK
           ANGLE_DIR="dist/Trinity.app/Contents/Frameworks/mvk-angle"
-          
-          # Configurar install names para usar @rpath
           install_name_tool -id "@rpath/libEGL.dylib" "$ANGLE_DIR/libEGL.dylib"
           install_name_tool -id "@rpath/libGLESv2.dylib" "$ANGLE_DIR/libGLESv2.dylib"
           install_name_tool -id "@rpath/libMoltenVK.dylib" "$ANGLE_DIR/libMoltenVK.dylib"
           
-          # Agregar rpath a las librerías para que puedan encontrarse mutuamente
           install_name_tool -add_rpath "@loader_path" "$ANGLE_DIR/libEGL.dylib"
           install_name_tool -add_rpath "@loader_path" "$ANGLE_DIR/libGLESv2.dylib"
           install_name_tool -add_rpath "@loader_path" "$ANGLE_DIR/libMoltenVK.dylib"
           
-          # Corregir MoltenVK_icd.json para que apunte a la ruta correcta
           cat > "$ANGLE_DIR/MoltenVK_icd.json" << 'EOF'
           {
               "file_format_version" : "1.0.0",
@@ -210,7 +219,7 @@ jobs:
           }
           EOF
           
-          # 5. Crear Info.plist TEMPORAL apuntando a trinity-bin para que macdeployqt lo analice
+          # 5. Info.plist temporal
           cat <<EOF > dist/Trinity.app/Contents/Info.plist
           <?xml version="1.0" encoding="UTF-8"?>
           <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
@@ -240,21 +249,16 @@ jobs:
           
           # 6. Ejecutar macdeployqt
           cd dist
-          $(brew --prefix qt@6)/bin/macdeployqt Trinity.app \
+          "${QT_DIR}/bin/macdeployqt" Trinity.app \
             -executable=Trinity.app/Contents/MacOS/mcpelauncher-client \
             -executable=Trinity.app/Contents/MacOS/mcpelauncher-extract \
             -always-overwrite -verbose=1
           cd ..
           
-          # 6b. OpenSSL del bundle: reescribir las referencias de Homebrew a
-          # @rpath para que el cliente use SIEMPRE la copia incluida en el
-          # .app (evita el choque de simbolos _CRYPTO_calloc entre dos copias
-          # de libcrypto cargadas a la vez). Debe ir ANTES del codesign.
+          # 6b. OpenSSL del bundle
           MACOS_BIN_DIR="dist/Trinity.app/Contents/MacOS"
           FW_DIR="dist/Trinity.app/Contents/Frameworks"
-          OPENSSL_LIB="$(brew --prefix openssl@3)/lib"
 
-          # Asegurar que libssl/libcrypto estan dentro del bundle
           for LIB in libssl.3.dylib libcrypto.3.dylib; do
             if [ ! -f "$FW_DIR/$LIB" ] && [ -f "$OPENSSL_LIB/$LIB" ]; then
               cp "$OPENSSL_LIB/$LIB" "$FW_DIR/$LIB"
@@ -265,8 +269,6 @@ jobs:
             fi
           done
 
-          # Reescribir referencias /opt/homebrew o /usr/local a @rpath en
-          # todos los Mach-O del bundle (binarios, dylibs y frameworks)
           while IFS= read -r TARGET; do
             file "$TARGET" | grep -q 'Mach-O' || continue
             for LIB in libssl libcrypto; do
@@ -276,18 +278,15 @@ jobs:
                 if install_name_tool -change "$OLD" "$NEW" "$TARGET" 2>/dev/null; then
                   echo "OpenSSL fix: $(basename "$TARGET"): $OLD -> $NEW"
                 fi
-              done < <(otool -L "$TARGET" 2>/dev/null | awk '{print $1}' | grep -E '^/(opt/homebrew|usr/local)/' | grep "${LIB}" || true)
+              done < <(otool -L "$TARGET" 2>/dev/null | awk '{print $1}' | grep -E "^(${OPENSSL_LIB}|/opt/homebrew|/usr/local)/" | grep "${LIB}" || true)
             done
           done < <(find "$MACOS_BIN_DIR" "$FW_DIR" -type f 2>/dev/null)
 
-          echo "=== OpenSSL incluido en el bundle ==="
-          ls -la "$FW_DIR" | grep -E 'libssl|libcrypto' || echo "::warning::No hay libssl/libcrypto en Frameworks"
-          
           # 7. Copiar librerías de mac-bin
           cp mac-bin/lib/native/arm64-v8a/libfmod*.dylib dist/Trinity.app/Contents/Resources/mcpelauncher/lib/native/arm64-v8a/
           cp mac-bin/lib/arm64-v8a/*.so dist/Trinity.app/Contents/Resources/mcpelauncher/lib/arm64-v8a/
           
-          # 8. Crear launcher en C CORREGIDO
+          # 8. Crear launcher en C
           cat << 'EOF' > trinity_launcher.c
           #include <stdio.h>
           #include <stdlib.h>
@@ -313,12 +312,10 @@ jobs:
               char bundle_path[MAXPATHLEN];
               snprintf(bundle_path, sizeof(bundle_path), "%s/../..", dir);
               
-              // CORREGIDO: Usar vulkan en lugar de metal
               setenv("ANGLE_DEFAULT_PLATFORM", "vulkan", 1);
               setenv("QT_MAC_WANTS_LAYER", "1", 1);
               setenv("QT_AUTO_SCREEN_SCALE_FACTOR", "1", 1);
               
-              // NUEVO: ANGLE feature overrides para evitar artefactos de renderizado
               setenv("ANGLE_FEATURE_OVERRIDES_DISABLED", "hasCheapRenderPass", 1);
               setenv("ANGLE_FEATURE_OVERRIDES_ENABLED", "flushAfterStreamVertexData:forceRobustResourceInit:allowClearForRobustResourceInit:preferDrawClearOverVkCmdClearAttachments", 1);
               setenv("MVK_CONFIG_SYNCHRONOUS_QUEUE_SUBMITS", "1", 1);
@@ -327,7 +324,6 @@ jobs:
               snprintf(resources_path, sizeof(resources_path), "%s/Resources/mcpelauncher", bundle_path);
               setenv("MCPELAUNCHER_RESOURCES", resources_path, 1);
               
-              // NUEVO: Configurar VK_DRIVER_FILES para MoltenVK
               char vk_driver_path[MAXPATHLEN];
               snprintf(vk_driver_path, sizeof(vk_driver_path), "%s/Frameworks/mvk-angle/MoltenVK_icd.json", bundle_path);
               setenv("VK_DRIVER_FILES", vk_driver_path, 1);
@@ -359,35 +355,16 @@ jobs:
           }
           EOF
           
-          # 9. Compilar el launcher en C
+          # 9. Compilar launcher
           clang -arch arm64 -mmacosx-version-min=11.0 -O2 -o dist/Trinity.app/Contents/MacOS/trinity trinity_launcher.c
           
-          # 10. Actualizar Info.plist para que apunte al launcher
+          # 10. Actualizar Info.plist
           /usr/libexec/PlistBuddy -c "Set :CFBundleExecutable trinity" dist/Trinity.app/Contents/Info.plist
           
           # 11. Copiar icono
           cp trinity/resources/branding/com.trench.trinity.launcher.icns dist/Trinity.app/Contents/Resources/AppIcon.icns
           
-          # 12. Verificar configuración de ANGLE
-          echo "=== Verificando estructura del bundle ==="
-          ls -la dist/Trinity.app/Contents/Frameworks/mvk-angle/
-          
-          echo -e "\n=== Verificando MoltenVK_icd.json ==="
-          cat dist/Trinity.app/Contents/Frameworks/mvk-angle/MoltenVK_icd.json
-          
-          echo -e "\n=== Verificando símbolos en libGLESv2.dylib ==="
-          nm -gU dist/Trinity.app/Contents/Frameworks/mvk-angle/libGLESv2.dylib | grep -E "glBindRenderbuffer|eglGetDisplay" || echo "ADVERTENCIA: Símbolos GL ES no encontrados"
-          
-          echo -e "\n=== Verificando dependencias de libEGL.dylib ==="
-          otool -L dist/Trinity.app/Contents/Frameworks/mvk-angle/libEGL.dylib
-          
-          echo -e "\n=== Verificando dependencias de libGLESv2.dylib ==="
-          otool -L dist/Trinity.app/Contents/Frameworks/mvk-angle/libGLESv2.dylib
-          
-          echo -e "\n=== Verificando dependencias de libMoltenVK.dylib ==="
-          otool -L dist/Trinity.app/Contents/Frameworks/mvk-angle/libMoltenVK.dylib
-          
-          # 13. Limpiar atributos extendidos y firmar
+          # 12. Firmar y crear DMG
           xattr -cr dist/Trinity.app
           cd dist
           codesign --force --deep --sign - --timestamp=none Trinity.app
@@ -453,16 +430,26 @@ jobs:
           curl -L "https://huggingface.co/datasets/ccoffee20/macos/resolve/main/anglex86_64.tar" -o angle.tar
           tar -xvf angle.tar -C external_libs/angle_extracted
 
-      - name: Instalar Homebrew (Intel) y dependencias
+      - name: Instalar dependencias compatibles con macOS 10.15 - 12+ (Intel)
         run: |
           eval "$(/usr/local/bin/brew shellenv)"
           brew update
-          brew install cmake ninja qt@6 qtsvg qtvirtualkeyboard libzip libpng pkg-config openssl@3
-          brew link --force qt@6
+          brew install cmake ninja pkg-config
 
-          # Rust con rustup-init oficial en vez de la formula brew "rustup":
-          # esa formula arrastra python@3.15/z3 y falla con
-          # "python@3.15 not present or broken" (bug Tier 3 de Homebrew)
+          # Qt 6.5.3 oficial (última versión con deployment target 10.15, funciona perfecto en 10.15, 11 y 12)
+          pip3 install aqtinstall --break-system-packages
+          aqt install-qt mac desktop 6.5.3 clang_64 -m qtsvg qtvirtualkeyboard -O "$GITHUB_WORKSPACE/qt6"
+
+          # Compilar OpenSSL 3 con target 10.15 para evitar crash de dyld en macOS 10/11/12
+          curl -L "https://www.openssl.org/source/openssl-3.3.2.tar.gz" -o openssl.tar.gz
+          tar -xzf openssl.tar.gz
+          cd openssl-3.3.2
+          MACOSX_DEPLOYMENT_TARGET=10.15 ./Configure darwin64-x86_64-cc --prefix="$GITHUB_WORKSPACE/openssl-x86_64" --openssldir="$GITHUB_WORKSPACE/openssl-x86_64/ssl" shared no-tests
+          MACOSX_DEPLOYMENT_TARGET=10.15 make -j$(sysctl -n hw.ncpu)
+          make install_sw
+          cd ..
+
+          # Rust con rustup-init oficial
           curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- -y --profile minimal --default-toolchain stable
           export PATH="$HOME/.cargo/bin:$PATH"
           rustc --version
@@ -471,12 +458,13 @@ jobs:
       - name: Compilar Trinity (x86_64)
         run: |
           eval "$(/usr/local/bin/brew shellenv)"
+          QT_DIR="$GITHUB_WORKSPACE/qt6/6.5.3/macos"
           cd trinity
           mkdir -p build && cd build
           cmake .. \
             -DCMAKE_BUILD_TYPE=Release \
             -G Ninja \
-            -DCMAKE_PREFIX_PATH="$(brew --prefix qt@6)" \
+            -DCMAKE_PREFIX_PATH="${QT_DIR}" \
             -DCMAKE_OSX_DEPLOYMENT_TARGET=10.15 \
             -DCMAKE_OSX_ARCHITECTURES=x86_64 \
             -DCMAKE_INSTALL_RPATH="@executable_path/../Frameworks" \
@@ -490,17 +478,18 @@ jobs:
       - name: Compilar mcpelauncher (x86_64)
         run: |
           eval "$(/usr/local/bin/brew shellenv)"
-          export PATH="/usr/local/opt/rustup/bin:$HOME/.cargo/bin:$PATH"
+          export PATH="$HOME/.cargo/bin:$PATH"
+          QT_DIR="$GITHUB_WORKSPACE/qt6/6.5.3/macos"
+          OPENSSL_DIR="$GITHUB_WORKSPACE/openssl-x86_64"
           cd mcpelauncher
           wget https://huggingface.co/datasets/ccoffee20/trinity-installer/resolve/main/patch.sh
           bash patch.sh
           mkdir -p build && cd build
           
-          OPENSSL_DIR="$(brew --prefix openssl@3)"
           cmake .. \
             -DCMAKE_BUILD_TYPE=Release \
             -G Ninja \
-            -DCMAKE_PREFIX_PATH="$(brew --prefix qt@6);$(brew --prefix openssl@3)" \
+            -DCMAKE_PREFIX_PATH="${QT_DIR};${OPENSSL_DIR}" \
             -DCMAKE_INSTALL_RPATH="@executable_path/../Frameworks" \
             -DCMAKE_INSTALL_RPATH_USE_LINK_PATH=ON \
             -DMACOSX_RPATH=ON \
@@ -542,6 +531,8 @@ jobs:
       - name: Crear Application Bundle Profesional (x86_64)
         run: |
           eval "$(/usr/local/bin/brew shellenv)"
+          QT_DIR="$GITHUB_WORKSPACE/qt6/6.5.3/macos"
+          OPENSSL_LIB="$GITHUB_WORKSPACE/openssl-x86_64/lib"
           
           mkdir -p dist/Trinity.app/Contents/{MacOS,Frameworks,Resources}
           mkdir -p dist/Trinity.app/Contents/Resources/mcpelauncher/lib/native/x86_64
@@ -569,7 +560,7 @@ jobs:
           done
           cd ../../../..
           
-          # 3. Copiar ANGLE (Solo archivos necesarios)
+          # 3. Copiar ANGLE
           find external_libs/angle_extracted -name "libEGL.dylib" -exec cp {} dist/Trinity.app/Contents/Frameworks/mvk-angle/ \;
           find external_libs/angle_extracted -name "libGLESv2.dylib" -exec cp {} dist/Trinity.app/Contents/Frameworks/mvk-angle/ \;
           find external_libs/angle_extracted -name "libMoltenVK.dylib" -exec cp {} dist/Trinity.app/Contents/Frameworks/mvk-angle/ \;
@@ -577,18 +568,14 @@ jobs:
           
           # 4. Configurar rpaths de ANGLE y MoltenVK
           ANGLE_DIR="dist/Trinity.app/Contents/Frameworks/mvk-angle"
-          
-          # Configurar install names para usar @rpath
           install_name_tool -id "@rpath/libEGL.dylib" "$ANGLE_DIR/libEGL.dylib"
           install_name_tool -id "@rpath/libGLESv2.dylib" "$ANGLE_DIR/libGLESv2.dylib"
           install_name_tool -id "@rpath/libMoltenVK.dylib" "$ANGLE_DIR/libMoltenVK.dylib"
           
-          # Agregar rpath a las librerías para que puedan encontrarse mutuamente
           install_name_tool -add_rpath "@loader_path" "$ANGLE_DIR/libEGL.dylib"
           install_name_tool -add_rpath "@loader_path" "$ANGLE_DIR/libGLESv2.dylib"
           install_name_tool -add_rpath "@loader_path" "$ANGLE_DIR/libMoltenVK.dylib"
           
-          # Corregir MoltenVK_icd.json para que apunte a la ruta correcta
           cat > "$ANGLE_DIR/MoltenVK_icd.json" << 'EOF'
           {
               "file_format_version" : "1.0.0",
@@ -599,7 +586,7 @@ jobs:
           }
           EOF
                     
-          # 5. Crear Info.plist TEMPORAL
+          # 5. Info.plist temporal
           cat <<EOF > dist/Trinity.app/Contents/Info.plist
           <?xml version="1.0" encoding="UTF-8"?>
           <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
@@ -629,21 +616,16 @@ jobs:
           
           # 6. Ejecutar macdeployqt
           cd dist
-          $(brew --prefix qt@6)/bin/macdeployqt Trinity.app \
+          "${QT_DIR}/bin/macdeployqt" Trinity.app \
             -executable=Trinity.app/Contents/MacOS/mcpelauncher-client \
             -executable=Trinity.app/Contents/MacOS/mcpelauncher-extract \
             -always-overwrite -verbose=1
           cd ..
           
-          # 6b. OpenSSL del bundle: reescribir las referencias de Homebrew a
-          # @rpath para que el cliente use SIEMPRE la copia incluida en el
-          # .app (evita el choque de simbolos _CRYPTO_calloc entre dos copias
-          # de libcrypto cargadas a la vez). Debe ir ANTES del codesign.
+          # 6b. OpenSSL del bundle
           MACOS_BIN_DIR="dist/Trinity.app/Contents/MacOS"
           FW_DIR="dist/Trinity.app/Contents/Frameworks"
-          OPENSSL_LIB="$(brew --prefix openssl@3)/lib"
 
-          # Asegurar que libssl/libcrypto estan dentro del bundle
           for LIB in libssl.3.dylib libcrypto.3.dylib; do
             if [ ! -f "$FW_DIR/$LIB" ] && [ -f "$OPENSSL_LIB/$LIB" ]; then
               cp "$OPENSSL_LIB/$LIB" "$FW_DIR/$LIB"
@@ -654,8 +636,6 @@ jobs:
             fi
           done
 
-          # Reescribir referencias /opt/homebrew o /usr/local a @rpath en
-          # todos los Mach-O del bundle (binarios, dylibs y frameworks)
           while IFS= read -r TARGET; do
             file "$TARGET" | grep -q 'Mach-O' || continue
             for LIB in libssl libcrypto; do
@@ -665,18 +645,15 @@ jobs:
                 if install_name_tool -change "$OLD" "$NEW" "$TARGET" 2>/dev/null; then
                   echo "OpenSSL fix: $(basename "$TARGET"): $OLD -> $NEW"
                 fi
-              done < <(otool -L "$TARGET" 2>/dev/null | awk '{print $1}' | grep -E '^/(opt/homebrew|usr/local)/' | grep "${LIB}" || true)
+              done < <(otool -L "$TARGET" 2>/dev/null | awk '{print $1}' | grep -E "^(${OPENSSL_LIB}|/opt/homebrew|/usr/local)/" | grep "${LIB}" || true)
             done
           done < <(find "$MACOS_BIN_DIR" "$FW_DIR" -type f 2>/dev/null)
-
-          echo "=== OpenSSL incluido en el bundle ==="
-          ls -la "$FW_DIR" | grep -E 'libssl|libcrypto' || echo "::warning::No hay libssl/libcrypto en Frameworks"
           
           # 7. Copiar librerías de mac-bin
           cp mac-bin/lib/native/x86_64/libfmod*.dylib dist/Trinity.app/Contents/Resources/mcpelauncher/lib/native/x86_64/
           cp mac-bin/lib/x86_64/*.so dist/Trinity.app/Contents/Resources/mcpelauncher/lib/x86_64/
           
-          # 8. Crear launcher en C CORREGIDO (idéntico al de ARM64)
+          # 8. Crear launcher en C
           cat << 'EOF' > trinity_launcher.c
           #include <stdio.h>
           #include <stdlib.h>
@@ -702,12 +679,10 @@ jobs:
               char bundle_path[MAXPATHLEN];
               snprintf(bundle_path, sizeof(bundle_path), "%s/../..", dir);
               
-              // CORREGIDO: Usar vulkan en lugar de metal
               setenv("ANGLE_DEFAULT_PLATFORM", "vulkan", 1);
               setenv("QT_MAC_WANTS_LAYER", "1", 1);
               setenv("QT_AUTO_SCREEN_SCALE_FACTOR", "1", 1);
               
-              // NUEVO: ANGLE feature overrides para evitar artefactos de renderizado
               setenv("ANGLE_FEATURE_OVERRIDES_DISABLED", "hasCheapRenderPass", 1);
               setenv("ANGLE_FEATURE_OVERRIDES_ENABLED", "flushAfterStreamVertexData:forceRobustResourceInit:allowClearForRobustResourceInit:preferDrawClearOverVkCmdClearAttachments", 1);
               setenv("MVK_CONFIG_SYNCHRONOUS_QUEUE_SUBMITS", "1", 1);
@@ -716,7 +691,6 @@ jobs:
               snprintf(resources_path, sizeof(resources_path), "%s/Resources/mcpelauncher", bundle_path);
               setenv("MCPELAUNCHER_RESOURCES", resources_path, 1);
               
-              // NUEVO: Configurar VK_DRIVER_FILES para MoltenVK
               char vk_driver_path[MAXPATHLEN];
               snprintf(vk_driver_path, sizeof(vk_driver_path), "%s/Frameworks/mvk-angle/MoltenVK_icd.json", bundle_path);
               setenv("VK_DRIVER_FILES", vk_driver_path, 1);
@@ -748,35 +722,16 @@ jobs:
           }
           EOF
           
-          # 9. Compilar el launcher en C
+          # 9. Compilar launcher
           clang -arch x86_64 -mmacosx-version-min=10.15 -O2 -o dist/Trinity.app/Contents/MacOS/trinity trinity_launcher.c
           
-          # 10. Actualizar Info.plist para que apunte al launcher
+          # 10. Actualizar Info.plist
           /usr/libexec/PlistBuddy -c "Set :CFBundleExecutable trinity" dist/Trinity.app/Contents/Info.plist
           
           # 11. Copiar icono
           cp trinity/resources/branding/com.trench.trinity.launcher.icns dist/Trinity.app/Contents/Resources/AppIcon.icns
           
-          # 12. Verificar configuración de ANGLE
-          echo "=== Verificando estructura del bundle ==="
-          ls -la dist/Trinity.app/Contents/Frameworks/mvk-angle/
-          
-          echo -e "\n=== Verificando MoltenVK_icd.json ==="
-          cat dist/Trinity.app/Contents/Frameworks/mvk-angle/MoltenVK_icd.json
-          
-          echo -e "\n=== Verificando símbolos en libGLESv2.dylib ==="
-          nm -gU dist/Trinity.app/Contents/Frameworks/mvk-angle/libGLESv2.dylib | grep -E "glBindRenderbuffer|eglGetDisplay" || echo "ADVERTENCIA: Símbolos GL ES no encontrados"
-          
-          echo -e "\n=== Verificando dependencias de libEGL.dylib ==="
-          otool -L dist/Trinity.app/Contents/Frameworks/mvk-angle/libEGL.dylib
-          
-          echo -e "\n=== Verificando dependencias de libGLESv2.dylib ==="
-          otool -L dist/Trinity.app/Contents/Frameworks/mvk-angle/libGLESv2.dylib
-          
-          echo -e "\n=== Verificando dependencias de libMoltenVK.dylib ==="
-          otool -L dist/Trinity.app/Contents/Frameworks/mvk-angle/libMoltenVK.dylib
-          
-          # 13. Limpiar atributos extendidos y firmar
+          # 12. Firmar y crear DMG
           xattr -cr dist/Trinity.app
           cd dist
           codesign --force --deep --sign - --timestamp=none Trinity.app
