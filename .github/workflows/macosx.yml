@@ -92,6 +92,7 @@ jobs:
           eval "$(/opt/homebrew/bin/brew shellenv)"
           QT_DIR="$GITHUB_WORKSPACE/qt6/6.5.3/macos"
           cd trinity
+          sed -i '' 's/qt_standard_project_setup(.*)/qt_standard_project_setup()/g' CMakeLists.txt
           mkdir -p build && cd build
           cmake .. \
             -DCMAKE_BUILD_TYPE=Release \
