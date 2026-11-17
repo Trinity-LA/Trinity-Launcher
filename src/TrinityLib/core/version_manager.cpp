@@ -47,8 +47,11 @@ QString VersionManager::getVersionPath(const QString &versionName) const {
 // Check for the main runtime library (libminecraftpe.so).
 // See: https://github.com/minecraft-linux/mcpelauncher-manifest (GPLv3)
 bool VersionManager::isVersionValid(const QString &versionName) const {
-    QString libPath = getVersionPath(versionName) + "/lib/x86_64/libminecraftpe.so";
-    return QFileInfo::exists(libPath);
+    QString basePath = getVersionPath(versionName) + "/lib/";
+    // Check both x86_64 and x86 — an x86-only version is still valid
+    // (game_launcher uses mcpelauncher-client86 for those).
+    return QFileInfo::exists(basePath + "x86_64/libminecraftpe.so")
+        || QFileInfo::exists(basePath + "x86/libminecraftpe.so");
 }
 
 namespace {
@@ -235,7 +238,7 @@ bool VersionManager::extractApk(const QString &apkPath, const QString &versionNa
 
     QString destDir = getVersionPath(versionName);
     if (!QDir().mkpath(destDir)) {
-        errorMsg = "No se pudo crear el directorio de destino.";
+        errorMsg = tr("Could not create destination directory.");
         return false;
     }
 
@@ -252,7 +255,7 @@ bool VersionManager::extractApk(const QString &apkPath, const QString &versionNa
             extractorPath = QStandardPaths::findExecutable("mcpelauncher-extract");
         }
         if (extractorPath.isEmpty()) {
-            errorMsg = "mcpelauncher-extract no encontrado.";
+            errorMsg = tr("mcpelauncher-extract not found.");
             return false;
         }
 
@@ -260,8 +263,11 @@ bool VersionManager::extractApk(const QString &apkPath, const QString &versionNa
         process.start(extractorPath, {apkPath, destDir});
     }
 
-    // Esperar a que termine (sin bloquear la UI)
-    process.waitForStarted(-1);
+    // Esperar a que termine (con timeout razonable)
+    if (!process.waitForStarted(5000)) {
+        errorMsg = tr("Could not start the extraction process.");
+        return false;
+    }
 
     // Reportar estado inicial
     emit extractionProgress(tr("Starting extraction..."));
