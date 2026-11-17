@@ -1,6 +1,7 @@
 #include "TrinityLib/core/version_config.hpp"
 #include "TrinityLib/core/version_manager.hpp"
 #include <QFile>
+#include <QSaveFile>
 #include <QTextStream>
 #include <QDir>
 #include <QStandardPaths>
@@ -22,14 +23,13 @@ void VersionConfig::setLaunchArgs(const QString &args) {
 
 bool VersionConfig::save() {
     QDir().mkpath(QFileInfo(configPath()).dir().path());
-    QFile file(configPath());
+    QSaveFile file(configPath());
     if (!file.open(QIODevice::WriteOnly | QIODevice::Text)) {
         return false;
     }
     QTextStream out(&file);
     out << launchArgs;
-    file.close();
-    return true;
+    return file.commit();
 }
 
 bool VersionConfig::load() {

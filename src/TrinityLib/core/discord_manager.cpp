@@ -44,17 +44,19 @@ void DiscordManager::init(int64_t clientId) {
   }
 
   // Reconnect timer – retries every 5 s when disconnected
-  m_reconnectTimer = new QTimer(this);
-  m_reconnectTimer->setInterval(5000);
-  connect(m_reconnectTimer, &QTimer::timeout, this, [this]() {
-    if (!m_connected && m_enabled) {
-      if (connectToDiscord()) {
-        m_reconnectTimer->stop();
-        qDebug() << "[Discord] Reconnected successfully.";
-        updateActivityMain();
+  if (!m_reconnectTimer) {
+    m_reconnectTimer = new QTimer(this);
+    m_reconnectTimer->setInterval(5000);
+    connect(m_reconnectTimer, &QTimer::timeout, this, [this]() {
+      if (!m_connected && m_enabled) {
+        if (connectToDiscord()) {
+          m_reconnectTimer->stop();
+          qDebug() << "[Discord] Reconnected successfully.";
+          updateActivityMain();
+        }
       }
-    }
-  });
+    });
+  }
 }
 
 void DiscordManager::runCallbacks() {
@@ -128,7 +130,7 @@ void DiscordManager::updateActivityMain() {
   DiscordManager::instance().updateActivity(
       DiscordManager::tr("Waiting to start"), // Details
       DiscordManager::tr("In the main menu"), // State
-      DiscordManager::tr("axe_icon"),         // Small Image Key
+      "axe_icon",                             // Small Image Key
       DiscordManager::tr("Configuring"),      // Tooltip Small Image
       false                                   // No timer
   );
@@ -180,6 +182,8 @@ bool DiscordManager::connectToDiscord() {
       return sendHandshake();
     }
   }
+  m_socket->deleteLater();
+  m_socket = nullptr;
   return false;
 }
 

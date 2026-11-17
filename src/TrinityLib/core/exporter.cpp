@@ -47,19 +47,20 @@ void Exporter::exportVersion(const QString &versionName) {
     if (zipPath.isEmpty())
         return;
 
-    // Crear diálogo de progreso
-    QDialog progressDlg(parentWidget);
-    progressDlg.setWindowTitle(tr("Exporting..."));
-    progressDlg.setFixedSize(300, 100);
+    // Crear diálogo de progreso (heap-allocated to avoid dangling reference
+    // in the QProcess::finished lambda if the user closes the dialog early)
+    QDialog *progressDlg = new QDialog(parentWidget);
+    progressDlg->setWindowTitle(tr("Exporting..."));
+    progressDlg->setFixedSize(300, 100);
 
-    auto *layout = new QVBoxLayout(&progressDlg);
+    auto *layout = new QVBoxLayout(progressDlg);
     QLabel *label = new QLabel(tr("Exporting version..."));
     QProgressBar *progressBar = new QProgressBar();
     progressBar->setRange(0, 0); // Indefinido
     layout->addWidget(label);
     layout->addWidget(progressBar);
 
-    progressDlg.show();
+    progressDlg->show();
     QApplication::processEvents(); // Actualizar UI
 
     // Crear directorio temporal
@@ -102,9 +103,10 @@ void Exporter::exportVersion(const QString &versionName) {
     connect(
         compressProcess,
         QOverload<int, QProcess::ExitStatus>::of(&QProcess::finished), this,
-        [this, compressProcess, versionName, zipPath, tempDir, &progressDlg]() {
+        [this, compressProcess, versionName, zipPath, tempDir, progressDlg]() {
             // Cerrar diálogo de progreso
-            progressDlg.accept();
+            progressDlg->accept();
+            progressDlg->deleteLater();
 
             if (compressProcess->exitCode() == 0) {
                 emit exportFinished(true,
@@ -125,7 +127,7 @@ void Exporter::exportVersion(const QString &versionName) {
     compressProcess->start("tar", {"-czf", zipPath, "-C", exportDir, "."});
 
     // Mantener el diálogo abierto
-    progressDlg.exec();
+    progressDlg->exec();
 }
 
 void Exporter::importVersion() {
@@ -149,7 +151,8 @@ void Exporter::importVersion() {
 
     if (versionExists || gamesExists) {
         int r = QMessageBox::warning(parentWidget, tr("Warning"),
-                                     QString(tr("This process may take a while!\\n"
+                                     QString(tr("Some data for '%1' already exists and will be overwritten.\n"
+                                     "This process may take a while!\n"
                                      "Do you want to continue?"))
                                          .arg(fileName),
                                      QMessageBox::Yes | QMessageBox::No,
@@ -393,13 +396,10 @@ void CopyWorker::doCopy() {
         QString dstItem = dstPath + "/" + info.fileName();
 
         if (info.isDir()) {
-            if (!QDir().mkpath(dstItem)) {
-                emit copyFinished(false);
-                return;
-            }
-            // Copiar recursivamente
+            // Copy the directory contents directly (no mkpath before cp -r,
+            // otherwise cp nests the source inside the existing directory)
             QProcess process;
-            process.start("cp", {"-r", srcItem, dstItem});
+            process.start("cp", {"-rT", srcItem, dstItem});
             process.waitForFinished(-1);
             if (process.exitCode() != 0) {
                 emit copyFinished(false);

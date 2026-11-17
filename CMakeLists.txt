@@ -16,7 +16,7 @@ include_directories(include)
 
 find_package(
   Qt6
-  COMPONENTS Core Widgets Concurrent Network LinguistTools
+  COMPONENTS Core Gui Widgets Concurrent Network LinguistTools
   REQUIRED)
 
 # We define which language use

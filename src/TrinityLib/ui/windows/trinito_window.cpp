@@ -282,10 +282,7 @@ QWidget *TrinitoWindow::createInstancesTab() {
     // ── Wire buttons only when launcher available ──────────────────────────
     if (m_launcher) {
         connect(m_launcher, &LauncherWindow::versionsChanged, this, [versionsList, refreshInstancesList]() {
-
-refreshInstancesList();
-refreshInstancesList();
-refreshInstancesList();
+            refreshInstancesList();
             if (versionsList->count() > 0)
                 versionsList->setCurrentRow(0);
         });
@@ -320,8 +317,8 @@ refreshInstancesList();
         connect(gpuCombo, QOverload<int>::of(&QComboBox::currentIndexChanged),
             this, [this, gpuCombo, versionsList](int index) {
                 const QString version = versionsList->currentItem()
-                                            ? versionsList->currentItem()->text()
-                                            : QString();
+                                             ? versionsList->currentItem()->text()
+                                             : QString();
                 if (version.isEmpty())
                     return;
                 QSettings s;
@@ -333,9 +330,7 @@ refreshInstancesList();
         importBtn->setEnabled(true);
 
         // Enable buttons for initial selection if any
-refreshInstancesList();
-refreshInstancesList();
-refreshInstancesList();
+        refreshInstancesList();
         if (versionsList->count() > 0) {
             shortcutBtn->setEnabled(true);
             envBtn->setEnabled(true);
@@ -769,13 +764,13 @@ QWidget *TrinitoWindow::createDevTab() {
         if (success) {
             QMessageBox::information(
                 this, tr("Success"),
-                QString(tr("deleted successfully.")).arg(selectedEntry));
+                QString(tr("'%1' deleted successfully.")).arg(selectedEntry));
             // Reload the list
             loadPacks("development_behavior_packs", behListWidget);
         } else {
             QMessageBox::critical(
-                this, "Error",
-                QString(tr("Could not delete")).arg(selectedEntry));
+                this, tr("Error"),
+                QString(tr("Could not delete '%1'.")).arg(selectedEntry));
         }
     });
     deleteLayout->addWidget(deleteBehButton);
@@ -817,14 +812,13 @@ QWidget *TrinitoWindow::createDevTab() {
         if (success) {
             QMessageBox::information(
                 this, tr("Success"),
-                QString(tr("deleted successfully.")).arg(selectedEntry));
+                QString(tr("'%1' deleted successfully.")).arg(selectedEntry));
             // Reload the list
             loadPacks("development_resource_packs", resListWidget);
         } else {
             QMessageBox::critical(
-                this, "Error",
-                QString("No se pudo eliminar el Resource Pack '%1'.")
-                    .arg(selectedEntry));
+                this, tr("Error"),
+                QString(tr("Could not delete Resource Pack '%1'.")).arg(selectedEntry));
         }
     });
     deleteLayout->addWidget(deleteResButton);
