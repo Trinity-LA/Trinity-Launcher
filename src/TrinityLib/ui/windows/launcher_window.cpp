@@ -991,7 +991,7 @@ void LauncherWindow::onExportClicked() {
     QString selectedVersion = versionCombo->currentText();
     if (selectedVersion.isEmpty()) {
         QMessageBox::warning(this, tr("Warning"),
-                             tr("No version selected."));
+                              tr("No version selected."));
         return;
     }
 
@@ -1002,7 +1002,7 @@ void LauncherWindow::onDeleteClicked() {
     QString selectedVersion = versionCombo->currentText();
     if (selectedVersion.isEmpty()) {
         QMessageBox::warning(this, tr("Warning"),
-                             tr("No version selected."));
+                              tr("No version selected."));
         return;
     }
 
@@ -1176,7 +1176,7 @@ void LauncherWindow::createDesktopShortcut() {
     // Mensaje de éxito
     QMessageBox::information(
         this, tr("Success"),
-        QString(tr("Shortcut created in Downloads folder")
+        QString(tr("Shortcut created in Downloads folder: %1")
                     .arg(shortcutPath)));
 }
 
